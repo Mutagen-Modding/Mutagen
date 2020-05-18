@@ -48,6 +48,76 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region GravityVelocity
+        public Single GravityVelocity { get; set; } = default;
+        #endregion
+        #region RotationVelocity
+        public Single RotationVelocity { get; set; } = default;
+        #endregion
+        #region ParticleSizeX
+        public Single ParticleSizeX { get; set; } = default;
+        #endregion
+        #region ParticleSizeY
+        public Single ParticleSizeY { get; set; } = default;
+        #endregion
+        #region CenterOffsetMin
+        public Single CenterOffsetMin { get; set; } = default;
+        #endregion
+        #region CenterOffsetMax
+        public Single CenterOffsetMax { get; set; } = default;
+        #endregion
+        #region InitialRotationRange
+        public Single InitialRotationRange { get; set; } = default;
+        #endregion
+        #region NumSubtexturesX
+        public UInt32 NumSubtexturesX { get; set; } = default;
+        #endregion
+        #region NumSubtexturesY
+        public UInt32 NumSubtexturesY { get; set; } = default;
+        #endregion
+        #region Type
+        public ShaderParticleGeometry.TypeEnum Type { get; set; } = default;
+        #endregion
+        #region BoxSize
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt32 _BoxSize;
+        public UInt32 BoxSize
+        {
+            get => this._BoxSize;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._BoxSize = value;
+            }
+        }
+        #endregion
+        #region ParticleDensity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _ParticleDensity;
+        public Single ParticleDensity
+        {
+            get => this._ParticleDensity;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._ParticleDensity = value;
+            }
+        }
+        #endregion
+        #region ParticleTexture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _ParticleTexture;
+        public String? ParticleTexture
+        {
+            get => this._ParticleTexture;
+            set => this._ParticleTexture = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
+        #endregion
+        #region DATADataTypeState
+        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +288,20 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.GravityVelocity = initialValue;
+                this.RotationVelocity = initialValue;
+                this.ParticleSizeX = initialValue;
+                this.ParticleSizeY = initialValue;
+                this.CenterOffsetMin = initialValue;
+                this.CenterOffsetMax = initialValue;
+                this.InitialRotationRange = initialValue;
+                this.NumSubtexturesX = initialValue;
+                this.NumSubtexturesY = initialValue;
+                this.Type = initialValue;
+                this.BoxSize = initialValue;
+                this.ParticleDensity = initialValue;
+                this.ParticleTexture = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +310,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem GravityVelocity,
+                TItem RotationVelocity,
+                TItem ParticleSizeX,
+                TItem ParticleSizeY,
+                TItem CenterOffsetMin,
+                TItem CenterOffsetMax,
+                TItem InitialRotationRange,
+                TItem NumSubtexturesX,
+                TItem NumSubtexturesY,
+                TItem Type,
+                TItem BoxSize,
+                TItem ParticleDensity,
+                TItem ParticleTexture,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +333,20 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.GravityVelocity = GravityVelocity;
+                this.RotationVelocity = RotationVelocity;
+                this.ParticleSizeX = ParticleSizeX;
+                this.ParticleSizeY = ParticleSizeY;
+                this.CenterOffsetMin = CenterOffsetMin;
+                this.CenterOffsetMax = CenterOffsetMax;
+                this.InitialRotationRange = InitialRotationRange;
+                this.NumSubtexturesX = NumSubtexturesX;
+                this.NumSubtexturesY = NumSubtexturesY;
+                this.Type = Type;
+                this.BoxSize = BoxSize;
+                this.ParticleDensity = ParticleDensity;
+                this.ParticleTexture = ParticleTexture;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +355,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem GravityVelocity;
+            public TItem RotationVelocity;
+            public TItem ParticleSizeX;
+            public TItem ParticleSizeY;
+            public TItem CenterOffsetMin;
+            public TItem CenterOffsetMax;
+            public TItem InitialRotationRange;
+            public TItem NumSubtexturesX;
+            public TItem NumSubtexturesY;
+            public TItem Type;
+            public TItem BoxSize;
+            public TItem ParticleDensity;
+            public TItem ParticleTexture;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +385,39 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.GravityVelocity, rhs.GravityVelocity)) return false;
+                if (!object.Equals(this.RotationVelocity, rhs.RotationVelocity)) return false;
+                if (!object.Equals(this.ParticleSizeX, rhs.ParticleSizeX)) return false;
+                if (!object.Equals(this.ParticleSizeY, rhs.ParticleSizeY)) return false;
+                if (!object.Equals(this.CenterOffsetMin, rhs.CenterOffsetMin)) return false;
+                if (!object.Equals(this.CenterOffsetMax, rhs.CenterOffsetMax)) return false;
+                if (!object.Equals(this.InitialRotationRange, rhs.InitialRotationRange)) return false;
+                if (!object.Equals(this.NumSubtexturesX, rhs.NumSubtexturesX)) return false;
+                if (!object.Equals(this.NumSubtexturesY, rhs.NumSubtexturesY)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.BoxSize, rhs.BoxSize)) return false;
+                if (!object.Equals(this.ParticleDensity, rhs.ParticleDensity)) return false;
+                if (!object.Equals(this.ParticleTexture, rhs.ParticleTexture)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.GravityVelocity);
+                hash.Add(this.RotationVelocity);
+                hash.Add(this.ParticleSizeX);
+                hash.Add(this.ParticleSizeY);
+                hash.Add(this.CenterOffsetMin);
+                hash.Add(this.CenterOffsetMax);
+                hash.Add(this.InitialRotationRange);
+                hash.Add(this.NumSubtexturesX);
+                hash.Add(this.NumSubtexturesY);
+                hash.Add(this.Type);
+                hash.Add(this.BoxSize);
+                hash.Add(this.ParticleDensity);
+                hash.Add(this.ParticleTexture);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +428,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.GravityVelocity)) return false;
+                if (!eval(this.RotationVelocity)) return false;
+                if (!eval(this.ParticleSizeX)) return false;
+                if (!eval(this.ParticleSizeY)) return false;
+                if (!eval(this.CenterOffsetMin)) return false;
+                if (!eval(this.CenterOffsetMax)) return false;
+                if (!eval(this.InitialRotationRange)) return false;
+                if (!eval(this.NumSubtexturesX)) return false;
+                if (!eval(this.NumSubtexturesY)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.BoxSize)) return false;
+                if (!eval(this.ParticleDensity)) return false;
+                if (!eval(this.ParticleTexture)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +450,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.GravityVelocity)) return true;
+                if (eval(this.RotationVelocity)) return true;
+                if (eval(this.ParticleSizeX)) return true;
+                if (eval(this.ParticleSizeY)) return true;
+                if (eval(this.CenterOffsetMin)) return true;
+                if (eval(this.CenterOffsetMax)) return true;
+                if (eval(this.InitialRotationRange)) return true;
+                if (eval(this.NumSubtexturesX)) return true;
+                if (eval(this.NumSubtexturesY)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.BoxSize)) return true;
+                if (eval(this.ParticleDensity)) return true;
+                if (eval(this.ParticleTexture)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +479,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.GravityVelocity = eval(this.GravityVelocity);
+                obj.RotationVelocity = eval(this.RotationVelocity);
+                obj.ParticleSizeX = eval(this.ParticleSizeX);
+                obj.ParticleSizeY = eval(this.ParticleSizeY);
+                obj.CenterOffsetMin = eval(this.CenterOffsetMin);
+                obj.CenterOffsetMax = eval(this.CenterOffsetMax);
+                obj.InitialRotationRange = eval(this.InitialRotationRange);
+                obj.NumSubtexturesX = eval(this.NumSubtexturesX);
+                obj.NumSubtexturesY = eval(this.NumSubtexturesY);
+                obj.Type = eval(this.Type);
+                obj.BoxSize = eval(this.BoxSize);
+                obj.ParticleDensity = eval(this.ParticleDensity);
+                obj.ParticleTexture = eval(this.ParticleTexture);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +515,62 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.GravityVelocity ?? true)
+                    {
+                        fg.AppendItem(GravityVelocity, "GravityVelocity");
+                    }
+                    if (printMask?.RotationVelocity ?? true)
+                    {
+                        fg.AppendItem(RotationVelocity, "RotationVelocity");
+                    }
+                    if (printMask?.ParticleSizeX ?? true)
+                    {
+                        fg.AppendItem(ParticleSizeX, "ParticleSizeX");
+                    }
+                    if (printMask?.ParticleSizeY ?? true)
+                    {
+                        fg.AppendItem(ParticleSizeY, "ParticleSizeY");
+                    }
+                    if (printMask?.CenterOffsetMin ?? true)
+                    {
+                        fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                    }
+                    if (printMask?.CenterOffsetMax ?? true)
+                    {
+                        fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                    }
+                    if (printMask?.InitialRotationRange ?? true)
+                    {
+                        fg.AppendItem(InitialRotationRange, "InitialRotationRange");
+                    }
+                    if (printMask?.NumSubtexturesX ?? true)
+                    {
+                        fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                    }
+                    if (printMask?.NumSubtexturesY ?? true)
+                    {
+                        fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.BoxSize ?? true)
+                    {
+                        fg.AppendItem(BoxSize, "BoxSize");
+                    }
+                    if (printMask?.ParticleDensity ?? true)
+                    {
+                        fg.AppendItem(ParticleDensity, "ParticleDensity");
+                    }
+                    if (printMask?.ParticleTexture ?? true)
+                    {
+                        fg.AppendItem(ParticleTexture, "ParticleTexture");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +582,57 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? GravityVelocity;
+            public Exception? RotationVelocity;
+            public Exception? ParticleSizeX;
+            public Exception? ParticleSizeY;
+            public Exception? CenterOffsetMin;
+            public Exception? CenterOffsetMax;
+            public Exception? InitialRotationRange;
+            public Exception? NumSubtexturesX;
+            public Exception? NumSubtexturesY;
+            public Exception? Type;
+            public Exception? BoxSize;
+            public Exception? ParticleDensity;
+            public Exception? ParticleTexture;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        return GravityVelocity;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        return RotationVelocity;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        return ParticleSizeX;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        return ParticleSizeY;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        return CenterOffsetMin;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        return CenterOffsetMax;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                        return InitialRotationRange;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        return NumSubtexturesX;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        return NumSubtexturesY;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        return Type;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        return BoxSize;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        return ParticleDensity;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        return ParticleTexture;
+                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +643,48 @@ namespace Mutagen.Bethesda.Skyrim
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        this.GravityVelocity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        this.RotationVelocity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        this.ParticleSizeX = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        this.ParticleSizeY = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        this.CenterOffsetMin = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        this.CenterOffsetMax = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                        this.InitialRotationRange = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        this.NumSubtexturesX = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        this.NumSubtexturesY = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        this.BoxSize = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        this.ParticleDensity = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        this.ParticleTexture = ex;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +696,48 @@ namespace Mutagen.Bethesda.Skyrim
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                        this.GravityVelocity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                        this.RotationVelocity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                        this.ParticleSizeX = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                        this.ParticleSizeY = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                        this.CenterOffsetMin = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                        this.CenterOffsetMax = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                        this.InitialRotationRange = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                        this.NumSubtexturesX = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                        this.NumSubtexturesY = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.BoxSize:
+                        this.BoxSize = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                        this.ParticleDensity = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                        this.ParticleTexture = (Exception?)obj;
+                        break;
+                    case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +747,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (GravityVelocity != null) return true;
+                if (RotationVelocity != null) return true;
+                if (ParticleSizeX != null) return true;
+                if (ParticleSizeY != null) return true;
+                if (CenterOffsetMin != null) return true;
+                if (CenterOffsetMax != null) return true;
+                if (InitialRotationRange != null) return true;
+                if (NumSubtexturesX != null) return true;
+                if (NumSubtexturesY != null) return true;
+                if (Type != null) return true;
+                if (BoxSize != null) return true;
+                if (ParticleDensity != null) return true;
+                if (ParticleTexture != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +796,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(GravityVelocity, "GravityVelocity");
+                fg.AppendItem(RotationVelocity, "RotationVelocity");
+                fg.AppendItem(ParticleSizeX, "ParticleSizeX");
+                fg.AppendItem(ParticleSizeY, "ParticleSizeY");
+                fg.AppendItem(CenterOffsetMin, "CenterOffsetMin");
+                fg.AppendItem(CenterOffsetMax, "CenterOffsetMax");
+                fg.AppendItem(InitialRotationRange, "InitialRotationRange");
+                fg.AppendItem(NumSubtexturesX, "NumSubtexturesX");
+                fg.AppendItem(NumSubtexturesY, "NumSubtexturesY");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(BoxSize, "BoxSize");
+                fg.AppendItem(ParticleDensity, "ParticleDensity");
+                fg.AppendItem(ParticleTexture, "ParticleTexture");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +818,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.GravityVelocity = this.GravityVelocity.Combine(rhs.GravityVelocity);
+                ret.RotationVelocity = this.RotationVelocity.Combine(rhs.RotationVelocity);
+                ret.ParticleSizeX = this.ParticleSizeX.Combine(rhs.ParticleSizeX);
+                ret.ParticleSizeY = this.ParticleSizeY.Combine(rhs.ParticleSizeY);
+                ret.CenterOffsetMin = this.CenterOffsetMin.Combine(rhs.CenterOffsetMin);
+                ret.CenterOffsetMax = this.CenterOffsetMax.Combine(rhs.CenterOffsetMax);
+                ret.InitialRotationRange = this.InitialRotationRange.Combine(rhs.InitialRotationRange);
+                ret.NumSubtexturesX = this.NumSubtexturesX.Combine(rhs.NumSubtexturesX);
+                ret.NumSubtexturesY = this.NumSubtexturesY.Combine(rhs.NumSubtexturesY);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.BoxSize = this.BoxSize.Combine(rhs.BoxSize);
+                ret.ParticleDensity = this.ParticleDensity.Combine(rhs.ParticleDensity);
+                ret.ParticleTexture = this.ParticleTexture.Combine(rhs.ParticleTexture);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,14 +853,63 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool GravityVelocity;
+            public bool RotationVelocity;
+            public bool ParticleSizeX;
+            public bool ParticleSizeY;
+            public bool CenterOffsetMin;
+            public bool CenterOffsetMax;
+            public bool InitialRotationRange;
+            public bool NumSubtexturesX;
+            public bool NumSubtexturesY;
+            public bool Type;
+            public bool BoxSize;
+            public bool ParticleDensity;
+            public bool ParticleTexture;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.GravityVelocity = defaultOn;
+                this.RotationVelocity = defaultOn;
+                this.ParticleSizeX = defaultOn;
+                this.ParticleSizeY = defaultOn;
+                this.CenterOffsetMin = defaultOn;
+                this.CenterOffsetMax = defaultOn;
+                this.InitialRotationRange = defaultOn;
+                this.NumSubtexturesX = defaultOn;
+                this.NumSubtexturesY = defaultOn;
+                this.Type = defaultOn;
+                this.BoxSize = defaultOn;
+                this.ParticleDensity = defaultOn;
+                this.ParticleTexture = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((GravityVelocity, null));
+                ret.Add((RotationVelocity, null));
+                ret.Add((ParticleSizeX, null));
+                ret.Add((ParticleSizeY, null));
+                ret.Add((CenterOffsetMin, null));
+                ret.Add((CenterOffsetMax, null));
+                ret.Add((InitialRotationRange, null));
+                ret.Add((NumSubtexturesX, null));
+                ret.Add((NumSubtexturesY, null));
+                ret.Add((Type, null));
+                ret.Add((BoxSize, null));
+                ret.Add((ParticleDensity, null));
+                ret.Add((ParticleTexture, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
@@ -457,6 +932,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -519,6 +999,20 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IShaderParticleGeometryInternal>
     {
+        new Single GravityVelocity { get; set; }
+        new Single RotationVelocity { get; set; }
+        new Single ParticleSizeX { get; set; }
+        new Single ParticleSizeY { get; set; }
+        new Single CenterOffsetMin { get; set; }
+        new Single CenterOffsetMax { get; set; }
+        new Single InitialRotationRange { get; set; }
+        new UInt32 NumSubtexturesX { get; set; }
+        new UInt32 NumSubtexturesY { get; set; }
+        new ShaderParticleGeometry.TypeEnum Type { get; set; }
+        new UInt32 BoxSize { get; set; }
+        new Single ParticleDensity { get; set; }
+        new String? ParticleTexture { get; set; }
+        new ShaderParticleGeometry.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IShaderParticleGeometryInternal :
@@ -535,6 +1029,20 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
+        Single GravityVelocity { get; }
+        Single RotationVelocity { get; }
+        Single ParticleSizeX { get; }
+        Single ParticleSizeY { get; }
+        Single CenterOffsetMin { get; }
+        Single CenterOffsetMax { get; }
+        Single InitialRotationRange { get; }
+        UInt32 NumSubtexturesX { get; }
+        UInt32 NumSubtexturesY { get; }
+        ShaderParticleGeometry.TypeEnum Type { get; }
+        UInt32 BoxSize { get; }
+        Single ParticleDensity { get; }
+        String? ParticleTexture { get; }
+        ShaderParticleGeometry.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -835,6 +1343,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        GravityVelocity = 6,
+        RotationVelocity = 7,
+        ParticleSizeX = 8,
+        ParticleSizeY = 9,
+        CenterOffsetMin = 10,
+        CenterOffsetMax = 11,
+        InitialRotationRange = 12,
+        NumSubtexturesX = 13,
+        NumSubtexturesY = 14,
+        Type = 15,
+        BoxSize = 16,
+        ParticleDensity = 17,
+        ParticleTexture = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -852,9 +1374,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "3221c39f-42d8-4126-82c3-c4e33a1d65be";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -884,6 +1406,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "GRAVITYVELOCITY":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.GravityVelocity;
+                case "ROTATIONVELOCITY":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.RotationVelocity;
+                case "PARTICLESIZEX":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.ParticleSizeX;
+                case "PARTICLESIZEY":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.ParticleSizeY;
+                case "CENTEROFFSETMIN":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.CenterOffsetMin;
+                case "CENTEROFFSETMAX":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.CenterOffsetMax;
+                case "INITIALROTATIONRANGE":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.InitialRotationRange;
+                case "NUMSUBTEXTURESX":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.NumSubtexturesX;
+                case "NUMSUBTEXTURESY":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.NumSubtexturesY;
+                case "TYPE":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.Type;
+                case "BOXSIZE":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.BoxSize;
+                case "PARTICLEDENSITY":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.ParticleDensity;
+                case "PARTICLETEXTURE":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.ParticleTexture;
+                case "DATADATATYPESTATE":
+                    return (ushort)ShaderParticleGeometry_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -894,6 +1444,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                case ShaderParticleGeometry_FieldIndex.Type:
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -904,6 +1469,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                case ShaderParticleGeometry_FieldIndex.Type:
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -914,6 +1494,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                case ShaderParticleGeometry_FieldIndex.Type:
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -924,6 +1519,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                    return "GravityVelocity";
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                    return "RotationVelocity";
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                    return "ParticleSizeX";
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                    return "ParticleSizeY";
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                    return "CenterOffsetMin";
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                    return "CenterOffsetMax";
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                    return "InitialRotationRange";
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                    return "NumSubtexturesX";
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                    return "NumSubtexturesY";
+                case ShaderParticleGeometry_FieldIndex.Type:
+                    return "Type";
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                    return "BoxSize";
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                    return "ParticleDensity";
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                    return "ParticleTexture";
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -934,6 +1557,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                case ShaderParticleGeometry_FieldIndex.Type:
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -944,6 +1582,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                case ShaderParticleGeometry_FieldIndex.Type:
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -954,6 +1607,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
             switch (enu)
             {
+                case ShaderParticleGeometry_FieldIndex.GravityVelocity:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.RotationVelocity:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeX:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.ParticleSizeY:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMin:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.CenterOffsetMax:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.InitialRotationRange:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesX:
+                    return typeof(UInt32);
+                case ShaderParticleGeometry_FieldIndex.NumSubtexturesY:
+                    return typeof(UInt32);
+                case ShaderParticleGeometry_FieldIndex.Type:
+                    return typeof(ShaderParticleGeometry.TypeEnum);
+                case ShaderParticleGeometry_FieldIndex.BoxSize:
+                    return typeof(UInt32);
+                case ShaderParticleGeometry_FieldIndex.ParticleDensity:
+                    return typeof(Single);
+                case ShaderParticleGeometry_FieldIndex.ParticleTexture:
+                    return typeof(String);
+                case ShaderParticleGeometry_FieldIndex.DATADataTypeState:
+                    return typeof(ShaderParticleGeometry.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -961,9 +1642,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ShaderParticleGeometryXmlWriteTranslation);
         public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType TriggeringRecordType = SPGD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1006,6 +1689,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IShaderParticleGeometryInternal item)
         {
             ClearPartial();
+            item.GravityVelocity = default;
+            item.RotationVelocity = default;
+            item.ParticleSizeX = default;
+            item.ParticleSizeY = default;
+            item.CenterOffsetMin = default;
+            item.CenterOffsetMax = default;
+            item.InitialRotationRange = default;
+            item.NumSubtexturesX = default;
+            item.NumSubtexturesY = default;
+            item.Type = default;
+            item.BoxSize = default;
+            item.ParticleDensity = default;
+            item.ParticleTexture = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1048,6 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -1108,6 +1806,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IShaderParticleGeometryInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.GravityVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotationVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ParticleSizeX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ParticleSizeY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.CenterOffsetMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.CenterOffsetMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.InitialRotationRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NumSubtexturesX = dataFrame.ReadUInt32();
+                    item.NumSubtexturesY = dataFrame.ReadUInt32();
+                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.Type);
+                    }
+                    item.BoxSize = dataFrame.ReadUInt32();
+                    item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
         
         public virtual void CopyInFromBinary(
@@ -1174,6 +1923,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.GravityVelocity = item.GravityVelocity.EqualsWithin(rhs.GravityVelocity);
+            ret.RotationVelocity = item.RotationVelocity.EqualsWithin(rhs.RotationVelocity);
+            ret.ParticleSizeX = item.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX);
+            ret.ParticleSizeY = item.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY);
+            ret.CenterOffsetMin = item.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin);
+            ret.CenterOffsetMax = item.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax);
+            ret.InitialRotationRange = item.InitialRotationRange.EqualsWithin(rhs.InitialRotationRange);
+            ret.NumSubtexturesX = item.NumSubtexturesX == rhs.NumSubtexturesX;
+            ret.NumSubtexturesY = item.NumSubtexturesY == rhs.NumSubtexturesY;
+            ret.Type = item.Type == rhs.Type;
+            ret.BoxSize = item.BoxSize == rhs.BoxSize;
+            ret.ParticleDensity = item.ParticleDensity.EqualsWithin(rhs.ParticleDensity);
+            ret.ParticleTexture = string.Equals(item.ParticleTexture, rhs.ParticleTexture);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1225,12 +1988,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.GravityVelocity ?? true)
+            {
+                fg.AppendItem(item.GravityVelocity, "GravityVelocity");
+            }
+            if (printMask?.RotationVelocity ?? true)
+            {
+                fg.AppendItem(item.RotationVelocity, "RotationVelocity");
+            }
+            if (printMask?.ParticleSizeX ?? true)
+            {
+                fg.AppendItem(item.ParticleSizeX, "ParticleSizeX");
+            }
+            if (printMask?.ParticleSizeY ?? true)
+            {
+                fg.AppendItem(item.ParticleSizeY, "ParticleSizeY");
+            }
+            if (printMask?.CenterOffsetMin ?? true)
+            {
+                fg.AppendItem(item.CenterOffsetMin, "CenterOffsetMin");
+            }
+            if (printMask?.CenterOffsetMax ?? true)
+            {
+                fg.AppendItem(item.CenterOffsetMax, "CenterOffsetMax");
+            }
+            if (printMask?.InitialRotationRange ?? true)
+            {
+                fg.AppendItem(item.InitialRotationRange, "InitialRotationRange");
+            }
+            if (printMask?.NumSubtexturesX ?? true)
+            {
+                fg.AppendItem(item.NumSubtexturesX, "NumSubtexturesX");
+            }
+            if (printMask?.NumSubtexturesY ?? true)
+            {
+                fg.AppendItem(item.NumSubtexturesY, "NumSubtexturesY");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.BoxSize ?? true)
+            {
+                fg.AppendItem(item.BoxSize, "BoxSize");
+            }
+            if (printMask?.ParticleDensity ?? true)
+            {
+                fg.AppendItem(item.ParticleDensity, "ParticleDensity");
+            }
+            if ((printMask?.ParticleTexture ?? true)
+                && item.ParticleTexture.TryGet(out var ParticleTextureItem))
+            {
+                fg.AppendItem(ParticleTextureItem, "ParticleTexture");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IShaderParticleGeometryGetter item,
             ShaderParticleGeometry.Mask<bool?> checkMask)
         {
+            if (checkMask.ParticleTexture.HasValue && checkMask.ParticleTexture.Value != (item.ParticleTexture != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1240,6 +2061,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShaderParticleGeometryGetter item,
             ShaderParticleGeometry.Mask<bool> mask)
         {
+            mask.GravityVelocity = true;
+            mask.RotationVelocity = true;
+            mask.ParticleSizeX = true;
+            mask.ParticleSizeY = true;
+            mask.CenterOffsetMin = true;
+            mask.CenterOffsetMax = true;
+            mask.InitialRotationRange = true;
+            mask.NumSubtexturesX = true;
+            mask.NumSubtexturesY = true;
+            mask.Type = true;
+            mask.BoxSize = true;
+            mask.ParticleDensity = true;
+            mask.ParticleTexture = (item.ParticleTexture != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1291,6 +2126,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
+            if (!lhs.RotationVelocity.EqualsWithin(rhs.RotationVelocity)) return false;
+            if (!lhs.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX)) return false;
+            if (!lhs.ParticleSizeY.EqualsWithin(rhs.ParticleSizeY)) return false;
+            if (!lhs.CenterOffsetMin.EqualsWithin(rhs.CenterOffsetMin)) return false;
+            if (!lhs.CenterOffsetMax.EqualsWithin(rhs.CenterOffsetMax)) return false;
+            if (!lhs.InitialRotationRange.EqualsWithin(rhs.InitialRotationRange)) return false;
+            if (lhs.NumSubtexturesX != rhs.NumSubtexturesX) return false;
+            if (lhs.NumSubtexturesY != rhs.NumSubtexturesY) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.BoxSize != rhs.BoxSize) return false;
+            if (!lhs.ParticleDensity.EqualsWithin(rhs.ParticleDensity)) return false;
+            if (!string.Equals(lhs.ParticleTexture, rhs.ParticleTexture)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1315,6 +2164,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IShaderParticleGeometryGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.GravityVelocity);
+            hash.Add(item.RotationVelocity);
+            hash.Add(item.ParticleSizeX);
+            hash.Add(item.ParticleSizeY);
+            hash.Add(item.CenterOffsetMin);
+            hash.Add(item.CenterOffsetMax);
+            hash.Add(item.InitialRotationRange);
+            hash.Add(item.NumSubtexturesX);
+            hash.Add(item.NumSubtexturesY);
+            hash.Add(item.Type);
+            hash.Add(item.BoxSize);
+            hash.Add(item.ParticleDensity);
+            if (item.ParticleTexture.TryGet(out var ParticleTextureitem))
+            {
+                hash.Add(ParticleTextureitem);
+            }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1391,6 +2257,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            {
+                item.GravityVelocity = rhs.GravityVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            {
+                item.RotationVelocity = rhs.RotationVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            {
+                item.ParticleSizeX = rhs.ParticleSizeX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            {
+                item.ParticleSizeY = rhs.ParticleSizeY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            {
+                item.CenterOffsetMin = rhs.CenterOffsetMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            {
+                item.CenterOffsetMax = rhs.CenterOffsetMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange) ?? true))
+            {
+                item.InitialRotationRange = rhs.InitialRotationRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            {
+                item.NumSubtexturesX = rhs.NumSubtexturesX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            {
+                item.NumSubtexturesY = rhs.NumSubtexturesY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+            {
+                item.BoxSize = rhs.BoxSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+            {
+                item.ParticleDensity = rhs.ParticleDensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            {
+                item.ParticleTexture = rhs.ParticleTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1533,6 +2455,140 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.GravityVelocity),
+                    item: item.GravityVelocity,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.GravityVelocity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RotationVelocity),
+                    item: item.RotationVelocity,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.RotationVelocity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParticleSizeX),
+                    item: item.ParticleSizeX,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleSizeX,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParticleSizeY),
+                    item: item.ParticleSizeY,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleSizeY,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CenterOffsetMin),
+                    item: item.CenterOffsetMin,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CenterOffsetMax),
+                    item: item.CenterOffsetMax,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.InitialRotationRange),
+                    item: item.InitialRotationRange,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.InitialRotationRange,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumSubtexturesX),
+                    item: item.NumSubtexturesX,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumSubtexturesY),
+                    item: item.NumSubtexturesY,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
+            if (!item.DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BoxSize),
+                        item: item.BoxSize,
+                        fieldIndex: (int)ShaderParticleGeometry_FieldIndex.BoxSize,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ParticleDensity),
+                        item: item.ParticleDensity,
+                        fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleDensity,
+                        errorMask: errorMask);
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasDATADataType"));
+            }
+            if ((item.ParticleTexture != null)
+                && (translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParticleTexture),
+                    item: item.ParticleTexture,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleTexture,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ShaderParticleGeometry.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1640,6 +2696,259 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "GravityVelocity":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.GravityVelocity);
+                    try
+                    {
+                        item.GravityVelocity = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RotationVelocity":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.RotationVelocity);
+                    try
+                    {
+                        item.RotationVelocity = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ParticleSizeX":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX);
+                    try
+                    {
+                        item.ParticleSizeX = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ParticleSizeY":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY);
+                    try
+                    {
+                        item.ParticleSizeY = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CenterOffsetMin":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin);
+                    try
+                    {
+                        item.CenterOffsetMin = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CenterOffsetMax":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax);
+                    try
+                    {
+                        item.CenterOffsetMax = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "InitialRotationRange":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange);
+                    try
+                    {
+                        item.InitialRotationRange = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumSubtexturesX":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX);
+                    try
+                    {
+                        item.NumSubtexturesX = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumSubtexturesY":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY);
+                    try
+                    {
+                        item.NumSubtexturesY = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.Type);
+                    try
+                    {
+                        item.Type = EnumXmlTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BoxSize":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.BoxSize);
+                    try
+                    {
+                        item.BoxSize = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~ShaderParticleGeometry.DATADataType.Break0;
+                    break;
+                case "ParticleDensity":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                    try
+                    {
+                        item.ParticleDensity = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ParticleTexture":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                    try
+                    {
+                        item.ParticleTexture = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<ShaderParticleGeometry.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1726,6 +3035,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ShaderParticleGeometryBinaryWriteTranslation Instance = new ShaderParticleGeometryBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IShaderParticleGeometryGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IShaderParticleGeometryGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.DATA_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.GravityVelocity);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RotationVelocity);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleSizeX);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleSizeY);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CenterOffsetMin);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CenterOffsetMax);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.InitialRotationRange);
+                writer.Write(item.NumSubtexturesX);
+                writer.Write(item.NumSubtexturesY);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 4);
+                if (!item.DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0))
+                {
+                    writer.Write(item.BoxSize);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ParticleDensity);
+                }
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParticleTexture,
+                header: recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IShaderParticleGeometryGetter item,
@@ -1736,10 +3107,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.SPGD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1846,6 +3217,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        private int? _DATALocation;
+        public ShaderParticleGeometry.DATADataType DATADataTypeState { get; private set; }
+        #region GravityVelocity
+        private int _GravityVelocityLocation => _DATALocation!.Value + 0x0;
+        private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityVelocityLocation, 4)) : default;
+        #endregion
+        #region RotationVelocity
+        private int _RotationVelocityLocation => _DATALocation!.Value + 0x4;
+        private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_RotationVelocityLocation, 4)) : default;
+        #endregion
+        #region ParticleSizeX
+        private int _ParticleSizeXLocation => _DATALocation!.Value + 0x8;
+        private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeXLocation, 4)) : default;
+        #endregion
+        #region ParticleSizeY
+        private int _ParticleSizeYLocation => _DATALocation!.Value + 0xC;
+        private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeYLocation, 4)) : default;
+        #endregion
+        #region CenterOffsetMin
+        private int _CenterOffsetMinLocation => _DATALocation!.Value + 0x10;
+        private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMinLocation, 4)) : default;
+        #endregion
+        #region CenterOffsetMax
+        private int _CenterOffsetMaxLocation => _DATALocation!.Value + 0x14;
+        private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMaxLocation, 4)) : default;
+        #endregion
+        #region InitialRotationRange
+        private int _InitialRotationRangeLocation => _DATALocation!.Value + 0x18;
+        private bool _InitialRotationRange_IsSet => _DATALocation.HasValue;
+        public Single InitialRotationRange => _InitialRotationRange_IsSet ? SpanExt.GetFloat(_data.Slice(_InitialRotationRangeLocation, 4)) : default;
+        #endregion
+        #region NumSubtexturesX
+        private int _NumSubtexturesXLocation => _DATALocation!.Value + 0x1C;
+        private bool _NumSubtexturesX_IsSet => _DATALocation.HasValue;
+        public UInt32 NumSubtexturesX => _NumSubtexturesX_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_NumSubtexturesXLocation, 4)) : default;
+        #endregion
+        #region NumSubtexturesY
+        private int _NumSubtexturesYLocation => _DATALocation!.Value + 0x20;
+        private bool _NumSubtexturesY_IsSet => _DATALocation.HasValue;
+        public UInt32 NumSubtexturesY => _NumSubtexturesY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_NumSubtexturesYLocation, 4)) : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _DATALocation!.Value + 0x24;
+        private bool _Type_IsSet => _DATALocation.HasValue;
+        public ShaderParticleGeometry.TypeEnum Type => _Type_IsSet ? (ShaderParticleGeometry.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        #endregion
+        #region BoxSize
+        private int _BoxSizeLocation => _DATALocation!.Value + 0x28;
+        private bool _BoxSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
+        public UInt32 BoxSize => _BoxSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BoxSizeLocation, 4)) : default;
+        #endregion
+        #region ParticleDensity
+        private int _ParticleDensityLocation => _DATALocation!.Value + 0x2C;
+        private bool _ParticleDensity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
+        public Single ParticleDensity => _ParticleDensity_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleDensityLocation, 4)) : default;
+        #endregion
+        #region ParticleTexture
+        private int? _ParticleTextureLocation;
+        public String? ParticleTexture => _ParticleTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleTextureLocation.Value, _package.Meta)) : default(string?);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1896,6 +3333,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x28)
+                    {
+                        this.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _ParticleTextureLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

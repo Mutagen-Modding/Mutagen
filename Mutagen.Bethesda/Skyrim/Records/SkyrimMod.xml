@@ -52,6 +52,7 @@
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="Weathers" refName="Weather" />
       <Group name="Climates" refName="Climate" />
+      <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
     </Fields>
   </Object>
 </Loqui>

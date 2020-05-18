@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             _LeveledItems_Object = new Group<LeveledItem>(this);
             _Weathers_Object = new Group<Weather>(this);
             _Climates_Object = new Group<Climate>(this);
+            _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -447,6 +448,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IClimateGetter> ISkyrimModGetter.Climates => _Climates_Object;
         #endregion
+        #region ShaderParticleGeometries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ShaderParticleGeometry> _ShaderParticleGeometries_Object;
+        public Group<ShaderParticleGeometry> ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IShaderParticleGeometryGetter> ISkyrimModGetter.ShaderParticleGeometries => _ShaderParticleGeometries_Object;
+        #endregion
 
         #region To String
 
@@ -667,6 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -719,7 +728,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SoulGems,
                 TItem LeveledItems,
                 TItem Weathers,
-                TItem Climates)
+                TItem Climates,
+                TItem ShaderParticleGeometries)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -771,6 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledItems, new Group.Mask<TItem>(LeveledItems));
                 this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(Weathers, new Group.Mask<TItem>(Weathers));
                 this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(Climates, new Group.Mask<TItem>(Climates));
+                this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(ShaderParticleGeometries, new Group.Mask<TItem>(ShaderParticleGeometries));
             }
 
             #pragma warning disable CS8618
@@ -832,6 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? LeveledItems { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Weathers { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
             #endregion
 
             #region Equals
@@ -894,6 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 if (!object.Equals(this.Climates, rhs.Climates)) return false;
+                if (!object.Equals(this.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -949,6 +962,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LeveledItems);
                 hash.Add(this.Weathers);
                 hash.Add(this.Climates);
+                hash.Add(this.ShaderParticleGeometries);
                 return hash.ToHashCode();
             }
 
@@ -1207,6 +1221,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Climates.Overall)) return false;
                     if (this.Climates.Specific != null && !this.Climates.Specific.All(eval)) return false;
                 }
+                if (ShaderParticleGeometries != null)
+                {
+                    if (!eval(this.ShaderParticleGeometries.Overall)) return false;
+                    if (this.ShaderParticleGeometries.Specific != null && !this.ShaderParticleGeometries.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1464,6 +1483,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Climates.Overall)) return true;
                     if (this.Climates.Specific != null && this.Climates.Specific.Any(eval)) return true;
                 }
+                if (ShaderParticleGeometries != null)
+                {
+                    if (eval(this.ShaderParticleGeometries.Overall)) return true;
+                    if (this.ShaderParticleGeometries.Specific != null && this.ShaderParticleGeometries.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1528,6 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
                 obj.Climates = this.Climates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1750,6 +1775,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Climates?.ToString(fg);
                     }
+                    if (printMask?.ShaderParticleGeometries?.Overall ?? true)
+                    {
+                        ShaderParticleGeometries?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1825,6 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             public MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>? Weathers;
             public MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
             #endregion
 
             #region IErrorMask
@@ -1933,6 +1963,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Weathers;
                     case SkyrimMod_FieldIndex.Climates:
                         return Climates;
+                    case SkyrimMod_FieldIndex.ShaderParticleGeometries:
+                        return ShaderParticleGeometries;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2092,6 +2124,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Climates:
                         this.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ShaderParticleGeometries:
+                        this.ShaderParticleGeometries = new MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2253,6 +2288,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Climates:
                         this.Climates = (MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.ShaderParticleGeometries:
+                        this.ShaderParticleGeometries = (MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2311,6 +2349,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LeveledItems != null) return true;
                 if (Weathers != null) return true;
                 if (Climates != null) return true;
+                if (ShaderParticleGeometries != null) return true;
                 return false;
             }
             #endregion
@@ -2395,6 +2434,7 @@ namespace Mutagen.Bethesda.Skyrim
                 LeveledItems?.ToString(fg);
                 Weathers?.ToString(fg);
                 Climates?.ToString(fg);
+                ShaderParticleGeometries?.ToString(fg);
             }
             #endregion
 
@@ -2453,6 +2493,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
                 ret.Climates = this.Climates.Combine(rhs.Climates, (l, r) => l.Combine(r));
+                ret.ShaderParticleGeometries = this.ShaderParticleGeometries.Combine(rhs.ShaderParticleGeometries, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2524,6 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?> LeveledItems;
             public MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?> Weathers;
             public MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?> Climates;
+            public MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?> ShaderParticleGeometries;
             #endregion
 
             #region Ctors
@@ -2579,6 +2621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LeveledItems = new MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?>(defaultOn, null);
                 this.Weathers = new MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?>(defaultOn, null);
                 this.Climates = new MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?>(defaultOn, null);
+                this.ShaderParticleGeometries = new MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2644,6 +2687,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LeveledItems?.Overall ?? true, LeveledItems?.Specific?.GetCrystal()));
                 ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
                 ret.Add((Climates?.Overall ?? true, Climates?.Specific?.GetCrystal()));
+                ret.Add((ShaderParticleGeometries?.Overall ?? true, ShaderParticleGeometries?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2707,6 +2751,7 @@ namespace Mutagen.Bethesda.Skyrim
             _LeveledItems_Object = new Group<LeveledItem>(this);
             _Weathers_Object = new Group<Weather>(this);
             _Climates_Object = new Group<Climate>(this);
+            _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2907,6 +2952,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Climates ?? true)
             {
                 this.Climates.RecordCache.Set(rhsMod.Climates.RecordCache.Items);
+            }
+            if (mask?.ShaderParticleGeometries ?? true)
+            {
+                this.ShaderParticleGeometries.RecordCache.Set(rhsMod.ShaderParticleGeometries.RecordCache.Items);
             }
         }
 
@@ -3258,6 +3307,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Climate>());
             }
+            if (mask?.ShaderParticleGeometries ?? true)
+            {
+                this.ShaderParticleGeometries.RecordCache.Set(
+                    rhs.ShaderParticleGeometries.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ShaderParticleGeometry>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3326,6 +3382,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += LeveledItems.RecordCache.Count > 0 ? 1 : 0;
             count += Weathers.RecordCache.Count > 0 ? 1 : 0;
             count += Climates.RecordCache.Count > 0 ? 1 : 0;
+            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3573,6 +3630,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<LeveledItem> LeveledItems { get; }
         new Group<Weather> Weathers { get; }
         new Group<Climate> Climates { get; }
+        new Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3640,6 +3698,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<ILeveledItemGetter> LeveledItems { get; }
         IGroupGetter<IWeatherGetter> Weathers { get; }
         IGroupGetter<IClimateGetter> Climates { get; }
+        IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
 
     }
 
@@ -4129,6 +4188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LeveledItems = 47,
         Weathers = 48,
         Climates = 49,
+        ShaderParticleGeometries = 50,
     }
     #endregion
 
@@ -4146,9 +4206,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 50;
+        public const ushort AdditionalFieldCount = 51;
 
-        public const ushort FieldCount = 50;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4278,6 +4338,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Weathers;
                 case "CLIMATES":
                     return (ushort)SkyrimMod_FieldIndex.Climates;
+                case "SHADERPARTICLEGEOMETRIES":
+                    return (ushort)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 default:
                     return null;
             }
@@ -4338,6 +4400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LeveledItems:
                 case SkyrimMod_FieldIndex.Weathers:
                 case SkyrimMod_FieldIndex.Climates:
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4399,6 +4462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LeveledItems:
                 case SkyrimMod_FieldIndex.Weathers:
                 case SkyrimMod_FieldIndex.Climates:
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4460,6 +4524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LeveledItems:
                 case SkyrimMod_FieldIndex.Weathers:
                 case SkyrimMod_FieldIndex.Climates:
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4571,6 +4636,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Weathers";
                 case SkyrimMod_FieldIndex.Climates:
                     return "Climates";
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
+                    return "ShaderParticleGeometries";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4631,6 +4698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LeveledItems:
                 case SkyrimMod_FieldIndex.Weathers:
                 case SkyrimMod_FieldIndex.Climates:
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4693,6 +4761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LeveledItems:
                 case SkyrimMod_FieldIndex.Weathers:
                 case SkyrimMod_FieldIndex.Climates:
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4804,6 +4873,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Weather>);
                 case SkyrimMod_FieldIndex.Climates:
                     return typeof(Group<Climate>);
+                case SkyrimMod_FieldIndex.ShaderParticleGeometries:
+                    return typeof(Group<ShaderParticleGeometry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4860,9 +4931,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
+        public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 50;
+        public const int NumTypedFields = 51;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4954,6 +5026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LeveledItems.Clear();
             item.Weathers.Clear();
             item.Climates.Clear();
+            item.ShaderParticleGeometries.Clear();
         }
         
         #region Xml Translation
@@ -5755,6 +5828,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
                 }
+                case 0x44475053: // SPGD
+                {
+                    if (importMask?.ShaderParticleGeometries ?? true)
+                    {
+                        item.ShaderParticleGeometries.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -5856,6 +5943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
             ret.Climates = MaskItemExt.Factory(item.Climates.GetEqualsMask(rhs.Climates, include), include);
+            ret.ShaderParticleGeometries = MaskItemExt.Factory(item.ShaderParticleGeometries.GetEqualsMask(rhs.ShaderParticleGeometries, include), include);
         }
         
         public string ToString(
@@ -6102,6 +6190,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Climates?.ToString(fg, "Climates");
             }
+            if (printMask?.ShaderParticleGeometries?.Overall ?? true)
+            {
+                item.ShaderParticleGeometries?.ToString(fg, "ShaderParticleGeometries");
+            }
         }
         
         public bool HasBeenSet(
@@ -6165,6 +6257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.LeveledItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
             mask.Weathers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
             mask.Climates = new MaskItem<bool, Group.Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
+            mask.ShaderParticleGeometries = new MaskItem<bool, Group.Mask<bool>?>(true, item.ShaderParticleGeometries?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6224,6 +6317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
             if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
             if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
+            if (!object.Equals(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
             return true;
         }
         
@@ -6280,6 +6374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LeveledItems);
             hash.Add(item.Weathers);
             hash.Add(item.Climates);
+            hash.Add(item.ShaderParticleGeometries);
             return hash.ToHashCode();
         }
         
@@ -6542,6 +6637,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimate":
                 case "IClimateInternal":
                     return obj.Climates.RecordCache;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    return obj.ShaderParticleGeometries.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -6558,7 +6658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[49];
+            Stream[] outputStreams = new Stream[50];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -6609,6 +6709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6999,6 +7100,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.ShaderParticleGeometries is ILinkedFormKeyContainer ShaderParticleGeometrieslinkCont)
+            {
+                foreach (var item in ShaderParticleGeometrieslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7198,6 +7306,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Climates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7656,6 +7768,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimate":
                 case "IClimateInternal":
                     foreach (var item in obj.Climates.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ShaderParticleGeometry":
+                case "IShaderParticleGeometryGetter":
+                case "IShaderParticleGeometry":
+                case "IShaderParticleGeometryInternal":
+                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -8679,6 +8800,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ShaderParticleGeometries) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                try
+                {
+                    item.ShaderParticleGeometries.DeepCopyIn(
+                        rhs: rhs.ShaderParticleGeometries,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ShaderParticleGeometries));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9317,6 +9458,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Climates,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Climates));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ShaderParticleGeometries) ?? true))
+            {
+                var ShaderParticleGeometriesItem = item.ShaderParticleGeometries;
+                ((GroupXmlWriteTranslation)((IXmlItem)ShaderParticleGeometriesItem).XmlWriteTranslator).Write<IShaderParticleGeometryGetter>(
+                    item: ShaderParticleGeometriesItem,
+                    node: node,
+                    name: nameof(item.ShaderParticleGeometries),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ShaderParticleGeometries,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ShaderParticleGeometries));
             }
         }
 
@@ -10355,6 +10507,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "ShaderParticleGeometries":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                    try
+                    {
+                        item.ShaderParticleGeometries.CopyInFromXml<ShaderParticleGeometry>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -10573,6 +10744,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool LeveledItems;
         public bool Weathers;
         public bool Climates;
+        public bool ShaderParticleGeometries;
         public GroupMask()
         {
         }
@@ -10627,6 +10799,7 @@ namespace Mutagen.Bethesda.Skyrim
             LeveledItems = defaultValue;
             Weathers = defaultValue;
             Climates = defaultValue;
+            ShaderParticleGeometries = defaultValue;
         }
     }
 
@@ -11195,6 +11368,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.ShaderParticleGeometries ?? true)
+            {
+                var ShaderParticleGeometriesItem = item.ShaderParticleGeometries;
+                if (ShaderParticleGeometriesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ShaderParticleGeometriesItem).BinaryWriteTranslator).Write<IShaderParticleGeometryGetter>(
+                        item: ShaderParticleGeometriesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -11634,6 +11818,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IClimateGetter>? _Climates => _ClimatesLocation.HasValue ? GroupBinaryOverlay<IClimateGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ClimatesLocation!.Value.Min, _ClimatesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IClimateGetter> Climates => _Climates ?? new Group<Climate>(this);
         #endregion
+        #region ShaderParticleGeometries
+        private RangeInt64? _ShaderParticleGeometriesLocation;
+        private IGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocation.HasValue ? GroupBinaryOverlay<IShaderParticleGeometryGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ShaderParticleGeometriesLocation!.Value.Min, _ShaderParticleGeometriesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new Group<ShaderParticleGeometry>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -11967,6 +12156,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                }
+                case 0x44475053: // SPGD
+                {
+                    _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);
