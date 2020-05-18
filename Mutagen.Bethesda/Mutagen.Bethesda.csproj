@@ -223,6 +223,9 @@
     <Compile Include="Skyrim\Records\Major Records\Tree.cs">
       <DependentUpon>Tree.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VisualEffect.cs">
+      <DependentUpon>VisualEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
