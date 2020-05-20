@@ -1030,6 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHarvestable,
         IModeled,
         IObjectBounded,
+        IRegionTarget,
         ILoquiObjectSetter<ITreeInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1064,6 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHarvestableGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IRegionTargetGetter,
         ILoquiObject<ITreeGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

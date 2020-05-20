@@ -1032,6 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IClimate :
         IClimateGetter,
         ISkyrimMajorRecord,
+        IModeled,
         ILoquiObjectSetter<IClimateInternal>
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
@@ -1057,6 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClimateGetter :
         ISkyrimMajorRecordGetter,
+        IModeledGetter,
         ILoquiObject<IClimateGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

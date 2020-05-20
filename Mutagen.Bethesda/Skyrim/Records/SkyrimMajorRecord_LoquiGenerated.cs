@@ -1102,6 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
+        public static readonly RecordType MUSC_HEADER = new RecordType("MUSC");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -1127,6 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
+        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
@@ -1192,6 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         MISC_HEADER,
                         MSTT_HEADER,
                         MOVT_HEADER,
+                        MUSC_HEADER,
                         NPC__HEADER,
                         ENCH_HEADER,
                         OTFT_HEADER,
@@ -1217,6 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         VOLI_HEADER,
                         WEAP_HEADER,
                         WTHR_HEADER,
+                        WRLD_HEADER,
                         LVSP_HEADER,
                         SHOU_HEADER,
                         SPEL_HEADER

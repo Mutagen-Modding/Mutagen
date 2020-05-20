@@ -54,6 +54,7 @@
       <Group name="Climates" refName="Climate" />
       <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
       <Group name="VisualEffects" refName="VisualEffect" />
+      <Group name="Regions" refName="Region" />
     </Fields>
   </Object>
 </Loqui>

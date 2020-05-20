@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (!recordType.Equals(RDSD) && !recordType.Equals(RDMD)) return false;
                     break;
                 default:
-                    break;
+                    return false;
             }
             return true;
         }
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Grasses = RegionGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Sound:
-                    var nextRec = frame.GetSubrecord(offset: len);
-                    if (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD))
+                    if (frame.Reader.TryGetSubrecord(out var nextRec, offset: len)
+                        && (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD)))
                     {
                         len += nextRec.TotalLength;
                     }

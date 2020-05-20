@@ -80,6 +80,7 @@
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
+    <Compile Include="Skyrim\Interfaces\IRegionObject.cs" />
     <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
     <Compile Include="Skyrim\Interfaces\ISound.cs" />
     <Compile Include="Skyrim\Interfaces\IWeightValue.cs" />
@@ -199,6 +200,21 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Projectile.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Region.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionData.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionDataObject.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionObject.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionSound.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
@@ -1863,8 +1879,23 @@
     <Compile Include="Skyrim\Records\Major Records\Climate_LoquiGenerated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\WeatherType_LoquiGenerated.cs">
-      <DependentUpon>Climate.xml</DependentUpon>
+    <Compile Include="Skyrim\Records\Common Subrecords\WeatherType_LoquiGenerated.cs">
+      <DependentUpon>WeatherType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Music_LoquiGenerated.cs">
+      <DependentUpon>Music.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionArea_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionData_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Worldspace_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionSound_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Common Subrecords\WeatherType_LoquiGenerated.cs">
       <DependentUpon>WeatherType.xml</DependentUpon>
@@ -1897,6 +1928,33 @@
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\RegionMap_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionDataHeader_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionSounds_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionObjects_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionObject_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionWeather_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionGrasses_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionGrass_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionMap_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RegionLand_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
   </ItemGroup>

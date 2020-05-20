@@ -23,6 +23,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessRaces(stream, formID, recType, loc);
             ProcessFurniture(stream, formID, recType, loc);
             ProcessNpcs(stream, formID, recType, loc);
+            ProcessRegions(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -175,6 +176,48 @@ namespace Mutagen.Bethesda.Tests
                 {
                     ProcessZeroFloat(stream);
                 }
+            }
+        }
+
+        private void ProcessRegions(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Region_Registration.TriggeringRecordType.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData, Region_Registration.RDAT_HEADER, navigateToContent: false);
+            if (rdat == null) return;
+
+            // Order RDATs by index
+            SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+            List<uint> raw = new List<uint>();
+            while (rdat != null)
+            {
+                var rdatHeader = stream.MetaData.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
+                var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
+                var nextRdat = UtilityTranslation.FindFirstSubrecord(
+                    majorFrame.Content, 
+                    stream.MetaData,
+                    Region_Registration.RDAT_HEADER, 
+                    navigateToContent: false,
+                    offset: rdat.Value + rdatHeader.Header.TotalLength);
+                rdats[index] =
+                    new RangeInt64(
+                        loc.Min + majorFrame.Header.HeaderLength + rdat.Value,
+                        nextRdat == null ? loc.Max : nextRdat.Value - 1 + loc.Min + majorFrame.Header.HeaderLength);
+                raw.Add(index);
+                rdat = nextRdat;
+            }
+            if (raw.SequenceEqual(rdats.Keys)) return;
+            foreach (var item in rdats.Reverse())
+            {
+                this._Instructions.SetMove(
+                    loc: loc.Max + 1,
+                    section: item.Value);
             }
         }
     }

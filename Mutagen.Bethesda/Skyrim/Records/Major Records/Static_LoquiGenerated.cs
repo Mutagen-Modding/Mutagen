@@ -780,6 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IRegionTarget,
         ILoquiObjectSetter<IStaticInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -806,6 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IRegionTargetGetter,
         ILoquiObject<IStaticGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

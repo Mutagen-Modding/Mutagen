@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -48,6 +49,102 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region MapColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color? _MapColor;
+        public Color? MapColor
+        {
+            get => this._MapColor;
+            set => this._MapColor = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? IRegionGetter.MapColor => this.MapColor;
+        #endregion
+        #region Worldspace
+        public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
+        #endregion
+        #region RegionAreas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> RegionAreas
+        {
+            get => this._RegionAreas;
+            protected set => this._RegionAreas = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRegionAreaGetter> IRegionGetter.RegionAreas => _RegionAreas;
+        #endregion
+
+        #endregion
+        #region Objects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionObjects? _Objects;
+        public RegionObjects? Objects
+        {
+            get => _Objects;
+            set => _Objects = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionObjectsGetter? IRegionGetter.Objects => this.Objects;
+        #endregion
+        #region Weather
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionWeather? _Weather;
+        public RegionWeather? Weather
+        {
+            get => _Weather;
+            set => _Weather = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionWeatherGetter? IRegionGetter.Weather => this.Weather;
+        #endregion
+        #region Map
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionMap? _Map;
+        public RegionMap? Map
+        {
+            get => _Map;
+            set => _Map = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionMapGetter? IRegionGetter.Map => this.Map;
+        #endregion
+        #region Land
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionLand? _Land;
+        public RegionLand? Land
+        {
+            get => _Land;
+            set => _Land = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionLandGetter? IRegionGetter.Land => this.Land;
+        #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionGrasses? _Grasses;
+        public RegionGrasses? Grasses
+        {
+            get => _Grasses;
+            set => _Grasses = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionGrassesGetter? IRegionGetter.Grasses => this.Grasses;
+        #endregion
+        #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionSounds? _Sounds;
+        public RegionSounds? Sounds
+        {
+            get => _Sounds;
+            set => _Sounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionSoundsGetter? IRegionGetter.Sounds => this.Sounds;
+        #endregion
 
         #region To String
 
@@ -218,6 +315,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.MapColor = initialValue;
+                this.Worldspace = initialValue;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(initialValue, new RegionObjects.Mask<TItem>(initialValue));
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
+                this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(initialValue, new RegionMap.Mask<TItem>(initialValue));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(initialValue, new RegionLand.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(initialValue, new RegionGrasses.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(initialValue, new RegionSounds.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +332,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem MapColor,
+                TItem Worldspace,
+                TItem RegionAreas,
+                TItem Objects,
+                TItem Weather,
+                TItem Map,
+                TItem Land,
+                TItem Grasses,
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +350,15 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.MapColor = MapColor;
+                this.Worldspace = Worldspace;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(Objects, new RegionObjects.Mask<TItem>(Objects));
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
+                this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(Map, new RegionMap.Mask<TItem>(Map));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(Land, new RegionLand.Mask<TItem>(Land));
+                this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(Grasses, new RegionGrasses.Mask<TItem>(Grasses));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(Sounds, new RegionSounds.Mask<TItem>(Sounds));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +367,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem MapColor;
+            public TItem Worldspace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? RegionAreas;
+            public MaskItem<TItem, RegionObjects.Mask<TItem>?>? Objects { get; set; }
+            public MaskItem<TItem, RegionWeather.Mask<TItem>?>? Weather { get; set; }
+            public MaskItem<TItem, RegionMap.Mask<TItem>?>? Map { get; set; }
+            public MaskItem<TItem, RegionLand.Mask<TItem>?>? Land { get; set; }
+            public MaskItem<TItem, RegionGrasses.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, RegionSounds.Mask<TItem>?>? Sounds { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +392,29 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
+                if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
+                if (!object.Equals(this.RegionAreas, rhs.RegionAreas)) return false;
+                if (!object.Equals(this.Objects, rhs.Objects)) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.Map, rhs.Map)) return false;
+                if (!object.Equals(this.Land, rhs.Land)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.MapColor);
+                hash.Add(this.Worldspace);
+                hash.Add(this.RegionAreas);
+                hash.Add(this.Objects);
+                hash.Add(this.Weather);
+                hash.Add(this.Map);
+                hash.Add(this.Land);
+                hash.Add(this.Grasses);
+                hash.Add(this.Sounds);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +425,50 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.MapColor)) return false;
+                if (!eval(this.Worldspace)) return false;
+                if (this.RegionAreas != null)
+                {
+                    if (!eval(this.RegionAreas.Overall)) return false;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (!eval(this.Objects.Overall)) return false;
+                    if (this.Objects.Specific != null && !this.Objects.Specific.All(eval)) return false;
+                }
+                if (Weather != null)
+                {
+                    if (!eval(this.Weather.Overall)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.All(eval)) return false;
+                }
+                if (Map != null)
+                {
+                    if (!eval(this.Map.Overall)) return false;
+                    if (this.Map.Specific != null && !this.Map.Specific.All(eval)) return false;
+                }
+                if (Land != null)
+                {
+                    if (!eval(this.Land.Overall)) return false;
+                    if (this.Land.Specific != null && !this.Land.Specific.All(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
+                }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +477,50 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.MapColor)) return true;
+                if (eval(this.Worldspace)) return true;
+                if (this.RegionAreas != null)
+                {
+                    if (eval(this.RegionAreas.Overall)) return true;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (eval(this.Objects.Overall)) return true;
+                    if (this.Objects.Specific != null && this.Objects.Specific.Any(eval)) return true;
+                }
+                if (Weather != null)
+                {
+                    if (eval(this.Weather.Overall)) return true;
+                    if (this.Weather.Specific != null && this.Weather.Specific.Any(eval)) return true;
+                }
+                if (Map != null)
+                {
+                    if (eval(this.Map.Overall)) return true;
+                    if (this.Map.Specific != null && this.Map.Specific.Any(eval)) return true;
+                }
+                if (Land != null)
+                {
+                    if (eval(this.Land.Overall)) return true;
+                    if (this.Land.Specific != null && this.Land.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +536,29 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.MapColor = eval(this.MapColor);
+                obj.Worldspace = eval(this.Worldspace);
+                if (RegionAreas != null)
+                {
+                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    if (RegionAreas.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
+                        obj.RegionAreas.Specific = l;
+                        foreach (var item in RegionAreas.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Objects = this.Objects == null ? null : new MaskItem<R, RegionObjects.Mask<R>?>(eval(this.Objects.Overall), this.Objects.Specific?.Translate(eval));
+                obj.Weather = this.Weather == null ? null : new MaskItem<R, RegionWeather.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
+                obj.Map = this.Map == null ? null : new MaskItem<R, RegionMap.Mask<R>?>(eval(this.Map.Overall), this.Map.Specific?.Translate(eval));
+                obj.Land = this.Land == null ? null : new MaskItem<R, RegionLand.Mask<R>?>(eval(this.Land.Overall), this.Land.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionGrasses.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +581,61 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.MapColor ?? true)
+                    {
+                        fg.AppendItem(MapColor, "MapColor");
+                    }
+                    if (printMask?.Worldspace ?? true)
+                    {
+                        fg.AppendItem(Worldspace, "Worldspace");
+                    }
+                    if ((printMask?.RegionAreas?.Overall ?? true)
+                        && RegionAreas.TryGet(out var RegionAreasItem))
+                    {
+                        fg.AppendLine("RegionAreas =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RegionAreasItem.Overall);
+                            if (RegionAreasItem.Specific != null)
+                            {
+                                foreach (var subItem in RegionAreasItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Objects?.Overall ?? true)
+                    {
+                        Objects?.ToString(fg);
+                    }
+                    if (printMask?.Weather?.Overall ?? true)
+                    {
+                        Weather?.ToString(fg);
+                    }
+                    if (printMask?.Map?.Overall ?? true)
+                    {
+                        Map?.ToString(fg);
+                    }
+                    if (printMask?.Land?.Overall ?? true)
+                    {
+                        Land?.ToString(fg);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.ToString(fg);
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +647,42 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? MapColor;
+            public Exception? Worldspace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? RegionAreas;
+            public MaskItem<Exception?, RegionObjects.ErrorMask?>? Objects;
+            public MaskItem<Exception?, RegionWeather.ErrorMask?>? Weather;
+            public MaskItem<Exception?, RegionMap.ErrorMask?>? Map;
+            public MaskItem<Exception?, RegionLand.ErrorMask?>? Land;
+            public MaskItem<Exception?, RegionGrasses.ErrorMask?>? Grasses;
+            public MaskItem<Exception?, RegionSounds.ErrorMask?>? Sounds;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        return MapColor;
+                    case Region_FieldIndex.Worldspace:
+                        return Worldspace;
+                    case Region_FieldIndex.RegionAreas:
+                        return RegionAreas;
+                    case Region_FieldIndex.Objects:
+                        return Objects;
+                    case Region_FieldIndex.Weather:
+                        return Weather;
+                    case Region_FieldIndex.Map:
+                        return Map;
+                    case Region_FieldIndex.Land:
+                        return Land;
+                    case Region_FieldIndex.Grasses:
+                        return Grasses;
+                    case Region_FieldIndex.Sounds:
+                        return Sounds;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +693,33 @@ namespace Mutagen.Bethesda.Skyrim
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = ex;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = ex;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = new MaskItem<Exception?, RegionObjects.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = new MaskItem<Exception?, RegionWeather.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Map:
+                        this.Map = new MaskItem<Exception?, RegionMap.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Land:
+                        this.Land = new MaskItem<Exception?, RegionLand.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, RegionGrasses.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, RegionSounds.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +731,33 @@ namespace Mutagen.Bethesda.Skyrim
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = (Exception?)obj;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = (Exception?)obj;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = (MaskItem<Exception?, RegionObjects.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = (MaskItem<Exception?, RegionWeather.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Map:
+                        this.Map = (MaskItem<Exception?, RegionMap.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Land:
+                        this.Land = (MaskItem<Exception?, RegionLand.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, RegionGrasses.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, RegionSounds.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +767,15 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (MapColor != null) return true;
+                if (Worldspace != null) return true;
+                if (RegionAreas != null) return true;
+                if (Objects != null) return true;
+                if (Weather != null) return true;
+                if (Map != null) return true;
+                if (Land != null) return true;
+                if (Grasses != null) return true;
+                if (Sounds != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +811,36 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(MapColor, "MapColor");
+                fg.AppendItem(Worldspace, "Worldspace");
+                if (RegionAreas.TryGet(out var RegionAreasItem))
+                {
+                    fg.AppendLine("RegionAreas =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RegionAreasItem.Overall);
+                        if (RegionAreasItem.Specific != null)
+                        {
+                            foreach (var subItem in RegionAreasItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Objects?.ToString(fg);
+                Weather?.ToString(fg);
+                Map?.ToString(fg);
+                Land?.ToString(fg);
+                Grasses?.ToString(fg);
+                Sounds?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +849,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.MapColor = this.MapColor.Combine(rhs.MapColor);
+                ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
+                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
+                ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
+                ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
+                ret.Map = this.Map.Combine(rhs.Map, (l, r) => l.Combine(r));
+                ret.Land = this.Land.Combine(rhs.Land, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +879,59 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool MapColor;
+            public bool Worldspace;
+            public MaskItem<bool, RegionArea.TranslationMask?> RegionAreas;
+            public MaskItem<bool, RegionObjects.TranslationMask?> Objects;
+            public MaskItem<bool, RegionWeather.TranslationMask?> Weather;
+            public MaskItem<bool, RegionMap.TranslationMask?> Map;
+            public MaskItem<bool, RegionLand.TranslationMask?> Land;
+            public MaskItem<bool, RegionGrasses.TranslationMask?> Grasses;
+            public MaskItem<bool, RegionSounds.TranslationMask?> Sounds;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.MapColor = defaultOn;
+                this.Worldspace = defaultOn;
+                this.RegionAreas = new MaskItem<bool, RegionArea.TranslationMask?>(defaultOn, null);
+                this.Objects = new MaskItem<bool, RegionObjects.TranslationMask?>(defaultOn, null);
+                this.Weather = new MaskItem<bool, RegionWeather.TranslationMask?>(defaultOn, null);
+                this.Map = new MaskItem<bool, RegionMap.TranslationMask?>(defaultOn, null);
+                this.Land = new MaskItem<bool, RegionLand.TranslationMask?>(defaultOn, null);
+                this.Grasses = new MaskItem<bool, RegionGrasses.TranslationMask?>(defaultOn, null);
+                this.Sounds = new MaskItem<bool, RegionSounds.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((MapColor, null));
+                ret.Add((Worldspace, null));
+                ret.Add((RegionAreas?.Overall ?? true, RegionAreas?.Specific?.GetCrystal()));
+                ret.Add((Objects?.Overall ?? true, Objects?.Specific?.GetCrystal()));
+                ret.Add((Weather?.Overall ?? true, Weather?.Specific?.GetCrystal()));
+                ret.Add((Map?.Overall ?? true, Map?.Specific?.GetCrystal()));
+                ret.Add((Land?.Overall ?? true, Land?.Specific?.GetCrystal()));
+                ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
+                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +949,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -519,6 +1016,19 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IRegionInternal>
     {
+        new Color? MapColor { get; set; }
+        new FormLinkNullable<Worldspace> Worldspace { get; set; }
+        new ExtendedList<RegionArea> RegionAreas { get; }
+        new RegionObjects? Objects { get; set; }
+        new RegionWeather? Weather { get; set; }
+        new RegionMap? Map { get; set; }
+        new RegionLand? Land { get; set; }
+        new RegionGrasses? Grasses { get; set; }
+        new RegionSounds? Sounds { get; set; }
+        #region Mutagen
+        new Region.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IRegionInternal :
@@ -532,9 +1042,23 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IRegionGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Region_Registration.Instance;
+        Color? MapColor { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
+        IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
+        IRegionObjectsGetter? Objects { get; }
+        IRegionWeatherGetter? Weather { get; }
+        IRegionMapGetter? Map { get; }
+        IRegionLandGetter? Land { get; }
+        IRegionGrassesGetter? Grasses { get; }
+        IRegionSoundsGetter? Sounds { get; }
+
+        #region Mutagen
+        Region.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -835,6 +1359,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        MapColor = 6,
+        Worldspace = 7,
+        RegionAreas = 8,
+        Objects = 9,
+        Weather = 10,
+        Map = 11,
+        Land = 12,
+        Grasses = 13,
+        Sounds = 14,
     }
     #endregion
 
@@ -852,9 +1385,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "f10c5e7d-6f32-4e0f-a856-df812878ce5b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -884,6 +1417,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "MAPCOLOR":
+                    return (ushort)Region_FieldIndex.MapColor;
+                case "WORLDSPACE":
+                    return (ushort)Region_FieldIndex.Worldspace;
+                case "REGIONAREAS":
+                    return (ushort)Region_FieldIndex.RegionAreas;
+                case "OBJECTS":
+                    return (ushort)Region_FieldIndex.Objects;
+                case "WEATHER":
+                    return (ushort)Region_FieldIndex.Weather;
+                case "MAP":
+                    return (ushort)Region_FieldIndex.Map;
+                case "LAND":
+                    return (ushort)Region_FieldIndex.Land;
+                case "GRASSES":
+                    return (ushort)Region_FieldIndex.Grasses;
+                case "SOUNDS":
+                    return (ushort)Region_FieldIndex.Sounds;
                 default:
                     return null;
             }
@@ -894,6 +1445,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.RegionAreas:
+                    return true;
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Worldspace:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.Map:
+                case Region_FieldIndex.Land:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -904,6 +1466,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.RegionAreas:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.Map:
+                case Region_FieldIndex.Land:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return true;
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Worldspace:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -914,6 +1487,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Worldspace:
+                case Region_FieldIndex.RegionAreas:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.Map:
+                case Region_FieldIndex.Land:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -924,6 +1507,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.MapColor:
+                    return "MapColor";
+                case Region_FieldIndex.Worldspace:
+                    return "Worldspace";
+                case Region_FieldIndex.RegionAreas:
+                    return "RegionAreas";
+                case Region_FieldIndex.Objects:
+                    return "Objects";
+                case Region_FieldIndex.Weather:
+                    return "Weather";
+                case Region_FieldIndex.Map:
+                    return "Map";
+                case Region_FieldIndex.Land:
+                    return "Land";
+                case Region_FieldIndex.Grasses:
+                    return "Grasses";
+                case Region_FieldIndex.Sounds:
+                    return "Sounds";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -934,6 +1535,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Worldspace:
+                case Region_FieldIndex.RegionAreas:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.Map:
+                case Region_FieldIndex.Land:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -944,6 +1555,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.MapColor:
+                case Region_FieldIndex.Worldspace:
+                case Region_FieldIndex.RegionAreas:
+                case Region_FieldIndex.Objects:
+                case Region_FieldIndex.Weather:
+                case Region_FieldIndex.Map:
+                case Region_FieldIndex.Land:
+                case Region_FieldIndex.Grasses:
+                case Region_FieldIndex.Sounds:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -954,6 +1575,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Region_FieldIndex enu = (Region_FieldIndex)index;
             switch (enu)
             {
+                case Region_FieldIndex.MapColor:
+                    return typeof(Color);
+                case Region_FieldIndex.Worldspace:
+                    return typeof(FormLinkNullable<Worldspace>);
+                case Region_FieldIndex.RegionAreas:
+                    return typeof(ExtendedList<RegionArea>);
+                case Region_FieldIndex.Objects:
+                    return typeof(RegionObjects);
+                case Region_FieldIndex.Weather:
+                    return typeof(RegionWeather);
+                case Region_FieldIndex.Map:
+                    return typeof(RegionMap);
+                case Region_FieldIndex.Land:
+                    return typeof(RegionLand);
+                case Region_FieldIndex.Grasses:
+                    return typeof(RegionGrasses);
+                case Region_FieldIndex.Sounds:
+                    return typeof(RegionSounds);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -961,9 +1600,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(RegionXmlWriteTranslation);
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
+        public static readonly RecordType RCLR_HEADER = new RecordType("RCLR");
+        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
+        public static readonly RecordType RPLI_HEADER = new RecordType("RPLI");
+        public static readonly RecordType RPLD_HEADER = new RecordType("RPLD");
+        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType TriggeringRecordType = REGN_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1006,6 +1651,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionInternal item)
         {
             ClearPartial();
+            item.MapColor = default;
+            item.Worldspace = null;
+            item.RegionAreas.Clear();
+            item.Objects = null;
+            item.Weather = null;
+            item.Map = null;
+            item.Land = null;
+            item.Grasses = null;
+            item.Sounds = null;
             base.Clear(item);
         }
         
@@ -1110,6 +1764,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IRegionInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x524C4352: // RCLR
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                }
+                case 0x494C5052: // RPLI
+                case 0x444C5052: // RPLD
+                {
+                    item.RegionAreas.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out RegionArea listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.RegionAreas);
+                }
+                case 0x54414452: // RDAT
+                {
+                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IRegionInternal item,
             MutagenFrame frame,
@@ -1174,6 +1886,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
+            ret.Worldspace = object.Equals(item.Worldspace, rhs.Worldspace);
+            ret.RegionAreas = item.RegionAreas.CollectionEqualsHelper(
+                rhs.RegionAreas,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objects = EqualsMaskHelper.EqualsHelper(
+                item.Objects,
+                rhs.Objects,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Weather = EqualsMaskHelper.EqualsHelper(
+                item.Weather,
+                rhs.Weather,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Map = EqualsMaskHelper.EqualsHelper(
+                item.Map,
+                rhs.Map,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Land = EqualsMaskHelper.EqualsHelper(
+                item.Land,
+                rhs.Land,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Grasses = EqualsMaskHelper.EqualsHelper(
+                item.Grasses,
+                rhs.Grasses,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Sounds = EqualsMaskHelper.EqualsHelper(
+                item.Sounds,
+                rhs.Sounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1225,12 +1973,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.MapColor ?? true)
+                && item.MapColor.TryGet(out var MapColorItem))
+            {
+                fg.AppendItem(MapColorItem, "MapColor");
+            }
+            if ((printMask?.Worldspace ?? true)
+                && item.Worldspace.TryGet(out var WorldspaceItem))
+            {
+                fg.AppendItem(WorldspaceItem, "Worldspace");
+            }
+            if (printMask?.RegionAreas?.Overall ?? true)
+            {
+                fg.AppendLine("RegionAreas =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RegionAreas)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Objects?.Overall ?? true)
+                && item.Objects.TryGet(out var ObjectsItem))
+            {
+                ObjectsItem?.ToString(fg, "Objects");
+            }
+            if ((printMask?.Weather?.Overall ?? true)
+                && item.Weather.TryGet(out var WeatherItem))
+            {
+                WeatherItem?.ToString(fg, "Weather");
+            }
+            if ((printMask?.Map?.Overall ?? true)
+                && item.Map.TryGet(out var MapItem))
+            {
+                MapItem?.ToString(fg, "Map");
+            }
+            if ((printMask?.Land?.Overall ?? true)
+                && item.Land.TryGet(out var LandItem))
+            {
+                LandItem?.ToString(fg, "Land");
+            }
+            if ((printMask?.Grasses?.Overall ?? true)
+                && item.Grasses.TryGet(out var GrassesItem))
+            {
+                GrassesItem?.ToString(fg, "Grasses");
+            }
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds.TryGet(out var SoundsItem))
+            {
+                SoundsItem?.ToString(fg, "Sounds");
+            }
         }
         
         public bool HasBeenSet(
             IRegionGetter item,
             Region.Mask<bool?> checkMask)
         {
+            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
+            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != (item.Worldspace.FormKey != null)) return false;
+            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects.Overall.Value != (item.Objects != null)) return false;
+            if (checkMask.Objects?.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
+            if (checkMask.Weather?.Overall.HasValue ?? false && checkMask.Weather.Overall.Value != (item.Weather != null)) return false;
+            if (checkMask.Weather?.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
+            if (checkMask.Map?.Overall.HasValue ?? false && checkMask.Map.Overall.Value != (item.Map != null)) return false;
+            if (checkMask.Map?.Specific != null && (item.Map == null || !item.Map.HasBeenSet(checkMask.Map.Specific))) return false;
+            if (checkMask.Land?.Overall.HasValue ?? false && checkMask.Land.Overall.Value != (item.Land != null)) return false;
+            if (checkMask.Land?.Specific != null && (item.Land == null || !item.Land.HasBeenSet(checkMask.Land.Specific))) return false;
+            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses.Overall.Value != (item.Grasses != null)) return false;
+            if (checkMask.Grasses?.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
+            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds.Overall.Value != (item.Sounds != null)) return false;
+            if (checkMask.Sounds?.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1240,6 +2060,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGetter item,
             Region.Mask<bool> mask)
         {
+            mask.MapColor = (item.MapColor != null);
+            mask.Worldspace = (item.Worldspace.FormKey != null);
+            var RegionAreasItem = item.RegionAreas;
+            mask.RegionAreas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>?>(true, RegionAreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var itemObjects = item.Objects;
+            mask.Objects = new MaskItem<bool, RegionObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
+            var itemWeather = item.Weather;
+            mask.Weather = new MaskItem<bool, RegionWeather.Mask<bool>?>(itemWeather != null, itemWeather?.GetHasBeenSetMask());
+            var itemMap = item.Map;
+            mask.Map = new MaskItem<bool, RegionMap.Mask<bool>?>(itemMap != null, itemMap?.GetHasBeenSetMask());
+            var itemLand = item.Land;
+            mask.Land = new MaskItem<bool, RegionLand.Mask<bool>?>(itemLand != null, itemLand?.GetHasBeenSetMask());
+            var itemGrasses = item.Grasses;
+            mask.Grasses = new MaskItem<bool, RegionGrasses.Mask<bool>?>(itemGrasses != null, itemGrasses?.GetHasBeenSetMask());
+            var itemSounds = item.Sounds;
+            mask.Sounds = new MaskItem<bool, RegionSounds.Mask<bool>?>(itemSounds != null, itemSounds?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1291,6 +2127,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
+            if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas)) return false;
+            if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
+            if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
+            if (!object.Equals(lhs.Map, rhs.Map)) return false;
+            if (!object.Equals(lhs.Land, rhs.Land)) return false;
+            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
             return true;
         }
         
@@ -1315,6 +2160,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
+            if (item.MapColor.TryGet(out var MapColoritem))
+            {
+                hash.Add(MapColoritem);
+            }
+            if (item.Worldspace.TryGet(out var Worldspaceitem))
+            {
+                hash.Add(Worldspaceitem);
+            }
+            hash.Add(item.RegionAreas);
+            if (item.Objects.TryGet(out var Objectsitem))
+            {
+                hash.Add(Objectsitem);
+            }
+            if (item.Weather.TryGet(out var Weatheritem))
+            {
+                hash.Add(Weatheritem);
+            }
+            if (item.Map.TryGet(out var Mapitem))
+            {
+                hash.Add(Mapitem);
+            }
+            if (item.Land.TryGet(out var Landitem))
+            {
+                hash.Add(Landitem);
+            }
+            if (item.Grasses.TryGet(out var Grassesitem))
+            {
+                hash.Add(Grassesitem);
+            }
+            if (item.Sounds.TryGet(out var Soundsitem))
+            {
+                hash.Add(Soundsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1343,6 +2221,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Worldspace.FormKey.TryGet(out var WorldspaceKey))
+            {
+                yield return WorldspaceKey;
+            }
+            if (obj.Objects.TryGet(out var ObjectsItems))
+            {
+                foreach (var item in ObjectsItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weather.TryGet(out var WeatherItems))
+            {
+                foreach (var item in WeatherItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Grasses.TryGet(out var GrassesItems))
+            {
+                foreach (var item in GrassesItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Sounds.TryGet(out var SoundsItems))
+            {
+                foreach (var item in SoundsItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1391,6 +2301,194 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                item.MapColor = rhs.MapColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                item.Worldspace = rhs.Worldspace.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.RegionAreas);
+                try
+                {
+                    item.RegionAreas.SetTo(
+                        rhs.RegionAreas
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Objects);
+                try
+                {
+                    if(rhs.Objects.TryGet(out var rhsObjects))
+                    {
+                        item.Objects = rhsObjects.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                    }
+                    else
+                    {
+                        item.Objects = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                try
+                {
+                    if(rhs.Weather.TryGet(out var rhsWeather))
+                    {
+                        item.Weather = rhsWeather.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                    }
+                    else
+                    {
+                        item.Weather = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Map);
+                try
+                {
+                    if(rhs.Map.TryGet(out var rhsMap))
+                    {
+                        item.Map = rhsMap.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Map));
+                    }
+                    else
+                    {
+                        item.Map = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Land);
+                try
+                {
+                    if(rhs.Land.TryGet(out var rhsLand))
+                    {
+                        item.Land = rhsLand.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Land));
+                    }
+                    else
+                    {
+                        item.Land = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
+                try
+                {
+                    if(rhs.Grasses.TryGet(out var rhsGrasses))
+                    {
+                        item.Grasses = rhsGrasses.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                    }
+                    else
+                    {
+                        item.Grasses = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                try
+                {
+                    if(rhs.Sounds.TryGet(out var rhsSounds))
+                    {
+                        item.Sounds = rhsSounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                    }
+                    else
+                    {
+                        item.Sounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1533,6 +2631,130 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.MapColor != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MapColor),
+                    item: item.MapColor.Value,
+                    fieldIndex: (int)Region_FieldIndex.MapColor,
+                    errorMask: errorMask);
+            }
+            if ((item.Worldspace.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Worldspace),
+                    item: item.Worldspace.FormKey.Value,
+                    fieldIndex: (int)Region_FieldIndex.Worldspace,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                ListXmlTranslation<IRegionAreaGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RegionAreas),
+                    item: item.RegionAreas,
+                    fieldIndex: (int)Region_FieldIndex.RegionAreas,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.RegionAreas),
+                    transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((RegionAreaXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Objects != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                if (item.Objects.TryGet(out var ObjectsItem))
+                {
+                    ((RegionObjectsXmlWriteTranslation)((IXmlItem)ObjectsItem).XmlWriteTranslator).Write(
+                        item: ObjectsItem,
+                        node: node,
+                        name: nameof(item.Objects),
+                        fieldIndex: (int)Region_FieldIndex.Objects,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                }
+            }
+            if ((item.Weather != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                if (item.Weather.TryGet(out var WeatherItem))
+                {
+                    ((RegionWeatherXmlWriteTranslation)((IXmlItem)WeatherItem).XmlWriteTranslator).Write(
+                        item: WeatherItem,
+                        node: node,
+                        name: nameof(item.Weather),
+                        fieldIndex: (int)Region_FieldIndex.Weather,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                }
+            }
+            if ((item.Map != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
+            {
+                if (item.Map.TryGet(out var MapItem))
+                {
+                    ((RegionMapXmlWriteTranslation)((IXmlItem)MapItem).XmlWriteTranslator).Write(
+                        item: MapItem,
+                        node: node,
+                        name: nameof(item.Map),
+                        fieldIndex: (int)Region_FieldIndex.Map,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Map));
+                }
+            }
+            if ((item.Land != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                if (item.Land.TryGet(out var LandItem))
+                {
+                    ((RegionLandXmlWriteTranslation)((IXmlItem)LandItem).XmlWriteTranslator).Write(
+                        item: LandItem,
+                        node: node,
+                        name: nameof(item.Land),
+                        fieldIndex: (int)Region_FieldIndex.Land,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Land));
+                }
+            }
+            if ((item.Grasses != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                if (item.Grasses.TryGet(out var GrassesItem))
+                {
+                    ((RegionGrassesXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write(
+                        item: GrassesItem,
+                        node: node,
+                        name: nameof(item.Grasses),
+                        fieldIndex: (int)Region_FieldIndex.Grasses,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                }
+            }
+            if ((item.Sounds != null)
+                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                if (item.Sounds.TryGet(out var SoundsItem))
+                {
+                    ((RegionSoundsXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write(
+                        item: SoundsItem,
+                        node: node,
+                        name: nameof(item.Sounds),
+                        fieldIndex: (int)Region_FieldIndex.Sounds,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                }
+            }
         }
 
         public void Write(
@@ -1640,6 +2862,184 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "MapColor":
+                    errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
+                    try
+                    {
+                        item.MapColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Worldspace":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
+                    try
+                    {
+                        item.Worldspace = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RegionAreas":
+                    errorMask?.PushIndex((int)Region_FieldIndex.RegionAreas);
+                    try
+                    {
+                        if (ListXmlTranslation<RegionArea>.Instance.Parse(
+                            node: node,
+                            enumer: out var RegionAreasItem,
+                            transl: LoquiXmlTranslation<RegionArea>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RegionAreas.SetTo(RegionAreasItem);
+                        }
+                        else
+                        {
+                            item.RegionAreas.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Objects":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Objects);
+                    try
+                    {
+                        item.Objects = LoquiXmlTranslation<RegionObjects>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weather":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                    try
+                    {
+                        item.Weather = LoquiXmlTranslation<RegionWeather>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Map":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Map);
+                    try
+                    {
+                        item.Map = LoquiXmlTranslation<RegionMap>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Map));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Land":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Land);
+                    try
+                    {
+                        item.Land = LoquiXmlTranslation<RegionLand>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Land));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Grasses":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
+                    try
+                    {
+                        item.Grasses = LoquiXmlTranslation<RegionGrasses>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sounds":
+                    errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                    try
+                    {
+                        item.Sounds = LoquiXmlTranslation<RegionSounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1726,6 +3126,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
+        static partial void WriteBinaryRegionAreaLogicCustom(
+            MutagenWriter writer,
+            IRegionGetter item);
+
+        public static void WriteBinaryRegionAreaLogic(
+            MutagenWriter writer,
+            IRegionGetter item)
+        {
+            WriteBinaryRegionAreaLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteRecordTypes(
+            IRegionGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MapColor,
+                header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Worldspace,
+                header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
+                writer: writer,
+                items: item.RegionAreas,
+                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IRegionGetter item,
@@ -1739,7 +3185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1785,6 +3231,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
+        static partial void FillBinaryRegionAreaLogicCustom(
+            MutagenFrame frame,
+            IRegionInternal item);
+
+        public static void FillBinaryRegionAreaLogicCustomPublic(
+            MutagenFrame frame,
+            IRegionInternal item)
+        {
+            FillBinaryRegionAreaLogicCustom(
+                frame: frame,
+                item: item);
+        }
+
     }
 
 }
@@ -1820,6 +3279,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1845,7 +3310,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region MapColor
+        private int? _MapColorLocation;
+        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region Worldspace
+        private int? _WorldspaceLocation;
+        public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
+        #region RegionAreaLogic
+        partial void RegionAreaLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1896,6 +3377,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x524C4352: // RCLR
+                {
+                    _MapColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    _WorldspaceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                }
+                case 0x494C5052: // RPLI
+                case 0x444C5052: // RPLD
+                {
+                    this.RegionAreas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: RegionArea_Registration.TriggeringRecordTypes,
+                        factory:  RegionAreaBinaryOverlay.RegionAreaFactory);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.RegionAreas);
+                }
+                case 0x54414452: // RDAT
+                {
+                    RegionAreaLogicCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

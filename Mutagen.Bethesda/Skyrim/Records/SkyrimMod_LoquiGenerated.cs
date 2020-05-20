@@ -94,6 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Climates_Object = new Group<Climate>(this);
             _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Group<VisualEffect>(this);
+            _Regions_Object = new Group<Region>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -463,6 +464,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IVisualEffectGetter> ISkyrimModGetter.VisualEffects => _VisualEffects_Object;
         #endregion
+        #region Regions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Region> _Regions_Object;
+        public Group<Region> Regions => _Regions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IRegionGetter> ISkyrimModGetter.Regions => _Regions_Object;
+        #endregion
 
         #region To String
 
@@ -685,6 +693,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -739,7 +748,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Weathers,
                 TItem Climates,
                 TItem ShaderParticleGeometries,
-                TItem VisualEffects)
+                TItem VisualEffects,
+                TItem Regions)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -793,6 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Climates = new MaskItem<TItem, Group.Mask<TItem>?>(Climates, new Group.Mask<TItem>(Climates));
                 this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(ShaderParticleGeometries, new Group.Mask<TItem>(ShaderParticleGeometries));
                 this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(VisualEffects, new Group.Mask<TItem>(VisualEffects));
+                this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(Regions, new Group.Mask<TItem>(Regions));
             }
 
             #pragma warning disable CS8618
@@ -856,6 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Climates { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? VisualEffects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Regions { get; set; }
             #endregion
 
             #region Equals
@@ -920,6 +932,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Climates, rhs.Climates)) return false;
                 if (!object.Equals(this.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
                 if (!object.Equals(this.VisualEffects, rhs.VisualEffects)) return false;
+                if (!object.Equals(this.Regions, rhs.Regions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -977,6 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Climates);
                 hash.Add(this.ShaderParticleGeometries);
                 hash.Add(this.VisualEffects);
+                hash.Add(this.Regions);
                 return hash.ToHashCode();
             }
 
@@ -1245,6 +1259,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.VisualEffects.Overall)) return false;
                     if (this.VisualEffects.Specific != null && !this.VisualEffects.Specific.All(eval)) return false;
                 }
+                if (Regions != null)
+                {
+                    if (!eval(this.Regions.Overall)) return false;
+                    if (this.Regions.Specific != null && !this.Regions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1512,6 +1531,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.VisualEffects.Overall)) return true;
                     if (this.VisualEffects.Specific != null && this.VisualEffects.Specific.Any(eval)) return true;
                 }
+                if (Regions != null)
+                {
+                    if (eval(this.Regions.Overall)) return true;
+                    if (this.Regions.Specific != null && this.Regions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1578,6 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Climates = this.Climates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
                 obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
                 obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
+                obj.Regions = this.Regions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1808,6 +1833,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         VisualEffects?.ToString(fg);
                     }
+                    if (printMask?.Regions?.Overall ?? true)
+                    {
+                        Regions?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1885,6 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>? Climates;
             public MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
             public MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
+            public MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>? Regions;
             #endregion
 
             #region IErrorMask
@@ -1997,6 +2027,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ShaderParticleGeometries;
                     case SkyrimMod_FieldIndex.VisualEffects:
                         return VisualEffects;
+                    case SkyrimMod_FieldIndex.Regions:
+                        return Regions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2162,6 +2194,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.VisualEffects:
                         this.VisualEffects = new MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Regions:
+                        this.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2329,6 +2364,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.VisualEffects:
                         this.VisualEffects = (MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Regions:
+                        this.Regions = (MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2389,6 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Climates != null) return true;
                 if (ShaderParticleGeometries != null) return true;
                 if (VisualEffects != null) return true;
+                if (Regions != null) return true;
                 return false;
             }
             #endregion
@@ -2475,6 +2514,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Climates?.ToString(fg);
                 ShaderParticleGeometries?.ToString(fg);
                 VisualEffects?.ToString(fg);
+                Regions?.ToString(fg);
             }
             #endregion
 
@@ -2535,6 +2575,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Climates = this.Climates.Combine(rhs.Climates, (l, r) => l.Combine(r));
                 ret.ShaderParticleGeometries = this.ShaderParticleGeometries.Combine(rhs.ShaderParticleGeometries, (l, r) => l.Combine(r));
                 ret.VisualEffects = this.VisualEffects.Combine(rhs.VisualEffects, (l, r) => l.Combine(r));
+                ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2608,6 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?> Climates;
             public MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?> ShaderParticleGeometries;
             public MaskItem<bool, Group.TranslationMask<VisualEffect.TranslationMask>?> VisualEffects;
+            public MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?> Regions;
             #endregion
 
             #region Ctors
@@ -2665,6 +2707,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Climates = new MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?>(defaultOn, null);
                 this.ShaderParticleGeometries = new MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?>(defaultOn, null);
                 this.VisualEffects = new MaskItem<bool, Group.TranslationMask<VisualEffect.TranslationMask>?>(defaultOn, null);
+                this.Regions = new MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2732,6 +2775,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Climates?.Overall ?? true, Climates?.Specific?.GetCrystal()));
                 ret.Add((ShaderParticleGeometries?.Overall ?? true, ShaderParticleGeometries?.Specific?.GetCrystal()));
                 ret.Add((VisualEffects?.Overall ?? true, VisualEffects?.Specific?.GetCrystal()));
+                ret.Add((Regions?.Overall ?? true, Regions?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2797,6 +2841,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Climates_Object = new Group<Climate>(this);
             _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Group<VisualEffect>(this);
+            _Regions_Object = new Group<Region>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3005,6 +3050,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.VisualEffects ?? true)
             {
                 this.VisualEffects.RecordCache.Set(rhsMod.VisualEffects.RecordCache.Items);
+            }
+            if (mask?.Regions ?? true)
+            {
+                this.Regions.RecordCache.Set(rhsMod.Regions.RecordCache.Items);
             }
         }
 
@@ -3370,6 +3419,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<VisualEffect>());
             }
+            if (mask?.Regions ?? true)
+            {
+                this.Regions.RecordCache.Set(
+                    rhs.Regions.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Region>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3440,6 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Climates.RecordCache.Count > 0 ? 1 : 0;
             count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : 0;
             count += VisualEffects.RecordCache.Count > 0 ? 1 : 0;
+            count += Regions.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3689,6 +3746,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Climate> Climates { get; }
         new Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
         new Group<VisualEffect> VisualEffects { get; }
+        new Group<Region> Regions { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3758,6 +3816,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IClimateGetter> Climates { get; }
         IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
         IGroupGetter<IVisualEffectGetter> VisualEffects { get; }
+        IGroupGetter<IRegionGetter> Regions { get; }
 
     }
 
@@ -4249,6 +4308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Climates = 49,
         ShaderParticleGeometries = 50,
         VisualEffects = 51,
+        Regions = 52,
     }
     #endregion
 
@@ -4266,9 +4326,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 52;
+        public const ushort AdditionalFieldCount = 53;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 53;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4402,6 +4462,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 case "VISUALEFFECTS":
                     return (ushort)SkyrimMod_FieldIndex.VisualEffects;
+                case "REGIONS":
+                    return (ushort)SkyrimMod_FieldIndex.Regions;
                 default:
                     return null;
             }
@@ -4464,6 +4526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Climates:
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
+                case SkyrimMod_FieldIndex.Regions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4527,6 +4590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Climates:
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
+                case SkyrimMod_FieldIndex.Regions:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4590,6 +4654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Climates:
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
+                case SkyrimMod_FieldIndex.Regions:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4705,6 +4770,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ShaderParticleGeometries";
                 case SkyrimMod_FieldIndex.VisualEffects:
                     return "VisualEffects";
+                case SkyrimMod_FieldIndex.Regions:
+                    return "Regions";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4767,6 +4834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Climates:
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
+                case SkyrimMod_FieldIndex.Regions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4831,6 +4899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Climates:
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
+                case SkyrimMod_FieldIndex.Regions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4946,6 +5015,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<ShaderParticleGeometry>);
                 case SkyrimMod_FieldIndex.VisualEffects:
                     return typeof(Group<VisualEffect>);
+                case SkyrimMod_FieldIndex.Regions:
+                    return typeof(Group<Region>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5004,9 +5075,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
+        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 52;
+        public const int NumTypedFields = 53;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5100,6 +5172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Climates.Clear();
             item.ShaderParticleGeometries.Clear();
             item.VisualEffects.Clear();
+            item.Regions.Clear();
         }
         
         #region Xml Translation
@@ -5929,6 +6002,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
                 }
+                case 0x4E474552: // REGN
+                {
+                    if (importMask?.Regions ?? true)
+                    {
+                        item.Regions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -6032,6 +6119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Climates = MaskItemExt.Factory(item.Climates.GetEqualsMask(rhs.Climates, include), include);
             ret.ShaderParticleGeometries = MaskItemExt.Factory(item.ShaderParticleGeometries.GetEqualsMask(rhs.ShaderParticleGeometries, include), include);
             ret.VisualEffects = MaskItemExt.Factory(item.VisualEffects.GetEqualsMask(rhs.VisualEffects, include), include);
+            ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
         }
         
         public string ToString(
@@ -6286,6 +6374,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.VisualEffects?.ToString(fg, "VisualEffects");
             }
+            if (printMask?.Regions?.Overall ?? true)
+            {
+                item.Regions?.ToString(fg, "Regions");
+            }
         }
         
         public bool HasBeenSet(
@@ -6351,6 +6443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Climates = new MaskItem<bool, Group.Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
             mask.ShaderParticleGeometries = new MaskItem<bool, Group.Mask<bool>?>(true, item.ShaderParticleGeometries?.GetHasBeenSetMask());
             mask.VisualEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.VisualEffects?.GetHasBeenSetMask());
+            mask.Regions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6412,6 +6505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
             if (!object.Equals(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
             if (!object.Equals(lhs.VisualEffects, rhs.VisualEffects)) return false;
+            if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
             return true;
         }
         
@@ -6470,6 +6564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Climates);
             hash.Add(item.ShaderParticleGeometries);
             hash.Add(item.VisualEffects);
+            hash.Add(item.Regions);
             return hash.ToHashCode();
         }
         
@@ -6742,6 +6837,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
                     return obj.VisualEffects.RecordCache;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    return obj.Regions.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -6758,7 +6858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[51];
+            Stream[] outputStreams = new Stream[52];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -6811,6 +6911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7215,6 +7316,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Regions is ILinkedFormKeyContainer RegionslinkCont)
+            {
+                foreach (var item in RegionslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7422,6 +7530,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.VisualEffects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7898,6 +8010,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
                     foreach (var item in obj.VisualEffects.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    foreach (var item in obj.Regions.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -8961,6 +9082,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Regions) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Regions);
+                try
+                {
+                    item.Regions.DeepCopyIn(
+                        rhs: rhs.Regions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Regions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9621,6 +9762,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.VisualEffects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VisualEffects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Regions) ?? true))
+            {
+                var RegionsItem = item.Regions;
+                ((GroupXmlWriteTranslation)((IXmlItem)RegionsItem).XmlWriteTranslator).Write<IRegionGetter>(
+                    item: RegionsItem,
+                    node: node,
+                    name: nameof(item.Regions),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Regions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Regions));
             }
         }
 
@@ -10697,6 +10849,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Regions":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Regions);
+                    try
+                    {
+                        item.Regions.CopyInFromXml<Region>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -10917,6 +11088,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Climates;
         public bool ShaderParticleGeometries;
         public bool VisualEffects;
+        public bool Regions;
         public GroupMask()
         {
         }
@@ -10973,6 +11145,7 @@ namespace Mutagen.Bethesda.Skyrim
             Climates = defaultValue;
             ShaderParticleGeometries = defaultValue;
             VisualEffects = defaultValue;
+            Regions = defaultValue;
         }
     }
 
@@ -11563,6 +11736,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Regions ?? true)
+            {
+                var RegionsItem = item.Regions;
+                if (RegionsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
+                        item: RegionsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -12012,6 +12196,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocation.HasValue ? GroupBinaryOverlay<IVisualEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _VisualEffectsLocation!.Value.Min, _VisualEffectsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new Group<VisualEffect>(this);
         #endregion
+        #region Regions
+        private RangeInt64? _RegionsLocation;
+        private IGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? GroupBinaryOverlay<IRegionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IRegionGetter> Regions => _Regions ?? new Group<Region>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -12355,6 +12544,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                }
+                case 0x4E474552: // REGN
+                {
+                    _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

@@ -1171,7 +1171,8 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
-                            if (HasRecordTypeFields(obj))
+                            if (HasRecordTypeFields(obj)
+                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
                                 args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }
@@ -1186,7 +1187,8 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
-                            if (HasRecordTypeFields(obj))
+                            if (HasRecordTypeFields(obj)
+                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
                                 args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }
@@ -1201,7 +1203,8 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
-                            if (HasRecordTypeFields(obj))
+                            if (HasRecordTypeFields(obj)
+                                || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
                                 args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
                             }

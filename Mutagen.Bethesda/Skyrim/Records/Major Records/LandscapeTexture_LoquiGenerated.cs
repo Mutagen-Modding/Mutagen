@@ -845,6 +845,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILandscapeTexture :
         ILandscapeTextureGetter,
         ISkyrimMajorRecord,
+        IRegionTarget,
         ILoquiObjectSetter<ILandscapeTextureInternal>
     {
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
@@ -865,6 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILandscapeTextureGetter :
         ISkyrimMajorRecordGetter,
+        IRegionTargetGetter,
         ILoquiObject<ILandscapeTextureGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

@@ -5,6 +5,7 @@
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IRegionTarget</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />

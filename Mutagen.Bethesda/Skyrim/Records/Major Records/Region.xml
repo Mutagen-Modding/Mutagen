@@ -1,6 +1,105 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Region" recordType="REGN" objType="Record" baseClass="SkyrimMajorRecord" GUID="f10c5e7d-6f32-4e0f-a856-df812878ce5b" ID="88">
+  <Object name="Region" recordType="REGN" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="f10c5e7d-6f32-4e0f-a856-df812878ce5b" ID="88">
+    <Fields>
+      <Color name="MapColor" recordType="RCLR" binaryType="Alpha" />
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
+      <RefList name="RegionAreas" refName="RegionArea" />
+      <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
+      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" />
+      <RefDirect name="Map" refName="RegionMap" binary="NoGeneration" />
+      <RefDirect name="Land" refName="RegionLand" binary="NoGeneration" />
+      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="RegionArea" objType="Subrecord" GUID="722b7070-0d0a-4d2d-97e5-0ea574ddcfff" ID="259">
+    <Fields>
+      <UInt32 name="EdgeFallOff" recordType="RPLI" />
+      <List name="RegionPointListData" recordType="RPLD">
+        <P2Float />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="RegionData" abstract="true" objType="Subrecord" GUID="a6986ee8-e0cb-4fd9-bd88-b883bbc763d2" ID="260">
+    <Interface>IHasIcons</Interface>
+    <Fields>
+      <RefDirect name="Header" refName="RegionDataHeader" />
+      <RefDirect name="Icons" refName="Icons" />
+    </Fields>
+  </Object>
+  <Object name="RegionDataHeader" objType="Subrecord" recordType="RDAT" GUID="cdb4d0b8-01c9-46d2-9dba-131b6ecf19cd" ID="261">
+    <Fields>
+      <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="protected" internalSetInterface="true" />
+      <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
+      <UInt8 name="Priority" />
+      <Zero byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData" GUID="190e9555-1844-4c56-9deb-d5877459cfb7" ID="262">
+    <Fields>
+      <FormLink name="Music" refName="Music" recordType="RDMO" />
+      <RefList name="Sounds" refName="RegionSound" recordType="RDSA" />
+    </Fields>
+  </Object>
+  <Object name="RegionSound" objType="Subrecord" GUID="32a58ffc-1995-4c02-8ffd-9fea3d78ede2" ID="263">
+    <Fields>
+      <FormLink name="Sound" refName="SoundDescriptor" />
+      <Enum name="Flags" enumName="RegionSound.Flag" />
+      <Float name="Chance" min="0" max="100" />
+    </Fields>
+  </Object>
+  <Object name="RegionMap" objType="Subrecord" baseClass="RegionData" GUID="1c00a511-3a77-4aa9-990a-02cbb48c3478" ID="264">
+    <Fields>
+      <String name="Name" recordType="RDMP" />
+    </Fields>
+  </Object>
+  <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData" GUID="95aee256-1c1e-4ede-bb5a-af5c28507e23" ID="265">
+    <Fields>
+      <RefList name="Objects" refName="RegionObject" recordType="RDOT" />
+    </Fields>
+  </Object>
+  <Object name="RegionObject" objType="Subrecord" GUID="97e90183-2a56-46b0-bbdd-014ba9cc25da" ID="266">
+    <Fields>
+      <FormLink name="Object" objType="Record">
+        <Interface>IRegionTarget</Interface>
+      </FormLink>
+      <UInt16 name="ParentIndex" />
+      <UInt16 name="Unknown" />
+      <Float name="Density" />
+      <UInt8 name="Clustering" />
+      <UInt8 name="MinSlope" />
+      <UInt8 name="MaxSlope" />
+      <Enum name="Flags" enumName="RegionObject.Flag" byteLength="1" />
+      <UInt16 name="RadiusWrtPercent" />
+      <UInt16 name="Radius" />
+      <Float name="MinHeight" />
+      <Float name="MaxHeight" />
+      <Float name="Sink" />
+      <Float name="SinkVariance" />
+      <Float name="SizeVariance" />
+      <P3UInt16 name="AngleVariance" />
+      <ByteArray name="Unknown2" hasBeenSet="False" byteLength="6" />
+    </Fields>
+  </Object>
+  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData" GUID="4ee120f4-9a14-49e9-b9d4-50254a1aabec" ID="267">
+    <Fields>
+      <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
+    </Fields>
+  </Object>
+  <Object name="RegionGrasses" objType="Subrecord" baseClass="RegionData" GUID="8b898374-ebf2-42ec-a5bf-00d7e590062a" ID="269">
+    <Fields>
+      <RefList name="Grasses" refName="RegionGrass" recordType="RDGS" />
+    </Fields>
+  </Object>
+  <Object name="RegionGrass" objType="Subrecord" GUID="0497c14e-9916-45c5-ada1-ae510d631913" ID="270">
+    <Fields>
+      <FormLink name="Grass" refName="Grass" />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="RegionLand" objType="Subrecord" baseClass="RegionData" GUID="4c0cb6ae-ed79-4884-b04b-7f0fd61f3fff" ID="271">
     <Fields>
     </Fields>
   </Object>

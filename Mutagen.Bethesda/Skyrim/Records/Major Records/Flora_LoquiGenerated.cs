@@ -1097,6 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IModeled,
         IObjectBounded,
+        IRegionTarget,
         ILoquiObjectSetter<IFloraInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1125,6 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IRegionTargetGetter,
         ILoquiObject<IFloraGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

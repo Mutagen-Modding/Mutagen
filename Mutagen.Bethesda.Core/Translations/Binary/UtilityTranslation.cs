@@ -556,13 +556,25 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static int? FindFirstSubrecord(ReadOnlySpan<byte> data, GameConstants meta, RecordType recordType, bool navigateToContent = false)
+        public static int? FindFirstSubrecord(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            RecordType recordType,
+            bool navigateToContent = false, 
+            int? offset = null)
         {
-            int loc = 0;
+            int loc = offset ?? 0;
             while (data.Length > loc)
             {
                 var subMeta = meta.Subrecord(data.Slice(loc));
-                if (subMeta.RecordType == recordType) return navigateToContent ? (loc + meta.SubConstants.HeaderLength) : loc;
+                if (subMeta.RecordType == recordType)
+                {
+                    if (navigateToContent)
+                    {
+                        loc += meta.SubConstants.HeaderLength;
+                    }
+                    return loc;
+                }
                 loc += subMeta.TotalLength;
             }
             return null;

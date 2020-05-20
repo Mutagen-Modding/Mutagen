@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WeatherType" objType="Subrecord" GUID="c18c7d5c-54f9-4a89-a80c-f3922cfb867d" ID="257">
+    <Fields>
+      <FormLink name="Weather" refName="Weather" />
+      <Int32 name="Chance" />
+      <FormLink name="Global" refName="Global" />
+    </Fields>
+  </Object>
+</Loqui>
