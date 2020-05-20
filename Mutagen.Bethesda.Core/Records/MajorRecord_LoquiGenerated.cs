@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Internals
                     }
                     yield break;
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
         }
         

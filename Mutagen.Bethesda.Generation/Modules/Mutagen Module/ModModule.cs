@@ -321,14 +321,14 @@ namespace Mutagen.Bethesda.Generation
         private void GenerateGetGroup(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                "public object GetGroup<T>"))
+                "public object GetGroup<TMajor>"))
             {
-                args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
+                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"{obj.Interface(getter: true)} obj");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("switch (typeof(T).Name)");
+                fg.AppendLine("switch (typeof(TMajor).Name)");
                 using (new BraceWrapper(fg))
                 {
                     foreach (var field in obj.IterateFields())
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("default:");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendLine("throw new ArgumentException($\"Unknown group type: {typeof(T)}\");");
+                        fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {typeof(TMajor)}\");");
                     }
                 }
             }

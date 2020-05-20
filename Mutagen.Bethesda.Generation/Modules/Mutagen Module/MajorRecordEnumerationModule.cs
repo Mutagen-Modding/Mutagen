@@ -684,8 +684,9 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                fg.AppendLine("throw new ArgumentException();");
+                                fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {typeof(TMajor)}\");");
                             }
+
                         }
                     }
                 }

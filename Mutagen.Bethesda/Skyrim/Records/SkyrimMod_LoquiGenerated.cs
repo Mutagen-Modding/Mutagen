@@ -6482,10 +6482,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public object GetGroup<T>(ISkyrimModGetter obj)
-            where T : IMajorRecordCommonGetter
+        public object GetGroup<TMajor>(ISkyrimModGetter obj)
+            where TMajor : IMajorRecordCommonGetter
         {
-            switch (typeof(T).Name)
+            switch (typeof(TMajor).Name)
             {
                 case "GameSetting":
                 case "IGameSettingGetter":
@@ -6743,7 +6743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffectInternal":
                     return obj.VisualEffects.RecordCache;
                 default:
-                    throw new ArgumentException($"Unknown group type: {typeof(T)}");
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
         }
         
@@ -7903,7 +7903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
         }
         

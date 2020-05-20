@@ -6976,10 +6976,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public object GetGroup<T>(IOblivionModGetter obj)
-            where T : IMajorRecordCommonGetter
+        public object GetGroup<TMajor>(IOblivionModGetter obj)
+            where TMajor : IMajorRecordCommonGetter
         {
-            switch (typeof(T).Name)
+            switch (typeof(TMajor).Name)
             {
                 case "GameSetting":
                 case "IGameSettingGetter":
@@ -7261,7 +7261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEffectShaderInternal":
                     return obj.EffectShaders.RecordCache;
                 default:
-                    throw new ArgumentException($"Unknown group type: {typeof(T)}");
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
         }
         
@@ -8518,7 +8518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
         }
         
