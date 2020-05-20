@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public enum RegionDataType
         {
-            Objects = 2,
+            Object = 2,
             Weather = 3,
-            MapName = 4,
+            Map = 4,
             Icon = 5,
-            Grasses = 6,
-            Sounds = 7,
+            Grass = 6,
+            Sound = 7,
         }
     }
 }

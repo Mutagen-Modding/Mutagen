@@ -50,6 +50,9 @@
     <Compile Include="Oblivion\Records\Major Records\Potion.cs">
       <DependentUpon>Potion.xml</DependentUpon>
     </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionObject.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Oblivion\Records\Major Records\SigilStone.cs">
       <DependentUpon>SigilStone.xml</DependentUpon>
     </Compile>
@@ -733,30 +736,6 @@
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\RegionData.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataGrasses_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataMapName_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataObject.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataObjects_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataObject_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataSounds_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataWeather_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionData_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\RegionSound.cs">
@@ -1506,9 +1485,6 @@
     <Compile Include="Oblivion\Records\Major Records\RaceData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\RegionDataHeader_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\LocalVariableData_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -1898,6 +1874,30 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\WeatherData_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionData_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionDataHeader_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionObjects_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionObject_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionGrasses_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionSounds_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionWeather_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionMap_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

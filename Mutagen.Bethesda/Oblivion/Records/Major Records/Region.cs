@@ -36,22 +36,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (dataType)
             {
-                case RegionData.RegionDataType.Objects:
+                case RegionData.RegionDataType.Object:
                     if (!recordType.Equals(RDOT)) return false;
                     break;
                 case RegionData.RegionDataType.Weather:
                     if (!recordType.Equals(RDWT)) return false;
                     break;
-                case RegionData.RegionDataType.MapName:
+                case RegionData.RegionDataType.Map:
                     if (!recordType.Equals(RDMP)) return false;
                     break;
                 case RegionData.RegionDataType.Icon:
                     if (!recordType.Equals(ICON)) return false;
                     break;
-                case RegionData.RegionDataType.Grasses:
+                case RegionData.RegionDataType.Grass:
                     if (!recordType.Equals(RDGS)) return false;
                     break;
-                case RegionData.RegionDataType.Sounds:
+                case RegionData.RegionDataType.Sound:
                     if (!recordType.Equals(RDSD) && !recordType.Equals(RDMD)) return false;
                     break;
                 default:
@@ -72,25 +72,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             switch (dataType)
             {
-                case RegionData.RegionDataType.Objects:
-                    item.Objects = RegionDataObjects.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                case RegionData.RegionDataType.Object:
+                    item.Objects = RegionObjects.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
-                case RegionData.RegionDataType.MapName:
-                    item.MapName = RegionDataMapName.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                case RegionData.RegionDataType.Map:
+                    item.MapName = RegionMap.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
-                case RegionData.RegionDataType.Grasses:
-                    item.Grasses = RegionDataGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                case RegionData.RegionDataType.Grass:
+                    item.Grasses = RegionGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
-                case RegionData.RegionDataType.Sounds:
+                case RegionData.RegionDataType.Sound:
                     var nextRec = frame.GetSubrecord(offset: len);
                     if (nextRec.RecordType.Equals(RDSD) || nextRec.RecordType.Equals(RDMD))
                     {
                         len += nextRec.TotalLength;
                     }
-                    item.Sounds = RegionDataSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                    item.Sounds = RegionSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Weather:
-                    item.Weather = RegionDataWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                    item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Icon:
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + rdatFrame.Header.TotalLength;
@@ -144,19 +144,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
-        public IRegionDataObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionDataObjectsBinaryOverlay.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package) : default;
+        public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package) : default;
 
         private ReadOnlyMemorySlice<byte>? _WeatherSpan;
-        public IRegionDataWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionDataWeatherBinaryOverlay.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package) : default;
+        public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package) : default;
         
-        private ReadOnlyMemorySlice<byte>? _MapNameSpan;
-        public IRegionDataMapNameGetter? MapName => _MapNameSpan.HasValue ? RegionDataMapNameBinaryOverlay.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package) : default;
+        private ReadOnlyMemorySlice<byte>? _MapSpan;
+        public IRegionMapGetter? MapName => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new BinaryMemoryReadStream(_MapSpan.Value), _package) : default;
         
         private ReadOnlyMemorySlice<byte>? _GrassesSpan;
-        public IRegionDataGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionDataGrassesBinaryOverlay.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package) : default;
+        public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package) : default;
 
         private ReadOnlyMemorySlice<byte>? _SoundsSpan;
-        public IRegionDataSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionDataSoundsBinaryOverlay.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package) : default;
+        public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package) : default;
 
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,
@@ -193,16 +193,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             switch (dataType)
             {
-                case RegionData.RegionDataType.Objects:
+                case RegionData.RegionDataType.Object:
                     _ObjectsSpan = this._data.Slice(loc, len);
                     break;
-                case RegionData.RegionDataType.MapName:
-                    _MapNameSpan = this._data.Slice(loc, len);
+                case RegionData.RegionDataType.Map:
+                    _MapSpan = this._data.Slice(loc, len);
                     break;
-                case RegionData.RegionDataType.Grasses:
+                case RegionData.RegionDataType.Grass:
                     _GrassesSpan = this._data.Slice(loc, len);
                     break;
-                case RegionData.RegionDataType.Sounds:
+                case RegionData.RegionDataType.Sound:
                     var nextRec = this._package.Meta.GetSubrecord(stream);
                     if (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSD) || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMD))
                     {

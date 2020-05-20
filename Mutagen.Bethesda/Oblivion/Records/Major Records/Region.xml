@@ -7,11 +7,11 @@
       <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="Areas" refName="RegionArea" />
       <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
-      <RefDirect name="Objects" refName="RegionDataObjects" binary="NoGeneration" />
-      <RefDirect name="Weather" refName="RegionDataWeather" binary="NoGeneration" />
-      <RefDirect name="MapName" refName="RegionDataMapName" binary="NoGeneration" />
-      <RefDirect name="Grasses" refName="RegionDataGrasses" binary="NoGeneration" />
-      <RefDirect name="Sounds" refName="RegionDataSounds" binary="NoGeneration" />
+      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" />
+      <RefDirect name="MapName" refName="RegionMap" binary="NoGeneration" />
+      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="RegionArea" objType="Subrecord" GUID="9cbce207-fe81-4953-a29f-9010447d54ff" ID="108">
@@ -35,12 +35,12 @@
       <Zero byteLength="2" />
     </Fields>
   </Object>
-  <Object name="RegionDataObjects" objType="Subrecord" baseClass="RegionData" GUID="6c1a729e-5137-4710-b72d-2f6a5a9f0b7e" ID="110">
+  <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData" GUID="6c1a729e-5137-4710-b72d-2f6a5a9f0b7e" ID="110">
     <Fields>
-      <RefList name="Objects" refName="RegionDataObject" recordType="RDOT" />
+      <RefList name="Objects" refName="RegionObject" recordType="RDOT" />
     </Fields>
   </Object>
-  <Object name="RegionDataObject" objType="Subrecord" GUID="e814f192-a945-4518-bfd0-00e67eae8105" ID="117">
+  <Object name="RegionObject" objType="Subrecord" GUID="e814f192-a945-4518-bfd0-00e67eae8105" ID="117">
     <Fields>
       <FormLink name="Object" refName="OblivionMajorRecord" />
       <UInt16 name="ParentIndex" />
@@ -49,7 +49,7 @@
       <UInt8 name="Clustering" />
       <UInt8 name="MinSlope" />
       <UInt8 name="MaxSlope" />
-      <Enum name="Flags" enumName="RegionDataObject.Flag" byteLength="1" />
+      <Enum name="Flags" enumName="RegionObject.Flag" byteLength="1" />
       <UInt16 name="RadiusWrtPercent" />
       <UInt16 name="Radius" />
       <Float name="MinHeight" />
@@ -61,19 +61,19 @@
       <ByteArray name="Unknown2" hasBeenSet="False" byteLength="6" />
     </Fields>
   </Object>
-  <Object name="RegionDataMapName" objType="Subrecord" baseClass="RegionData" GUID="acca1023-9d99-47c2-82a4-d46ed90b087b" ID="111">
+  <Object name="RegionMap" objType="Subrecord" baseClass="RegionData" GUID="acca1023-9d99-47c2-82a4-d46ed90b087b" ID="111">
     <Fields>
-      <String name="MapName" recordType="RDMP" />
+      <String name="Map" recordType="RDMP" />
     </Fields>
   </Object>
-  <Object name="RegionDataGrasses" objType="Subrecord" baseClass="RegionData" GUID="1c951313-4152-4555-922e-549f944794e8" ID="112">
+  <Object name="RegionGrasses" objType="Subrecord" baseClass="RegionData" GUID="1c951313-4152-4555-922e-549f944794e8" ID="112">
     <Fields>
       <List name="Grasses" recordType="RDGS">
         <FormLink refName="Grass" />
       </List>
     </Fields>
   </Object>
-  <Object name="RegionDataSounds" objType="Subrecord" baseClass="RegionData" GUID="45ee0280-5f00-4126-9120-50ed00cc27c3" ID="114">
+  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData" GUID="45ee0280-5f00-4126-9120-50ed00cc27c3" ID="114">
     <Fields>
       <Enum name="MusicType" enumName="MusicType" byteLength="4" recordType="RDMD" />
       <RefList name="Sounds" refName="RegionSound" recordType="RDSD" />
@@ -86,7 +86,7 @@
       <Float name="Chance" min="0" max="100" />
     </Fields>
   </Object>
-  <Object name="RegionDataWeather" objType="Subrecord" baseClass="RegionData" GUID="920ad66e-13de-42ac-a509-355019f9519a" ID="115">
+  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData" GUID="920ad66e-13de-42ac-a509-355019f9519a" ID="115">
     <Fields>
       <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
     </Fields>
