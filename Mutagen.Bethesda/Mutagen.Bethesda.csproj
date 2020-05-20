@@ -96,8 +96,8 @@
     <Compile Include="Skyrim\Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\Location.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationTarget.cs">
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
@@ -204,7 +204,9 @@
     <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\PreferredPathing.cs" />
+    <Compile Include="Skyrim\Records\Major Records\PreferredPathing.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Projectile.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>
@@ -1778,29 +1780,26 @@
     <Compile Include="Skyrim\Records\Major Records\IdleMarker_LoquiGenerated.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\Location_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ALocationTarget_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationCell_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationObjectId_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationObjectType_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationKeyword_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationFallback_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationReference_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LandscapeTexture_LoquiGenerated.cs">
       <DependentUpon>LandscapeTexture.xml</DependentUpon>
@@ -1987,6 +1986,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\NavmeshNode_LoquiGenerated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationTarget_LoquiGenerated.cs">
+      <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
