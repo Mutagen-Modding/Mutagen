@@ -2153,15 +2153,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
-        #region Scripts
-        partial void ScriptsCustomParse(
-            BinaryMemoryReadStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed);
-        #endregion
         private int ScriptsEndingPos;
+        partial void CustomScriptsEndPos();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2186,6 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            ret.CustomScriptsEndPos();
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

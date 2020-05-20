@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Group<VisualEffect>(this);
             _Regions_Object = new Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -471,6 +472,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IRegionGetter> ISkyrimModGetter.Regions => _Regions_Object;
         #endregion
+        #region NavigationMeshInfoMaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<NavigationMeshInfoMap> _NavigationMeshInfoMaps_Object;
+        public Group<NavigationMeshInfoMap> NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<INavigationMeshInfoMapGetter> ISkyrimModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        #endregion
 
         #region To String
 
@@ -694,6 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -749,7 +758,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Climates,
                 TItem ShaderParticleGeometries,
                 TItem VisualEffects,
-                TItem Regions)
+                TItem Regions,
+                TItem NavigationMeshInfoMaps)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -804,6 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ShaderParticleGeometries = new MaskItem<TItem, Group.Mask<TItem>?>(ShaderParticleGeometries, new Group.Mask<TItem>(ShaderParticleGeometries));
                 this.VisualEffects = new MaskItem<TItem, Group.Mask<TItem>?>(VisualEffects, new Group.Mask<TItem>(VisualEffects));
                 this.Regions = new MaskItem<TItem, Group.Mask<TItem>?>(Regions, new Group.Mask<TItem>(Regions));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Group.Mask<TItem>(NavigationMeshInfoMaps));
             }
 
             #pragma warning disable CS8618
@@ -868,6 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? ShaderParticleGeometries { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? VisualEffects { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
             #endregion
 
             #region Equals
@@ -933,6 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
                 if (!object.Equals(this.VisualEffects, rhs.VisualEffects)) return false;
                 if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -991,6 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ShaderParticleGeometries);
                 hash.Add(this.VisualEffects);
                 hash.Add(this.Regions);
+                hash.Add(this.NavigationMeshInfoMaps);
                 return hash.ToHashCode();
             }
 
@@ -1264,6 +1278,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Regions.Overall)) return false;
                     if (this.Regions.Specific != null && !this.Regions.Specific.All(eval)) return false;
                 }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (!eval(this.NavigationMeshInfoMaps.Overall)) return false;
+                    if (this.NavigationMeshInfoMaps.Specific != null && !this.NavigationMeshInfoMaps.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1536,6 +1555,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Regions.Overall)) return true;
                     if (this.Regions.Specific != null && this.Regions.Specific.Any(eval)) return true;
                 }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (eval(this.NavigationMeshInfoMaps.Overall)) return true;
+                    if (this.NavigationMeshInfoMaps.Specific != null && this.NavigationMeshInfoMaps.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1603,6 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ShaderParticleGeometries = this.ShaderParticleGeometries == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ShaderParticleGeometries.Overall), this.ShaderParticleGeometries.Specific?.Translate(eval));
                 obj.VisualEffects = this.VisualEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VisualEffects.Overall), this.VisualEffects.Specific?.Translate(eval));
                 obj.Regions = this.Regions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1837,6 +1862,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Regions?.ToString(fg);
                     }
+                    if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+                    {
+                        NavigationMeshInfoMaps?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1915,6 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<ShaderParticleGeometry.ErrorMask>?>? ShaderParticleGeometries;
             public MaskItem<Exception?, Group.ErrorMask<VisualEffect.ErrorMask>?>? VisualEffects;
             public MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
             #endregion
 
             #region IErrorMask
@@ -2029,6 +2059,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return VisualEffects;
                     case SkyrimMod_FieldIndex.Regions:
                         return Regions;
+                    case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
+                        return NavigationMeshInfoMaps;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2197,6 +2229,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Regions:
                         this.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = new MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2367,6 +2402,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Regions:
                         this.Regions = (MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = (MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2428,6 +2466,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ShaderParticleGeometries != null) return true;
                 if (VisualEffects != null) return true;
                 if (Regions != null) return true;
+                if (NavigationMeshInfoMaps != null) return true;
                 return false;
             }
             #endregion
@@ -2515,6 +2554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ShaderParticleGeometries?.ToString(fg);
                 VisualEffects?.ToString(fg);
                 Regions?.ToString(fg);
+                NavigationMeshInfoMaps?.ToString(fg);
             }
             #endregion
 
@@ -2576,6 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ShaderParticleGeometries = this.ShaderParticleGeometries.Combine(rhs.ShaderParticleGeometries, (l, r) => l.Combine(r));
                 ret.VisualEffects = this.VisualEffects.Combine(rhs.VisualEffects, (l, r) => l.Combine(r));
                 ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
+                ret.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps.Combine(rhs.NavigationMeshInfoMaps, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2650,6 +2691,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?> ShaderParticleGeometries;
             public MaskItem<bool, Group.TranslationMask<VisualEffect.TranslationMask>?> VisualEffects;
             public MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?> Regions;
+            public MaskItem<bool, Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>?> NavigationMeshInfoMaps;
             #endregion
 
             #region Ctors
@@ -2708,6 +2750,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ShaderParticleGeometries = new MaskItem<bool, Group.TranslationMask<ShaderParticleGeometry.TranslationMask>?>(defaultOn, null);
                 this.VisualEffects = new MaskItem<bool, Group.TranslationMask<VisualEffect.TranslationMask>?>(defaultOn, null);
                 this.Regions = new MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?>(defaultOn, null);
+                this.NavigationMeshInfoMaps = new MaskItem<bool, Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2776,6 +2819,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ShaderParticleGeometries?.Overall ?? true, ShaderParticleGeometries?.Specific?.GetCrystal()));
                 ret.Add((VisualEffects?.Overall ?? true, VisualEffects?.Specific?.GetCrystal()));
                 ret.Add((Regions?.Overall ?? true, Regions?.Specific?.GetCrystal()));
+                ret.Add((NavigationMeshInfoMaps?.Overall ?? true, NavigationMeshInfoMaps?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2842,6 +2886,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ShaderParticleGeometries_Object = new Group<ShaderParticleGeometry>(this);
             _VisualEffects_Object = new Group<VisualEffect>(this);
             _Regions_Object = new Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3054,6 +3099,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Regions ?? true)
             {
                 this.Regions.RecordCache.Set(rhsMod.Regions.RecordCache.Items);
+            }
+            if (mask?.NavigationMeshInfoMaps ?? true)
+            {
+                this.NavigationMeshInfoMaps.RecordCache.Set(rhsMod.NavigationMeshInfoMaps.RecordCache.Items);
             }
         }
 
@@ -3426,6 +3475,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Region>());
             }
+            if (mask?.NavigationMeshInfoMaps ?? true)
+            {
+                this.NavigationMeshInfoMaps.RecordCache.Set(
+                    rhs.NavigationMeshInfoMaps.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<NavigationMeshInfoMap>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3497,6 +3553,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : 0;
             count += VisualEffects.RecordCache.Count > 0 ? 1 : 0;
             count += Regions.RecordCache.Count > 0 ? 1 : 0;
+            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3747,6 +3804,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<ShaderParticleGeometry> ShaderParticleGeometries { get; }
         new Group<VisualEffect> VisualEffects { get; }
         new Group<Region> Regions { get; }
+        new Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3817,6 +3875,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries { get; }
         IGroupGetter<IVisualEffectGetter> VisualEffects { get; }
         IGroupGetter<IRegionGetter> Regions { get; }
+        IGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
 
     }
 
@@ -4309,6 +4368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ShaderParticleGeometries = 50,
         VisualEffects = 51,
         Regions = 52,
+        NavigationMeshInfoMaps = 53,
     }
     #endregion
 
@@ -4326,9 +4386,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 53;
+        public const ushort AdditionalFieldCount = 54;
 
-        public const ushort FieldCount = 53;
+        public const ushort FieldCount = 54;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4464,6 +4524,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.VisualEffects;
                 case "REGIONS":
                     return (ushort)SkyrimMod_FieldIndex.Regions;
+                case "NAVIGATIONMESHINFOMAPS":
+                    return (ushort)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 default:
                     return null;
             }
@@ -4527,6 +4589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
                 case SkyrimMod_FieldIndex.Regions:
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4591,6 +4654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
                 case SkyrimMod_FieldIndex.Regions:
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4655,6 +4719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
                 case SkyrimMod_FieldIndex.Regions:
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4772,6 +4837,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "VisualEffects";
                 case SkyrimMod_FieldIndex.Regions:
                     return "Regions";
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
+                    return "NavigationMeshInfoMaps";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4835,6 +4902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
                 case SkyrimMod_FieldIndex.Regions:
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4900,6 +4968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ShaderParticleGeometries:
                 case SkyrimMod_FieldIndex.VisualEffects:
                 case SkyrimMod_FieldIndex.Regions:
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5017,6 +5086,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<VisualEffect>);
                 case SkyrimMod_FieldIndex.Regions:
                     return typeof(Group<Region>);
+                case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
+                    return typeof(Group<NavigationMeshInfoMap>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5076,9 +5147,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
+        public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 53;
+        public const int NumTypedFields = 54;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5173,6 +5245,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ShaderParticleGeometries.Clear();
             item.VisualEffects.Clear();
             item.Regions.Clear();
+            item.NavigationMeshInfoMaps.Clear();
         }
         
         #region Xml Translation
@@ -6016,6 +6089,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
                 }
+                case 0x4956414E: // NAVI
+                {
+                    if (importMask?.NavigationMeshInfoMaps ?? true)
+                    {
+                        item.NavigationMeshInfoMaps.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -6120,6 +6207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ShaderParticleGeometries = MaskItemExt.Factory(item.ShaderParticleGeometries.GetEqualsMask(rhs.ShaderParticleGeometries, include), include);
             ret.VisualEffects = MaskItemExt.Factory(item.VisualEffects.GetEqualsMask(rhs.VisualEffects, include), include);
             ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
+            ret.NavigationMeshInfoMaps = MaskItemExt.Factory(item.NavigationMeshInfoMaps.GetEqualsMask(rhs.NavigationMeshInfoMaps, include), include);
         }
         
         public string ToString(
@@ -6378,6 +6466,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Regions?.ToString(fg, "Regions");
             }
+            if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+            {
+                item.NavigationMeshInfoMaps?.ToString(fg, "NavigationMeshInfoMaps");
+            }
         }
         
         public bool HasBeenSet(
@@ -6444,6 +6536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ShaderParticleGeometries = new MaskItem<bool, Group.Mask<bool>?>(true, item.ShaderParticleGeometries?.GetHasBeenSetMask());
             mask.VisualEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.VisualEffects?.GetHasBeenSetMask());
             mask.Regions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
+            mask.NavigationMeshInfoMaps = new MaskItem<bool, Group.Mask<bool>?>(true, item.NavigationMeshInfoMaps?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6506,6 +6599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
             if (!object.Equals(lhs.VisualEffects, rhs.VisualEffects)) return false;
             if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
+            if (!object.Equals(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
             return true;
         }
         
@@ -6565,6 +6659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ShaderParticleGeometries);
             hash.Add(item.VisualEffects);
             hash.Add(item.Regions);
+            hash.Add(item.NavigationMeshInfoMaps);
             return hash.ToHashCode();
         }
         
@@ -6842,6 +6937,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegion":
                 case "IRegionInternal":
                     return obj.Regions.RecordCache;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    return obj.NavigationMeshInfoMaps.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -6858,7 +6958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[52];
+            Stream[] outputStreams = new Stream[53];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -6912,6 +7012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7323,6 +7424,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.NavigationMeshInfoMaps is ILinkedFormKeyContainer NavigationMeshInfoMapslinkCont)
+            {
+                foreach (var item in NavigationMeshInfoMapslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7534,6 +7642,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Regions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8019,6 +8131,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegion":
                 case "IRegionInternal":
                     foreach (var item in obj.Regions.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -9102,6 +9223,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                try
+                {
+                    item.NavigationMeshInfoMaps.DeepCopyIn(
+                        rhs: rhs.NavigationMeshInfoMaps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9773,6 +9914,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Regions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Regions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
+                ((GroupXmlWriteTranslation)((IXmlItem)NavigationMeshInfoMapsItem).XmlWriteTranslator).Write<INavigationMeshInfoMapGetter>(
+                    item: NavigationMeshInfoMapsItem,
+                    node: node,
+                    name: nameof(item.NavigationMeshInfoMaps),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps));
             }
         }
 
@@ -10868,6 +11020,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "NavigationMeshInfoMaps":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                    try
+                    {
+                        item.NavigationMeshInfoMaps.CopyInFromXml<NavigationMeshInfoMap>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -11089,6 +11260,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ShaderParticleGeometries;
         public bool VisualEffects;
         public bool Regions;
+        public bool NavigationMeshInfoMaps;
         public GroupMask()
         {
         }
@@ -11146,6 +11318,7 @@ namespace Mutagen.Bethesda.Skyrim
             ShaderParticleGeometries = defaultValue;
             VisualEffects = defaultValue;
             Regions = defaultValue;
+            NavigationMeshInfoMaps = defaultValue;
         }
     }
 
@@ -11747,6 +11920,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.NavigationMeshInfoMaps ?? true)
+            {
+                var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
+                if (NavigationMeshInfoMapsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
+                        item: NavigationMeshInfoMapsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -12201,6 +12385,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IRegionGetter>? _Regions => _RegionsLocation.HasValue ? GroupBinaryOverlay<IRegionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RegionsLocation!.Value.Min, _RegionsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IRegionGetter> Regions => _Regions ?? new Group<Region>(this);
         #endregion
+        #region NavigationMeshInfoMaps
+        private RangeInt64? _NavigationMeshInfoMapsLocation;
+        private IGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocation.HasValue ? GroupBinaryOverlay<INavigationMeshInfoMapGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _NavigationMeshInfoMapsLocation!.Value.Min, _NavigationMeshInfoMapsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Group<NavigationMeshInfoMap>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -12549,6 +12738,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                }
+                case 0x4956414E: // NAVI
+                {
+                    _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

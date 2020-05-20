@@ -15,6 +15,11 @@ namespace Mutagen.Bethesda
         /// FormKey to link against
         /// </summary>
         FormKey FormKey { get; }
+
+        /// <summary>
+        /// True if FormKey points to a null ID
+        /// </summary>
+        bool IsNull { get; }
     }
 
     /// <summary>

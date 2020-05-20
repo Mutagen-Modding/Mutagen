@@ -200,9 +200,9 @@ namespace Mutagen.Bethesda.Tests
                 var rdatHeader = stream.MetaData.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
                 var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
                 var nextRdat = UtilityTranslation.FindFirstSubrecord(
-                    majorFrame.Content, 
+                    majorFrame.Content,
                     stream.MetaData,
-                    Region_Registration.RDAT_HEADER, 
+                    Region_Registration.RDAT_HEADER,
                     navigateToContent: false,
                     offset: rdat.Value + rdatHeader.Header.TotalLength);
                 rdats[index] =

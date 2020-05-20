@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"thread: true");
                     }
-                    if (needsMasters)
+                    if (needsMasters && data.HasTrigger)
                     {
                         args.AddPassArg($"recordTypeConverter");
                     }
@@ -496,24 +496,39 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    using (var args = new ArgsWrapper(fg,
-                        $"partial void {typeGen.Name}CustomParse"))
+                    if (typeGen.GetFieldData().HasTrigger)
                     {
-                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                        args.Add($"long finalPos");
-                        args.Add($"int offset");
-                        args.Add($"{nameof(RecordType)} type");
-                        args.Add($"int? lastParsed");
+                        using (var args = new ArgsWrapper(fg,
+                            $"partial void {typeGen.Name}CustomParse"))
+                        {
+                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"long finalPos");
+                            args.Add($"int offset");
+                            args.Add($"{nameof(RecordType)} type");
+                            args.Add($"int? lastParsed");
+                        }
                     }
                     return;
                 default:
                     throw new NotImplementedException();
             }
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+            var subData = list.SubTypeGeneration.GetFieldData();
+            ListBinaryType listBinaryType = GetListType(list, data, subData);
+            var expLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
             if (list.SubTypeGeneration is LoquiType loqui)
             {
                 var typeName = this.Module.BinaryOverlayClassName(loqui);
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
+                switch (listBinaryType)
+                {
+                    case ListBinaryType.PrependCount 
+                    when !data.HasTrigger && expLen.HasValue:
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        break;
+                    default:
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
+                        break;
+                }
             }
             else if (data.HasTrigger)
             {
@@ -521,7 +536,17 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                switch (listBinaryType)
+                {
+                    case ListBinaryType.CounterRecord:
+                        throw new NotImplementedException();
+                    case ListBinaryType.PrependCount:
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        break;
+                    default:
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        break;
+                }
             }
         }
 
@@ -972,7 +997,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperUnknownLengthParse(
+        public override async Task GenerateWrapperUnknownLengthParse(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -987,7 +1012,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
-            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");
+            var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+            var subExpLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
+            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + 4;");
         }
     }
 }

@@ -1939,6 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
         private int DataEndingPos;
+        partial void CustomDataEndPos();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1967,6 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            ret.CustomDataEndPos();
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

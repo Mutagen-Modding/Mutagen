@@ -481,6 +481,55 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            int countLengthLength,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            switch (countLengthLength)
+            {
+                case 2:
+                    writer.Write(checked((ushort)items.Count));
+                    break;
+                case 4:
+                    writer.Write(items.Count);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            foreach (var item in items)
+            {
+                transl(writer, item, recordTypeConverter);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            int countLengthLength,
+            BinarySubWriteDelegate<T> transl)
+        {
+            if (items == null) return;
+            switch (countLengthLength)
+            {
+                case 2:
+                    writer.Write(checked((ushort)items.Count));
+                    break;
+                case 4:
+                    writer.Write(items.Count);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            foreach (var item in items)
+            {
+                transl(writer, item);
+            }
+        }
+
         public void WritePerItem(
             MutagenWriter writer,
             IReadOnlyList<T>? items,

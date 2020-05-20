@@ -171,7 +171,12 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperUnknownLengthParse(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, int? passedLength, string passedLengthAccessor)
+        public override async Task GenerateWrapperUnknownLengthParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            int? passedLength,
+            string passedLengthAccessor)
         {
             StringType str = typeGen as StringType;
             switch (str.BinaryType)

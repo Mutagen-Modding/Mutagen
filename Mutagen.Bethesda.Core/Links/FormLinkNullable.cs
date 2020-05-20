@@ -31,6 +31,11 @@ namespace Mutagen.Bethesda
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         /// <summary>
+        /// True if unlinked and ID points to Null
+        /// </summary>
+        public bool IsNull => this.FormKey?.IsNull ?? true;
+
+        /// <summary>
         /// Default constructor that creates a link to the target FormKey
         /// </summary>
         public FormLinkNullable(FormKey? formKey)

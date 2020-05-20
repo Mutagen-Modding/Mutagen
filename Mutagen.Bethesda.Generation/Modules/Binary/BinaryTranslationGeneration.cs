@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public virtual void GenerateWrapperUnknownLengthParse(
+        public virtual async Task GenerateWrapperUnknownLengthParse(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

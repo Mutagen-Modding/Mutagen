@@ -1847,6 +1847,10 @@ namespace Mutagen.Bethesda.Generation
                                 && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
                             {
                                 fg.AppendLine($"private int {field.Item.Field.Name}EndingPos;");
+                                if (data.BinaryOverlayFallback == BinaryGenerationType.Custom)
+                                {
+                                    fg.AppendLine($"partial void Custom{field.Item.Field.Name}EndPos();");
+                                }
                             }
                         }
                         else if (passedLength != null)
@@ -2141,12 +2145,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (amount == null)
                                 {
                                     if (field.Item.Field is CustomLogic) continue;
-                                    passedLength = null;
                                     if (field.Last
                                         || (field.Item.InternalIndex < (obj.Fields.Count - 1)
                                         && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
                                     {
-                                        var passedAccessor = passedLength == null ? null : $"0x{passedLength:X}";
+                                        var passedAccessor = passedLength == null || passedLength.Value == 0 ? null : $"0x{passedLength:X}";
                                         if (lastUnknownField != null)
                                         {
                                             passedAccessor = $"ret.{lastUnknownField.Name}EndingPos";
@@ -2155,14 +2158,26 @@ namespace Mutagen.Bethesda.Generation
                                                 passedAccessor += $" + 0x{passedLength:X}";
                                             }
                                         }
-                                        typeGen.GenerateWrapperUnknownLengthParse(
-                                            fg,
-                                            obj,
-                                            field.Item.Field,
-                                            passedLength,
-                                            passedAccessor);
+                                        switch (data.BinaryOverlayFallback)
+                                        {
+                                            case BinaryGenerationType.Custom:
+                                                fg.AppendLine($"ret.Custom{field.Item.Field.Name}EndPos();");
+                                                break;
+                                            case BinaryGenerationType.DoNothing:
+                                            case BinaryGenerationType.NoGeneration:
+                                                break;
+                                            case BinaryGenerationType.Normal:
+                                                await typeGen.GenerateWrapperUnknownLengthParse(
+                                                    fg,
+                                                    obj,
+                                                    field.Item.Field,
+                                                    passedLength,
+                                                    passedAccessor);
+                                                break;
+                                        }
                                         lastUnknownFieldParse = field.Item.Field;
                                     }
+                                    passedLength = null;
                                     lastUnknownField = field.Item.Field;
                                 }
                                 else

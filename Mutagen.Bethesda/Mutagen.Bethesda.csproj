@@ -183,6 +183,12 @@
     <Compile Include="Skyrim\Records\Major Records\MoveableStatic.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationMapInfo.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -198,6 +204,7 @@
     <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PreferredPathing.cs" />
     <Compile Include="Skyrim\Records\Major Records\Projectile.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>
@@ -1956,6 +1963,30 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\RegionLand_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationMesh_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationMeshInfoMap_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationMapInfo_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LinkedDoor_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IslandData_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PreferredPathing_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavmeshSet_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavmeshNode_LoquiGenerated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

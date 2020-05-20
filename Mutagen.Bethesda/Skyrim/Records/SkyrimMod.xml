@@ -55,6 +55,7 @@
       <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
       <Group name="VisualEffects" refName="VisualEffect" />
       <Group name="Regions" refName="Region" />
+      <Group name="NavigationMeshInfoMaps" refName="NavigationMeshInfoMap" />
     </Fields>
   </Object>
 </Loqui>

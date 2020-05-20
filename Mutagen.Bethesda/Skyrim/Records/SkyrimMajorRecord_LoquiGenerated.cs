@@ -1103,6 +1103,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType MUSC_HEADER = new RecordType("MUSC");
+        public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
+        public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -1195,6 +1197,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         MSTT_HEADER,
                         MOVT_HEADER,
                         MUSC_HEADER,
+                        NAVM_HEADER,
+                        NAVI_HEADER,
                         NPC__HEADER,
                         ENCH_HEADER,
                         OTFT_HEADER,

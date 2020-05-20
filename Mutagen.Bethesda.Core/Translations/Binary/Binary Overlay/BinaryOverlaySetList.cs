@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -105,6 +106,33 @@ namespace Mutagen.Bethesda.Binary
             }
             return new BinaryOverlayListByStartIndex(
                 mem,
+                package,
+                getter,
+                itemLength);
+        }
+
+        public static IReadOnlyList<T> FactoryByCountLength(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
+            int itemLength,
+            byte countLength,
+            BinaryOverlay.SpanFactory<T> getter)
+        {
+            uint count;
+            switch (countLength)
+            {
+                case 4:
+                    count = BinaryPrimitives.ReadUInt32LittleEndian(mem);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            if (((mem.Length - countLength) / itemLength) < count)
+            {
+                throw new ArgumentException("Item count and expected size did not match.");
+            }
+            return new BinaryOverlayListByStartIndex(
+                mem.Slice(countLength, checked((int)(count * itemLength))),
                 package,
                 getter,
                 itemLength);
