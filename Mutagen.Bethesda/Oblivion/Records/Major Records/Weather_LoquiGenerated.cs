@@ -81,17 +81,17 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeatherGetter.Model => this.Model;
         #endregion
-        #region WeatherTypes
+        #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherType>? _WeatherTypes;
-        public ExtendedList<WeatherType>? WeatherTypes
+        private ExtendedList<WeatherColors>? _Colors;
+        public ExtendedList<WeatherColors>? Colors
         {
-            get => this._WeatherTypes;
-            set => this._WeatherTypes = value;
+            get => this._Colors;
+            set => this._Colors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IWeatherTypeGetter>? IWeatherGetter.WeatherTypes => _WeatherTypes;
+        IReadOnlyList<IWeatherColorsGetter>? IWeatherGetter.Colors => _Colors;
         #endregion
 
         #endregion
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = initialValue;
                 this.TextureUpperLayer = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>());
                 this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(initialValue, new FogDistance.Mask<TItem>(initialValue));
                 this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(initialValue, new HDRData.Mask<TItem>(initialValue));
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(initialValue, new WeatherData.Mask<TItem>(initialValue));
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem TextureLowerLayer,
                 TItem TextureUpperLayer,
                 TItem Model,
-                TItem WeatherTypes,
+                TItem Colors,
                 TItem FogDistance,
                 TItem HDRData,
                 TItem Data,
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = TextureLowerLayer;
                 this.TextureUpperLayer = TextureUpperLayer;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(Colors, Enumerable.Empty<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>());
                 this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(FogDistance, new FogDistance.Mask<TItem>(FogDistance));
                 this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(HDRData, new HDRData.Mask<TItem>(HDRData));
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(Data, new WeatherData.Mask<TItem>(Data));
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem TextureLowerLayer;
             public TItem TextureUpperLayer;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? WeatherTypes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>? Colors;
             public MaskItem<TItem, FogDistance.Mask<TItem>?>? FogDistance { get; set; }
             public MaskItem<TItem, HDRData.Mask<TItem>?>? HDRData { get; set; }
             public MaskItem<TItem, WeatherData.Mask<TItem>?>? Data { get; set; }
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
                 if (!object.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.WeatherTypes, rhs.WeatherTypes)) return false;
+                if (!object.Equals(this.Colors, rhs.Colors)) return false;
                 if (!object.Equals(this.FogDistance, rhs.FogDistance)) return false;
                 if (!object.Equals(this.HDRData, rhs.HDRData)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.TextureLowerLayer);
                 hash.Add(this.TextureUpperLayer);
                 hash.Add(this.Model);
-                hash.Add(this.WeatherTypes);
+                hash.Add(this.Colors);
                 hash.Add(this.FogDistance);
                 hash.Add(this.HDRData);
                 hash.Add(this.Data);
@@ -421,12 +421,12 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (this.WeatherTypes != null)
+                if (this.Colors != null)
                 {
-                    if (!eval(this.WeatherTypes.Overall)) return false;
-                    if (this.WeatherTypes.Specific != null)
+                    if (!eval(this.Colors.Overall)) return false;
+                    if (this.Colors.Specific != null)
                     {
-                        foreach (var item in this.WeatherTypes.Specific)
+                        foreach (var item in this.Colors.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -475,12 +475,12 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (this.WeatherTypes != null)
+                if (this.Colors != null)
                 {
-                    if (eval(this.WeatherTypes.Overall)) return true;
-                    if (this.WeatherTypes.Specific != null)
+                    if (eval(this.Colors.Overall)) return true;
+                    if (this.Colors.Specific != null)
                     {
-                        foreach (var item in this.WeatherTypes.Specific)
+                        foreach (var item in this.Colors.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -532,16 +532,16 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TextureLowerLayer = eval(this.TextureLowerLayer);
                 obj.TextureUpperLayer = eval(this.TextureUpperLayer);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                if (WeatherTypes != null)
+                if (Colors != null)
                 {
-                    obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.WeatherTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
-                    if (WeatherTypes.Specific != null)
+                    obj.Colors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherColors.Mask<R>?>>?>(eval(this.Colors.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherColors.Mask<R>?>>());
+                    if (Colors.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
-                        obj.WeatherTypes.Specific = l;
-                        foreach (var item in WeatherTypes.Specific.WithIndex())
+                        var l = new List<MaskItemIndexed<R, WeatherColors.Mask<R>?>>();
+                        obj.Colors.Specific = l;
+                        foreach (var item in Colors.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherColors.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherColors.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -599,17 +599,17 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Model?.ToString(fg);
                     }
-                    if ((printMask?.WeatherTypes?.Overall ?? true)
-                        && WeatherTypes.TryGet(out var WeatherTypesItem))
+                    if ((printMask?.Colors?.Overall ?? true)
+                        && Colors.TryGet(out var ColorsItem))
                     {
-                        fg.AppendLine("WeatherTypes =>");
+                        fg.AppendLine("Colors =>");
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(WeatherTypesItem.Overall);
-                            if (WeatherTypesItem.Specific != null)
+                            fg.AppendItem(ColorsItem.Overall);
+                            if (ColorsItem.Specific != null)
                             {
-                                foreach (var subItem in WeatherTypesItem.Specific)
+                                foreach (var subItem in ColorsItem.Specific)
                                 {
                                     fg.AppendLine("[");
                                     using (new DepthWrapper(fg))
@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? TextureLowerLayer;
             public Exception? TextureUpperLayer;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>? WeatherTypes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>? Colors;
             public MaskItem<Exception?, FogDistance.ErrorMask?>? FogDistance;
             public MaskItem<Exception?, HDRData.ErrorMask?>? HDRData;
             public MaskItem<Exception?, WeatherData.ErrorMask?>? Data;
@@ -691,8 +691,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return TextureUpperLayer;
                     case Weather_FieldIndex.Model:
                         return Model;
-                    case Weather_FieldIndex.WeatherTypes:
-                        return WeatherTypes;
+                    case Weather_FieldIndex.Colors:
+                        return Colors;
                     case Weather_FieldIndex.FogDistance:
                         return FogDistance;
                     case Weather_FieldIndex.HDRData:
@@ -720,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Weather_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.WeatherTypes:
-                        this.WeatherTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ex, null);
+                    case Weather_FieldIndex.Colors:
+                        this.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(ex, null);
                         break;
                     case Weather_FieldIndex.FogDistance:
                         this.FogDistance = new MaskItem<Exception?, FogDistance.ErrorMask?>(ex, null);
@@ -755,8 +755,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Weather_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.WeatherTypes:
-                        this.WeatherTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
+                    case Weather_FieldIndex.Colors:
+                        this.Colors = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>)obj;
                         break;
                     case Weather_FieldIndex.FogDistance:
                         this.FogDistance = (MaskItem<Exception?, FogDistance.ErrorMask?>?)obj;
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (TextureLowerLayer != null) return true;
                 if (TextureUpperLayer != null) return true;
                 if (Model != null) return true;
-                if (WeatherTypes != null) return true;
+                if (Colors != null) return true;
                 if (FogDistance != null) return true;
                 if (HDRData != null) return true;
                 if (Data != null) return true;
@@ -825,16 +825,16 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(TextureLowerLayer, "TextureLowerLayer");
                 fg.AppendItem(TextureUpperLayer, "TextureUpperLayer");
                 Model?.ToString(fg);
-                if (WeatherTypes.TryGet(out var WeatherTypesItem))
+                if (Colors.TryGet(out var ColorsItem))
                 {
-                    fg.AppendLine("WeatherTypes =>");
+                    fg.AppendLine("Colors =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendItem(WeatherTypesItem.Overall);
-                        if (WeatherTypesItem.Specific != null)
+                        fg.AppendItem(ColorsItem.Overall);
+                        if (ColorsItem.Specific != null)
                         {
-                            foreach (var subItem in WeatherTypesItem.Specific)
+                            foreach (var subItem in ColorsItem.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.TextureLowerLayer = this.TextureLowerLayer.Combine(rhs.TextureLowerLayer);
                 ret.TextureUpperLayer = this.TextureUpperLayer.Combine(rhs.TextureUpperLayer);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.WeatherTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.WeatherTypes?.Overall, rhs.WeatherTypes?.Overall), ExceptionExt.Combine(this.WeatherTypes?.Specific, rhs.WeatherTypes?.Specific));
+                ret.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(ExceptionExt.Combine(this.Colors?.Overall, rhs.Colors?.Overall), ExceptionExt.Combine(this.Colors?.Specific, rhs.Colors?.Specific));
                 ret.FogDistance = this.FogDistance.Combine(rhs.FogDistance, (l, r) => l.Combine(r));
                 ret.HDRData = this.HDRData.Combine(rhs.HDRData, (l, r) => l.Combine(r));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool TextureLowerLayer;
             public bool TextureUpperLayer;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, WeatherType.TranslationMask?> WeatherTypes;
+            public MaskItem<bool, WeatherColors.TranslationMask?> Colors;
             public MaskItem<bool, FogDistance.TranslationMask?> FogDistance;
             public MaskItem<bool, HDRData.TranslationMask?> HDRData;
             public MaskItem<bool, WeatherData.TranslationMask?> Data;
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = defaultOn;
                 this.TextureUpperLayer = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.WeatherTypes = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
+                this.Colors = new MaskItem<bool, WeatherColors.TranslationMask?>(defaultOn, null);
                 this.FogDistance = new MaskItem<bool, FogDistance.TranslationMask?>(defaultOn, null);
                 this.HDRData = new MaskItem<bool, HDRData.TranslationMask?>(defaultOn, null);
                 this.Data = new MaskItem<bool, WeatherData.TranslationMask?>(defaultOn, null);
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((TextureLowerLayer, null));
                 ret.Add((TextureUpperLayer, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((WeatherTypes?.Overall ?? true, WeatherTypes?.Specific?.GetCrystal()));
+                ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
                 ret.Add((FogDistance?.Overall ?? true, FogDistance?.Specific?.GetCrystal()));
                 ret.Add((HDRData?.Overall ?? true, HDRData?.Specific?.GetCrystal()));
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
         new Model? Model { get; set; }
-        new ExtendedList<WeatherType>? WeatherTypes { get; set; }
+        new ExtendedList<WeatherColors>? Colors { get; set; }
         new FogDistance? FogDistance { get; set; }
         new HDRData? HDRData { get; set; }
         new WeatherData? Data { get; set; }
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
         IModelGetter? Model { get; }
-        IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
+        IReadOnlyList<IWeatherColorsGetter>? Colors { get; }
         IFogDistanceGetter? FogDistance { get; }
         IHDRDataGetter? HDRData { get; }
         IWeatherDataGetter? Data { get; }
@@ -1373,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         TextureLowerLayer = 5,
         TextureUpperLayer = 6,
         Model = 7,
-        WeatherTypes = 8,
+        Colors = 8,
         FogDistance = 9,
         HDRData = 10,
         Data = 11,
@@ -1433,8 +1433,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Weather_FieldIndex.TextureUpperLayer;
                 case "MODEL":
                     return (ushort)Weather_FieldIndex.Model;
-                case "WEATHERTYPES":
-                    return (ushort)Weather_FieldIndex.WeatherTypes;
+                case "COLORS":
+                    return (ushort)Weather_FieldIndex.Colors;
                 case "FOGDISTANCE":
                     return (ushort)Weather_FieldIndex.FogDistance;
                 case "HDRDATA":
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weather_FieldIndex enu = (Weather_FieldIndex)index;
             switch (enu)
             {
-                case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.Colors:
                 case Weather_FieldIndex.Sounds:
                     return true;
                 case Weather_FieldIndex.TextureLowerLayer:
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Weather_FieldIndex.Model:
-                case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.Colors:
                 case Weather_FieldIndex.FogDistance:
                 case Weather_FieldIndex.HDRData:
                 case Weather_FieldIndex.Data:
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureLowerLayer:
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
-                case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.Colors:
                 case Weather_FieldIndex.FogDistance:
                 case Weather_FieldIndex.HDRData:
                 case Weather_FieldIndex.Data:
@@ -1518,8 +1518,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "TextureUpperLayer";
                 case Weather_FieldIndex.Model:
                     return "Model";
-                case Weather_FieldIndex.WeatherTypes:
-                    return "WeatherTypes";
+                case Weather_FieldIndex.Colors:
+                    return "Colors";
                 case Weather_FieldIndex.FogDistance:
                     return "FogDistance";
                 case Weather_FieldIndex.HDRData:
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureLowerLayer:
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
-                case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.Colors:
                 case Weather_FieldIndex.FogDistance:
                 case Weather_FieldIndex.HDRData:
                 case Weather_FieldIndex.Data:
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureLowerLayer:
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
-                case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.Colors:
                 case Weather_FieldIndex.FogDistance:
                 case Weather_FieldIndex.HDRData:
                 case Weather_FieldIndex.Data:
@@ -1582,8 +1582,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
-                case Weather_FieldIndex.WeatherTypes:
-                    return typeof(ExtendedList<WeatherType>);
+                case Weather_FieldIndex.Colors:
+                    return typeof(ExtendedList<WeatherColors>);
                 case Weather_FieldIndex.FogDistance:
                     return typeof(FogDistance);
                 case Weather_FieldIndex.HDRData:
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TextureLowerLayer = default;
             item.TextureUpperLayer = default;
             item.Model = null;
-            item.WeatherTypes = null;
+            item.Colors = null;
             item.FogDistance = null;
             item.HDRData = null;
             item.Data = null;
@@ -1800,17 +1800,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x304D414E: // NAM0
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.WeatherTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
+                    item.Colors = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherColors>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
+                            transl: (MutagenFrame r, out WeatherColors listSubItem) =>
                             {
-                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
+                                return LoquiBinaryTranslation<WeatherColors>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem!);
                             })
-                        .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
+                        .ToExtendedList<WeatherColors>();
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
                 }
                 case 0x4D414E46: // FNAM
                 {
@@ -1924,8 +1924,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
-                rhs.WeatherTypes,
+            ret.Colors = item.Colors.CollectionEqualsHelper(
+                rhs.Colors,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.FogDistance = EqualsMaskHelper.EqualsHelper(
@@ -2013,14 +2013,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.WeatherTypes?.Overall ?? true)
-                && item.WeatherTypes.TryGet(out var WeatherTypesItem))
+            if ((printMask?.Colors?.Overall ?? true)
+                && item.Colors.TryGet(out var ColorsItem))
             {
-                fg.AppendLine("WeatherTypes =>");
+                fg.AppendLine("Colors =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in WeatherTypesItem)
+                    foreach (var subItem in ColorsItem)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.TextureUpperLayer.HasValue && checkMask.TextureUpperLayer.Value != (item.TextureUpperLayer != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.WeatherTypes?.Overall.HasValue ?? false && checkMask.WeatherTypes!.Overall.Value != (item.WeatherTypes != null)) return false;
+            if (checkMask.Colors?.Overall.HasValue ?? false && checkMask.Colors!.Overall.Value != (item.Colors != null)) return false;
             if (checkMask.FogDistance?.Overall.HasValue ?? false && checkMask.FogDistance.Overall.Value != (item.FogDistance != null)) return false;
             if (checkMask.FogDistance?.Specific != null && (item.FogDistance == null || !item.FogDistance.HasBeenSet(checkMask.FogDistance.Specific))) return false;
             if (checkMask.HDRData?.Overall.HasValue ?? false && checkMask.HDRData.Overall.Value != (item.HDRData != null)) return false;
@@ -2095,9 +2095,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.TextureUpperLayer = (item.TextureUpperLayer != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            if (item.WeatherTypes.TryGet(out var WeatherTypesItem))
+            if (item.Colors.TryGet(out var ColorsItem))
             {
-                mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeatherTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+                mask.Colors = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherColors.Mask<bool>?>>?>(true, ColorsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherColors.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
             var itemFogDistance = item.FogDistance;
             mask.FogDistance = new MaskItem<bool, FogDistance.Mask<bool>?>(itemFogDistance != null, itemFogDistance?.GetHasBeenSetMask());
@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
             if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+            if (!lhs.Colors.SequenceEqual(rhs.Colors)) return false;
             if (!object.Equals(lhs.FogDistance, rhs.FogDistance)) return false;
             if (!object.Equals(lhs.HDRData, rhs.HDRData)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
@@ -2200,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.WeatherTypes);
+            hash.Add(item.Colors);
             if (item.FogDistance.TryGet(out var FogDistanceitem))
             {
                 hash.Add(FogDistanceitem);
@@ -2328,26 +2328,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Colors) ?? true))
             {
-                errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                errorMask?.PushIndex((int)Weather_FieldIndex.Colors);
                 try
                 {
-                    if ((rhs.WeatherTypes != null))
+                    if ((rhs.Colors != null))
                     {
-                        item.WeatherTypes = 
-                            rhs.WeatherTypes
+                        item.Colors = 
+                            rhs.Colors
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<WeatherType>();
+                            .ToExtendedList<WeatherColors>();
                     }
                     else
                     {
-                        item.WeatherTypes = null;
+                        item.Colors = null;
                     }
                 }
                 catch (Exception ex)
@@ -2638,20 +2638,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model));
                 }
             }
-            if ((item.WeatherTypes != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
+            if ((item.Colors != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Colors) ?? true))
             {
-                ListXmlTranslation<IWeatherTypeGetter>.Instance.Write(
+                ListXmlTranslation<IWeatherColorsGetter>.Instance.Write(
                     node: node,
-                    name: nameof(item.WeatherTypes),
-                    item: item.WeatherTypes,
-                    fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
+                    name: nameof(item.Colors),
+                    item: item.Colors,
+                    fieldIndex: (int)Weather_FieldIndex.Colors,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WeatherTypes),
-                    transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Colors),
+                    transl: (XElement subNode, IWeatherColorsGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
-                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        ((WeatherColorsXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
                             item: Item,
                             node: subNode,
                             name: null,
@@ -2883,22 +2883,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "WeatherTypes":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                case "Colors":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Colors);
                     try
                     {
-                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
+                        if (ListXmlTranslation<WeatherColors>.Instance.Parse(
                             node: node,
-                            enumer: out var WeatherTypesItem,
-                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
+                            enumer: out var ColorsItem,
+                            transl: LoquiXmlTranslation<WeatherColors>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.WeatherTypes = WeatherTypesItem.ToExtendedList();
+                            item.Colors = ColorsItem.ToExtendedList();
                         }
                         else
                         {
-                            item.WeatherTypes = null;
+                            item.Colors = null;
                         }
                     }
                     catch (Exception ex)
@@ -3108,14 +3108,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherColorsGetter>.Instance.Write(
                 writer: writer,
-                items: item.WeatherTypes,
+                items: item.Colors,
                 recordType: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER),
-                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherColorsGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
-                    ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((WeatherColorsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         recordTypeConverter: conv);
@@ -3289,7 +3289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
+        public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
         public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package) : default;
@@ -3389,13 +3389,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.WeatherTypes = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
+                    this.Colors = BinaryOverlaySetList<WeatherColorsBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
-                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
+                        getter: (s, p) => WeatherColorsBinaryOverlay.WeatherColorsFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
                 }
                 case 0x4D414E46: // FNAM
                 {

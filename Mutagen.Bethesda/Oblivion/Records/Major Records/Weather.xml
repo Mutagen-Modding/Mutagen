@@ -5,8 +5,8 @@
       <String name="TextureLowerLayer" recordType="CNAM" />
       <String name="TextureUpperLayer" recordType="DNAM" />
       <RefDirect name="Model" refName="Model" />
-      <List name="WeatherTypes" recordType="NAM0">
-        <RefDirect refName="WeatherType" />
+      <List name="Colors" recordType="NAM0">
+        <RefDirect refName="WeatherColors" />
       </List>
       <RefDirect name="FogDistance" refName="FogDistance" />
       <RefDirect name="HDRData" refName="HDRData" />
@@ -16,7 +16,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="WeatherType" objType="Subrecord" GUID="8a3ac7e7-7e81-4f9c-b318-c1c40ed00f8c" ID="103">
+  <Object name="WeatherColors" objType="Subrecord" GUID="8a3ac7e7-7e81-4f9c-b318-c1c40ed00f8c" ID="103">
     <Fields>
       <Color name="Sunrise" binaryType="Alpha" />
       <Color name="Day" binaryType="Alpha" />

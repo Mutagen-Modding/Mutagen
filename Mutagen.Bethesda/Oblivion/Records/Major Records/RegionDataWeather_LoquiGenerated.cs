@@ -49,15 +49,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherChance>? _Weathers;
-        public ExtendedList<WeatherChance>? Weathers
+        private ExtendedList<WeatherType>? _Weathers;
+        public ExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IWeatherChanceGetter>? IRegionDataWeatherGetter.Weathers => _Weathers;
+        IReadOnlyList<IWeatherTypeGetter>? IRegionDataWeatherGetter.Weathers => _Weathers;
         #endregion
 
         #endregion
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Weathers)
             : base(Header: Header)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherChance.Mask<TItem>?>>?>? Weathers;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? Weathers;
             #endregion
 
             #region Equals
@@ -331,14 +331,14 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Weathers != null)
                 {
-                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance.Mask<R>?>>());
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
                     if (Weathers.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, WeatherChance.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
                         obj.Weathers.Specific = l;
                         foreach (var item in Weathers.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, WeatherChance.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherChance.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>? Weathers;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>? Weathers;
             #endregion
 
             #region IErrorMask
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionDataWeather_FieldIndex.Weathers:
-                        this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ex, null);
+                        this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case RegionDataWeather_FieldIndex.Weathers:
-                        this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>)obj;
+                        this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -537,14 +537,14 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, WeatherChance.TranslationMask?> Weathers;
+            public MaskItem<bool, WeatherType.TranslationMask?> Weathers;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Weathers = new MaskItem<bool, WeatherChance.TranslationMask?>(defaultOn, null);
+                this.Weathers = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionDataWeather>
     {
-        new ExtendedList<WeatherChance>? Weathers { get; set; }
+        new ExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionDataWeatherGetter :
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         static ILoquiRegistration Registration => RegionDataWeather_Registration.Instance;
-        IReadOnlyList<IWeatherChanceGetter>? Weathers { get; }
+        IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }
 
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataWeather_FieldIndex.Weathers:
-                    return typeof(ExtendedList<WeatherChance>);
+                    return typeof(ExtendedList<WeatherType>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1195,15 +1195,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Weathers = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherChance listSubItem) =>
+                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
                             {
-                                return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
+                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem!);
                             })
-                        .ToExtendedList<WeatherChance>();
+                        .ToExtendedList<WeatherType>();
                     return TryGet<int?>.Succeed((int)RegionDataWeather_FieldIndex.Weathers);
                 }
                 default:
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (item.Weathers.TryGet(out var WeathersItem))
             {
-                mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>?>(true, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+                mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
             base.FillHasBeenSetMask(
                 item: item,
@@ -1473,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<WeatherChance>();
+                            .ToExtendedList<WeatherType>();
                     }
                     else
                     {
@@ -1597,17 +1597,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Weathers != null)
                 && (translationMask?.GetShouldTranslate((int)RegionDataWeather_FieldIndex.Weathers) ?? true))
             {
-                ListXmlTranslation<IWeatherChanceGetter>.Instance.Write(
+                ListXmlTranslation<IWeatherTypeGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Weathers),
                     item: item.Weathers,
                     fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RegionDataWeather_FieldIndex.Weathers),
-                    transl: (XElement subNode, IWeatherChanceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
-                        ((WeatherChanceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
                             item: Item,
                             node: subNode,
                             name: null,
@@ -1711,10 +1711,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                     try
                     {
-                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
                             node: node,
                             enumer: out var WeathersItem,
-                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1830,14 +1830,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherChanceGetter>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.Weathers,
                 recordType: recordTypeConverter.ConvertToCustom(RegionDataWeather_Registration.RDWT_HEADER),
-                transl: (MutagenWriter subWriter, IWeatherChanceGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
-                    ((WeatherChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         recordTypeConverter: conv);
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IWeatherChanceGetter>? Weathers { get; private set; }
+        public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2013,11 +2013,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Weathers = BinaryOverlaySetList<WeatherChanceBinaryOverlay>.FactoryByStartIndex(
+                    this.Weathers = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => WeatherChanceBinaryOverlay.WeatherChanceFactory(s, p));
+                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataWeather_FieldIndex.Weathers);
                 }

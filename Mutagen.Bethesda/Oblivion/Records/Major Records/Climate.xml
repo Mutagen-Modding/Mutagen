@@ -3,7 +3,7 @@
   <Object name="Climate" objType="Record" baseClass="OblivionMajorRecord" recordType="CLMT" GUID="25ca8fab-7f62-4f8b-9c32-d65a3261ac05" ID="105">
     <Fields>
       <List name="Weathers" recordType="WLST">
-        <RefDirect refName="WeatherChance" />
+        <RefDirect refName="WeatherType" />
       </List>
       <String name="SunTexture" recordType="FNAM" />
       <String name="SunGlareTexture" recordType="GNAM" />

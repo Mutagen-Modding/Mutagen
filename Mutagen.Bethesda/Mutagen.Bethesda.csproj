@@ -303,9 +303,6 @@
     <Compile Include="Oblivion\Records\Common Subrecords\ScriptEffect_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Common Subrecords\WeatherChance_LoquiGenerated.cs">
-      <DependentUpon>WeatherChance.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -883,9 +880,6 @@
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\WeatherSound_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\WeatherType_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Weather_LoquiGenerated.cs">
@@ -1548,9 +1542,6 @@
     <Compile Include="Oblivion\Records\Major Records\HDRData_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\WeatherData_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\CrimeValues_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
@@ -1898,6 +1889,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WeatherType_LoquiGenerated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Common Subrecords\WeatherType_LoquiGenerated.cs">
+      <DependentUpon>WeatherType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\WeatherColors_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\WeatherData_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

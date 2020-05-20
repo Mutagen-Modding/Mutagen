@@ -88,7 +88,7 @@
   </Object>
   <Object name="RegionDataWeather" objType="Subrecord" baseClass="RegionData" GUID="920ad66e-13de-42ac-a509-355019f9519a" ID="115">
     <Fields>
-      <RefList name="Weathers" refName="WeatherChance" recordType="RDWT" />
+      <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
     </Fields>
   </Object>
 </Loqui>
