@@ -179,6 +179,9 @@ namespace Mutagen.Bethesda.Generation
                 case StringBinaryType.PrependLength:
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");
                     break;
+                case StringBinaryType.PrependLengthUShort:
+                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;");
+                    break;
                 default:
                     if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return;
                     throw new NotImplementedException();

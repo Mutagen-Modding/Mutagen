@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen,
                         dataAccessor,
                         currentPosition,
+                        passedLengthAccessor,
                         dataType);
                     return;
                 default:
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor}];");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");
                 }
                 else
                 {

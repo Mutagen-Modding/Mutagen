@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region SkillValues
         public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x0), _package.Meta, _package.MasterReferences)),
+            new MutagenFrame(new MutagenMemoryReadStream(_data, _package.Meta, _package.MasterReferences)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation.Instance.Parse);
         #endregion

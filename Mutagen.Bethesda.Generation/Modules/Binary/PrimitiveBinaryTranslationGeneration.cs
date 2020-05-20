@@ -220,6 +220,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen,
                         dataAccessor,
                         currentPosition,
+                        passedLengthAccessor,
                         dataType);
                     return;
                 default:
@@ -260,7 +261,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor ?? "0x0"}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
                     }
                 }
                 else

@@ -138,6 +138,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen,
                         dataAccessor,
                         currentPosition,
+                        passedLengthAccessor,
                         dataType);
                     return;
                 default:

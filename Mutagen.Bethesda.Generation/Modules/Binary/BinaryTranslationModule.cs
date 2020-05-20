@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Generation
                             default:
                                 break;
                         }
-                        var passedAccessor = $"0x{passedLength:X}";
+                        var passedAccessor = (passedLength ?? 0) == 0 ? null : $"0x{passedLength:X}";
                         if (lastUnknownField != null)
                         {
                             passedAccessor = $"{lastUnknownField.Name}EndingPos";
@@ -1836,15 +1836,15 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!this.TryGetTypeGeneration(field.Item.Field.GetType(), out var typeGen)) continue;
                     var data = field.Item.Field.GetFieldData();
-                    if (!data.HasTrigger && passedLength != null)
+                    if (!data.HasTrigger)
                     {
                         var amount = await typeGen.GetPassedAmount(obj, field.Item.Field);
                         if (amount == null)
                         {
                             passedLength = null;
-                            if (!field.Last
-                                && field.Item.InternalIndex < (obj.Fields.Count - 1)
-                                && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger)
+                            if (field.Last
+                                || (field.Item.InternalIndex < (obj.Fields.Count - 1)
+                                && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
                             {
                                 fg.AppendLine($"private int {field.Item.Field.Name}EndingPos;");
                             }
@@ -2142,14 +2142,14 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     if (field.Item.Field is CustomLogic) continue;
                                     passedLength = null;
-                                    if (!field.Last
-                                        && field.Item.InternalIndex < (obj.Fields.Count - 1)
-                                        && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger)
+                                    if (field.Last
+                                        || (field.Item.InternalIndex < (obj.Fields.Count - 1)
+                                        && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
                                     {
                                         var passedAccessor = passedLength == null ? null : $"0x{passedLength:X}";
                                         if (lastUnknownField != null)
                                         {
-                                            passedAccessor = $"{lastUnknownField.Name}EndingPos";
+                                            passedAccessor = $"ret.{lastUnknownField.Name}EndingPos";
                                             if (passedLength.HasValue)
                                             {
                                                 passedAccessor += $" + 0x{passedLength:X}";

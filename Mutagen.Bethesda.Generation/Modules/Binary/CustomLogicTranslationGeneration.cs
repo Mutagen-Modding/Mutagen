@@ -219,6 +219,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
+            string passedLenAccessor,
             DataType dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
@@ -246,14 +247,14 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                loc = $"0x{currentPosition:X}";
+                loc = passedLenAccessor;
             }
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)}{(typeGen.IsNullable ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 if (!fieldData.HasTrigger && dataType == null)
                 {
-                    args.Add($"location: {loc}");
+                    args.Add($"location: {loc ?? "0x0"}");
                 }
             }
             if (!fieldData.HasTrigger)

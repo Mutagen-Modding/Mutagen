@@ -1938,6 +1938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
+        private int DataEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

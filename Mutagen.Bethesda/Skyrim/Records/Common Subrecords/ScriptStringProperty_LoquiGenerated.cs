@@ -1728,6 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
+        private int DataEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1751,6 +1752,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            ret.DataEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._data) + 2;
+            stream.Position += ret.DataEndingPos;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

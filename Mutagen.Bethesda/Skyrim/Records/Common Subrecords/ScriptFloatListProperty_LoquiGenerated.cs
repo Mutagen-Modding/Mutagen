@@ -1861,7 +1861,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<Single> Data => BinaryOverlaySetList<Single>.FactoryByStartIndex(_data.Slice(0), _package, 4, (s, p) => SpanExt.GetFloat(s));
+        public IReadOnlyList<Single> Data => BinaryOverlaySetList<Single>.FactoryByStartIndex(_data, _package, 4, (s, p) => SpanExt.GetFloat(s));
+        private int DataEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1885,6 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            stream.Position += ret.DataEndingPos;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

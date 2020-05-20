@@ -2161,6 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             int? lastParsed);
         #endregion
+        private int ScriptsEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

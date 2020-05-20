@@ -2092,7 +2092,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(0xC, 0x3).ToArray();
-        public IReadOnlyList<P3Float> Connections => BinaryOverlaySetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Connections => BinaryOverlaySetList<P3Float>.FactoryByStartIndex(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
+        private int ConnectionsEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2116,6 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            stream.Position += ret.ConnectionsEndingPos;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen,
                         dataAccessor,
                         currentPosition,
+                        passedLengthAccessor,
                         dataType);
                     return;
                 default:
@@ -163,7 +164,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
             }
-            var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{typeGen.Name}Location";
+            var posStr = dataType == null ? passedLengthAccessor : $"_{typeGen.Name}Location";
             string slice;
             if (data.RecordType.HasValue)
             {
@@ -171,7 +172,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                slice = $"{dataAccessor}.Span.Slice({posStr}, 0x{eType.ByteLength:X})";
+                slice = $"{dataAccessor}.Span.Slice({posStr ?? "0x0"}, 0x{eType.ByteLength:X})";
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 

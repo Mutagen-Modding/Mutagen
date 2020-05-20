@@ -1943,6 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
+        private int DataEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

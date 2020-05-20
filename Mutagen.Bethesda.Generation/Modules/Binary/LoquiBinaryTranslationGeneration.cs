@@ -286,6 +286,7 @@ namespace Mutagen.Bethesda.Generation
                         typeGen,
                         dataAccessor,
                         currentPosition,
+                        passedLengthAccessor,
                         dataType);
                     return;
                 default:
@@ -414,7 +415,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!loqui.Singleton)
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor})), _package, {recConverter});");
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor ?? "0x0"})), _package, {recConverter});");
                     }
                     else
                     {
