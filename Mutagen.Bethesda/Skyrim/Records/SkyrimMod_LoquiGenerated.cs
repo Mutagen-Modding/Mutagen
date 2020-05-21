@@ -6954,10 +6954,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters param,
             ModKey modKey)
         {
-            var masterRefs = new MasterReferenceReader(item.ModKey, item.MasterReferences);
-            var modHeader = item.ModHeader.DeepCopy() as ModHeader;
-            modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-            modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
+            var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
+            SkyrimModBinaryWriteTranslation.WriteModHeader(
+                item,
+                new MutagenWriter(stream, GameConstants.Skyrim, masterRefs),
+                modKey);
             Stream[] outputStreams = new Stream[53];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
@@ -11346,8 +11347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteModHeader(
                 mod: item,
                 writer: writer,
-                modKey: modKey,
-                param: param);
+                modKey: modKey);
             if (importMask?.GameSettings ?? true)
             {
                 var GameSettingsItem = item.GameSettings;

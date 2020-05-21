@@ -1590,7 +1590,6 @@ namespace Mutagen.Bethesda.Generation
                                     args.Add("mod: item");
                                     args.AddPassArg("writer");
                                     args.AddPassArg("modKey");
-                                    args.AddPassArg("param");
                                 }
                                 continue;
                             }

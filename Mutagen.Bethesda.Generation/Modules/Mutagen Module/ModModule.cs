@@ -387,14 +387,15 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = new {nameof(MasterReferenceReader)}(item.ModKey, item.MasterReferences);");
-                fg.AppendLine($"var modHeader = item.ModHeader.DeepCopy() as ModHeader;");
-                fg.AppendLine($"modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);");
+                fg.AppendLine($"var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);");
                 using (var args = new ArgsWrapper(fg,
-                    "modHeader.WriteToBinary"))
+                    $"{obj.ObjectName}BinaryWriteTranslation.WriteModHeader"))
                 {
+                    args.Add("item");
                     args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masterRefs)");
+                    args.Add("modKey");
                 }
+
                 int groupCount = obj.IterateFields()
                     .Select(f => f as LoquiType)
                     .Where(l => l != null)

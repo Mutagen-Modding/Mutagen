@@ -93,21 +93,11 @@ namespace Mutagen.Bethesda.Oblivion
             public static void WriteModHeader(
                 IOblivionModGetter mod,
                 MutagenWriter writer,
-                ModKey modKey,
-                BinaryWriteParameters param)
+                ModKey modKey)
             {
                 var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-                switch (param.MastersListSync)
-                {
-                    case BinaryWriteParameters.MastersListSyncOption.NoCheck:
-                        break;
-                    case BinaryWriteParameters.MastersListSyncOption.Iterate:
-                        modHeader.MasterReferences.SetTo(writer.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                modHeader.MasterReferences.SetTo(writer.MasterReferences!.Masters.Select(m => m.DeepCopy()));
                 modHeader.WriteToBinary(writer);
             }
         }
