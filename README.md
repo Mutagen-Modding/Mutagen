@@ -33,7 +33,7 @@ Check out the [Wiki](https://github.com/Noggog/Mutagen/wiki) for more detailed e
 
 [Examples Wiki](https://github.com/Noggog/Mutagen/wiki/Examples)
 
-[Example Project](https://github.com/Noggog/MutagenBootcamp)
+[Example Project](https://github.com/Noggog/MutagenBootcamp/blob/master/Program.cs)
 
 ## Installing Mutagen
 Mutagen can be added to your C# project via NuGet, under the package name `Mutagen.Bethesda`.  Search for it in Visual Studio, or find it [here](https://www.nuget.org/packages/Mutagen.Bethesda/).
