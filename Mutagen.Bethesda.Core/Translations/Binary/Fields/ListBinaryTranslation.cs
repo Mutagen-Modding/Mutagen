@@ -215,11 +215,26 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
         {
-            return this.Parse(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame reader, RecordType header, out T subItem)
-                    => transl(reader, out subItem));
+            var ret = new List<T>();
+            while (!frame.Complete)
+            {
+                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                var startingPos = frame.Position;
+                if (transl(frame, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
+                if (frame.Position == startingPos)
+                {
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                }
+            }
+            return ret;
         }
 
         public IEnumerable<T> Parse(
@@ -228,12 +243,27 @@ namespace Mutagen.Bethesda.Binary
             ICollectionGetter<RecordType> triggeringRecord,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return this.Parse(
-                frame: frame,
-                triggeringRecord: triggeringRecord,
-                transl: (MutagenFrame reader, RecordType header, out T subItem, RecordTypeConverter? r)
-                    => transl(reader, out subItem, r),
-                recordTypeConverter: recordTypeConverter);
+            var ret = new List<T>();
+            while (!frame.Complete)
+            {
+                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
+                if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                var startingPos = frame.Position;
+                if (transl(frame, out var subIitem, recordTypeConverter))
+                {
+                    ret.Add(subIitem);
+                }
+                if (frame.Position == startingPos)
+                {
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
+                }
+            }
+            return ret;
         }
         #endregion
 
