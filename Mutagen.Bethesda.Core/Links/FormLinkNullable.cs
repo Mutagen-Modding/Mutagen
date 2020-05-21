@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => this.FormKey?.ToString() ?? string.Empty;
+        public override string ToString() => this.FormKey?.ToString() ?? "Null";
 
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
