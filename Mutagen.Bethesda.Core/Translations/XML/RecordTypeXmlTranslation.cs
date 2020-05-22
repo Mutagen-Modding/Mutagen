@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Xml
 {
     public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
     {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Xml
 {
     public class FormKeyXmlTranslation : TypicalXmlTranslation<FormKey>
     {

@@ -23,6 +23,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
