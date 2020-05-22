@@ -49,12 +49,16 @@
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
+    <Compile Include="Enums\Language.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\ILinkCache.cs" />
     <Compile Include="Links\LoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
+    <Compile Include="String Lookup\IStringsLookup.cs" />
+    <Compile Include="String Lookup\ITranslatedString.cs" />
+    <Compile Include="String Lookup\TranslatedString.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
@@ -181,5 +185,6 @@
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Translations\XML\ModKeyXmlTranslation.cs" />
+    <Compile Include="String Lookup\StringsLookupOverlay.cs" />
   </ItemGroup>
 </Project>
