@@ -16,17 +16,33 @@ namespace Mutagen.Bethesda
     {
         private readonly ReadOnlyMemorySlice<byte> _indexData;
         private ReadOnlyMemorySlice<byte> _stringData;
+        private Type _type;
 
         public int Count => _indexData.Length / 8;
+
+        public enum Type
+        {
+            /// <summary>
+            /// .strings format
+            /// </summary>
+            Normal,
+
+            /// <summary>
+            /// .dlstrings and .ilstrings format
+            /// </summary>
+            LengthPrepended,
+        }
 
         /// <summary>
         /// Overlays onto a set of bytes assumed to be in Strings file format
         /// </summary>
         /// <param name="data">Data to wrap</param>
-        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data)
+        /// <param name="type">Strings file format</param>
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, Type type)
         {
             try
             {
+                _type = type;
                 var count = BinaryPrimitives.ReadUInt32LittleEndian(data);
                 var dataSize = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)));
                 _indexData = data.Slice(8, checked((int)(count * 2 * 4)));
@@ -42,8 +58,9 @@ namespace Mutagen.Bethesda
         /// Reads all bytes from a file, and overlays them
         /// </summary>
         /// <param name="path">Path to read in</param>
-        public StringsLookupOverlay(string path)
-            : this(File.ReadAllBytes(path))
+        /// <param name="type">Strings file format</param>
+        public StringsLookupOverlay(string path, Type type)
+            : this(File.ReadAllBytes(path), type)
         {
         }
 
@@ -57,7 +74,24 @@ namespace Mutagen.Bethesda
                 return false;
             }
             var loc = BinaryPrimitives.ReadInt32LittleEndian(_indexData.Slice((int)(key * 8 + 4)));
-            str = BinaryStringUtility.ParseUnknownLengthString(this._stringData.Slice(loc));
+            switch (_type)
+            {
+                case Type.Normal:
+                    str = BinaryStringUtility.ParseUnknownLengthString(this._stringData.Slice(loc));
+                    break;
+                case Type.LengthPrepended:
+                    try
+                    {
+                        str = BinaryStringUtility.ParsePrependedString(this._stringData.Slice(loc), 4);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        throw new ArgumentOutOfRangeException("Strings file malformed.");
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             return true;
         }
     }

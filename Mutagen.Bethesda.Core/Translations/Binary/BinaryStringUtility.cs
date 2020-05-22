@@ -157,12 +157,12 @@ namespace Noggog
                 case 2:
                     {
                         var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
-                        return ToZString(span.Slice(2, length));
+                        return ProcessWholeToZString(span.Slice(2, length));
                     }
                 case 4:
                     {
                         var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
-                        return ToZString(span.Slice(4, checked((int)length)));
+                        return ProcessWholeToZString(span.Slice(4, checked((int)length)));
                     }
                 default:
                     throw new NotImplementedException();
