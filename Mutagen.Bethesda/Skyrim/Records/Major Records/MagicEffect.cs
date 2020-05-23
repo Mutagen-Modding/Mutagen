@@ -10,12 +10,28 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MagicEffect
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequired.Name
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = new TranslatedString(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value == null ? null : new TranslatedString(value);
         }
 
         [Flags]
@@ -177,8 +193,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class MagicEffectBinaryOverlay
         {
+            #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+            string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            string? INamedGetter.Name => this.Name?.String;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+            #endregion
 
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 

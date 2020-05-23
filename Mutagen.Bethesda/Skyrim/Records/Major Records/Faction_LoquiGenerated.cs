@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFactionGetter.Name => this.Name;
+        TranslatedString? IFactionGetter.Name => this.Name;
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1366,12 +1366,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFaction :
         IFactionGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IRelatable,
         IObjectId,
         ILoquiObjectSetter<IFactionInternal>
     {
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; }
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IRelatableGetter,
         IObjectIdGetter,
         ILoquiObject<IFactionGetter>,
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => Faction_Registration.Instance;
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag Flags { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker { get; }
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Faction_FieldIndex.Relations:
                     return typeof(ExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
@@ -3328,7 +3328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -4297,7 +4297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags

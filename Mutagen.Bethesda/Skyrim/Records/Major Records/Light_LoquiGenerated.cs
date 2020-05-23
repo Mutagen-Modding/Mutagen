@@ -90,14 +90,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILightGetter.Name => this.Name;
+        TranslatedString? ILightGetter.Name => this.Name;
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILight :
         ILightGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IItem,
         IHasIcons,
         IModeled,
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Icons? Icons { get; set; }
         new Int32 Time { get; set; }
         new UInt32 Radius { get; set; }
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IItemGetter,
         IHasIconsGetter,
         IModeledGetter,
@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IIconsGetter? Icons { get; }
         Int32 Time { get; }
         UInt32 Radius { get; }
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Light_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Light_FieldIndex.Icons:
                     return typeof(Icons);
                 case Light_FieldIndex.Time:
@@ -3239,7 +3239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -4213,7 +4213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IIconsGetter? Icons { get; private set; }
         private int? _DATALocation;

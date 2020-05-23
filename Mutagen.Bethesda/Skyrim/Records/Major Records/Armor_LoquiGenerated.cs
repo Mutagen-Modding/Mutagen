@@ -67,14 +67,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorGetter.Name => this.Name;
+        TranslatedString? IArmorGetter.Name => this.Name;
         #endregion
         #region ObjectEffect
         public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmor :
         IArmorGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IItem,
         IObjectBounded,
         IObjectId,
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new GenderedItem<ArmorModel?>? WorldModel { get; set; }
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IItemGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Armor_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
@@ -2290,7 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Armor_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Armor_FieldIndex.ObjectEffect:
                     return typeof(FormLinkNullable<IEffectRecord>);
                 case Armor_FieldIndex.EnchantmentAmount:
@@ -3823,7 +3823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -4991,7 +4991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         #region ObjectEffect
         private int? _ObjectEffectLocation;

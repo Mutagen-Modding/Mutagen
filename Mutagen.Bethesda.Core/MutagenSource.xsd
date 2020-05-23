@@ -238,6 +238,7 @@
       <xs:complexContent>
         <xs:extension base="String">
           <xs:attribute name="binaryType" type="StringBinaryType" />
+          <xs:attribute name="translated" type="xs:boolean" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

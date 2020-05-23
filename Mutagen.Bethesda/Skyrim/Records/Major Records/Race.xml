@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
-    <Interface>INamed</Interface>
+    <Interface>ITranslatedNamed</Interface>
     <Interface>IRelatable</Interface>
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" hasBeenSet="False" />
       <List name="ActorEffect" counterRecType="SPCT">
         <FormLink refName="ASpell" recordType="SPLO" />

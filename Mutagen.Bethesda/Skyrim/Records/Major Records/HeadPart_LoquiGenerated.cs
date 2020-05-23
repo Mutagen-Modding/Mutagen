@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadPartGetter.Name => this.Name;
+        TranslatedString? IHeadPartGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1030,11 +1030,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPart :
         IHeadPartGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IModeled,
         ILoquiObjectSetter<IHeadPartInternal>
     {
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadPartGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
         IXmlItem,
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => HeadPart_Registration.Instance;
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case HeadPart_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case HeadPart_FieldIndex.Model:
                     return typeof(Model);
                 case HeadPart_FieldIndex.Flags:
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3265,7 +3265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Flags

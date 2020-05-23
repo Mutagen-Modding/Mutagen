@@ -8,7 +8,7 @@
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>

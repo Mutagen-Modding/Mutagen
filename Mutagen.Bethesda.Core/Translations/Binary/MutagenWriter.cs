@@ -38,6 +38,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public MasterReferenceReader? MasterReferences { get; set; }
 
+        /// <summary>
+        /// Optional strings writer for easy access during write operations
+        /// </summary>
+        public StringsWriter? StringsWriter { get; set; }
+
         /// <inheritdoc/>
         public long Position
         {

@@ -67,14 +67,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWeaponGetter.Name => this.Name;
+        TranslatedString? IWeaponGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeapon :
         IWeaponGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IItem,
         IHasIcons,
         IModeled,
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeaponGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IItemGetter,
         IHasIconsGetter,
         IModeledGetter,
@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Weapon_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
@@ -2639,7 +2639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Weapon_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Weapon_FieldIndex.Model:
                     return typeof(Model);
                 case Weapon_FieldIndex.Icons:
@@ -4542,7 +4542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -5946,7 +5946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }

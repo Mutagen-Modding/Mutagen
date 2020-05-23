@@ -117,6 +117,28 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable(
             MutagenWriter writer,
+            ITranslatedStringGetter? item,
+            RecordType header,
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            {
+                if (writer.StringsWriter == null)
+                {
+                    writer.Write(
+                        item.String,
+                        binaryType: binaryType);
+                }
+                else
+                {
+                    writer.Write(writer.StringsWriter.Register(item));
+                }
+            }
+        }
+
+        public void WriteNullable(
+            MutagenWriter writer,
             string? item,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {

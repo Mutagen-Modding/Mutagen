@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AlchemicalApparatus" recordType="APPA" baseClass="SkyrimMajorRecord" objType="Record" GUID="5ca84371-e6e9-4890-a8c8-930cc1633a36" ID="161">
-    <Interface>INamed</Interface>
+    <Interface>ITranslatedNamed</Interface>
     <Interface>IItem</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
@@ -10,7 +10,7 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
       <RefDirect name="Destructible" refName="Destructible" />

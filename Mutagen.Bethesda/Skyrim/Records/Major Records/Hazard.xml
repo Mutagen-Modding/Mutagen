@@ -4,7 +4,7 @@
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
       <Data>

@@ -56,14 +56,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IScrollGetter.Name => this.Name;
+        TranslatedString? IScrollGetter.Name => this.Name;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScroll :
         IScrollGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IItem,
         IModeled,
         IObjectBounded,
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IScrollInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new FormLinkNullable<EquipType> EquipmentType { get; set; }
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScrollGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IItemGetter,
         IModeledGetter,
         IObjectBoundedGetter,
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => Scroll_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
@@ -2276,7 +2276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Scroll_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Scroll_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Scroll_FieldIndex.MenuDisplayObject:
@@ -3625,7 +3625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -4774,7 +4774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region MenuDisplayObject

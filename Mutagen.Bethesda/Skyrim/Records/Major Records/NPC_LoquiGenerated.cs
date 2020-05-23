@@ -247,14 +247,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INpcGetter.Name => this.Name;
+        TranslatedString? INpcGetter.Name => this.Name;
         #endregion
         #region ShortName
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcGetter,
         ISkyrimMajorRecord,
         IObjectBounded,
-        INamed,
+        ITranslatedNamed,
         IObjectId,
         INpcSpawn,
         ILoquiObjectSetter<INpcInternal>
@@ -2930,7 +2930,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Package>>? Packages { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLink<Class> Class { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new String? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
         new ExtendedList<IFormLink<HeadPart>>? HeadParts { get; set; }
@@ -2967,7 +2967,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IObjectIdGetter,
         INpcSpawnGetter,
         ILoquiObject<INpcGetter>,
@@ -3000,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IPackageGetter>>? Packages { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IFormLinkGetter<IClassGetter> Class { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         String? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? HeadParts { get; }
@@ -3950,7 +3950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Class:
                     return typeof(FormLink<Class>);
                 case Npc_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Npc_FieldIndex.ShortName:
                     return typeof(String);
                 case Npc_FieldIndex.PlayerSkills:
@@ -6851,7 +6851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -8721,7 +8721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         #region ShortName
         private int? _ShortNameLocation;

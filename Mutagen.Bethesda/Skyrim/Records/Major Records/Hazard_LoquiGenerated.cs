@@ -56,14 +56,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHazardGetter.Name => this.Name;
+        TranslatedString? IHazardGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHazardInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
         new UInt32 Limit { get; set; }
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => Hazard_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         UInt32 Limit { get; }
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Hazard_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Hazard_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Hazard_FieldIndex.Model:
                     return typeof(Model);
                 case Hazard_FieldIndex.ImageSpaceModifier:
@@ -2647,7 +2647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3448,7 +3448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         #region ImageSpaceModifier
