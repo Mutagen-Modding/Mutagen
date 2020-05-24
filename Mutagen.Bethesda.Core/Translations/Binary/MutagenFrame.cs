@@ -73,6 +73,13 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
+        public IStringsFolderLookup? StringsLookup
+        {
+            get => this.Reader.StringsLookup;
+            set => this.Reader.StringsLookup = value;
+        }
+
+        /// <inheritdoc/>
         public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
         
         /// <inheritdoc/>
@@ -283,7 +290,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var res = ZlibStream.UncompressBuffer(bytes);
                 return new MutagenFrame(
-                    new MutagenMemoryReadStream(res, this.MetaData, this.MasterReferences));
+                    new MutagenMemoryReadStream(res, this.MetaData, this.MasterReferences, this.RecordInfoCache, this.StringsLookup));
             }
             catch (Exception)
             {
@@ -305,7 +312,8 @@ namespace Mutagen.Bethesda.Binary
                     this.MetaData,
                     this.MasterReferences,
                     offsetReference: offset,
-                    infoCache: this.RecordInfoCache));
+                    infoCache: this.RecordInfoCache,
+                    stringsLookup: this.StringsLookup));
         }
 
         /// <inheritdoc/>

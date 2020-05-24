@@ -50,6 +50,7 @@
     <Compile Include="Enums\FloatBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
@@ -61,6 +62,10 @@
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />
     <Compile Include="String Lookup\ITranslatedString.cs" />
+    <Compile Include="String Lookup\IStringsFolderLookup.cs" />
+    <Compile Include="String Lookup\StringsInstructions.cs" />
+    <Compile Include="String Lookup\StringsFolderLookupOverlay.cs" />
+    <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />

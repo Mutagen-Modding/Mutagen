@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor,
             Accessor converterAccessor)
         {
-            Mutagen.Bethesda.Generation.StringType stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
+            var stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}StringBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
@@ -69,6 +69,10 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}"); 
                 }
                 args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");
+                if (stringType.Translated.HasValue)
+                {
+                    args.Add($"source: {nameof(StringsSource)}.{stringType.Translated.Value}");
+                }
             }
         }
 
@@ -90,6 +94,10 @@ namespace Mutagen.Bethesda.Generation
 
             List<string> extraArgs = new List<string>();
             extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
+            if (str.Translated.HasValue)
+            {
+                extraArgs.Add($"source: {nameof(StringsSource)}.{str.Translated.Value}");
+            }
             extraArgs.Add($"stringBinaryType: {nameof(StringBinaryType)}.{str.BinaryType}");
 
             TranslationGeneration.WrapParseCall(

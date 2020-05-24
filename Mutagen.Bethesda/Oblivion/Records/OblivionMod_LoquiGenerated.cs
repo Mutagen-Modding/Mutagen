@@ -3787,11 +3787,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3807,11 +3807,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -4448,11 +4448,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
@@ -12553,23 +12553,24 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            using (var memStream = new MemoryTributary())
+            using var memStream = new MemoryTributary();
+            using (var writer = new MutagenWriter(
+                memStream,
+                dispose: false,
+                meta: GameConstants.Get(item.GameMode)))
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
-                {
-                    OblivionModBinaryWriteTranslation.Instance.Write(
-                        item: item,
-                        importMask: importMask,
-                        writer: writer,
-                        param: param,
-                        modKey: modKey,
-                        recordTypeConverter: null);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
+                OblivionModBinaryWriteTranslation.Instance.Write(
+                    item: item,
+                    importMask: importMask,
+                    writer: writer,
+                    param: param,
+                    modKey: modKey,
+                    recordTypeConverter: null);
+            }
+            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                memStream.Position = 0;
+                memStream.CopyTo(fs);
             }
         }
 

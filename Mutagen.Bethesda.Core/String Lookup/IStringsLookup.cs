@@ -6,7 +6,7 @@ using System.Text;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// Interface for looking up TranslatedStrings contents
+    /// Interface for looking up TranslatedStrings contents from a single source
     /// </summary>
     public interface IStringsLookup
     {

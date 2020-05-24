@@ -26,6 +26,9 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public RecordInfoCache? RecordInfoCache { get; set; }
 
+        /// <inheritdoc/>
+        public IStringsFolderLookup? StringsLookup { get; set; }
+
         /// <summary>
         /// Constructor that opens a read stream to a path
         /// </summary>
@@ -33,6 +36,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
         /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
+        /// <param name="stringsLookup">Optional strings lookup to reference while reading</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
@@ -40,12 +44,14 @@ namespace Mutagen.Bethesda.Binary
             GameConstants metaData, 
             MasterReferenceReader? masterReferences = null,
             RecordInfoCache? infoCache = null,
+            IStringsFolderLookup? stringsLookup = null,
             int bufferSize = 4096,
             long offsetReference = 0)
             : base(path, bufferSize)
         {
             this._path = path;
             this.MetaData = metaData;
+            this.StringsLookup = stringsLookup;
             this.RecordInfoCache = infoCache;
             this.MasterReferences = masterReferences;
             this.OffsetReference = offsetReference;
@@ -58,6 +64,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
         /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
+        /// <param name="stringsLookup">Optional strings lookup to reference while reading</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="dispose">Whether to dispose the source stream</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
@@ -66,6 +73,7 @@ namespace Mutagen.Bethesda.Binary
             GameConstants metaData,
             MasterReferenceReader? masterReferences = null,
             RecordInfoCache? infoCache = null,
+            IStringsFolderLookup? stringsLookup = null,
             int bufferSize = 4096, 
             bool dispose = true, 
             long offsetReference = 0)
@@ -73,6 +81,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.MetaData = metaData;
             this.MasterReferences = masterReferences;
+            this.StringsLookup = stringsLookup;
             this.RecordInfoCache = infoCache;
             this.OffsetReference = offsetReference;
         }
@@ -93,7 +102,8 @@ namespace Mutagen.Bethesda.Binary
                 this.MetaData, 
                 this.MasterReferences,
                 offsetReference: offset,
-                infoCache: this.RecordInfoCache);
+                infoCache: this.RecordInfoCache,
+                stringsLookup: this.StringsLookup);
         }
 
         public override string ToString()

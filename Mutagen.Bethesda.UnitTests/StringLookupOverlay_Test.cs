@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Strings_Typical()
         {
-            var overlay = new StringsLookupOverlay(_stringsFormat, StringsLookupOverlay.Type.Normal);
+            var overlay = new StringsLookupOverlay(_stringsFormat, StringsFileFormat.Normal);
             Assert.Equal(_strs.Count, overlay.Count);
             Assert.True(overlay.TryLookup(1, out var str));
             Assert.Equal(_strs[0], str);
@@ -81,14 +81,14 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Strings_OutOfRange()
         {
-            var overlay = new StringsLookupOverlay(_stringsFormat, StringsLookupOverlay.Type.Normal);
+            var overlay = new StringsLookupOverlay(_stringsFormat, StringsFileFormat.Normal);
             Assert.False(overlay.TryLookup(56, out _));
         }
 
         [Fact]
         public void ILStrings_Typical()
         {
-            var overlay = new StringsLookupOverlay(_ILstringsFormat, StringsLookupOverlay.Type.LengthPrepended);
+            var overlay = new StringsLookupOverlay(_ILstringsFormat, StringsFileFormat.LengthPrepended);
             Assert.Equal(_strs.Count, overlay.Count);
             Assert.True(overlay.TryLookup(1, out var str));
             Assert.Equal(_strs[0], str);
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void ILStrings_OutOfRange()
         {
-            var overlay = new StringsLookupOverlay(_ILstringsFormat, StringsLookupOverlay.Type.LengthPrepended);
+            var overlay = new StringsLookupOverlay(_ILstringsFormat, StringsFileFormat.LengthPrepended);
             Assert.False(overlay.TryLookup(56, out _));
         }
     }

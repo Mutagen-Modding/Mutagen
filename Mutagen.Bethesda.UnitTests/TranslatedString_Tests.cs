@@ -80,6 +80,14 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
+        public void SetDefaultOntoNonLocalized()
+        {
+            ITranslatedString str = new TranslatedString(SomeString);
+            str.Set(TranslatedString.DefaultLanguage, SomeAltString);
+            Assert.Equal(SomeAltString, str.String);
+        }
+
+        [Fact]
         public void Remove()
         {
             TranslatedString.DefaultLanguage = Language.English;

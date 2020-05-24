@@ -30,6 +30,15 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Creates a translated string with empty string set for the default language
+        /// </summary>
+        public TranslatedString()
+        {
+            _directString = string.Empty;
+            _localization = null;
+        }
+
+        /// <summary>
         /// Creates a translated string with a value for the default language
         /// </summary>
         /// <param name="directString">String to register for the default language</param>
@@ -92,7 +101,7 @@ namespace Mutagen.Bethesda
                 _localization = new Dictionary<Language, string>();
 
                 // If we already have a direct string, swap to the internal setup where it's stored in the dictionary
-                if (_directString != null && language != DefaultLanguage)
+                if (_directString != null)
                 {
                     _localization[DefaultLanguage] = _directString;
                     _directString = null;

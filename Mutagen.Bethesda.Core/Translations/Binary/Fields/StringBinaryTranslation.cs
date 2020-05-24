@@ -63,6 +63,27 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public virtual TranslatedString Parse(
+            MutagenFrame frame,
+            StringsSource source,
+            StringBinaryType stringBinaryType,
+            bool parseWhole = true)
+        {
+            if (frame.StringsLookup != null)
+            {
+                if (frame.Remaining != 4)
+                {
+                    throw new ArgumentException($"String in Strings File format had unexpected length: {frame.Remaining} != 4");
+                }
+                uint key = frame.ReadUInt32();
+                return frame.StringsLookup.CreateString(source, key);
+            }
+            else
+            {
+                return Parse(frame, parseWhole, stringBinaryType);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             string item)
@@ -119,7 +140,8 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             ITranslatedStringGetter? item,
             RecordType header,
-            StringBinaryType binaryType = StringBinaryType.NullTerminate)
+            StringBinaryType binaryType,
+            StringsSource source)
         {
             if (item == null) return;
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
@@ -132,7 +154,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    writer.Write(writer.StringsWriter.Register(item));
+                    writer.Write(writer.StringsWriter.Register(item, source));
                 }
             }
         }

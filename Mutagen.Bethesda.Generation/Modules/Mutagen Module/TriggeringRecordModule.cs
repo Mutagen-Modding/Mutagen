@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Generation
             var record = obj.Node.GetAttribute("recordType");
             data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
             data.CustomBinary = obj.Node.GetAttribute<bool>("customBinary", defaultVal: false);
+            data.UsesStringFiles = obj.Node.GetAttribute<bool>("usesStringFiles", defaultVal: true);
             data.CustomBinaryEnd = obj.Node.GetAttribute<CustomEnd>("customBinaryEnd", defaultVal: CustomEnd.Off);
             data.BinaryOverlay = obj.Node.GetAttribute<BinaryGenerationType>("binaryOverlay", defaultVal: BinaryGenerationType.Normal);
 
