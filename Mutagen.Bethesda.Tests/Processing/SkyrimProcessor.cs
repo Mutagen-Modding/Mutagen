@@ -220,5 +220,53 @@ namespace Mutagen.Bethesda.Tests
                     section: item.Value);
             }
         }
+
+        protected override void PreProcessorJobs(IMutagenReadStream stream)
+        {
+            base.PreProcessorJobs(stream);
+            ProcessStringsFilesIndices(stream);
+        }
+
+        private void ProcessStringsFilesIndices(IMutagenReadStream stream)
+        {
+            RenumberStringsFileEntries(
+                stream,
+                new RecordType[] { "ACTI", "FULL" },
+                new RecordType[] { "APPA", "FULL", "DESC" },
+                new RecordType[] { "AMMO", "FULL", "DESC" },
+                new RecordType[] { "ARMO", "FULL", "DESC" },
+                new RecordType[] { "BOOK", "FULL" },
+                new RecordType[] { "CLAS", "FULL" },
+                new RecordType[] { "EYES", "FULL" },
+                new RecordType[] { "CONT", "FULL" },
+                new RecordType[] { "DOOR", "FULL" },
+                new RecordType[] { "FACT", "FULL" },
+                new RecordType[] { "FURN", "FULL" },
+                new RecordType[] { "HAZD", "FULL" },
+                new RecordType[] { "HDPT", "FULL" },
+                new RecordType[] { "ALCH", "FULL", "DESC" },
+                new RecordType[] { "INGR", "FULL" },
+                new RecordType[] { "LIGH", "FULL" },
+                new RecordType[] { "MGEF", "FULL", "DNAM" },
+                new RecordType[] { "MISC", "FULL" },
+                new RecordType[] { "MSTT", "FULL" },
+                new RecordType[] { "NPC_", "FULL" },
+                new RecordType[] { "ENCH", "FULL" },
+                new RecordType[] { "PROJ", "FULL" },
+                new RecordType[] { "RACE", "FULL" },
+                new RecordType[] { "SCRL", "FULL", "DESC" },
+                new RecordType[] { "SLGM", "FULL" },
+                new RecordType[] { "SPEL", "FULL" },
+                new RecordType[] { "TACT", "FULL" },
+                new RecordType[] { "TREE", "FULL" },
+                new RecordType[] { "WEAP", "FULL", "DESC" },
+                new RecordType[] { "FLOR", "FULL" },
+                new RecordType[] { "KEYM", "FULL" }
+            );
+            RenumberStringsFileEntries(
+                stream,
+                new RecordType[] { "BOOK", "DESC" }
+            );
+        }
     }
 }

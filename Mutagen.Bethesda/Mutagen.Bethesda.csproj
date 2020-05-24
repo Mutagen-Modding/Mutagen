@@ -120,6 +120,9 @@
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Class.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>

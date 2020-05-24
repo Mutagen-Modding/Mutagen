@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Tests
                             record.IsCompressed = false;
                         }
 
-                        mod.WriteToBinaryParallel(outputPath, writeParams);
+                        mod.WriteToBinary(outputPath, writeParams);
                         GC.Collect();
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);

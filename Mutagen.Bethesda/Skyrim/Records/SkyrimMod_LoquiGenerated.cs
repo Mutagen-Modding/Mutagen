@@ -4214,7 +4214,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
+            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
@@ -12048,11 +12048,12 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
+            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
                 memStream,
                 dispose: false,
+                stringsWriter: stringsWriter,
                 meta: GameConstants.Get(item.GameMode)))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(

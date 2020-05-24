@@ -241,5 +241,61 @@ namespace Mutagen.Bethesda.Tests
                 this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
             }
         }
+
+        public List<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
+            IMutagenReadStream stream,
+            params RecordType[][] recordTypes)
+        {
+            var ret = new List<KeyValuePair<uint, uint>>();
+            var dict = new Dictionary<RecordType, HashSet<RecordType>>();
+            foreach (var item in recordTypes)
+            {
+                var set = new HashSet<RecordType>();
+                dict[item[0]] = set;
+                for (int i = 1; i < item.Length; i++)
+                {
+                    set.Add(item[i]);
+                }
+            }
+            stream.Position = 0;
+            var mod = stream.ReadMod();
+            stream.Position += mod.ContentLength;
+
+            uint newIndex = 1;
+            while (!stream.Complete)
+            {
+                var grup = stream.ReadGroup();
+                if (!dict.TryGetValue(grup.ContainedRecordType, out var instructions))
+                {
+                    stream.Position += grup.ContentLength;
+                    continue;
+                }
+                var groupCompletePos = stream.Position + grup.ContentLength;
+                while (stream.Position < groupCompletePos)
+                {
+                    var major = stream.ReadMajorRecord();
+                    var majorCompletePos = stream.Position + major.ContentLength;
+                    while (stream.Position < majorCompletePos)
+                    {
+                        var sub = stream.ReadSubrecord();
+                        if (instructions.Contains(sub.RecordType))
+                        {
+                            if (sub.ContentLength != 4)
+                            {
+                                throw new ArgumentException();
+                            }
+                            var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+                            var assignedIndex = newIndex++;
+                            ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
+                            byte[] b = new byte[4];
+                            BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
+                            _Instructions.SetSubstitution(stream.Position, b);
+                        }
+                        stream.Position += sub.ContentLength;
+                    }
+                }
+            }
+            return ret;
+        }
     }
 }

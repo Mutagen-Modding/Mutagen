@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectData().UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine("param.StringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
+                fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
@@ -1017,6 +1017,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add("memStream");
                 args.Add("dispose: false");
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    args.AddPassArg("stringsWriter");
+                }
                 args.Add($"meta: {nameof(GameConstants)}.{nameof(GameConstants.Get)}(item.GameMode)");
             }
             using (new BraceWrapper(fg))

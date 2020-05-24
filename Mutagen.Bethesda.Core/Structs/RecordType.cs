@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda
         /// Constructor taking in a string
         /// The integer constructor is preferable in most cases, as it is faster and can never throw an exception.
         /// </summary>
-        /// <param name="type">String of four characters</param>
+        /// <param name="typeStr">String of four characters</param>
         /// <exception cref="ArgumentException">If string does not contain exactly four characters</exception>
         [DebuggerStepThrough]
         public RecordType(ReadOnlySpan<char> typeStr)
@@ -81,18 +81,18 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Default equality operator
         /// </summary>
-        /// <param name="obj">object to compare to</param>
+        /// <param name="other">object to compare to</param>
         /// <returns>True if RecordType with equal TypeInt</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (!(obj is RecordType rhs)) return false;
+            if (!(other is RecordType rhs)) return false;
             return Equals(rhs);
         }
 
         /// <summary>
         /// RecordType equality operator
         /// </summary>
-        /// <param name="obj">RecordType to compare to</param>
+        /// <param name="other">RecordType to compare to</param>
         /// <returns>True if equal TypeInt value</returns>
         public bool Equals(RecordType other)
         {
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// String equality operator
         /// </summary>
-        /// <param name="obj">String to compare to</param>
+        /// <param name="other">String to compare to</param>
         /// <returns>True if equal Type string value</returns>
         public bool Equals(string other)
         {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda
         /// <returns>Hashcode retrieved from TypeInt value.</returns>
         public override int GetHashCode()
         {
-            return this.TypeInt.GetHashCode();
+            return HashCode.Combine(TypeInt);
         }
 
         /// <summary>
@@ -175,6 +175,16 @@ namespace Mutagen.Bethesda
                 b[i] = (byte)typeStr[i];
             }
             return BinaryPrimitives.ReadInt32LittleEndian(b);
+        }
+
+        public static implicit operator RecordType(ReadOnlySpan<char> str)
+        {
+            return new RecordType(str);
+        }
+
+        public static implicit operator RecordType(string str)
+        {
+            return new RecordType(str);
         }
     }
 }
