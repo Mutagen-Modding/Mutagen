@@ -129,6 +129,13 @@ namespace Mutagen.Bethesda
             _localization = null;
         }
 
+        /// <inheritdoc />
+        public void Clear()
+        {
+            ClearNonDefault();
+            this._directString = null;
+        }
+
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         public IEnumerator<KeyValuePair<Language, string>> GetEnumerator()

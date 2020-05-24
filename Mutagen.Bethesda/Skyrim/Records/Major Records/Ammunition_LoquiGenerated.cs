@@ -110,14 +110,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAmmunitionGetter.Description => this.Description;
+        TranslatedString? IAmmunitionGetter.Description => this.Description;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLink<Projectile> Projectile { get; set; }
         new Ammunition.Flag Flags { get; set; }
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         Ammunition.Flag Flags { get; }
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Ammunition_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Ammunition_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Ammunition_FieldIndex.Projectile:
@@ -2113,6 +2113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
                 }
@@ -3062,7 +3063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -3684,7 +3685,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -3869,7 +3871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;

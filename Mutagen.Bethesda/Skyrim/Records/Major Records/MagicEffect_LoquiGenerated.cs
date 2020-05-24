@@ -266,14 +266,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MagicItemDescription
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MagicItemDescription;
-        public String? MagicItemDescription
+        private TranslatedString? _MagicItemDescription;
+        public TranslatedString? MagicItemDescription
         {
             get => this._MagicItemDescription;
             set => this._MagicItemDescription = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMagicEffectGetter.MagicItemDescription => this.MagicItemDescription;
+        TranslatedString? IMagicEffectGetter.MagicItemDescription => this.MagicItemDescription;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2432,7 +2432,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ScriptEffectAIDelayTime { get; set; }
         new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
-        new String? MagicItemDescription { get; set; }
+        new TranslatedString? MagicItemDescription { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -2496,7 +2496,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ScriptEffectAIDelayTime { get; }
         IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
-        String? MagicItemDescription { get; }
+        TranslatedString? MagicItemDescription { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         MagicEffect.DATADataType DATADataTypeState { get; }
 
@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.Sounds:
                     return typeof(ExtendedList<MagicEffectSound>);
                 case MagicEffect_FieldIndex.MagicItemDescription:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case MagicEffect_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
@@ -3843,6 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.MagicItemDescription = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MagicItemDescription);
                 }
@@ -5559,7 +5560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.MagicItemDescription != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicItemDescription) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MagicItemDescription),
                     item: item.MagicItemDescription,
@@ -6886,7 +6887,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MagicItemDescription,
                 header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DNAM_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             MagicEffectBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
@@ -7262,7 +7264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region MagicItemDescription
         private int? _MagicItemDescriptionLocation;
-        public String? MagicItemDescription => _MagicItemDescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MagicItemDescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? MagicItemDescription => _MagicItemDescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MagicItemDescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

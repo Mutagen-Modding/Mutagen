@@ -43,7 +43,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <String name="Description" recordType="DESC" />
+      <String name="Description" recordType="DESC" translated="Normal" />
       <List name="Armature">
         <FormLink recordType="MODL" refName="ArmorAddon" />
       </List>

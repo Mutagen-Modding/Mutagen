@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"String in Strings File format had unexpected length: {frame.Remaining} != 4");
                 }
                 uint key = frame.ReadUInt32();
+                if (key == 0) return string.Empty;
                 return frame.StringsLookup.CreateString(source, key);
             }
             else
@@ -133,6 +134,28 @@ namespace Mutagen.Bethesda.Binary
                 writer.Write(
                     item,
                     binaryType: binaryType);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            ITranslatedStringGetter item,
+            RecordType header,
+            StringBinaryType binaryType,
+            StringsSource source)
+        {
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            {
+                if (writer.StringsWriter == null)
+                {
+                    writer.Write(
+                        item.String,
+                        binaryType: binaryType);
+                }
+                else
+                {
+                    writer.Write(writer.StringsWriter.Register(item, source));
+                }
             }
         }
 

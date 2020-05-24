@@ -15,7 +15,7 @@
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
-      <String name="Description" recordType="DESC" />
+      <String name="Description" recordType="DESC" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />

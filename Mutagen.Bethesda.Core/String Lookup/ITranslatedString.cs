@@ -65,5 +65,10 @@ namespace Mutagen.Bethesda
         /// Clears all non-default language string registrations
         /// </summary>
         void ClearNonDefault();
+
+        /// <summary>
+        /// Clears all language registrations, and sets the default string to empty.
+        /// </summary>
+        void Clear();
     }
 }

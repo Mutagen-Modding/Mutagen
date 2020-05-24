@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? IBookGetter.Icons => this.Icons;
         #endregion
         #region BookText
-        public String BookText { get; set; } = string.Empty;
+        public TranslatedString BookText { get; set; } = string.Empty;
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
-        new String BookText { get; set; }
+        new TranslatedString BookText { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
-        String BookText { get; }
+        TranslatedString BookText { get; }
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.Icons:
                     return typeof(Icons);
                 case Book_FieldIndex.BookText:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Book_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Book_FieldIndex.PickUpSound:
@@ -2124,7 +2124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Model = null;
             item.Icons = null;
-            item.BookText = string.Empty;
+            item.BookText.Clear();
             item.Destructible = null;
             item.PickUpSound = null;
             item.PutDownSound = null;
@@ -2290,6 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.BookText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.BookText);
                 }
@@ -3386,7 +3387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BookText),
                     item: item.BookText,
@@ -4165,7 +4166,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.BookText,
                 header: recordTypeConverter.ConvertToCustom(Book_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             if (item.Destructible.TryGet(out var DestructibleItem))
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -4392,7 +4394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IIconsGetter? Icons { get; private set; }
         #region BookText
         private int? _BookTextLocation;
-        public String BookText => _BookTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BookTextLocation.Value, _package.Meta)) : string.Empty;
+        public TranslatedString BookText => _BookTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BookTextLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound

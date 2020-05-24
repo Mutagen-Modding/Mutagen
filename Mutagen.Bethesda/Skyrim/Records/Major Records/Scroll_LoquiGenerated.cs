@@ -91,14 +91,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IScrollGetter.Description => this.Description;
+        TranslatedString? IScrollGetter.Description => this.Description;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new FormLinkNullable<EquipType> EquipmentType { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
@@ -2284,7 +2284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.EquipmentType:
                     return typeof(FormLinkNullable<EquipType>);
                 case Scroll_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Scroll_FieldIndex.Model:
                     return typeof(Model);
                 case Scroll_FieldIndex.Destructible:
@@ -2577,6 +2577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Description);
                 }
@@ -3675,7 +3676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -4568,7 +4569,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Scroll_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -4791,7 +4793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }

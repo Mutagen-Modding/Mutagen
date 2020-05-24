@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Binary;
+using Loqui;
+using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -30,7 +32,14 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.Translated.HasValue)
             {
-                return $"default({nameof(TranslatedString)}{this.NullChar})";
+                if (this.HasBeenSet)
+                {
+                    return $"default({nameof(TranslatedString)}?)";
+                }
+                else
+                {
+                    return $"string.Empty";
+                }
             }
             else
             {
@@ -43,6 +52,19 @@ namespace Mutagen.Bethesda.Generation
             this.BinaryType = node.GetAttribute<StringBinaryType>("binaryType", defaultVal: StringBinaryType.NullTerminate);
             this.Translated = node.GetAttribute<StringsSource?>("translated", defaultVal: null);
             await base.Load(node, requireName);
+        }
+
+        public override void GenerateClear(FileGeneration fg, Accessor identifier)
+        {
+            if (this.Translated.HasValue
+                && !this.HasBeenSet)
+            {
+                fg.AppendLine($"{identifier}.Clear();");
+            }
+            else
+            {
+                base.GenerateClear(fg, identifier);
+            }
         }
     }
 }

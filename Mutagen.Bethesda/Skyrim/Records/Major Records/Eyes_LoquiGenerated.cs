@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        public String Name { get; set; } = string.Empty;
+        public TranslatedString Name { get; set; } = string.Empty;
         #endregion
         #region Icon
         public String Icon { get; set; } = string.Empty;
@@ -629,10 +629,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEyes :
         IEyesGetter,
         ISkyrimMajorRecord,
-        INamedRequired,
+        ITranslatedNamedRequired,
         ILoquiObjectSetter<IEyesInternal>
     {
-        new String Name { get; set; }
+        new TranslatedString Name { get; set; }
         new String Icon { get; set; }
         new Eyes.Flag Flags { get; set; }
         #region Mutagen
@@ -650,13 +650,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter,
         ILoquiObject<IEyesGetter>,
         IXmlItem,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Eyes_Registration.Instance;
-        String Name { get; }
+        TranslatedString Name { get; }
         String Icon { get; }
         Eyes.Flag Flags { get; }
 
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Eyes_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Eyes_FieldIndex.Icon:
                     return typeof(String);
                 case Eyes_FieldIndex.Flags:
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEyesInternal item)
         {
             ClearPartial();
-            item.Name = string.Empty;
+            item.Name.Clear();
             item.Icon = string.Empty;
             item.Flags = default;
             base.Clear(item);
@@ -1300,6 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Name);
                 }
@@ -1788,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -2073,7 +2074,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Eyes_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon,
@@ -2209,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
+        public TranslatedString Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

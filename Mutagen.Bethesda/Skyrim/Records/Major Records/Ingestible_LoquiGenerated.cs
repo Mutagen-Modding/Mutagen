@@ -81,14 +81,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IIngestibleGetter.Description => this.Description;
+        TranslatedString? IIngestibleGetter.Description => this.Description;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1369,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new Icons? Icons { get; set; }
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IIconsGetter? Icons { get; }
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingestible_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Ingestible_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Ingestible_FieldIndex.Model:
                     return typeof(Model);
                 case Ingestible_FieldIndex.Destructible:
@@ -2308,6 +2308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Description);
                 }
@@ -3350,7 +3351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -4098,7 +4099,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Ingestible_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -4305,7 +4307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }

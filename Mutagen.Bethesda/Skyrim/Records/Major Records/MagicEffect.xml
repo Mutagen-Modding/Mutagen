@@ -56,7 +56,7 @@
         <FormLink refName="MagicEffect" recordType="ESCE" />
       </List>
       <RefList name="Sounds" refName="MagicEffectSound" recordType="SNDD" />
-      <String name="MagicItemDescription" recordType="DNAM" />
+      <String name="MagicItemDescription" recordType="DNAM" translated="Normal" />
       <RefList name="Conditions" refName="Condition" binary="Custom" />
     </Fields>
   </Object>

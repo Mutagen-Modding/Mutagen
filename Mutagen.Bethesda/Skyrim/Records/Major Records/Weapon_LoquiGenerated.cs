@@ -166,14 +166,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWeaponGetter.Description => this.Description;
+        TranslatedString? IWeaponGetter.Description => this.Description;
         #endregion
         #region ScopeModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new Byte[]? Unused { get; set; }
         new FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; }
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         IModelGetter? ScopeModel { get; }
         ReadOnlyMemorySlice<Byte>? Unused { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet { get; }
@@ -2663,7 +2663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Weapon_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Weapon_FieldIndex.ScopeModel:
                     return typeof(Model);
                 case Weapon_FieldIndex.Unused:
@@ -3051,6 +3051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
                 }
@@ -4684,7 +4685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -5729,7 +5730,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Weapon_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.ScopeModel.TryGet(out var ScopeModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ScopeModelItem).BinaryWriteTranslator).Write(
@@ -5990,7 +5992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         public IModelGetter? ScopeModel { get; private set; }
         #region Unused

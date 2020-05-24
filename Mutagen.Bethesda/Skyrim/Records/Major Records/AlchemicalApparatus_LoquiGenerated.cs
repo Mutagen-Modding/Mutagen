@@ -132,14 +132,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAlchemicalApparatusGetter.Description => this.Description;
+        TranslatedString? IAlchemicalApparatusGetter.Description => this.Description;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new AlchemicalApparatus.QualityLevel? Quality { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new AlchemicalApparatus.DATADataType DATADataTypeState { get; set; }
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         AlchemicalApparatus.QualityLevel? Quality { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         AlchemicalApparatus.DATADataType DATADataTypeState { get; }
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AlchemicalApparatus_FieldIndex.Quality:
                     return typeof(AlchemicalApparatus.QualityLevel);
                 case AlchemicalApparatus_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case AlchemicalApparatus_FieldIndex.Value:
                     return typeof(UInt32);
                 case AlchemicalApparatus_FieldIndex.Weight:
@@ -1945,6 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Description);
                 }
@@ -2859,7 +2860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -3399,7 +3400,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
@@ -3568,7 +3570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
         #endregion
         private int? _DATALocation;
         public AlchemicalApparatus.DATADataType DATADataTypeState { get; private set; }
