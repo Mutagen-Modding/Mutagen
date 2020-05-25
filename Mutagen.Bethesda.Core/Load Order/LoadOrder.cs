@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="modsToInclude">Mods to include</param>
         /// <param name="dataPath">Path to data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>List of modkeys in load order, excluding missing mods</returns>
         /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
         public static IExtendedList<ModKey> AlignLoadOrder(
