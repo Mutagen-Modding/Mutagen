@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     /// </summary>
     public class StringsWriter : IDisposable
     {
-        private readonly DirectoryPath _writeDir;
+        public DirectoryPath WriteDir { get; }
         private readonly ModKey _modKey;
         private readonly List<KeyValuePair<Language, string>[]> _strings = new List<KeyValuePair<Language, string>[]>();
         private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new List<KeyValuePair<Language, string>[]>();
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda
         public StringsWriter(ModKey modKey, DirectoryPath writeDirectory)
         {
             _modKey = modKey;
-            _writeDir = writeDirectory;
+            WriteDir = writeDirectory;
         }
 
         public uint Register(ITranslatedStringGetter str, StringsSource source)
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda
         private void WriteStrings(List<KeyValuePair<Language, string>[]> strs, StringsSource source)
         {
             if (strs.Count == 0) return;
-            _writeDir.Create();
+            WriteDir.Create();
 
             var subLists = new Dictionary<Language, List<(string String, int Index)>>();
             for (int i = 0; i < strs.Count; i++)
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda
             foreach (var language in subLists)
             {
                 using var writer = new MutagenWriter(
-                    Path.Combine(_writeDir.Path, StringsUtility.GetFileName(_modKey, language.Key, source)),
+                    Path.Combine(WriteDir.Path, StringsUtility.GetFileName(_modKey, language.Key, source)),
                     meta: null!);
                 // Write count
                 writer.Write(language.Value.Count);

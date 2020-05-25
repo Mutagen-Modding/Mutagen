@@ -57,6 +57,11 @@ namespace Mutagen.Bethesda
         /// The key associated with this mod
         /// </summary>
         ModKey ModKey { get; }
+
+        /// <summary>
+        /// Whether a mod supports localization features
+        /// </summary>
+        bool CanUseLocalization { get; }
     }
 
     /// <summary>

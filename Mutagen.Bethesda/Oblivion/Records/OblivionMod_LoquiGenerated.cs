@@ -2963,6 +2963,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        public override bool CanUseLocalization => false;
         public OblivionMod(ModKey modKey)
             : base(modKey)
         {
@@ -12628,6 +12629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        public bool CanUseLocalization => false;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

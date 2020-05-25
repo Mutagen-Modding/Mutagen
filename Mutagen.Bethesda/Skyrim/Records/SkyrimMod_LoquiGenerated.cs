@@ -2832,6 +2832,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        public override bool CanUseLocalization => true;
         public SkyrimMod(ModKey modKey)
             : base(modKey)
         {
@@ -12129,6 +12130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        public bool CanUseLocalization => true;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

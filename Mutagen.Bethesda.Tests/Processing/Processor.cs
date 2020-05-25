@@ -80,10 +80,8 @@ namespace Mutagen.Bethesda.Tests
             {
                 try
                 {
-                    using (var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        processor.CopyTo(outStream);
-                    }
+                    using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+                    processor.CopyTo(outStream);
                 }
                 catch (Exception)
                 {

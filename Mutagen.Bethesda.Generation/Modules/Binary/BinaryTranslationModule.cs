@@ -1716,6 +1716,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
+                    fg.AppendLine($"public bool CanUseLocalization => {(obj.GetObjectData().UsesStringFiles ? "true" : "false")};");
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod

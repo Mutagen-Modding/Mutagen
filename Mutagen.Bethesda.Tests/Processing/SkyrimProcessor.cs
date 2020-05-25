@@ -286,6 +286,15 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "WEAP", "DESC" },
                     new RecordType[] { "BOOK", "DESC" }
                 ));
+            ProcessStringsFiles(
+                stringsFolder,
+                language,
+                StringsSource.IL,
+                RenumberStringsFileEntries(
+                    stream,
+                    language,
+                    StringsSource.IL
+                ));
         }
     }
 }
