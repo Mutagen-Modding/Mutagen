@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda
     public enum GameMode
     {
         Oblivion,
-        Skyrim
+        Skyrim,
+        SkyrimSpecialEdition
     }
 }
