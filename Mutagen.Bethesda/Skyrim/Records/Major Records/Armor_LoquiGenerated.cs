@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Description);
                 }
@@ -4826,7 +4826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Armor_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                source: StringsSource.DL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IArmorAddonGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Armature,

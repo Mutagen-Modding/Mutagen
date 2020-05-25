@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
                 }
@@ -3686,7 +3686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                source: StringsSource.DL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,

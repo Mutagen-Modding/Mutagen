@@ -129,6 +129,7 @@ namespace Mutagen.Bethesda.Tests
                 if (processor != null)
                 {
                     processor.Process(
+                        tmpFolder: tmp,
                         sourcePath: this.FilePath.Path,
                         preprocessedPath: alignedPath,
                         outputPath: processedPath,
@@ -176,6 +177,8 @@ namespace Mutagen.Bethesda.Tests
                             record.IsCompressed = false;
                         }
 
+                        using var stringsWriter = new StringsWriter(mod.ModKey, Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_Normal"));
+                        writeParams.StringsWriter = stringsWriter;
                         mod.WriteToBinary(outputPath, writeParams);
                         GC.Collect();
 
@@ -197,6 +200,8 @@ namespace Mutagen.Bethesda.Tests
                     {
                         using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                         {
+                            using var stringsWriter = new StringsWriter(wrapper.ModKey, Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_Overlay"));
+                            writeParams.StringsWriter = stringsWriter;
                             wrapper.WriteToBinary(binaryOverlayPath, writeParams);
                         }
 
@@ -217,6 +222,8 @@ namespace Mutagen.Bethesda.Tests
                     async () =>
                     {
                         var copyIn = await ImportCopyIn(this.FilePath.Path);
+                        using var stringsWriter = new StringsWriter(copyIn.ModKey, Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_CopyIn"));
+                        writeParams.StringsWriter = stringsWriter;
                         copyIn.WriteToBinary(copyInPath, writeParams);
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);

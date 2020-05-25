@@ -12,7 +12,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <String name="Description" recordType="DESC" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <RefDirect name="Icons" refName="Icons" />

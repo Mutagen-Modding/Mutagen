@@ -27,16 +27,48 @@ namespace Mutagen.Bethesda
 
         public uint Register(ITranslatedStringGetter str, StringsSource source)
         {
-            lock (_strings)
+            List<KeyValuePair<Language, string>[]> strs = source switch
             {
-                List<KeyValuePair<Language, string>[]> strs = source switch
+                StringsSource.Normal => _strings,
+                StringsSource.IL => _ilStrings,
+                StringsSource.DL => _dlStrings,
+                _ => throw new NotImplementedException(),
+            };
+            lock (strs)
+            {
+                var arr = str.ToArray();
+                if (!arr.Any(x => !string.IsNullOrEmpty(x.Value)))
                 {
-                    StringsSource.Normal => _strings,
-                    StringsSource.IL => _ilStrings,
-                    StringsSource.DL => _dlStrings,
-                    _ => throw new NotImplementedException(),
-                };
-                strs.Add(str.ToArray());
+                    // Do not insert into strings writer
+                    return 0;
+                }
+                strs.Add(arr);
+                try
+                {
+                    return checked((uint)strs.Count);
+                }
+                catch (OverflowException)
+                {
+                    throw new OverflowException("Too many translated strings for current system to handle.");
+                }
+            }
+        }
+
+        public uint Register(string str, Language language, StringsSource source)
+        {
+            List<KeyValuePair<Language, string>[]> strs = source switch
+            {
+                StringsSource.Normal => _strings,
+                StringsSource.IL => _ilStrings,
+                StringsSource.DL => _dlStrings,
+                _ => throw new NotImplementedException(),
+            };
+            lock (strs)
+            {
+                strs.Add(new KeyValuePair<Language, string>[]
+                {
+                    new KeyValuePair<Language, string>(language, str)
+                });
                 try
                 {
                     return checked((uint)strs.Count);

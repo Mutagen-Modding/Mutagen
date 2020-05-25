@@ -165,5 +165,10 @@ namespace Mutagen.Bethesda
         {
             return new TranslatedString(str);
         }
+
+        public override string ToString()
+        {
+            return this.String;
+        }
     }
 }

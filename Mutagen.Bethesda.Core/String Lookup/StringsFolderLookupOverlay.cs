@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
             {
                 foreach (var file in targetDir.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}"))
                 {
-                    if (!StringsUtility.TryRetrieveInfoFromString(file.Name, out var type, out var lang)) continue;
+                    if (!StringsUtility.TryRetrieveInfoFromString(file.Name, out var type, out var lang, out _)) continue;
                     var dict = ret.Get(type);
                     dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                 }

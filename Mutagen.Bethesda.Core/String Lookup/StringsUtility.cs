@@ -7,8 +7,8 @@ namespace Mutagen.Bethesda
     public static class StringsUtility
     {
         public const string StringsFileExtension = "STRINGS";
-        public const string ILStringsFileExtension = "DLSTRINGS";
-        public const string DLStringsFileExtension = "ILSTRINGS";
+        public const string ILStringsFileExtension = "ILSTRINGS";
+        public const string DLStringsFileExtension = "DLSTRINGS";
 
         public static bool TryConvertToStringSource(ReadOnlySpan<char> str, out StringsSource source)
         {
@@ -19,12 +19,12 @@ namespace Mutagen.Bethesda
             }
             if (str.Equals(ILStringsFileExtension, StringComparison.OrdinalIgnoreCase))
             {
-                source = StringsSource.DL;
+                source = StringsSource.IL;
                 return true;
             }
             if (str.Equals(DLStringsFileExtension, StringComparison.OrdinalIgnoreCase))
             {
-                source = StringsSource.IL;
+                source = StringsSource.DL;
                 return true;
             }
             source = default;
@@ -65,17 +65,19 @@ namespace Mutagen.Bethesda
             return $"{modKey.Name}_{language}.{GetSourceString(source)}";
         }
 
-        public static bool TryRetrieveInfoFromString(ReadOnlySpan<char> name, out StringsSource source, out Language language)
+        public static bool TryRetrieveInfoFromString(ReadOnlySpan<char> name, out StringsSource source, out Language language, out ReadOnlySpan<char> modName)
         {
             source = default;
             language = default;
+            modName = default;
             var extensionIndex = name.LastIndexOf('.');
             if (extensionIndex == -1) return false;
-            if (!StringsUtility.TryConvertToStringSource(name.Slice(extensionIndex + 1), out source)) return false;
+            if (!TryConvertToStringSource(name.Slice(extensionIndex + 1), out source)) return false;
             var separatorIndex = name.LastIndexOf('_');
             if (separatorIndex == -1) return false;
             if (separatorIndex > extensionIndex) return false;
             var languageSpan = name.Slice(separatorIndex + 1, extensionIndex - separatorIndex - 1);
+            modName = name.Slice(0, separatorIndex);
             return Enum.TryParse(languageSpan.ToString(), ignoreCase: true, out language);
         }
     }
