@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5</Version>
+    <Version>0.6</Version>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
