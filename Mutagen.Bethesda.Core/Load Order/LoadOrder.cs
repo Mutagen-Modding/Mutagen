@@ -24,15 +24,13 @@ namespace Mutagen.Bethesda
         /// <returns>True if file located</returns>
         public static bool TryGetPluginsFile(GameMode game, out FilePath path)
         {
-            string pluginPath;
-            switch (game)
+            string pluginPath = game switch
             {
-                case GameMode.Oblivion:
-                    pluginPath = "Oblivion/Plugins.txt";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+                GameMode.Oblivion => "Oblivion/Plugins.txt",
+                GameMode.Skyrim => "Skyrim/Plugins.txt",
+                GameMode.SkyrimSpecialEdition => "Skyrim Special Edition/Plugins.txt",
+                _ => throw new NotImplementedException()
+            };
             path = new FilePath(
                 Path.Combine(
                     Environment.GetEnvironmentVariable("LocalAppData"),
