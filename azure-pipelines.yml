@@ -45,3 +45,9 @@ steps:
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
   condition: succeededOrFailed()
+  
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'CHANGELOG.md'
+    ArtifactName: 'changelog'
+    publishLocation: 'Container'
