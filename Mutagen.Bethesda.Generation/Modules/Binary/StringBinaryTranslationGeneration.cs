@@ -155,27 +155,34 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             StringType str = typeGen as StringType;
-            switch (str.BinaryType)
+            if (str.Translated.HasValue)
             {
-                case StringBinaryType.Plain:
-                case StringBinaryType.NullTerminate:
-                    var data = typeGen.GetFieldData();
-                    var gendered = data.Parent as GenderedType;
-                    if (data.HasTrigger
-                        || (gendered?.MaleMarker.HasValue ?? false))
-                    {
-                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
-                    }
-                    else
-                    {
-                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
-                    }
-                case StringBinaryType.PrependLength:
-                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4)";
-                case StringBinaryType.PrependLengthUShort:
-                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2)";
-                default:
-                    throw new NotImplementedException();
+                return $"StringBinaryTranslation.Instance.Parse({dataAccessor}, {nameof(StringsSource)}.{str.Translated.Value}, _package.StringsLookup)";
+            }
+            else
+            {
+                switch (str.BinaryType)
+                {
+                    case StringBinaryType.Plain:
+                    case StringBinaryType.NullTerminate:
+                        var data = typeGen.GetFieldData();
+                        var gendered = data.Parent as GenderedType;
+                        if (data.HasTrigger
+                            || (gendered?.MaleMarker.HasValue ?? false))
+                        {
+                            return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor})";
+                        }
+                        else
+                        {
+                            return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor})";
+                        }
+                    case StringBinaryType.PrependLength:
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4)";
+                    case StringBinaryType.PrependLengthUShort:
+                        return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2)";
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
 

@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(TranslatedString?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }
@@ -3570,7 +3570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(TranslatedString?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta), StringsSource.DL, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         private int? _DATALocation;
         public AlchemicalApparatus.DATADataType DATADataTypeState { get; private set; }

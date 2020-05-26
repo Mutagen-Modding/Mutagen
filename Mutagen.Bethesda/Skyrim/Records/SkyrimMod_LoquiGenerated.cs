@@ -3713,28 +3713,28 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            ModKey modKey)
+            ModKey modKey,
+            IStringsFolderLookup? stringsLookup = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: bytes,
                     metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, GameMode.Skyrim))),
+                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, GameMode.Skyrim)),
+                    stringsLookup: stringsLookup),
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             string path,
-            ModKey? modKeyOverride = null)
+            ModKey? modKeyOverride = null,
+            StringsReadParameters? stringsParam = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim))),
-                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
-                shouldDispose: true);
+                path: path,
+                modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
+                stringsParam: stringsParam);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
@@ -12453,32 +12453,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this._package = new BinaryOverlayFactoryPackage(
                 modKey: modKey,
                 gameMode: GameMode.Skyrim,
-                infoCache: stream.RecordInfoCache);
+                infoCache: stream.RecordInfoCache,
+                stringsLookup: stream.StringsLookup);
             this._shouldDispose = shouldDispose;
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ReadOnlyMemorySlice<byte> data,
-            ModKey modKey)
+            ModKey modKey,
+            IStringsFolderLookup? stringsLookup = null)
         {
             return SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: data,
                     metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(data, GameMode.Skyrim))),
+                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(data, GameMode.Skyrim)),
+                    stringsLookup: stringsLookup),
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             string path,
-            ModKey modKey)
+            ModKey modKey,
+            StringsReadParameters? stringsParam = null)
         {
+            var stream = new MutagenBinaryReadStream(
+                path: path,
+                metaData: GameMode.Skyrim,
+                infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim)));
+            if (stream.Remaining < 12)
+            {
+                throw new ArgumentException("File stream was too short to parse flags");
+            }
+            var flags = stream.GetInt32(offset: 8);
+            if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+            {
+                stream.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+            }
             return SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim))),
+                stream: stream,
                 modKey: modKey,
                 shouldDispose: false);
         }

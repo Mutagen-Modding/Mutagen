@@ -85,6 +85,27 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public TranslatedString Parse(
+            ReadOnlyMemorySlice<byte> data,
+            StringsSource source,
+            IStringsFolderLookup? lookup)
+        {
+            if (lookup != null)
+            {
+                if (data.Length != 4)
+                {
+                    throw new ArgumentException($"String in Strings File format had unexpected length: {data.Length} != 4");
+                }
+                uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
+                if (key == 0) return string.Empty;
+                return lookup.CreateString(source, key);
+            }
+            else
+            {
+                return BinaryStringUtility.ProcessWholeToZString(data);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             string item)

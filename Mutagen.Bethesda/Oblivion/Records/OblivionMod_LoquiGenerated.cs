@@ -3881,12 +3881,8 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey? modKeyOverride = null)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Oblivion,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
-                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
-                shouldDispose: true);
+                path: path,
+                modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
@@ -12967,7 +12963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this._package = new BinaryOverlayFactoryPackage(
                 modKey: modKey,
                 gameMode: GameMode.Oblivion,
-                infoCache: stream.RecordInfoCache);
+                infoCache: stream.RecordInfoCache,
+                stringsLookup: stream.StringsLookup);
             this._shouldDispose = shouldDispose;
         }
 
@@ -12988,11 +12985,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string path,
             ModKey modKey)
         {
+            var stream = new MutagenBinaryReadStream(
+                path: path,
+                metaData: GameMode.Oblivion,
+                infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)));
             return OblivionModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Oblivion,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
+                stream: stream,
                 modKey: modKey,
                 shouldDispose: false);
         }
