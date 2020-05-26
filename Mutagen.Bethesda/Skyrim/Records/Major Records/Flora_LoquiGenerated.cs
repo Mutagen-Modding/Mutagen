@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -65,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IFloraGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        public String Name { get; set; } = string.Empty;
+        public TranslatedString Name { get; set; } = string.Empty;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1094,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFlora :
         IFloraGetter,
         ISkyrimMajorRecord,
-        INamedRequired,
+        ITranslatedNamedRequired,
         IModeled,
         IObjectBounded,
         IRegionTarget,
@@ -1102,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String Name { get; set; }
+        new TranslatedString Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFloraGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter,
         IModeledGetter,
         IObjectBoundedGetter,
         IRegionTargetGetter,
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Flora_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String Name { get; }
+        TranslatedString Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
@@ -1696,7 +1697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Flora_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Flora_FieldIndex.Model:
                     return typeof(Model);
                 case Flora_FieldIndex.Destructible:
@@ -1784,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.Name = string.Empty;
+            item.Name.Clear();
             item.Model = null;
             item.Destructible = null;
             item.Keywords = null;
@@ -1923,6 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
@@ -2867,7 +2869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3434,7 +3436,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -3629,7 +3632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
+        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : string.Empty;
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }

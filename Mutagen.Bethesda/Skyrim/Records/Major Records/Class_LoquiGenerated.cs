@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        public String Name { get; set; } = string.Empty;
+        public TranslatedString Name { get; set; } = string.Empty;
         #endregion
         #region Description
         public String Description { get; set; } = string.Empty;
@@ -1146,10 +1147,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IClass :
         IClassGetter,
         ISkyrimMajorRecord,
-        INamedRequired,
+        ITranslatedNamedRequired,
         ILoquiObjectSetter<IClassInternal>
     {
-        new String Name { get; set; }
+        new TranslatedString Name { get; set; }
         new String Description { get; set; }
         new String? Icon { get; set; }
         new Int32 Unknown { get; set; }
@@ -1174,13 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClassGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter,
         ILoquiObject<IClassGetter>,
         IXmlItem,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Class_Registration.Instance;
-        String Name { get; }
+        TranslatedString Name { get; }
         String Description { get; }
         String? Icon { get; }
         Int32 Unknown { get; }
@@ -1737,7 +1738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Class_FieldIndex.Description:
                     return typeof(String);
                 case Class_FieldIndex.Icon:
@@ -1816,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IClassInternal item)
         {
             ClearPartial();
-            item.Name = string.Empty;
+            item.Name.Clear();
             item.Description = string.Empty;
             item.Icon = default;
             item.Unknown = default;
@@ -1947,6 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
@@ -2639,7 +2641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3196,7 +3198,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
@@ -3353,7 +3356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
+        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : string.Empty;
         #endregion
         #region Description
         private int? _DescriptionLocation;

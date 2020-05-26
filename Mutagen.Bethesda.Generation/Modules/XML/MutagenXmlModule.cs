@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -400,6 +401,12 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             fg.AppendLine();
+        }
+
+        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            return (await base.RequiredUsingStatements(obj))
+                .And("Mutagen.Bethesda.Xml");
         }
     }
 }

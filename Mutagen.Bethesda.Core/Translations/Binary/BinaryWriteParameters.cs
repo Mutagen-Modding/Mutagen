@@ -57,6 +57,11 @@ namespace Mutagen.Bethesda
         public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
 
         /// <summary>
+        /// Optional StringsWriter override, for mods that are able to localize.
+        /// </summary>
+        public StringsWriter? StringsWriter;
+
+        /// <summary>
         /// Aligns a mod's ModKey to a path's implied ModKey.
         /// Will adjust its logic based on the MasterFlagSync option:
         ///  - ThrowIfMisaligned:  If the path and mod do not match, throw.

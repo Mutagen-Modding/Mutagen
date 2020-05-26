@@ -23,24 +23,8 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public RecordInfoCache? RecordInfoCache { get; set; }
 
-        /// <summary>
-        /// Constructor that wraps an array
-        /// </summary>
-        /// <param name="data">Array to wrap and read from</param>
-        /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
-        /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
-        /// <param name="offsetReference">Optional offset reference position to use</param>
-        public MutagenMemoryReadStream(
-            byte[] data, 
-            GameConstants metaData,
-            MasterReferenceReader? masterReferences = null,
-            long offsetReference = 0)
-            : base(data)
-        {
-            this.MetaData = metaData;
-            this.MasterReferences = masterReferences;
-            this.OffsetReference = offsetReference;
-        }
+        /// <inheritdoc/>
+        public IStringsFolderLookup? StringsLookup { get; set; }
 
         /// <summary>
         /// Constructor that wraps a memory slice
@@ -48,13 +32,15 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="data">Span to wrap and read from</param>
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
-        /// <param name="infoCache">Optional RecordInfoCache to reference while readingg</param>
+        /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
+        /// <param name="stringsLookup">Optional strings lookup to reference while reading</param>
         public MutagenMemoryReadStream(
             ReadOnlyMemorySlice<byte> data, 
             GameConstants metaData,
             MasterReferenceReader? masterReferences = null,
             RecordInfoCache? infoCache = null,
+            IStringsFolderLookup? stringsLookup = null,
             long offsetReference = 0)
             : base(data)
         {
@@ -62,6 +48,7 @@ namespace Mutagen.Bethesda.Binary
             this.MasterReferences = masterReferences;
             this.RecordInfoCache = infoCache;
             this.OffsetReference = offsetReference;
+            this.StringsLookup = stringsLookup;
         }
 
         /// <summary>
@@ -79,7 +66,8 @@ namespace Mutagen.Bethesda.Binary
                 this.MetaData, 
                 this.MasterReferences, 
                 offsetReference: this.OffsetReference + this.Position,
-                infoCache: this.RecordInfoCache);
+                infoCache: this.RecordInfoCache,
+                stringsLookup: this.StringsLookup);
         }
     }
 }

@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.12" />
     <PackageReference Include="Loqui.Generation" Version="1.2.33" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.15" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.16" />
   </ItemGroup>
 
   <ItemGroup>

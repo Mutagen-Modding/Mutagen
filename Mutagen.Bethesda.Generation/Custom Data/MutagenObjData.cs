@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
         public bool CustomRecordFallback;
+        public bool UsesStringFiles = true;
 
         public MutagenObjData(ObjectGeneration objGen)
         {

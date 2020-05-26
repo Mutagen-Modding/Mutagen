@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="9adb9b58-0aef-4cee-a346-0639dd924acd" ID="160">
-    <Interface>INamed</Interface>
+    <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <RefDirect name="Destructible" refName="Destructible" />

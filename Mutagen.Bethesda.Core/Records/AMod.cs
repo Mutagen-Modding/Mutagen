@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
         uint IMod.NextObjectID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public abstract bool CanUseLocalization { get; }
         ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => throw new NotImplementedException();

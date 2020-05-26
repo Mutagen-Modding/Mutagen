@@ -146,6 +146,15 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Reader) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var stringsReadParamOptional = new APILine(
+                nicknameKey: "StringsParamsOptional",
+                resolutionString: $"{nameof(StringsReadParameters)}? stringsParam = null",
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Writer) return false;
+                    return obj.GetObjectType() == ObjectType.Mod
+                        && obj.GetObjectData().UsesStringFiles;
+                });
             var recordInfoCache = new APILine(
                 nicknameKey: "RecordInfoCache",
                 resolutionString: $"{nameof(RecordInfoCache)} infoCache",
@@ -185,7 +194,11 @@ namespace Mutagen.Bethesda.Generation
                         customAPI: new CustomMethodAPI[]
                         {
                         },
-                        optionalAPI: modKeyOptional.AndSingle(writeParamOptional).And(modAPILines).ToArray()))
+                        optionalAPI: modKeyOptional
+                            .AndSingle(writeParamOptional)
+                            .And(modAPILines)
+                            .And(stringsReadParamOptional)
+                            .ToArray()))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -674,11 +687,16 @@ namespace Mutagen.Bethesda.Generation
         private async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
+            var objData = obj.GetObjectData();
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"ReadOnlyMemorySlice<byte> bytes");
                 args.Add($"ModKey modKey");
+                if (objData.UsesStringFiles)
+                {
+                    args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
+                }
             }
             using (new BraceWrapper(fg))
             {
@@ -693,6 +711,10 @@ namespace Mutagen.Bethesda.Generation
                             subArgs.Add("data: bytes");
                             subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
                             subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                            if (objData.UsesStringFiles)
+                            {
+                                subArgs.AddPassArg("stringsLookup");
+                            }
                         }
                     });
                     args.AddPassArg("modKey");
@@ -706,24 +728,22 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"string path");
                 args.Add($"ModKey? modKeyOverride = null");
+                if (objData.UsesStringFiles)
+                {
+                    args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
+                }
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.Add(subFg =>
+                    args.AddPassArg("path");
+                    args.Add("modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
+                    if (objData.UsesStringFiles)
                     {
-                        using (var subArgs = new FunctionWrapper(subFg,
-                            $"stream: new {nameof(MutagenBinaryReadStream)}"))
-                        {
-                            subArgs.AddPassArg("path");
-                            subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
-                            subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
-                        }
-                    });
-                    args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
-                    args.Add("shouldDispose: true");
+                        args.AddPassArg("stringsParam");
+                    }
                 }
             }
             fg.AppendLine();
@@ -989,19 +1009,43 @@ namespace Mutagen.Bethesda.Generation
                 args.Add("mod: item");
                 args.AddPassArg("path");
             }
-            fg.AppendLine("using (var memStream = new MemoryTributary())");
+            if (obj.GetObjectData().UsesStringFiles)
+            {
+                fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
+                fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
+            }
+            fg.AppendLine("using var memStream = new MemoryTributary();");
+            using (var args = new ArgsWrapper(fg,
+                $"using (var writer = new MutagenWriter",
+                suffixLine: ")")
+            {
+                SemiColon = false
+            })
+            {
+                args.Add("memStream");
+                args.Add("dispose: false");
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    args.AddPassArg("stringsWriter");
+                }
+                args.Add($"meta: {nameof(GameConstants)}.{nameof(GameConstants.Get)}(item.GameMode)");
+            }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"using (var writer = new MutagenWriter(memStream, dispose: false, meta: {nameof(GameConstants)}.{nameof(GameConstants.Get)}(item.GameMode)))");
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
+            }
+            fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"memStream.Position = 0;");
+                fg.AppendLine($"memStream.CopyTo(fs);");
+            }
+            if (obj.GetObjectData().UsesStringFiles)
+            {
+                fg.AppendLine("if (disposeStrings)");
                 using (new BraceWrapper(fg))
                 {
-                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
-                }
-                fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"memStream.Position = 0;");
-                    fg.AppendLine($"memStream.CopyTo(fs);");
+                    fg.AppendLine("param.StringsWriter?.Dispose();");
                 }
             }
         }
@@ -1011,12 +1055,26 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
             using (new BraceWrapper(fg))
             {
+                fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 fg.AppendLine("var frame = new MutagenFrame(reader)");
                 using (new BraceWrapper(fg) { AppendSemicolon = true })
                 {
-                    fg.AppendLine($"{nameof(MutagenFrame.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                    fg.AppendLine($"{nameof(MutagenFrame.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode})),");
                 }
-                fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    fg.AppendLine("if (reader.Remaining < 12)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                    }
+                    fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
+                    fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"frame.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);");
+                    }
+                }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -1665,6 +1723,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
+                    fg.AppendLine($"public bool CanUseLocalization => {(obj.GetObjectData().UsesStringFiles ? "true" : "false")};");
                 }
 
                 if (obj.GetObjectType() == ObjectType.Mod
@@ -1917,6 +1976,7 @@ namespace Mutagen.Bethesda.Generation
                             args.AddPassArg("modKey");
                             args.Add($"gameMode: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
                             args.Add($"infoCache: stream.{nameof(MutagenBinaryReadStream.RecordInfoCache)}");
+                            args.Add("stringsLookup: stream.StringsLookup");
                         }
                         fg.AppendLine("this._shouldDispose = shouldDispose;");
                     }
@@ -1942,6 +2002,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"ReadOnlyMemorySlice<byte> data");
                             args.Add("ModKey modKey");
+                            if (objData.UsesStringFiles)
+                            {
+                                args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
+                            }
                         }
                         using (new BraceWrapper(fg))
                         {
@@ -1956,6 +2020,10 @@ namespace Mutagen.Bethesda.Generation
                                         subArgs.AddPassArg("data");
                                         subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
                                         subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                                        if (objData.UsesStringFiles)
+                                        {
+                                            subArgs.AddPassArg("stringsLookup");
+                                        }
                                     }
                                 });
                                 args.AddPassArg("modKey");
@@ -1969,22 +2037,39 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"string path");
                             args.Add("ModKey modKey");
+                            if (objData.UsesStringFiles)
+                            {
+                                args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
+                            }
                         }
                         using (new BraceWrapper(fg))
                         {
                             using (var args = new ArgsWrapper(fg,
+                                $"var stream = new {nameof(MutagenBinaryReadStream)}"))
+                            {
+                                args.AddPassArg("path");
+                                args.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                                args.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                            }
+                            if (objData.UsesStringFiles)
+                            {
+                                fg.AppendLine("if (stream.Remaining < 12)");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                                }
+                                fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
+                                fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"stream.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);");
+                                }
+                            }
+
+                            using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                args.Add(subFg =>
-                                {
-                                    using (var subArgs = new FunctionWrapper(subFg,
-                                        $"stream: new {nameof(MutagenBinaryReadStream)}"))
-                                    {
-                                        subArgs.AddPassArg("path");
-                                        subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
-                                        subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
-                                    }
-                                });
+                                args.AddPassArg("stream");
                                 args.AddPassArg("modKey");
                                 args.Add("shouldDispose: false");
                             }

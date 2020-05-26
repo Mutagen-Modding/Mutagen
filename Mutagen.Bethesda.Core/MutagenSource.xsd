@@ -5,7 +5,6 @@
     xmlns="http://tempuri.org/LoquiSource.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:redefine schemaLocation="../../Loqui/Loqui/LoquiSource.xsd">
-    
     <xs:complexType name="ObjectType" >
       <xs:complexContent>
         <xs:extension base="ObjectType">
@@ -238,6 +237,7 @@
       <xs:complexContent>
         <xs:extension base="String">
           <xs:attribute name="binaryType" type="StringBinaryType" />
+          <xs:attribute name="translated" type="StringsFileType" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -520,6 +520,14 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="Normal" />
       <xs:enumeration value="EDIDChars" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StringsFileType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="IL" />
+      <xs:enumeration value="DL" />
     </xs:restriction>
   </xs:simpleType>
 

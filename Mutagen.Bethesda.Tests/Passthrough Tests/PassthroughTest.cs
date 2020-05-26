@@ -129,6 +129,7 @@ namespace Mutagen.Bethesda.Tests
                 if (processor != null)
                 {
                     processor.Process(
+                        tmpFolder: tmp,
                         sourcePath: this.FilePath.Path,
                         preprocessedPath: alignedPath,
                         outputPath: processedPath,
@@ -152,6 +153,7 @@ namespace Mutagen.Bethesda.Tests
             var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
             var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
             var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
+            var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
 
             List<Exception> delayedExceptions = new List<Exception>();
 
@@ -164,19 +166,24 @@ namespace Mutagen.Bethesda.Tests
             // Do normal
             if (Settings.TestNormal)
             {
+                var strsWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_Normal");
+                bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Binary Normal Passthrough",
                     this.Target,
                     async () =>
                     {
                         var mod = await ImportBinary(this.FilePath.Path);
+                        doStrings = mod.CanUseLocalization;
 
                         foreach (var record in mod.EnumerateMajorRecords())
                         {
                             record.IsCompressed = false;
                         }
 
-                        mod.WriteToBinaryParallel(outputPath, writeParams);
+                        using var stringsWriter = new StringsWriter(mod.ModKey, strsWriteDir);
+                        writeParams.StringsWriter = stringsWriter;
+                        mod.WriteToBinary(outputPath, writeParams);
                         GC.Collect();
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
@@ -186,10 +193,22 @@ namespace Mutagen.Bethesda.Tests
                             outputPath,
                             amountToReport: 15);
                     });
+                if (doStrings)
+                {
+                    await foreach(var item in AssertStringsEqual(
+                        "Binary Normal",
+                        strsProcessedPath,
+                        strsWriteDir))
+                    {
+                        yield return item;
+                    }
+                }
             }
 
             if (Settings.TestBinaryOverlay)
             {
+                var strsWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_Overlay");
+                bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Binary Overlay Passthrough",
                     this.Target,
@@ -197,6 +216,9 @@ namespace Mutagen.Bethesda.Tests
                     {
                         using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                         {
+                            doStrings = wrapper.CanUseLocalization;
+                            using var stringsWriter = new StringsWriter(wrapper.ModKey, strsWriteDir);
+                            writeParams.StringsWriter = stringsWriter;
                             wrapper.WriteToBinary(binaryOverlayPath, writeParams);
                         }
 
@@ -207,16 +229,30 @@ namespace Mutagen.Bethesda.Tests
                             binaryOverlayPath,
                             amountToReport: 15);
                     });
+                if (doStrings)
+                {
+                    await foreach (var item in AssertStringsEqual(
+                        "Binary Overlay",
+                        strsProcessedPath,
+                        strsWriteDir))
+                    {
+                        yield return item;
+                    }
+                }
             }
 
             if (Settings.TestCopyIn)
             {
+                var strsWriteDir = Path.Combine(tmp.Dir.Path, "Strings", $"{this.Nickname}_CopyIn");
+                bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Copy In Passthrough",
                     this.Target,
                     async () =>
                     {
                         var copyIn = await ImportCopyIn(this.FilePath.Path);
+                        using var stringsWriter = new StringsWriter(copyIn.ModKey, strsWriteDir);
+                        writeParams.StringsWriter = stringsWriter;
                         copyIn.WriteToBinary(copyInPath, writeParams);
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
@@ -226,6 +262,16 @@ namespace Mutagen.Bethesda.Tests
                             copyInPath,
                             amountToReport: 15);
                     });
+                if (doStrings)
+                {
+                    await foreach (var item in AssertStringsEqual(
+                        "Copy In",
+                        strsProcessedPath,
+                        strsWriteDir))
+                    {
+                        yield return item;
+                    }
+                }
             }
 
             if (delayedExceptions.Count > 0)
@@ -316,6 +362,33 @@ namespace Mutagen.Bethesda.Tests
             if (reader2.Position != reader2.Length)
             {
                 throw new UnexpectedlyMoreData(path2, reader2.Position);
+            }
+        }
+
+        public async IAsyncEnumerable<(string TestName, Exception ex)> AssertStringsEqual(
+            string nickname,
+            DirectoryPath processedDir, 
+            DirectoryPath writeDir)
+        {
+            foreach (var source in EnumExt.GetValues<StringsSource>())
+            {
+                var stringsFileName = StringsUtility.GetFileName(this.ModKey, Language.English, source);
+                var sourcePath = Path.Combine(processedDir.Path, stringsFileName);
+                var pathToTest = Path.Combine(writeDir.Path, stringsFileName);
+                bool sourceExists = File.Exists(sourcePath);
+                bool targetExists = File.Exists(pathToTest);
+                yield return await TestBattery.RunTest($"{nickname} {source} Strings Passthrough",
+                    async () =>
+                    {
+                        if (sourceExists != targetExists)
+                        {
+                            throw new ArgumentException($"Strings file presence did not match for source: {source}");
+                        }
+                        if (!sourceExists) return;
+                        AssertFilesEqual(
+                            new FileStream(sourcePath, FileMode.Open),
+                            pathToTest);
+                    });
             }
         }
 

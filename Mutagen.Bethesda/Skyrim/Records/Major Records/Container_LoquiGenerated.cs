@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -66,14 +67,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IContainerGetter.Name => this.Name;
+        TranslatedString? IContainerGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1043,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainer :
         IContainerGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IModeled,
         IObjectBounded,
         IObjectId,
@@ -1051,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1075,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IContainerGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
@@ -1087,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Container_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IDestructibleGetter? Destructible { get; }
@@ -1641,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Container_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Container_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Container_FieldIndex.Model:
                     return typeof(Model);
                 case Container_FieldIndex.Items:
@@ -1862,6 +1863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Name);
                 }
@@ -2736,7 +2738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3278,7 +3280,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Container_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -3465,7 +3468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }

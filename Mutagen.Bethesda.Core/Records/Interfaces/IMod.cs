@@ -16,11 +16,13 @@ namespace Mutagen.Bethesda
         /// The associated game type
         /// </summary>
         GameMode GameMode { get; }
+
         /// <summary>
         /// Read only list of master reference getters.
         /// </summary>
         /// <returns>Read only list of master reference getters</returns>
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
+
         /// <summary>
         /// Returns the Group getter object associated with the given Major Record Type.
         /// </summary>
@@ -33,6 +35,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         IReadOnlyCache<TMajor, FormKey> GetGroupGetter<TMajor>() where TMajor : IMajorRecordCommonGetter;
+
         /// <summary>
         /// Exports to disk in Bethesda binary format.
         /// Access and iterates through the mod object's contents in a single thread.
@@ -40,6 +43,7 @@ namespace Mutagen.Bethesda
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
         void WriteToBinary(string path, BinaryWriteParameters? param = null);
+
         /// <summary>
         /// Exports to disk in Bethesda binary format.
         /// Access and iterates through the mod groups in separate threads.  All provided mod objects
@@ -48,10 +52,16 @@ namespace Mutagen.Bethesda
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
         void WriteToBinaryParallel(string path, BinaryWriteParameters? param = null);
+
         /// <summary>
         /// The key associated with this mod
         /// </summary>
         ModKey ModKey { get; }
+
+        /// <summary>
+        /// Whether a mod supports localization features
+        /// </summary>
+        bool CanUseLocalization { get; }
     }
 
     /// <summary>
@@ -64,6 +74,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <returns>List of master references</returns>
         new IList<MasterReference> MasterReferences { get; }
+
         /// <summary>
         /// Returns the Group object associated with the given Major Record Type.
         /// </summary>
@@ -76,7 +87,9 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         ICache<TMajor, FormKey> GetGroup<TMajor>() where TMajor : IMajorRecordCommon;
+
         uint NextObjectID { get; set; }
+
         void SyncRecordCount();
     }
 

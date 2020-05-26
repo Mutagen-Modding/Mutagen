@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
 
+            fg.AppendLine($"public override bool CanUseLocalization => {(obj.GetObjectData().UsesStringFiles ? "true" : "false")};");
+
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 fg.AppendLine($"public {obj.Name}({nameof(ModKey)} modKey)");
@@ -292,6 +294,11 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("mod: item");
                     args.AddPassArg("path");
                 }
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
+                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null;");
+                }
                 fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
                 {
@@ -302,6 +309,14 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg("stream");
                         args.Add($"param: param");
                         args.AddPassArg("modKey");
+                    }
+                }
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    fg.AppendLine("if (disposeStrings)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("param.StringsWriter?.Dispose();");
                     }
                 }
             }
@@ -376,6 +391,7 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiType groupInstance = null;
             LoquiType listGroupInstance = null;
+            var objData = obj.GetObjectData();
             fg.AppendLine("const int CutCount = 100;");
             using (var args = new FunctionWrapper(fg,
                 "public static void WriteParallel"))
@@ -420,7 +436,7 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
                         && loqui.TargetObjectGeneration.Name != "ListGroup")
                     {
-                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}, outputStreams));");
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
                     else
                     {
@@ -447,6 +463,10 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"{nameof(MasterReferenceReader)} masters");
                     args.Add("int targetIndex");
                     args.Add("Stream[] streamDepositArray");
+                    if (objData.UsesStringFiles)
+                    {
+                        args.Add($"{nameof(StringsWriter)}? stringsWriter");
+                    }
                     args.Wheres.AddRange(groupInstance.TargetObjectGeneration.GenerateWhereClauses(LoquiInterfaceType.IGetter, groupInstance.TargetObjectGeneration.Generics));
                 }
                 using (new BraceWrapper(fg))
@@ -468,7 +488,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masters, dispose: false))");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masters, {(objData.UsesStringFiles ? "stringsWriter, " : null)}dispose: false))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"foreach (var item in cutItems)");

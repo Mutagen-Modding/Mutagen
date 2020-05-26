@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "Mutagen.Bethesda.Binary.EnumBinaryTranslation<Climate.Moon>.Instance.Write(";
+            string testString = "f ((item.Model != null)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -54,6 +54,8 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
+            xmlGen.AddTypeAssociation<Loqui.Generation.StringType>(new StringXmlTranslationGeneration(), overrideExisting: true);
+            xmlGen.AddTypeAssociation<Mutagen.Bethesda.Generation.StringType>(new StringXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());

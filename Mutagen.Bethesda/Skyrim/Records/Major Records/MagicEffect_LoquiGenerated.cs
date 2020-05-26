@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -61,14 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMagicEffectGetter.Name => this.Name;
+        TranslatedString? IMagicEffectGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
         public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
@@ -263,16 +264,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region MagicItemDescription
+        #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MagicItemDescription;
-        public String? MagicItemDescription
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
-            get => this._MagicItemDescription;
-            set => this._MagicItemDescription = value;
+            get => this._Description;
+            set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMagicEffectGetter.MagicItemDescription => this.MagicItemDescription;
+        TranslatedString? IMagicEffectGetter.Description => this.Description;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -504,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIDelayTime = initialValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
-                this.MagicItemDescription = initialValue;
+                this.Description = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.DATADataTypeState = initialValue;
             }
@@ -559,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ScriptEffectAIDelayTime,
                 TItem CounterEffects,
                 TItem Sounds,
-                TItem MagicItemDescription,
+                TItem Description,
                 TItem Conditions,
                 TItem DATADataTypeState)
             : base(
@@ -613,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIDelayTime = ScriptEffectAIDelayTime;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
-                this.MagicItemDescription = MagicItemDescription;
+                this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -670,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem ScriptEffectAIDelayTime;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CounterEffects;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
-            public TItem MagicItemDescription;
+            public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem DATADataTypeState;
             #endregion
@@ -729,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ScriptEffectAIDelayTime, rhs.ScriptEffectAIDelayTime)) return false;
                 if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-                if (!object.Equals(this.MagicItemDescription, rhs.MagicItemDescription)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
@@ -780,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ScriptEffectAIDelayTime);
                 hash.Add(this.CounterEffects);
                 hash.Add(this.Sounds);
-                hash.Add(this.MagicItemDescription);
+                hash.Add(this.Description);
                 hash.Add(this.Conditions);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
@@ -875,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.MagicItemDescription)) return false;
+                if (!eval(this.Description)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -979,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.MagicItemDescription)) return true;
+                if (eval(this.Description)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -1091,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.MagicItemDescription = eval(this.MagicItemDescription);
+                obj.Description = eval(this.Description);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -1359,9 +1360,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.MagicItemDescription ?? true)
+                    if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(MagicItemDescription, "MagicItemDescription");
+                        fg.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions.TryGet(out var ConditionsItem))
@@ -1445,7 +1446,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? ScriptEffectAIDelayTime;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
-            public Exception? MagicItemDescription;
+            public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? DATADataTypeState;
             #endregion
@@ -1542,8 +1543,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return CounterEffects;
                     case MagicEffect_FieldIndex.Sounds:
                         return Sounds;
-                    case MagicEffect_FieldIndex.MagicItemDescription:
-                        return MagicItemDescription;
+                    case MagicEffect_FieldIndex.Description:
+                        return Description;
                     case MagicEffect_FieldIndex.Conditions:
                         return Conditions;
                     case MagicEffect_FieldIndex.DATADataTypeState:
@@ -1687,8 +1688,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.MagicItemDescription:
-                        this.MagicItemDescription = ex;
+                    case MagicEffect_FieldIndex.Description:
+                        this.Description = ex;
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -1836,8 +1837,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>)obj;
                         break;
-                    case MagicEffect_FieldIndex.MagicItemDescription:
-                        this.MagicItemDescription = (Exception?)obj;
+                    case MagicEffect_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -1897,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ScriptEffectAIDelayTime != null) return true;
                 if (CounterEffects != null) return true;
                 if (Sounds != null) return true;
-                if (MagicItemDescription != null) return true;
+                if (Description != null) return true;
                 if (Conditions != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
@@ -2041,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(MagicItemDescription, "MagicItemDescription");
+                fg.AppendItem(Description, "Description");
                 if (Conditions.TryGet(out var ConditionsItem))
                 {
                     fg.AppendLine("Conditions =>");
@@ -2116,7 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ScriptEffectAIDelayTime = this.ScriptEffectAIDelayTime.Combine(rhs.ScriptEffectAIDelayTime);
                 ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.MagicItemDescription = this.MagicItemDescription.Combine(rhs.MagicItemDescription);
+                ret.Description = this.Description.Combine(rhs.Description);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
@@ -2184,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ScriptEffectAIDelayTime;
             public bool CounterEffects;
             public MaskItem<bool, MagicEffectSound.TranslationMask?> Sounds;
-            public bool MagicItemDescription;
+            public bool Description;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool DATADataTypeState;
             #endregion
@@ -2236,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIDelayTime = defaultOn;
                 this.CounterEffects = defaultOn;
                 this.Sounds = new MaskItem<bool, MagicEffectSound.TranslationMask?>(defaultOn, null);
-                this.MagicItemDescription = defaultOn;
+                this.Description = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
             }
@@ -2289,7 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScriptEffectAIDelayTime, null));
                 ret.Add((CounterEffects, null));
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
-                ret.Add((MagicItemDescription, null));
+                ret.Add((Description, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
@@ -2385,11 +2386,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffect :
         IMagicEffectGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         ILoquiObjectSetter<IMagicEffectInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
@@ -2431,7 +2432,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ScriptEffectAIDelayTime { get; set; }
         new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
-        new String? MagicItemDescription { get; set; }
+        new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -2445,7 +2446,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IMagicEffectGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -2453,7 +2454,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         MagicEffect.Flag Flags { get; }
@@ -2495,7 +2496,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ScriptEffectAIDelayTime { get; }
         IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
-        String? MagicItemDescription { get; }
+        TranslatedString? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         MagicEffect.DATADataType DATADataTypeState { get; }
 
@@ -2841,7 +2842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ScriptEffectAIDelayTime = 46,
         CounterEffects = 47,
         Sounds = 48,
-        MagicItemDescription = 49,
+        Description = 49,
         Conditions = 50,
         DATADataTypeState = 51,
     }
@@ -2979,8 +2980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)MagicEffect_FieldIndex.CounterEffects;
                 case "SOUNDS":
                     return (ushort)MagicEffect_FieldIndex.Sounds;
-                case "MAGICITEMDESCRIPTION":
-                    return (ushort)MagicEffect_FieldIndex.MagicItemDescription;
+                case "DESCRIPTION":
+                    return (ushort)MagicEffect_FieldIndex.Description;
                 case "CONDITIONS":
                     return (ushort)MagicEffect_FieldIndex.Conditions;
                 case "DATADATATYPESTATE":
@@ -3040,7 +3041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.CastingSoundLevel:
                 case MagicEffect_FieldIndex.ScriptEffectAIScore:
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -3098,7 +3099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIScore:
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -3154,7 +3155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.Conditions:
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
@@ -3254,8 +3255,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "CounterEffects";
                 case MagicEffect_FieldIndex.Sounds:
                     return "Sounds";
-                case MagicEffect_FieldIndex.MagicItemDescription:
-                    return "MagicItemDescription";
+                case MagicEffect_FieldIndex.Description:
+                    return "Description";
                 case MagicEffect_FieldIndex.Conditions:
                     return "Conditions";
                 case MagicEffect_FieldIndex.DATADataTypeState:
@@ -3313,7 +3314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.Conditions:
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
@@ -3370,7 +3371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.Conditions:
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
@@ -3387,7 +3388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.VirtualMachineAdapter:
                     return typeof(VirtualMachineAdapter);
                 case MagicEffect_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                     return typeof(FormLinkNullable<Static>);
                 case MagicEffect_FieldIndex.Keywords:
@@ -3470,8 +3471,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<IFormLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.Sounds:
                     return typeof(ExtendedList<MagicEffectSound>);
-                case MagicEffect_FieldIndex.MagicItemDescription:
-                    return typeof(String);
+                case MagicEffect_FieldIndex.Description:
+                    return typeof(TranslatedString);
                 case MagicEffect_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
@@ -3581,7 +3582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ScriptEffectAIDelayTime = default;
             item.CounterEffects = null;
             item.Sounds = null;
-            item.MagicItemDescription = default;
+            item.Description = default;
             item.Conditions.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -3708,6 +3709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
                 }
@@ -3839,10 +3841,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E44: // DNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MagicItemDescription = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MagicItemDescription);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
                 }
                 case 0x41445443: // CTDA
                 {
@@ -3981,7 +3984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.MagicItemDescription = string.Equals(item.MagicItemDescription, rhs.MagicItemDescription);
+            ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -4258,10 +4261,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.MagicItemDescription ?? true)
-                && item.MagicItemDescription.TryGet(out var MagicItemDescriptionItem))
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
             {
-                fg.AppendItem(MagicItemDescriptionItem, "MagicItemDescription");
+                fg.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
@@ -4298,7 +4301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != (item.CounterEffects != null)) return false;
             if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
-            if (checkMask.MagicItemDescription.HasValue && checkMask.MagicItemDescription.Value != (item.MagicItemDescription != null)) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -4355,7 +4358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
-            mask.MagicItemDescription = (item.MagicItemDescription != null);
+            mask.Description = (item.Description != null);
             var ConditionsItem = item.Conditions;
             mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DATADataTypeState = true;
@@ -4453,7 +4456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
             if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            if (!string.Equals(lhs.MagicItemDescription, rhs.MagicItemDescription)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
@@ -4532,9 +4535,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ScriptEffectAIDelayTime);
             hash.Add(item.CounterEffects);
             hash.Add(item.Sounds);
-            if (item.MagicItemDescription.TryGet(out var MagicItemDescriptionitem))
+            if (item.Description.TryGet(out var Descriptionitem))
             {
-                hash.Add(MagicItemDescriptionitem);
+                hash.Add(Descriptionitem);
             }
             hash.Add(item.Conditions);
             hash.Add(item.DATADataTypeState);
@@ -4952,9 +4955,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicItemDescription) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
-                item.MagicItemDescription = rhs.MagicItemDescription;
+                item.Description = rhs.Description;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
@@ -5143,7 +5146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -5554,14 +5557,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if ((item.MagicItemDescription != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicItemDescription) ?? true))
+            if ((item.Description != null)
+                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.MagicItemDescription),
-                    item: item.MagicItemDescription,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MagicItemDescription,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Description,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
@@ -6506,11 +6509,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MagicItemDescription":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicItemDescription);
+                case "Description":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
                     try
                     {
-                        item.MagicItemDescription = StringXmlTranslation.Instance.Parse(
+                        item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -6724,7 +6727,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MenuDisplayObject,
@@ -6881,9 +6885,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MagicItemDescription,
+                item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DNAM_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             MagicEffectBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
@@ -7061,7 +7066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
@@ -7257,9 +7262,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
-        #region MagicItemDescription
-        private int? _MagicItemDescriptionLocation;
-        public String? MagicItemDescription => _MagicItemDescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MagicItemDescriptionLocation.Value, _package.Meta)) : default(string?);
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
@@ -7393,8 +7398,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _MagicItemDescriptionLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MagicItemDescription);
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
                 }
                 case 0x41445443: // CTDA
                 {

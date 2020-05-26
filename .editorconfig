@@ -71,3 +71,6 @@ dotnet_diagnostic.CS8597.severity = error
 
 # CS8609: Nullability of reference types in return type doesn't match overridden member.
 dotnet_diagnostic.CS8609.severity = error
+
+# CS8762: Parameter must have a non-null value when exiting in some condition.
+dotnet_diagnostic.CS8762.severity = error

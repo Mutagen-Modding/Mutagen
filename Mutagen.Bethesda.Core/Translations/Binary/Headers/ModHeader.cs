@@ -61,5 +61,12 @@ namespace Mutagen.Bethesda.Binary
         /// Total length, including the header and its content.
         /// </summary>
         public long TotalLength => this.HeaderLength + this.ContentLength;
+
+        /// <summary>
+        /// The integer representing a Mod Header's flags enum.
+        /// Since each game has its own flag Enum, this field is offered as an int that should
+        /// be casted to the appropriate enum for use.
+        /// </summary>
+        public int Flags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
     }
 }

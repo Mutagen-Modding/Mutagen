@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Binary
         public bool IsTopLevel => this.GroupType == 0;
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
+        public override string ToString() => $"{RecordType} ({ContainedRecordType}) => 0x{ContentLength:X}";
     }
 
     /// <summary>

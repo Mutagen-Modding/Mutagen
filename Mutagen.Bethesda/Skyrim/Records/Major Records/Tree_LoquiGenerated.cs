@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -98,14 +99,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITreeGetter.Name => this.Name;
+        TranslatedString? ITreeGetter.Name => this.Name;
         #endregion
         #region TrunkFlexibility
         public Single TrunkFlexibility { get; set; } = default;
@@ -1026,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITree :
         ITreeGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IHarvestable,
         IModeled,
         IObjectBounded,
@@ -1039,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
         new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Single TrunkFlexibility { get; set; }
         new Single BranchFlexibility { get; set; }
         new Byte[] Unknown { get; set; }
@@ -1061,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITreeGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IHarvestableGetter,
         IModeledGetter,
         IObjectBoundedGetter,
@@ -1078,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         Single TrunkFlexibility { get; }
         Single BranchFlexibility { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
@@ -1657,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.Production:
                     return typeof(SeasonalIngredientProduction);
                 case Tree_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Tree_FieldIndex.TrunkFlexibility:
                     return typeof(Single);
                 case Tree_FieldIndex.BranchFlexibility:
@@ -1900,6 +1901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
                 }
@@ -2733,7 +2735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3282,7 +3284,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Tree_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3458,7 +3461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         private int? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }

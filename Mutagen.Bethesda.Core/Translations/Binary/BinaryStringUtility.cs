@@ -66,7 +66,7 @@ namespace Noggog
             // If null terminated, don't include
             if (bytes[^1] == 0)
             {
-                return bytes.Slice(0, bytes.Length - 1);
+                return bytes[0..^1];
             }
             return bytes;
         }
@@ -81,7 +81,7 @@ namespace Noggog
             // If null terminated, don't include
             if (bytes[^1] == 0)
             {
-                return bytes.Slice(0, bytes.Length - 1);
+                return bytes[0..^1];
             }
             return bytes;
         }
@@ -91,10 +91,10 @@ namespace Noggog
         /// </summary>
         /// <param name="bytes">Bytes to convert</param>
         /// <returns>String representation of bytes</returns>
-        public static string ProcessWholeToZString(ReadOnlySpan<byte> span)
+        public static string ProcessWholeToZString(ReadOnlySpan<byte> bytes)
         {
-            span = ProcessNullTermination(span);
-            return ToZString(span);
+            bytes = ProcessNullTermination(bytes);
+            return ToZString(bytes);
         }
 
         /// <summary>
@@ -102,10 +102,10 @@ namespace Noggog
         /// </summary>
         /// <param name="bytes">Bytes to convert</param>
         /// <returns>String representation of bytes</returns>
-        public static string ProcessWholeToZString(ReadOnlyMemorySlice<byte> span)
+        public static string ProcessWholeToZString(ReadOnlyMemorySlice<byte> bytes)
         {
-            span = ProcessNullTermination(span);
-            return ToZString(span);
+            bytes = ProcessNullTermination(bytes);
+            return ToZString(bytes);
         }
 
         /// <summary>
@@ -122,9 +122,25 @@ namespace Noggog
             {
                 throw new ArgumentException();
             }
-            var ret = BinaryStringUtility.ToZString(mem.Slice(0, index));
+            var ret = BinaryStringUtility.ToZString(mem[0..index]);
             stream.Position += index + 1;
             return ret;
+        }
+
+        /// <summary>
+        /// Reads bytes from a stream until a null termination character occurs.
+        /// Converts results to a string.
+        /// </summary>
+        /// <param name="bytes">Bytes to convert</param>
+        /// <returns>First null terminated string read</returns>
+        public static string ParseUnknownLengthString(ReadOnlySpan<byte> bytes)
+        {
+            var index = bytes.IndexOf(default(byte));
+            if (index == -1)
+            {
+                throw new ArgumentException();
+            }
+            return BinaryStringUtility.ToZString(bytes[0..index]);
         }
 
         /// <summary>
@@ -141,12 +157,12 @@ namespace Noggog
                 case 2:
                     {
                         var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
-                        return ToZString(span.Slice(2, length));
+                        return ProcessWholeToZString(span.Slice(2, length));
                     }
                 case 4:
                     {
                         var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
-                        return ToZString(span.Slice(4, checked((int)length)));
+                        return ProcessWholeToZString(span.Slice(4, checked((int)length)));
                     }
                 default:
                     throw new NotImplementedException();

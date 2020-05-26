@@ -1,5 +1,7 @@
+using Microsoft.VisualBasic;
 using Mutagen.Bethesda.Binary;
 using Noggog;
+using Noggog.Utility;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -17,6 +19,9 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.Config _Instructions = new BinaryFileProcessor.Config();
         protected Dictionary<long, uint> _LengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
+        protected string SourcePath;
+        protected TempFolder TempFolder;
+        public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
 
         public Processor()
         {
@@ -24,11 +29,14 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void Process(
+            TempFolder tmpFolder,
             string sourcePath,
             string preprocessedPath,
             string outputPath,
             byte numMasters)
         {
+            this.TempFolder = tmpFolder;
+            this.SourcePath = sourcePath;
             this._NumMasters = numMasters;
             this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameMode);
             this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
@@ -72,10 +80,8 @@ namespace Mutagen.Bethesda.Tests
             {
                 try
                 {
-                    using (var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        processor.CopyTo(outStream);
-                    }
+                    using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+                    processor.CopyTo(outStream);
                 }
                 catch (Exception)
                 {
@@ -239,6 +245,115 @@ namespace Mutagen.Bethesda.Tests
                 var groupMeta = stream.ReadGroup();
                 if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
                 this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
+            }
+        }
+
+        public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
+            IMutagenReadStream stream,
+            Language language,
+            StringsSource source,
+            params RecordType[][] recordTypes)
+        {
+            var overlay = new StringsLookupOverlay(
+                Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings", StringsUtility.GetFileName(ModKey, language, source)),
+                StringsUtility.GetFormat(source));
+            var ret = new List<KeyValuePair<uint, uint>>();
+            var dict = new Dictionary<RecordType, HashSet<RecordType>>();
+            foreach (var item in recordTypes)
+            {
+                var set = new HashSet<RecordType>();
+                dict[item[0]] = set;
+                for (int i = 1; i < item.Length; i++)
+                {
+                    set.Add(item[i]);
+                }
+            }
+            stream.Position = 0;
+            var mod = stream.ReadMod();
+            if (!EnumExt.HasFlag(mod.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag)) return ListExt.Empty<KeyValuePair<uint, uint>>();
+            stream.Position += mod.ContentLength;
+
+            uint newIndex = 1;
+            while (!stream.Complete)
+            {
+                var grup = stream.ReadGroup();
+                if (!dict.TryGetValue(grup.ContainedRecordType, out var instructions))
+                {
+                    stream.Position += grup.ContentLength;
+                    continue;
+                }
+                var groupCompletePos = stream.Position + grup.ContentLength;
+                while (stream.Position < groupCompletePos)
+                {
+                    var major = stream.ReadMajorRecord();
+                    var majorCompletePos = stream.Position + major.ContentLength;
+                    while (stream.Position < majorCompletePos)
+                    {
+                        var sub = stream.ReadSubrecord();
+                        if (instructions.Contains(sub.RecordType))
+                        {
+                            if (sub.ContentLength != 4)
+                            {
+                                throw new ArgumentException();
+                            }
+                            var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+                            if (curIndex == 0x11243)
+                            {
+                                int wer = 23;
+                                wer++;
+                            }
+                            if (!overlay.TryLookup(curIndex, out var str)
+                                || string.IsNullOrEmpty(str))
+                            {
+                                _Instructions.SetSubstitution(stream.Position, new byte[4]);
+                            }
+                            else if (curIndex != 0)
+                            {
+                                var assignedIndex = newIndex++;
+                                ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
+                                byte[] b = new byte[4];
+                                BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
+                                _Instructions.SetSubstitution(stream.Position, b);
+                            }
+                        }
+                        stream.Position += sub.ContentLength;
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public void ProcessStringsFiles(
+            DirectoryInfo stringsFolder,
+            Language language, 
+            StringsSource source, 
+            IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
+        {
+            if (reindexing.Count == 0) return;
+
+            var modName = Path.GetFileName(this.SourcePath).SubstringFromEnd(".");
+
+            foreach (var f in stringsFolder.EnumerateFiles($"*{StringsUtility.StringsFileExtension}"))
+            {
+                if (!StringsUtility.TryRetrieveInfoFromString(f.Name, out var fileSrc, out var fileLanguage, out var fileModName)) continue;
+                if (fileSrc != source) continue;
+                if (fileLanguage != language) continue;
+                if (!fileModName.Equals(modName, StringComparison.OrdinalIgnoreCase)) continue;
+
+                var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
+                using var writer = new StringsWriter(ModKey.Factory(Path.GetFileName(this.SourcePath)), outFolder);
+                var overlay = new StringsLookupOverlay(f.FullName, StringsUtility.GetFormat(source));
+                foreach (var item in reindexing)
+                {
+                    if (!overlay.TryLookup(item.Key, out var str))
+                    {
+                        throw new ArgumentException();
+                    }
+                    if (item.Value != writer.Register(str, language, source))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -65,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IKeyGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        public String Name { get; set; } = string.Empty;
+        public TranslatedString Name { get; set; } = string.Empty;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1079,6 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IKey :
         IKeyGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamedRequired,
         IItem,
         IObjectId,
         IObjectBounded,
@@ -1087,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String Name { get; set; }
+        new TranslatedString Name { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1112,6 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeyGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedRequiredGetter,
         IItemGetter,
         IObjectIdGetter,
         IObjectBoundedGetter,
@@ -1124,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Key_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String Name { get; }
+        TranslatedString Name { get; }
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
         IDestructibleGetter? Destructible { get; }
@@ -1689,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Key_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Key_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Key_FieldIndex.Model:
                     return typeof(Model);
                 case Key_FieldIndex.Icons:
@@ -1775,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.Name = string.Empty;
+            item.Name.Clear();
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
@@ -1914,6 +1917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Key_FieldIndex.Name);
                 }
@@ -2819,7 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Key_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3392,7 +3396,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Key_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -3582,7 +3587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
+        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : string.Empty;
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }

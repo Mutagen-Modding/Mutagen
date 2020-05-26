@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.6</Version>
+    <Version>0.7</Version>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
@@ -119,6 +119,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Class.cs">
+      <DependentUpon>Class.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
@@ -1992,9 +1995,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.13.7" />
+    <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.1.12" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.15" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.16" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

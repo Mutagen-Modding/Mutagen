@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="db110917-5be4-4ea2-b679-55c8ac5b6179" ID="27">
-    <Interface>INamed</Interface>
+    <Interface>ITranslatedNamed</Interface>
     <Interface>IRelatable</Interface>
     <Interface>IObjectId</Interface>
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" hasBeenSet="False" />
       <FormLink name="ExteriorJailMarker" recordType="JAIL" refName="PlacedObject" />

@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -66,14 +67,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorGetter.Name => this.Name;
+        TranslatedString? IArmorGetter.Name => this.Name;
         #endregion
         #region ObjectEffect
         public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
@@ -174,14 +175,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
+        private TranslatedString? _Description;
+        public TranslatedString? Description
         {
             get => this._Description;
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorGetter.Description => this.Description;
+        TranslatedString? IArmorGetter.Description => this.Description;
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1544,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmor :
         IArmorGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IItem,
         IObjectBounded,
         IObjectId,
@@ -1553,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new GenderedItem<ArmorModel?>? WorldModel { get; set; }
@@ -1567,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<Race> Race { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new ExtendedList<IFormLink<ArmorAddon>>? Armature { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -1590,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IItemGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
@@ -1603,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Armor_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        String? Name { get; }
+        TranslatedString? Name { get; }
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
@@ -1617,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; }
         UInt32 Value { get; }
         Single Weight { get; }
@@ -2289,7 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case Armor_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Armor_FieldIndex.ObjectEffect:
                     return typeof(FormLinkNullable<IEffectRecord>);
                 case Armor_FieldIndex.EnchantmentAmount:
@@ -2317,7 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Armor_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Armor_FieldIndex.Armature:
                     return typeof(ExtendedList<IFormLink<ArmorAddon>>);
                 case Armor_FieldIndex.Value:
@@ -2587,6 +2588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Name);
                 }
@@ -2704,6 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Description);
                 }
@@ -3822,7 +3825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -3995,7 +3998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
@@ -4738,7 +4741,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Armor_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectEffect,
@@ -4821,7 +4825,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Armor_Registration.DESC_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IArmorAddonGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Armature,
@@ -4990,7 +4995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         #region ObjectEffect
         private int? _ObjectEffectLocation;
@@ -5048,7 +5053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta), StringsSource.DL, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; private set; }
         private int? _DATALocation;

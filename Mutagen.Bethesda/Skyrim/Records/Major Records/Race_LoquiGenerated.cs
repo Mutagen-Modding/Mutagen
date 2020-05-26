@@ -25,6 +25,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -50,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
+        private TranslatedString? _Name;
+        public TranslatedString? Name
         {
             get => this._Name;
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRaceGetter.Name => this.Name;
+        TranslatedString? IRaceGetter.Name => this.Name;
         #endregion
         #region Description
         public String Description { get; set; } = string.Empty;
@@ -3965,11 +3966,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRace :
         IRaceGetter,
         ISkyrimMajorRecord,
-        INamed,
+        ITranslatedNamed,
         IRelatable,
         ILoquiObjectSetter<IRaceInternal>
     {
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new String Description { get; set; }
         new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new FormLinkNullable<Armor> Skin { get; set; }
@@ -4066,7 +4067,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRaceGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        ITranslatedNamedGetter,
         IRelatableGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
@@ -4074,7 +4075,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => Race_Registration.Instance;
-        String? Name { get; }
+        TranslatedString? Name { get; }
         String Description { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
@@ -5275,7 +5276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Race_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.ActorEffect:
@@ -5729,6 +5730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 }
@@ -8322,7 +8324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
@@ -10893,7 +10895,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
@@ -11497,7 +11500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta), StringsSource.Normal, _package.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Description
         private int? _DescriptionLocation;

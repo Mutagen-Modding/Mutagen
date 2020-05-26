@@ -23,6 +23,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Xml;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
@@ -2962,6 +2963,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        public override bool CanUseLocalization => false;
         public OblivionMod(ModKey modKey)
             : base(modKey)
         {
@@ -3786,11 +3788,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3806,11 +3808,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3879,12 +3881,8 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey? modKeyOverride = null)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Oblivion,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
-                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
-                shouldDispose: true);
+                path: path,
+                modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
@@ -4447,11 +4445,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
+                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader)
                 {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)),
                 };
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
@@ -12552,23 +12550,24 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            using (var memStream = new MemoryTributary())
+            using var memStream = new MemoryTributary();
+            using (var writer = new MutagenWriter(
+                memStream,
+                dispose: false,
+                meta: GameConstants.Get(item.GameMode)))
             {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: GameConstants.Get(item.GameMode)))
-                {
-                    OblivionModBinaryWriteTranslation.Instance.Write(
-                        item: item,
-                        importMask: importMask,
-                        writer: writer,
-                        param: param,
-                        modKey: modKey,
-                        recordTypeConverter: null);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
+                OblivionModBinaryWriteTranslation.Instance.Write(
+                    item: item,
+                    importMask: importMask,
+                    writer: writer,
+                    param: param,
+                    modKey: modKey,
+                    recordTypeConverter: null);
+            }
+            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                memStream.Position = 0;
+                memStream.CopyTo(fs);
             }
         }
 
@@ -12626,6 +12625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        public bool CanUseLocalization => false;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -12963,7 +12963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this._package = new BinaryOverlayFactoryPackage(
                 modKey: modKey,
                 gameMode: GameMode.Oblivion,
-                infoCache: stream.RecordInfoCache);
+                infoCache: stream.RecordInfoCache,
+                stringsLookup: stream.StringsLookup);
             this._shouldDispose = shouldDispose;
         }
 
@@ -12984,11 +12985,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string path,
             ModKey modKey)
         {
+            var stream = new MutagenBinaryReadStream(
+                path: path,
+                metaData: GameMode.Oblivion,
+                infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion)));
             return OblivionModFactory(
-                stream: new MutagenBinaryReadStream(
-                    path: path,
-                    metaData: GameMode.Oblivion,
-                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
+                stream: stream,
                 modKey: modKey,
                 shouldDispose: false);
         }

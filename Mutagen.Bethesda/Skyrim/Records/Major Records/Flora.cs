@@ -9,6 +9,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = new TranslatedString(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
@@ -21,5 +29,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
+    }
+
+    namespace Internals
+    {
+        public partial class FloraBinaryOverlay
+        {
+            #region Interfaces
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+            #endregion
+        }
     }
 }

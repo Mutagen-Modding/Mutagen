@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
-    <Interface>INamed</Interface>
+    <Interface>ITranslatedNamed</Interface>
     <Interface>IItem</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
@@ -10,7 +10,7 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
       <FormLink name="ObjectEffect" recordType="EITM" objType="Record">
@@ -26,7 +26,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <String name="Description" recordType="DESC" />
+      <String name="Description" recordType="DESC" translated="DL" />
       <RefDirect name="ScopeModel" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD3" />
