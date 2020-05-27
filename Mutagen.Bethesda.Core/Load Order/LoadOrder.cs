@@ -328,6 +328,25 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Creates a load order and fills it with mods constructed by given importer
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="importer">Function used to construct a mod</param>
+        public static LoadOrder<TMod> ImportFactory(
+            DirectoryPath dataFolder,
+            IReadOnlyList<ModKey> loadOrder,
+            Importer importer)
+        {
+            var ret = new LoadOrder<TMod>();
+            ret.Import(
+                dataFolder,
+                loadOrder,
+                importer);
+            return ret;
+        }
+
+        /// <summary>
         /// Iterates through all mod listings in load order
         /// </summary>
         public IEnumerator<ModListing<TMod>> GetEnumerator()
