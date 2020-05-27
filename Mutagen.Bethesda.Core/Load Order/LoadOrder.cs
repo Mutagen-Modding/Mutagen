@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
     /// For a load order of just ModKeys in an order with no optionality, it is usually preferable to just use a normal List of ModKeys.
     /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained mods that implement IDisposable
     /// </summary>
-    public class LoadOrder<TMod> : IEnumerable<ModListing<TMod>>, IDisposable
+    public class LoadOrder<TMod> : IReadOnlyList<ModListing<TMod>>, IDisposable
         where TMod : class, IModGetter
     {
         private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Access a mod at a given index
         /// </summary>
-        public ModListing<TMod> this[LoadOrderIndex index] => _modsByLoadOrder[index.ID];
+        public ModListing<TMod> this[int index] => _modsByLoadOrder[index];
 
         /// <summary>
         /// Attempts to retrive a mod listing given a ModKey
@@ -159,18 +159,18 @@ namespace Mutagen.Bethesda
         /// <param name="key">ModKey to query for</param>
         /// <param name="result">Result containing located index, and a reference to the listing</param>
         /// <returns>True if matching mod located</returns>
-        public bool TryGetListing(ModKey key, out (LoadOrderIndex Index, ModListing<TMod> Listing) result)
+        public bool TryGetListing(ModKey key, out (int Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
             {
                 var item = _modsByLoadOrder[i];
                 if (item.Key.Equals(key))
                 {
-                    result = (new LoadOrderIndex(i), _modsByLoadOrder[i]);
+                    result = (i, _modsByLoadOrder[i]);
                     return true;
                 }
             }
-            result = default(ValueTuple<LoadOrderIndex, ModListing<TMod>>);
+            result = default(ValueTuple<int, ModListing<TMod>>);
             return false;
         }
 
@@ -180,12 +180,12 @@ namespace Mutagen.Bethesda
         /// <param name="key">ModKey to query for</param>
         /// <param name="result">Result containing located index, and a reference to the mod object</param>
         /// <returns>True if matching mod located</returns>
-        public bool TryGetMod(ModKey key, out (LoadOrderIndex Index, TMod Mod) result)
+        public bool TryGetMod(ModKey key, out (int Index, TMod Mod) result)
         {
             if (!this.TryGetListing(key, out var listing)
                 || listing.Listing.Mod == null)
             {
-                result = default((LoadOrderIndex, TMod));
+                result = default((int, TMod));
                 return false;
             }
             result = (listing.Index, listing.Listing.Mod);
@@ -198,14 +198,14 @@ namespace Mutagen.Bethesda
         /// <param name="index">Index to retrieve</param>
         /// <param name="result">Reference to the mod listing</param>
         /// <returns>True if index in range</returns>
-        public bool TryGetListing(LoadOrderIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
+        public bool TryGetListing(int index, [MaybeNullWhen(false)] out ModListing<TMod> result)
         {
-            if (!_modsByLoadOrder.InRange(index.ID))
+            if (!_modsByLoadOrder.InRange(index))
             {
                 result = default!;
                 return false;
             }
-            result = _modsByLoadOrder[index.ID];
+            result = _modsByLoadOrder[index];
             return result != null;
         }
 
