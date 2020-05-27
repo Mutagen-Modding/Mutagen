@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda
 
         private class AlphabeticalFormKeyComparer : Comparer<FormKey>
         {
-            private bool _mastersFirst;
+            private readonly bool _mastersFirst;
 
             public AlphabeticalFormKeyComparer(bool mastersFirst)
             {
@@ -261,14 +261,14 @@ namespace Mutagen.Bethesda
         public static Comparer<FormKey> LoadOrderComparer(
             IReadOnlyList<ModKey> loadOrder,
             Comparer<FormKey>? matchingFallback = null) =>
-            new LoadOrderFormKeyComparer(loadOrder, matchingFallback);
+            new ModKeyListFormKeyComparer(loadOrder, matchingFallback);
 
-        private class LoadOrderFormKeyComparer : Comparer<FormKey>
+        private class ModKeyListFormKeyComparer : Comparer<FormKey>
         {
-            IReadOnlyList<ModKey> _loadOrder;
-            Comparer<FormKey> _matchingFallback;
+            private readonly IReadOnlyList<ModKey> _loadOrder;
+            private readonly Comparer<FormKey> _matchingFallback;
 
-            public LoadOrderFormKeyComparer(
+            public ModKeyListFormKeyComparer(
                 IReadOnlyList<ModKey> loadOrder,
                 Comparer<FormKey>? matchingFallback)
             {
@@ -283,6 +283,51 @@ namespace Mutagen.Bethesda
                     var xIndex = _loadOrder.IndexOf(x.ModKey);
                     if (xIndex == -1) throw new ArgumentOutOfRangeException($"ModKey was not on load order: {x.ModKey}");
                     var yIndex = _loadOrder.IndexOf(y.ModKey);
+                    if (yIndex == -1) throw new ArgumentOutOfRangeException($"ModKey was not on load order: {y.ModKey}");
+                    return xIndex.CompareTo(yIndex);
+                }
+
+                return _matchingFallback.Compare(x, y);
+            }
+        }
+
+        /// <summary>
+        /// Constructs a comparer that sorts FormKeys according to a load order.
+        /// If FormKeys are from the same mod, then alphabetical sorting will be used, unless an override is specified.
+        /// </summary>
+        /// <param name="loadOrder">Load order to refer to for sorting</param>
+        /// <param name="matchingFallback">Comparer to use when FormKeys from the same mod.  Alphabetical is default.</param>
+        /// <returns>Comparer to use</returns>
+        /// <exception cref="ArgumentOutOfRangeException">A FormKey not on the load order is queried.</exception>
+        public static Comparer<FormKey> LoadOrderComparer<TMod>(
+            LoadOrder<TMod> loadOrder,
+            Comparer<FormKey>? matchingFallback = null)
+            where TMod : class, IModGetter
+        {
+            return new ModEntryListFormKeyComparer<TMod>(loadOrder, matchingFallback);
+        }
+
+        private class ModEntryListFormKeyComparer<TMod> : Comparer<FormKey>
+            where TMod : class, IModGetter
+        {
+            private readonly IReadOnlyList<ModListing<TMod>> _loadOrder;
+            private readonly Comparer<FormKey> _matchingFallback;
+
+            public ModEntryListFormKeyComparer(
+                IReadOnlyList<ModListing<TMod>> loadOrder,
+                Comparer<FormKey>? matchingFallback)
+            {
+                _loadOrder = loadOrder;
+                _matchingFallback = matchingFallback ?? AlphabeticalComparer(mastersFirst: false);
+            }
+
+            public override int Compare(FormKey x, FormKey y)
+            {
+                if (x.ModKey != y.ModKey)
+                {
+                    var xIndex = _loadOrder.IndexOf(x.ModKey, (l, k) => l.Key.Equals(k));
+                    if (xIndex == -1) throw new ArgumentOutOfRangeException($"ModKey was not on load order: {x.ModKey}");
+                    var yIndex = _loadOrder.IndexOf(y.ModKey, (l, k) => l.Key.Equals(k));
                     if (yIndex == -1) throw new ArgumentOutOfRangeException($"ModKey was not on load order: {y.ModKey}");
                     return xIndex.CompareTo(yIndex);
                 }
