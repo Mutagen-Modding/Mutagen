@@ -134,9 +134,11 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// A container for Mod objects in an order
+    /// A container for Mod objects in an order that can optionally exist.
+    /// For a load order of just ModKeys in an order with no optionality, it is usually preferable to just use a normal List of ModKeys.
+    /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained mods that implement IDisposable
     /// </summary>
-    public class LoadOrder<TMod> : IEnumerable<ModListing<TMod>>
+    public class LoadOrder<TMod> : IEnumerable<ModListing<TMod>>, IDisposable
         where TMod : class, IModGetter
     {
         private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
@@ -336,6 +338,20 @@ namespace Mutagen.Bethesda
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Disposes all contained mods that implement IDisposable
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var mod in _modsByLoadOrder)
+            {
+                if (mod.Mod is IDisposable disp)
+                {
+                    disp.Dispose();
+                }
+            }
         }
     }
 }
