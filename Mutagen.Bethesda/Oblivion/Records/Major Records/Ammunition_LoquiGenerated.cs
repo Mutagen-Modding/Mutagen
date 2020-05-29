@@ -1564,7 +1564,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.MajorRecordParse<IAmmunitionInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

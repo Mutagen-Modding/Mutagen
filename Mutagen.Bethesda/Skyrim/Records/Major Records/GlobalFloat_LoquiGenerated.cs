@@ -1236,7 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             UtilityTranslation.MajorRecordParse<IGlobalFloatInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

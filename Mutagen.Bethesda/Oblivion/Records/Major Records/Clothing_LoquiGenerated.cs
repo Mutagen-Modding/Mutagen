@@ -1291,7 +1291,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.MajorRecordParse<IClothingInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

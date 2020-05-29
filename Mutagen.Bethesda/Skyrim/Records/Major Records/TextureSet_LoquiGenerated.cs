@@ -1855,7 +1855,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             UtilityTranslation.MajorRecordParse<ITextureSetInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

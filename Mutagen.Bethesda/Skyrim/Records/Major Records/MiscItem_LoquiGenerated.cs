@@ -2013,7 +2013,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             UtilityTranslation.MajorRecordParse<IMiscItemInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

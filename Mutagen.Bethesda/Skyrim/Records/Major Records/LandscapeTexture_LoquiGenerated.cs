@@ -1627,7 +1627,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             UtilityTranslation.MajorRecordParse<ILandscapeTextureInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

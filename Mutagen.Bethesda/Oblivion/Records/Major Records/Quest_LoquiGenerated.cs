@@ -1868,7 +1868,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.MajorRecordParse<IQuestInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

@@ -1655,7 +1655,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.MajorRecordParse<IPlacedCreatureInternal>(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

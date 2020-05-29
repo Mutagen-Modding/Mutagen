@@ -113,6 +113,13 @@ namespace Mutagen.Bethesda.Binary
             return reader.Position + contentLength + reader.MetaData.MajorConstants.LengthAfterLength;
         }
 
+        public static long ParseRecord(IMutagenReadStream reader)
+        {
+            reader.Position += 4;
+            var len = checked((int)reader.ReadUInt32());
+            return reader.Position + len + reader.MetaData.MajorConstants.LengthAfterLength;
+        }
+
         public static long ParseSubrecord(
             IMutagenReadStream reader,
             RecordType expectedHeader)

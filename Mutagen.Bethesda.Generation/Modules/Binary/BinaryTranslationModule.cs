@@ -1157,7 +1157,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"record: {accessor}");
                     args.Add($"frame: frame");
-                    args.Add($"recType: RecordType");
                     args.Add($"recordTypeConverter: recordTypeConverter");
                     args.Add($"fillStructs: FillBinaryStructs");
                     args.Add($"fillTyped: FillBinaryRecordTypes");

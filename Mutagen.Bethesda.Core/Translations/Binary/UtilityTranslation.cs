@@ -72,15 +72,12 @@ namespace Mutagen.Bethesda
         public static M MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordType recType,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                frame.Reader,
-                recType));
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
             fillStructs(
                 record: record,
                 frame: frame);
