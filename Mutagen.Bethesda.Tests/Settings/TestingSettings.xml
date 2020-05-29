@@ -22,6 +22,7 @@
       <Bool name="TestImport" />
       <Bool name="TestFolder" />
       <Bool name="TestCopyIn" />
+      <Bool name="Parallel" />
     </Fields>
   </Object>
   <Object name="DataFolderLocations" GUID="352acadd-2222-4274-a2a2-5678a465527e" ID="4">

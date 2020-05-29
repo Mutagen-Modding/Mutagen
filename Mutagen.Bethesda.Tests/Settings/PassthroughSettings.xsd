@@ -12,6 +12,7 @@
          <xs:element name="TestImport" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFolder" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestCopyIn" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="Parallel" type="ValueType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>

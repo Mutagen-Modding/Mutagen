@@ -36,7 +36,8 @@ namespace Mutagen.Bethesda.Tests
         {
             return OblivionMod.CreateFromBinary(
                 path.Path,
-                this.ModKey);
+                this.ModKey,
+                parallel: this.Settings.Parallel);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)

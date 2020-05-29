@@ -65,6 +65,9 @@ namespace Mutagen.Bethesda.Tests
         #region TestCopyIn
         public Boolean TestCopyIn { get; set; } = default;
         #endregion
+        #region Parallel
+        public Boolean Parallel { get; set; } = default;
+        #endregion
 
         #region To String
         public override string ToString()
@@ -117,6 +120,7 @@ namespace Mutagen.Bethesda.Tests
                 this.TestImport = initialValue;
                 this.TestFolder = initialValue;
                 this.TestCopyIn = initialValue;
+                this.Parallel = initialValue;
             }
 
             public Mask(
@@ -127,7 +131,8 @@ namespace Mutagen.Bethesda.Tests
                 TItem TestBinaryOverlay,
                 TItem TestImport,
                 TItem TestFolder,
-                TItem TestCopyIn)
+                TItem TestCopyIn,
+                TItem Parallel)
             {
                 this.ReuseCaches = ReuseCaches;
                 this.ReorderRecords = ReorderRecords;
@@ -137,6 +142,7 @@ namespace Mutagen.Bethesda.Tests
                 this.TestImport = TestImport;
                 this.TestFolder = TestFolder;
                 this.TestCopyIn = TestCopyIn;
+                this.Parallel = Parallel;
             }
 
             #pragma warning disable CS8618
@@ -156,6 +162,7 @@ namespace Mutagen.Bethesda.Tests
             public TItem TestImport;
             public TItem TestFolder;
             public TItem TestCopyIn;
+            public TItem Parallel;
             #endregion
 
             #region Equals
@@ -176,6 +183,7 @@ namespace Mutagen.Bethesda.Tests
                 if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
                 if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
                 if (!object.Equals(this.TestCopyIn, rhs.TestCopyIn)) return false;
+                if (!object.Equals(this.Parallel, rhs.Parallel)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -189,6 +197,7 @@ namespace Mutagen.Bethesda.Tests
                 hash.Add(this.TestImport);
                 hash.Add(this.TestFolder);
                 hash.Add(this.TestCopyIn);
+                hash.Add(this.Parallel);
                 return hash.ToHashCode();
             }
 
@@ -205,6 +214,7 @@ namespace Mutagen.Bethesda.Tests
                 if (!eval(this.TestImport)) return false;
                 if (!eval(this.TestFolder)) return false;
                 if (!eval(this.TestCopyIn)) return false;
+                if (!eval(this.Parallel)) return false;
                 return true;
             }
             #endregion
@@ -220,6 +230,7 @@ namespace Mutagen.Bethesda.Tests
                 if (eval(this.TestImport)) return true;
                 if (eval(this.TestFolder)) return true;
                 if (eval(this.TestCopyIn)) return true;
+                if (eval(this.Parallel)) return true;
                 return false;
             }
             #endregion
@@ -242,6 +253,7 @@ namespace Mutagen.Bethesda.Tests
                 obj.TestImport = eval(this.TestImport);
                 obj.TestFolder = eval(this.TestFolder);
                 obj.TestCopyIn = eval(this.TestCopyIn);
+                obj.Parallel = eval(this.Parallel);
             }
             #endregion
 
@@ -296,6 +308,10 @@ namespace Mutagen.Bethesda.Tests
                     {
                         fg.AppendItem(TestCopyIn, "TestCopyIn");
                     }
+                    if (printMask?.Parallel ?? true)
+                    {
+                        fg.AppendItem(Parallel, "Parallel");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -329,6 +345,7 @@ namespace Mutagen.Bethesda.Tests
             public Exception? TestImport;
             public Exception? TestFolder;
             public Exception? TestCopyIn;
+            public Exception? Parallel;
             #endregion
 
             #region IErrorMask
@@ -353,6 +370,8 @@ namespace Mutagen.Bethesda.Tests
                         return TestFolder;
                     case PassthroughSettings_FieldIndex.TestCopyIn:
                         return TestCopyIn;
+                    case PassthroughSettings_FieldIndex.Parallel:
+                        return Parallel;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -386,6 +405,9 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     case PassthroughSettings_FieldIndex.TestCopyIn:
                         this.TestCopyIn = ex;
+                        break;
+                    case PassthroughSettings_FieldIndex.Parallel:
+                        this.Parallel = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -421,6 +443,9 @@ namespace Mutagen.Bethesda.Tests
                     case PassthroughSettings_FieldIndex.TestCopyIn:
                         this.TestCopyIn = (Exception?)obj;
                         break;
+                    case PassthroughSettings_FieldIndex.Parallel:
+                        this.Parallel = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -437,6 +462,7 @@ namespace Mutagen.Bethesda.Tests
                 if (TestImport != null) return true;
                 if (TestFolder != null) return true;
                 if (TestCopyIn != null) return true;
+                if (Parallel != null) return true;
                 return false;
             }
             #endregion
@@ -479,6 +505,7 @@ namespace Mutagen.Bethesda.Tests
                 fg.AppendItem(TestImport, "TestImport");
                 fg.AppendItem(TestFolder, "TestFolder");
                 fg.AppendItem(TestCopyIn, "TestCopyIn");
+                fg.AppendItem(Parallel, "Parallel");
             }
             #endregion
 
@@ -495,6 +522,7 @@ namespace Mutagen.Bethesda.Tests
                 ret.TestImport = this.TestImport.Combine(rhs.TestImport);
                 ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
                 ret.TestCopyIn = this.TestCopyIn.Combine(rhs.TestCopyIn);
+                ret.Parallel = this.Parallel.Combine(rhs.Parallel);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -524,6 +552,7 @@ namespace Mutagen.Bethesda.Tests
             public bool TestImport;
             public bool TestFolder;
             public bool TestCopyIn;
+            public bool Parallel;
             #endregion
 
             #region Ctors
@@ -537,6 +566,7 @@ namespace Mutagen.Bethesda.Tests
                 this.TestImport = defaultOn;
                 this.TestFolder = defaultOn;
                 this.TestCopyIn = defaultOn;
+                this.Parallel = defaultOn;
             }
 
             #endregion
@@ -560,6 +590,7 @@ namespace Mutagen.Bethesda.Tests
                 ret.Add((TestImport, null));
                 ret.Add((TestFolder, null));
                 ret.Add((TestCopyIn, null));
+                ret.Add((Parallel, null));
             }
         }
         #endregion
@@ -725,6 +756,7 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestImport { get; set; }
         new Boolean TestFolder { get; set; }
         new Boolean TestCopyIn { get; set; }
+        new Boolean Parallel { get; set; }
     }
 
     public partial interface IPassthroughSettingsGetter :
@@ -747,6 +779,7 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestImport { get; }
         Boolean TestFolder { get; }
         Boolean TestCopyIn { get; }
+        Boolean Parallel { get; }
 
     }
 
@@ -1047,6 +1080,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         TestImport = 5,
         TestFolder = 6,
         TestCopyIn = 7,
+        Parallel = 8,
     }
     #endregion
 
@@ -1064,9 +1098,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PassthroughSettings.Mask<>);
 
@@ -1112,6 +1146,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.TestFolder;
                 case "TESTCOPYIN":
                     return (ushort)PassthroughSettings_FieldIndex.TestCopyIn;
+                case "PARALLEL":
+                    return (ushort)PassthroughSettings_FieldIndex.Parallel;
                 default:
                     return null;
             }
@@ -1130,6 +1166,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                case PassthroughSettings_FieldIndex.Parallel:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1149,6 +1186,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                case PassthroughSettings_FieldIndex.Parallel:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1168,6 +1206,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                case PassthroughSettings_FieldIndex.Parallel:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1195,6 +1234,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestFolder";
                 case PassthroughSettings_FieldIndex.TestCopyIn:
                     return "TestCopyIn";
+                case PassthroughSettings_FieldIndex.Parallel:
+                    return "Parallel";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1213,6 +1254,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                case PassthroughSettings_FieldIndex.Parallel:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1232,6 +1274,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                case PassthroughSettings_FieldIndex.Parallel:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1258,6 +1301,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestCopyIn:
+                    return typeof(Boolean);
+                case PassthroughSettings_FieldIndex.Parallel:
                     return typeof(Boolean);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1314,6 +1359,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestImport = default;
             item.TestFolder = default;
             item.TestCopyIn = default;
+            item.Parallel = default;
         }
         
         #region Xml Translation
@@ -1378,6 +1424,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.TestCopyIn = item.TestCopyIn == rhs.TestCopyIn;
+            ret.Parallel = item.Parallel == rhs.Parallel;
         }
         
         public string ToString(
@@ -1456,6 +1503,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendItem(item.TestCopyIn, "TestCopyIn");
             }
+            if (printMask?.Parallel ?? true)
+            {
+                fg.AppendItem(item.Parallel, "Parallel");
+            }
         }
         
         public bool HasBeenSet(
@@ -1477,6 +1528,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.TestImport = true;
             mask.TestFolder = true;
             mask.TestCopyIn = true;
+            mask.Parallel = true;
         }
         
         #region Equals and Hash
@@ -1494,6 +1546,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs.TestImport != rhs.TestImport) return false;
             if (lhs.TestFolder != rhs.TestFolder) return false;
             if (lhs.TestCopyIn != rhs.TestCopyIn) return false;
+            if (lhs.Parallel != rhs.Parallel) return false;
             return true;
         }
         
@@ -1508,6 +1561,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             hash.Add(item.TestImport);
             hash.Add(item.TestFolder);
             hash.Add(item.TestCopyIn);
+            hash.Add(item.Parallel);
             return hash.ToHashCode();
         }
         
@@ -1562,6 +1616,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestCopyIn) ?? true))
             {
                 item.TestCopyIn = rhs.TestCopyIn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.Parallel) ?? true))
+            {
+                item.Parallel = rhs.Parallel;
             }
         }
         
@@ -1722,6 +1780,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.TestCopyIn),
                     item: item.TestCopyIn,
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestCopyIn,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.Parallel) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Parallel),
+                    item: item.Parallel,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.Parallel,
                     errorMask: errorMask);
             }
         }
@@ -1984,6 +2051,27 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             item.TestCopyIn = BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
+                case "Parallel":
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.Parallel) ?? true))
+                    {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.Parallel);
+                        try
+                        {
+                            item.Parallel = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
                         }
