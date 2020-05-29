@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: CellBlock_Registration.GRUP_HEADER,
-                            thread: true,
+                            thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
                             {

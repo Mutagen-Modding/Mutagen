@@ -3784,13 +3784,15 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             string path,
             ModKey? modKeyOverride = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion));
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3802,13 +3804,15 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder? errorMask,
             ModKey? modKeyOverride = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion));
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3821,12 +3825,14 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ModKey modKey,
             RecordInfoCache infoCache,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3839,12 +3845,14 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -4434,13 +4442,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             string path,
             ModKey? modKeyOverride = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion));
+                frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
@@ -4454,12 +4464,14 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ModKey modKey,
             RecordInfoCache infoCache,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,

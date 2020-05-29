@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
                                 frame: frame,
                                 triggeringRecord: ListGroup<T>.T_RecordType,
-                                thread: true,
+                                thread: frame.MetaData.Parallel,
                                 recordTypeConverter: recordTypeConverter,
                                 transl: (MutagenFrame r, out T listSubItem, RecordTypeConverter? conv) =>
                                 {

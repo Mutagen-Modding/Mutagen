@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
-                            thread: true,
+                            thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WorldspaceSubBlock listSubItem, RecordTypeConverter? conv) =>
                             {

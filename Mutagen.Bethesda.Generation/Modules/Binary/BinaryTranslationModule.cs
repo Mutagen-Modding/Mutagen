@@ -163,6 +163,14 @@ namespace Mutagen.Bethesda.Generation
                     if (dir != TranslationDirection.Reader) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var parallel = new APILine(
+                nicknameKey: "Parallel",
+                resolutionString: "bool parallel = true",
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Writer) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
@@ -198,6 +206,7 @@ namespace Mutagen.Bethesda.Generation
                             .AndSingle(writeParamOptional)
                             .And(modAPILines)
                             .And(stringsReadParamOptional)
+                            .And(parallel)
                             .ToArray()))
                 {
                     Funnel = new TranslationFunnel(
@@ -216,7 +225,9 @@ namespace Mutagen.Bethesda.Generation
                             CustomMethodAPI.FactoryPublic(recordInfoCache),
                             CustomMethodAPI.FactoryPublic(writeParamOptional),
                         },
-                        optionalAPI: modAPILines))
+                        optionalAPI: modAPILines
+                            .And(parallel)
+                            .ToArray()))
                 {
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
@@ -266,6 +277,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
+                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -1056,6 +1068,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}));");
+                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     fg.AppendLine("if (reader.Remaining < 12)");

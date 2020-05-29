@@ -30,6 +30,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public IStringsFolderLookup? StringsLookup { get; set; }
 
+        /// <summary>
+        /// Whether to do parallel work when possible
+        /// </summary>
+        public bool Parallel { get; set; }
+
         public ParsingBundle(GameConstants constants)
         {
             this.Constants = constants;

@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (threading)
                     {
-                        args.Add($"thread: true");
+                        args.Add($"thread: frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
                     }
                     if (needsMasters && data.HasTrigger)
                     {

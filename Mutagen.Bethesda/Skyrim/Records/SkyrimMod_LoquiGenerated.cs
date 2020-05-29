@@ -3613,13 +3613,15 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -3641,13 +3643,15 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -3669,12 +3673,14 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ModKey modKey,
             RecordInfoCache infoCache,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3687,12 +3693,14 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -4287,13 +4295,15 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -4316,12 +4326,14 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ModKey modKey,
             RecordInfoCache infoCache,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            bool parallel = true)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
+                frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
