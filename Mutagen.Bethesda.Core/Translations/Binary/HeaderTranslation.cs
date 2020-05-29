@@ -12,8 +12,6 @@ namespace Mutagen.Bethesda.Binary
 {
     public class HeaderTranslation
     {
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        
         public static bool TryParse(
             IBinaryReadStream reader,
             RecordType expectedHeader,

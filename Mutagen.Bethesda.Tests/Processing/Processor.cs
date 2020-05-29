@@ -356,5 +356,67 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
         }
+
+        public void CleanEmptyChildGroups(
+            IMutagenReadStream stream,
+            FormID formID,
+            RangeInt64 loc,
+            int numSubGroups)
+        {
+            List<RangeInt64> removes = new List<RangeInt64>();
+            stream.Position = loc.Min;
+            // Skip Major Record
+            var majorHeader = stream.ReadMajorRecord();
+            stream.Position += majorHeader.ContentLength;
+            var blockGroupPos = stream.Position;
+            var blockGroup = stream.ReadGroup();
+            if (!blockGroup.IsGroup) return;
+            if (blockGroup.ContentLength == 0)
+            {
+                removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            }
+            else if (numSubGroups > 0)
+            {
+                var grupType = (GroupTypeEnum)blockGroup.GroupType;
+                if (grupType != GroupTypeEnum.CellChildren) return;
+                var amountRemoved = 0;
+                for (int i = 0; i < numSubGroups; i++)
+                {
+                    var subBlockGroupPos = stream.Position;
+                    var subBlockGroup = stream.ReadGroup();
+                    if (!subBlockGroup.IsGroup) break;
+                    if (subBlockGroup.ContentLength == 0)
+                    { // Empty group
+                        this._LengthTracker[blockGroupPos] = checked((uint)(this._LengthTracker[blockGroupPos] - subBlockGroup.HeaderLength));
+                        removes.Add(RangeInt64.FactoryFromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
+                        amountRemoved++;
+                    }
+                    stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
+                }
+
+                // Check to see if removed subgroups left parent empty
+                if (amountRemoved > 0
+                    && blockGroup.ContentLength - (blockGroup.HeaderLength * amountRemoved) == 0)
+                {
+                    removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+                }
+            }
+
+            if (removes.Count == 0) return;
+
+            int amount = 0;
+            foreach (var remove in removes)
+            {
+                this._Instructions.SetRemove(
+                    section: remove);
+                amount -= (int)remove.Width;
+            }
+            ProcessSubrecordLengths(
+                stream,
+                amount,
+                loc.Min,
+                formID,
+                doRecordLen: false);
+        }
     }
 }

@@ -424,66 +424,11 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
-
-            // Clean empty child groups
-            List<RangeInt64> removes = new List<RangeInt64>();
-            stream.Position = loc.Min + 4;
-            var len = stream.ReadUInt32();
-            stream.Position += len + 12;
-            var grupPos = stream.Position;
-            var grup = stream.ReadZString(4);
-            if (!grup.Equals("GRUP")) return;
-            var grupLen = stream.ReadUInt32();
-            if (grupLen == 0x14)
-            {
-                removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
-            }
-            else
-            {
-                stream.Position += 4;
-                var grupType = (GroupTypeEnum)stream.ReadUInt32();
-                if (grupType != GroupTypeEnum.CellChildren) return;
-                stream.Position += 4;
-                var amountRemoved = 0;
-                for (int i = 0; i < 3; i++)
-                {
-                    var startPos = stream.Position;
-                    var subGrup = stream.ReadZString(4);
-                    if (!subGrup.Equals("GRUP")) break;
-                    var subGrupLen = stream.ReadUInt32();
-                    stream.Position = startPos + subGrupLen;
-                    if (subGrupLen == 0x14)
-                    { // Empty group
-                        this._LengthTracker[grupPos] = this._LengthTracker[grupPos] - 0x14;
-                        removes.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
-                        amountRemoved++;
-                    }
-                }
-
-                // Check to see if removed subgroups left parent empty
-                if (amountRemoved > 0
-                    && grupLen - 0x14 * amountRemoved == 0x14)
-                {
-                    removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
-                }
-            }
-
-            if (removes.Count == 0) return;
-
-            int amount = 0;
-            foreach (var remove in removes)
-            {
-                this._Instructions.SetRemove(
-                    section: remove);
-                amount -= (int)remove.Width;
-            }
-
-            ProcessSubrecordLengths(
-                stream,
-                amount,
-                loc.Min,
-                formID,
-                doRecordLen: false);
+            CleanEmptyChildGroups(
+                stream, 
+                formID, 
+                loc,
+                numSubGroups: 3);
         }
 
         private void ProcessDialogTopics(
@@ -493,31 +438,11 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
-
-            // Clean empty child groups
-            stream.Position = loc.Min + 4;
-            var len = stream.ReadUInt32();
-            stream.Position += len + 12;
-            var grupPos = stream.Position;
-            var grup = stream.ReadZString(4);
-            int amount = 0;
-            if (grup.Equals("GRUP"))
-            {
-                var grupLen = stream.ReadUInt32();
-                if (grupLen == 0x14)
-                {
-                    this._Instructions.SetRemove(
-                        section: new RangeInt64(grupPos, grupPos + 0x14 - 1));
-                    amount -= 0x14;
-                }
-            }
-
-            ProcessSubrecordLengths(
+            CleanEmptyChildGroups(
                 stream,
-                amount,
-                loc.Min,
                 formID,
-                doRecordLen: false);
+                loc,
+                numSubGroups: 0);
         }
 
         private void ProcessDialogItems(

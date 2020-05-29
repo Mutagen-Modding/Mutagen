@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (objTypeEnum == ObjectType.Group)
             {
-                data.RecordType = new RecordType("GRUP");
+                data.RecordType = Mutagen.Bethesda.Internals.Constants.Group;
             }
 
             foreach (var elem in obj.Node.Elements(XName.Get("CustomRecordTypeTrigger", LoquiGenerator.Namespace)))
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.ObjectType == ObjectType.Group)
             {
-                data.TriggeringRecordTypes.Add(new RecordType("GRUP"));
+                data.TriggeringRecordTypes.Add(Mutagen.Bethesda.Internals.Constants.Group);
             }
 
             if (obj.TryGetMarkerType(out var markerType))
