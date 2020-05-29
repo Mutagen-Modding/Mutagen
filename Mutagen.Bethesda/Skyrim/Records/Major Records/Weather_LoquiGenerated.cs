@@ -4627,37 +4627,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E44: // DNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown2);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown3);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown4);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown5);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Precipitation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -4665,7 +4665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VisualEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -4673,41 +4673,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown6 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown6);
                 }
                 case 0x4D414E52: // RNAM
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
                 }
                 case 0x4D414E51: // QNAM
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x4D414E50: // PNAM
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x4D414E4A: // JNAM
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x304D414E: // NAM0
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.SkyUpperColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
                     item.FogNearColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
@@ -4740,7 +4740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.FogDistanceDayNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.FogDistanceDayFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -4754,7 +4754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.WindSpeed = PercentBinaryTranslation.Parse(
                         frame: dataFrame,
@@ -4806,7 +4806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x314D414E: // NAM1
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
@@ -4844,19 +4844,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x434C4144: // DALC
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                 }
                 case 0x324D414E: // NAM2
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown8 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown8);
                 }
                 case 0x334D414E: // NAM3
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown9 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown9);
                 }
@@ -9305,37 +9305,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown3
         private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown4
         private int? _Unknown4Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown4Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown4Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown5
         private int? _Unknown5Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown5 => _Unknown5Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown5Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown5 => _Unknown5Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown5Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
         public bool Precipitation_IsSet => _PrecipitationLocation.HasValue;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrecipitationLocation.Value, _package.Meta)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
         public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
-        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.Meta)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region Unknown6
         private int? _Unknown6Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown6 => _Unknown6Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown6Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown6 => _Unknown6Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown6Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Clouds
         partial void CloudsCustomParse(
@@ -9609,11 +9609,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown8
         private int? _Unknown8Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown8 => _Unknown8Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown8Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown8 => _Unknown8Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown8Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown9
         private int? _Unknown9Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown9 => _Unknown9Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown9Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown9 => _Unknown9Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown9Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IModelGetter? Aurora { get; private set; }
         partial void CustomCtor(
@@ -9635,13 +9635,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
             var ret = new WeatherBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: finalPos,
@@ -9750,8 +9750,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    _NAM0Location = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _NAM0Location = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xD0)
                     {
                         this.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
@@ -9764,12 +9764,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    _FNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
                 }
                 case 0x314D414E: // NAM1
@@ -9790,7 +9790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             stream: stream,
                             finalPos: finalPos,
                             trigger: type,
-                            constants: _package.Meta.SubConstants,
+                            constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
@@ -9799,11 +9799,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.SkyStatics = BinaryOverlaySetList<IFormLinkGetter<IStaticGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
-                            constants: _package.Meta.SubConstants,
+                            constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));

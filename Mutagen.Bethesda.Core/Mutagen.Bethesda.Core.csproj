@@ -60,6 +60,7 @@
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Streams\ParsingBundle.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />
     <Compile Include="String Lookup\ITranslatedString.cs" />
     <Compile Include="String Lookup\IStringsFolderLookup.cs" />

@@ -1276,21 +1276,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x494E4954: // TINI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
                 }
                 case 0x434E4954: // TINC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
                 }
                 case 0x564E4954: // TINV
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterpolationValue = FloatBinaryTranslation.Parse(
                         frame: frame,
                         integerType: FloatIntegerType.UInt,
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x53414954: // TIAS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Preset = frame.ReadInt16();
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Preset);
                 }
@@ -2138,19 +2138,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Index
         private int? _IndexLocation;
-        public UInt16? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.Meta)) : default(UInt16?);
+        public UInt16? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region Color
         private int? _ColorLocation;
-        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region InterpolationValue
         private int? _InterpolationValueLocation;
-        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.Meta), FloatIntegerType.UInt, 1) : default(Single?);
+        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 1) : default(Single?);
         #endregion
         #region Preset
         private int? _PresetLocation;
-        public Int16? Preset => _PresetLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetLocation.Value, _package.Meta)) : default(Int16?);
+        public Int16? Preset => _PresetLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

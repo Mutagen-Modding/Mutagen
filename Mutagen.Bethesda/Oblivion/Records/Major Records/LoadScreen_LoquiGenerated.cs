@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x43534544: // DESC
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2384,11 +2384,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = ListExt.Empty<LoadScreenLocationBinaryOverlay>();
         partial void CustomCtor(
@@ -2410,13 +2410,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
             var ret = new LoadScreenBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: finalPos,
@@ -2473,7 +2473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             stream: stream,
                             finalPos: finalPos,
                             trigger: type,
-                            constants: _package.Meta.SubConstants,
+                            constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
                 }

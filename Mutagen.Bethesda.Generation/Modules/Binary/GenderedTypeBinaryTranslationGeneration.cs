@@ -45,11 +45,11 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.RecordType.HasValue)
             {
-                fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
             else if (data.MarkerType.HasValue && !gender.MarkerPerGender)
             {
-                fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
+                fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
             }
 
             using (var args = new ArgsWrapper(fg,
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
                         fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.HasBeenSet ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
-                        fg.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.Meta);");
+                        fg.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
                         using (var args = new ArgsWrapper(fg,
                             $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                         {
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Generation
             var gendered = typeGen as GenderedType;
             if (typeGen.GetFieldData().MarkerType.HasValue && !gendered.MarkerPerGender)
             {
-                fg.AppendLine($"stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker");
+                fg.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
             }
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("stream");
                                 this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
-                                args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.Meta)", "p")}");
+                                args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
                             }
                             if (gendered.FemaleConversions != null)
                             {

@@ -3618,10 +3618,8 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim)),
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -3629,7 +3627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -3648,10 +3646,8 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim)),
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -3659,7 +3655,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -3677,10 +3673,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = infoCache
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = infoCache;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3697,10 +3691,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = infoCache
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = infoCache;
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3716,12 +3708,13 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
+            var meta = new ParsingBundle(GameMode.Skyrim);
+            meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
+            meta.StringsLookup = stringsLookup;
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: bytes,
-                    metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, GameMode.Skyrim)),
-                    stringsLookup: stringsLookup),
+                    metaData: meta),
                 modKey: modKey,
                 shouldDispose: false);
         }
@@ -4299,10 +4292,8 @@ namespace Mutagen.Bethesda.Skyrim
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim)),
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
                 if (reader.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -4310,7 +4301,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -4329,10 +4320,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
             {
-                var frame = new MutagenFrame(reader)
-                {
-                    RecordInfoCache = infoCache
-                };
+                var frame = new MutagenFrame(reader);
+                frame.MetaData.RecordInfoCache = infoCache;
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
@@ -5396,7 +5385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    frame.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
+                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
@@ -6154,7 +6143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            frame.Reader.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
+            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -12450,11 +12439,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ModKey = modKey;
             this._data = stream;
-            this._package = new BinaryOverlayFactoryPackage(
-                modKey: modKey,
-                gameMode: GameMode.Skyrim,
-                infoCache: stream.RecordInfoCache,
-                stringsLookup: stream.StringsLookup);
+            this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
+            this._package.MetaData.MasterReferences = new MasterReferenceReader(modKey);
             this._shouldDispose = shouldDispose;
         }
 
@@ -12463,12 +12449,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
+            var meta = new ParsingBundle(GameMode.Skyrim);
+            meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
+            meta.StringsLookup = stringsLookup;
             return SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: data,
-                    metaData: GameMode.Skyrim,
-                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(data, GameMode.Skyrim)),
-                    stringsLookup: stringsLookup),
+                    metaData: meta),
                 modKey: modKey,
                 shouldDispose: false);
         }
@@ -12478,10 +12465,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey,
             StringsReadParameters? stringsParam = null)
         {
+            var meta = new ParsingBundle(GameMode.Skyrim)
+            {
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            };
             var stream = new MutagenBinaryReadStream(
                 path: path,
-                metaData: GameMode.Skyrim,
-                infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim)));
+                metaData: meta);
             if (stream.Remaining < 12)
             {
                 throw new ArgumentException("File stream was too short to parse flags");
@@ -12489,7 +12479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var flags = stream.GetInt32(offset: 8);
             if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
             {
-                stream.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
             }
             return SkyrimModFactory(
                 stream: stream,
@@ -12532,7 +12522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x34534554: // TES4
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    _package.MasterReferences.SetTo(
+                    _package.MetaData.MasterReferences!.SetTo(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
                             {

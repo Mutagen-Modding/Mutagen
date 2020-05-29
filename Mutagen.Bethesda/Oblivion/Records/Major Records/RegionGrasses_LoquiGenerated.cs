@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x53474452: // RDGS
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -1993,13 +1993,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x53474452: // RDGS
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Grasses = BinaryOverlaySetList<IFormLinkGetter<IGrassGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
                 }

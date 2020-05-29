@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E52: // RNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region RankNumber
         private int? _RankNumberLocation;
-        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.Meta)) : default(Int32?);
+        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region Name
         private IGenderedItemGetter<String?>? _NameOverlay;
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.Meta)) : default(string?);
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         male: Rank_Registration.MNAM_HEADER,
                         female: Rank_Registration.FNAM_HEADER,
                         stream: stream,
-                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.Meta)));
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
                 }
                 case 0x4D414E49: // INAM

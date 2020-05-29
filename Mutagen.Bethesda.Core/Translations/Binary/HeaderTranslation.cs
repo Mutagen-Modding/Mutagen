@@ -104,18 +104,18 @@ namespace Mutagen.Bethesda.Binary
                 reader,
                 expectedHeader,
                 out var contentLength,
-                reader.MetaData.MajorConstants.LengthLength))
+                reader.MetaData.Constants.MajorConstants.LengthLength))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength + reader.MetaData.MajorConstants.LengthAfterLength;
+            return reader.Position + contentLength + reader.MetaData.Constants.MajorConstants.LengthAfterLength;
         }
 
         public static long ParseRecord(IMutagenReadStream reader)
         {
             reader.Position += 4;
             var len = checked((int)reader.ReadUInt32());
-            return reader.Position + len + reader.MetaData.MajorConstants.LengthAfterLength;
+            return reader.Position + len + reader.MetaData.Constants.MajorConstants.LengthAfterLength;
         }
 
         public static long ParseSubrecord(
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Binary
                 reader,
                 expectedHeader,
                 out var contentLength,
-                reader.MetaData.SubConstants.LengthLength))
+                reader.MetaData.Constants.SubConstants.LengthLength))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = ParseSubrecord(
                 reader,
                 expectedHeader);
-            reader.Position -= reader.MetaData.SubConstants.HeaderLength;
+            reader.Position -= reader.MetaData.Constants.SubConstants.HeaderLength;
             return ret;
         }
 
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Binary
         {
             return ReadNextRecordType(
                 reader,
-                reader.MetaData.MajorConstants.LengthLength,
+                reader.MetaData.Constants.MajorConstants.LengthLength,
                 out contentLength);
         }
 
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Binary
         {
             return ReadNextRecordType(
                 reader,
-                reader.MetaData.SubConstants.LengthLength,
+                reader.MetaData.Constants.SubConstants.LengthLength,
                 out contentLength);
         }
 
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                finalPos = reader.Position + reader.MetaData.MajorConstants.HeaderLength + contentLength;
+                finalPos = reader.Position + reader.MetaData.Constants.MajorConstants.HeaderLength + contentLength;
             }
             return ret;
         }
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new RecordType(reader.GetInt32(offset));
             contentLength = GetContentLength(
                 reader: reader,
-                lengthLength: reader.MetaData.SubConstants.LengthLength,
+                lengthLength: reader.MetaData.Constants.SubConstants.LengthLength,
                 offset: Constants.HeaderLength + offset);
             return ret;
         }

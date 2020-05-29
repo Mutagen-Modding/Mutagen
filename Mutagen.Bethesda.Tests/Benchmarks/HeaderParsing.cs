@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             0x64, 0x00
         };
         static GameConstants constants = GameConstants.Oblivion;
-        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, constants));
+        static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, new ParsingBundle(constants)));
         static RecordType type = new RecordType("WEAP");
 
         [Benchmark]

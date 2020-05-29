@@ -1586,13 +1586,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41445443: // CTDA
                 {
                     ConstructibleObjectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Conditions);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CreatedObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WorkbenchKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CreatedObjectCount = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObjectCount);
                 }
@@ -2805,16 +2805,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region CreatedObject
         private int? _CreatedObjectLocation;
         public bool CreatedObject_IsSet => _CreatedObjectLocation.HasValue;
-        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CreatedObjectLocation.Value, _package.Meta)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
         public bool WorkbenchKeyword_IsSet => _WorkbenchKeywordLocation.HasValue;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorkbenchKeywordLocation.Value, _package.Meta)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region CreatedObjectCount
         private int? _CreatedObjectCountLocation;
-        public UInt16? CreatedObjectCount => _CreatedObjectCountLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectCountLocation.Value, _package.Meta)) : default(UInt16?);
+        public UInt16? CreatedObjectCount => _CreatedObjectCountLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectCountLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2835,13 +2835,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
             var ret = new ConstructibleObjectBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: finalPos,
@@ -2879,7 +2879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x54434F43: // COCT
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     this.Items = BinaryOverlaySetList<ContainerEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2889,7 +2889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             stream: stream,
                             count: count,
                             trigger: ConstructibleObject_Registration.CNTO_HEADER,
-                            constants: _package.Meta.SubConstants,
+                            constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Items);
                 }

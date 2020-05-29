@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 get
                 {
-                    return new FormLink<ICellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8, 0x4))));
+                    return new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x8, 0x4))));
                 }
             }
 

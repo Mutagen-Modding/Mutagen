@@ -152,10 +152,10 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             string filePath,
-            GameConstants meta,
+            GameConstants constants,
             RecordInterest? interest = null)
         {
-            using (var stream = new MutagenBinaryReadStream(filePath, meta))
+            using (var stream = new MutagenBinaryReadStream(filePath, new ParsingBundle(constants)))
             {
                 return GetFileLocations(stream, interest);
             }
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda
             RecordInterest? interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool>? additionalCriteria = null)
         {
-            FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData)
+            FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData.Constants)
             {
                 AdditionalCriteria = additionalCriteria,
             };

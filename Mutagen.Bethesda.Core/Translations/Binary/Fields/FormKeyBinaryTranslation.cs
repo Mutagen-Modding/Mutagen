@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
         {
             item = Parse(
                 frame.ReadSpan(4),
-                frame.MasterReferences!);
+                frame.MetaData.MasterReferences!);
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Binary
         {
             return Parse(
                 frame.ReadSpan(4), 
-                frame.MasterReferences!);
+                frame.MetaData.MasterReferences!);
         }
 
         public void Write(

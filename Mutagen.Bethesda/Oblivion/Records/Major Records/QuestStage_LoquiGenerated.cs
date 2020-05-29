@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Stage
         private int? _StageLocation;
-        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.Meta)) : default;
+        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = ListExt.Empty<LogEntryBinaryOverlay>();
         partial void CustomCtor(

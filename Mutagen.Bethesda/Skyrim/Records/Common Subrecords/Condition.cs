@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
-                if (!frame.MetaData.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
+                if (!frame.MetaData.Constants.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
                 if (!(item is IFunctionConditionData funcData)) return;
                 switch (subMeta.Header.RecordType.TypeInt)
                 {
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static ConditionBinaryOverlay ConditionFactory(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
-                var subRecMeta = package.Meta.GetSubrecordFrame(stream);
+                var subRecMeta = package.MetaData.Constants.GetSubrecordFrame(stream);
                 if (subRecMeta.Header.RecordType != Condition_Registration.CTDA_HEADER)
                 {
                     throw new ArgumentException();
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
-                var counterMeta = package.Meta.ReadSubrecordFrame(stream);
+                var counterMeta = package.MetaData.Constants.ReadSubrecordFrame(stream);
                 if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
                     || counterMeta.Content.Length != 4)
                 {
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var recordLocs = ParseRecordLocations(
                     stream: stream,
                     finalPos: long.MaxValue,
-                    constants: package.Meta.SubConstants,
+                    constants: package.MetaData.Constants.SubConstants,
                     trigger: Condition_Registration.CTDA_HEADER,
                     includeTriggers: IncludeTriggers,
                     skipHeader: false);
@@ -307,8 +307,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
-                item.ParameterOneRecord = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterOneNumber);
-                item.ParameterTwoRecord = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterTwoNumber);
+                item.ParameterOneRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
+                item.ParameterTwoRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
                 item.Unknown3 = frame.ReadInt32();
                 item.Unknown4 = frame.ReadInt32();
                 item.Unknown5 = frame.ReadInt32();
@@ -375,11 +375,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             private ReadOnlyMemorySlice<byte> _data2;
 
-            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
+            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
 
             public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
 
-            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
+            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
             
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
-                if (stream.Complete || !_package.Meta.TryGetSubrecord(stream, out var subFrame)) return;
+                if (stream.Complete || !_package.MetaData.Constants.TryGetSubrecord(stream, out var subFrame)) return;
                 switch (subFrame.RecordTypeInt)
                 {
                     case 0x31534943: // CIS1

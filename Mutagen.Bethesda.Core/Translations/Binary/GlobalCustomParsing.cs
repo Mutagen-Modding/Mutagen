@@ -67,10 +67,10 @@ namespace Mutagen.Bethesda.Binary
             
             T g = getter(frame, GetGlobalChar(majorMeta));
 
-            frame.Reader.Position = initialPos + frame.MetaData.MajorConstants.TypeAndLengthLength;
+            frame.Reader.Position = initialPos + frame.MetaData.Constants.MajorConstants.TypeAndLengthLength;
 
             // Read data
-            var fltvLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData, FLTV, navigateToContent: true);
+            var fltvLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData.Constants, FLTV, navigateToContent: true);
             if (fltvLoc == null)
             {
                 throw new ArgumentException($"Could not find FLTV.");

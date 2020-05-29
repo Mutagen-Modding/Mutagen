@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53444F4D: // MODS
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlternateTextures = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
                             amount: frame.ReadInt32(),
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53444F4D: // MODS
                 {
-                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
                     this.AlternateTextures = BinaryOverlaySetList<AlternateTextureBinaryOverlay>.FactoryByCount(
                         stream: stream,

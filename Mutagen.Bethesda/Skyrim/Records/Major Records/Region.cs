@@ -149,31 +149,31 @@ namespace Mutagen.Bethesda.Skyrim
                 BinaryMemoryReadStream stream,
                 int offset)
             {
-                var rdat = this._package.Meta.GetSubrecord(stream);
+                var rdat = this._package.MetaData.Constants.GetSubrecord(stream);
                 while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
                 {
                     ParseRegionData(stream, offset);
                     if (stream.Complete) break;
-                    rdat = this._package.Meta.GetSubrecord(stream);
+                    rdat = this._package.MetaData.Constants.GetSubrecord(stream);
                 }
             }
 
             private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
             {
                 int loc = stream.Position - offset;
-                var rdatFrame = this._package.Meta.ReadSubrecordFrame(stream);
+                var rdatFrame = this._package.MetaData.Constants.ReadSubrecordFrame(stream);
                 RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
                 var len = rdatFrame.Header.TotalLength;
                 if (!stream.Complete)
                 {
-                    var contentMeta = this._package.Meta.GetSubrecord(stream);
+                    var contentMeta = this._package.MetaData.Constants.GetSubrecord(stream);
                     var recType = contentMeta.RecordType;
                     if (recType == Region_Registration.ICON_HEADER)
                     {
                         var totalLen = contentMeta.TotalLength;
                         len += totalLen;
                         // Skip icon subrecord for now
-                        contentMeta = this._package.Meta.GetSubrecord(stream, offset: rdatFrame.Header.TotalLength + totalLen);
+                        contentMeta = this._package.MetaData.Constants.GetSubrecord(stream, offset: rdatFrame.Header.TotalLength + totalLen);
                     }
                     if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
                     {
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
                         _LandSpan = this._data.Slice(loc, len);
                         break;
                     case RegionData.RegionDataType.Sound:
-                        if (this._package.Meta.TryGetSubrecord(stream, out var nextRec)
+                        if (this._package.MetaData.Constants.TryGetSubrecord(stream, out var nextRec)
                             && (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSA)
                                 || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMO)))
                         {

@@ -7,18 +7,12 @@ namespace Mutagen.Bethesda.Binary
 {
     public class BinaryOverlayFactoryPackage
     {
-        public RecordInfoCache RecordInfoCache;
-        public IStringsFolderLookup? StringsLookup;
-        public MasterReferenceReader MasterReferences;
-        public GameConstants Meta;
+        public ParsingBundle MetaData;
         public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
 
-        public BinaryOverlayFactoryPackage(ModKey modKey, GameMode gameMode, RecordInfoCache? infoCache, IStringsFolderLookup? stringsLookup)
+        public BinaryOverlayFactoryPackage(ParsingBundle metaData)
         {
-            this.Meta = GameConstants.Get(gameMode);
-            this.MasterReferences = new MasterReferenceReader(modKey);
-            this.RecordInfoCache = infoCache ?? throw new ArgumentNullException("infoCache");
-            this.StringsLookup = stringsLookup;
+            this.MetaData = metaData;
         }
     }
 }

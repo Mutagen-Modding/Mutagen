@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F524353: // SCRO
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Reference
         private int? _ReferenceLocation;
         public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormLink<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

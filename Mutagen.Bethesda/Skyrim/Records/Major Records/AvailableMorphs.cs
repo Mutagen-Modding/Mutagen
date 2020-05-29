@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 morphs = new AvailableMorphs();
                 AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
-                    new MutagenFrame(new MutagenInterfaceReadStream(stream: stream, metaData: _package.Meta)),
+                    new MutagenFrame(new MutagenInterfaceReadStream(stream: stream, metaData: _package.MetaData)),
                     morphs);
             }
         }

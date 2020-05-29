@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             get
             {
-                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.Meta, _package.MasterReferences))
+                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
                 {
                     Position = 0x04
                 };

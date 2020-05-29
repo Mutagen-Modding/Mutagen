@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureLowerLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureUpperLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Colors = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherColors>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -3270,11 +3270,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region TextureLowerLayer
         private int? _TextureLowerLayerLocation;
-        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLowerLayerLocation.Value, _package.Meta)) : default(string?);
+        public String? TextureLowerLayer => _TextureLowerLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLowerLayerLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         #region TextureUpperLayer
         private int? _TextureUpperLayerLocation;
-        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.Meta)) : default(string?);
+        public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }
@@ -3313,13 +3313,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
             var ret = new WeatherBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: finalPos,
@@ -3375,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Colors = BinaryOverlaySetList<WeatherColorsBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -3411,7 +3411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             stream: stream,
                             finalPos: finalPos,
                             trigger: type,
-                            constants: _package.Meta.SubConstants,
+                            constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }

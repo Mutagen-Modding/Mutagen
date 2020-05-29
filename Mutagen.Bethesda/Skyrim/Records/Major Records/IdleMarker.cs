@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ret.Add(
                         new FormLink<IdleAnimation>(
-                            FormKeyBinaryTranslation.Instance.Parse(subFrame.Content.Slice(pos), stream.MasterReferences!)));
+                            FormKeyBinaryTranslation.Instance.Parse(subFrame.Content.Slice(pos), stream.MetaData.MasterReferences!)));
                     pos += 4;
                 }
                 return ret;
@@ -98,19 +98,19 @@ namespace Mutagen.Bethesda.Skyrim
             partial void AnimationCountCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 // Skip. Don't care
-                _package.Meta.ReadSubrecordFrame(stream);
+                _package.MetaData.Constants.ReadSubrecordFrame(stream);
             }
 
             public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
             partial void AnimationsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
-                var subHeader = _package.Meta.ReadSubrecord(stream);
+                var subHeader = _package.MetaData.Constants.ReadSubrecord(stream);
                 Animations = BinaryOverlaySetList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
                     mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
                     package: _package,
                     itemLength: 4,
-                    getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
             }
         }
     }

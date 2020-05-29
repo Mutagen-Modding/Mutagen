@@ -66,34 +66,13 @@ namespace Mutagen.Bethesda.Binary
         public long OffsetReference => this.Reader.OffsetReference;
 
         /// <inheritdoc/>
-        public RecordInfoCache? RecordInfoCache
-        {
-            get => this.Reader.RecordInfoCache;
-            set => this.Reader.RecordInfoCache = value;
-        }
-
-        /// <inheritdoc/>
-        public IStringsFolderLookup? StringsLookup
-        {
-            get => this.Reader.StringsLookup;
-            set => this.Reader.StringsLookup = value;
-        }
-
-        /// <inheritdoc/>
         public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
         
         /// <inheritdoc/>
         public ReadOnlyMemorySlice<byte> RemainingMemory => this.Reader.RemainingMemory;
 
         /// <inheritdoc/>
-        public GameConstants MetaData => this.Reader.MetaData;
-        
-        /// <inheritdoc/>
-        public MasterReferenceReader? MasterReferences
-        {
-            get => this.Reader.MasterReferences;
-            set => this.Reader.MasterReferences = value;
-        }
+        public ParsingBundle MetaData => this.Reader.MetaData;
 
         /// <summary>
         /// Constructs new frame around current reader position until its completion
@@ -290,7 +269,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var res = ZlibStream.UncompressBuffer(bytes);
                 return new MutagenFrame(
-                    new MutagenMemoryReadStream(res, this.MetaData, this.MasterReferences, this.RecordInfoCache, this.StringsLookup));
+                    new MutagenMemoryReadStream(res, this.MetaData));
             }
             catch (Exception)
             {
@@ -310,10 +289,7 @@ namespace Mutagen.Bethesda.Binary
                 new MutagenMemoryReadStream(
                     this.ReadMemory(length, readSafe: true),
                     this.MetaData,
-                    this.MasterReferences,
-                    offsetReference: offset,
-                    infoCache: this.RecordInfoCache,
-                    stringsLookup: this.StringsLookup));
+                    offsetReference: offset));
         }
 
         /// <inheritdoc/>

@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType stringBinaryType,
             bool parseWhole = true)
         {
-            if (frame.StringsLookup != null)
+            if (frame.MetaData.StringsLookup != null)
             {
                 if (frame.Remaining != 4)
                 {
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 uint key = frame.ReadUInt32();
                 if (key == 0) return string.Empty;
-                return frame.StringsLookup.CreateString(source, key);
+                return frame.MetaData.StringsLookup.CreateString(source, key);
             }
             else
             {

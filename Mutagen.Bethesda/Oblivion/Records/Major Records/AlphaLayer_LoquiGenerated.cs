@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54585456: // VTXT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 }
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region AlphaLayerData
         private int? _AlphaLayerDataLocation;
-        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

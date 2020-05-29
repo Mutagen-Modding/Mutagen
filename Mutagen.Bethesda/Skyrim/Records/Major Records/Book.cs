@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return new BookSpell()
                     {
-                        Spell = FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MasterReferences)
+                        Spell = FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!)
                     };
                 }
                 else if ((flags & BookBinaryCreateTranslation.SkillFlag) > 0)

@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x46545344: // DSTF: End Marker
                 {
-                    _package.Meta.ReadSubrecordFrame(stream);
+                    _package.MetaData.Constants.ReadSubrecordFrame(stream);
                     return TryGet<int?>.Failure;
                 }
                 default:

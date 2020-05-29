@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
                     // Find next set of records that make up a marker record
                     var next = UtilityTranslation.FindNextSubrecords(
                         stream.RemainingMemory,
-                        stream.MetaData,
+                        stream.MetaData.Constants,
                         out var lenParsed,
                         stopOnAlreadyEncounteredRecord: true,
                         recordTypes: _activeMarkerTypes);
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
                             throw new ArgumentException("Could not locate index subrecord of marker data");
                         }
                     }
-                    var index = BinaryPrimitives.ReadInt32LittleEndian(stream.MetaData.SubrecordFrame(stream.RemainingMemory.Slice(enamLoc.Value)).Content);
+                    var index = BinaryPrimitives.ReadInt32LittleEndian(stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(enamLoc.Value)).Content);
                     if (index > NumSits)
                     {
                         throw new ArgumentException($"Unexpected index value that was larger than the number of sit slots: {index} > {NumSits}");
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (loc == null) continue;
 
-                        var subMeta = stream.MetaData.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
+                        var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
                         switch (subMeta.Header.RecordTypeInt)
                         {
                             case 0x304D414E: // NAM0
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 };
                                 break;
                             case 0x4B4D4E46: // FNMK
-                                marker.MarkerKeyword = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MasterReferences!);
+                                marker.MarkerKeyword = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
                                 break;
                             default:
                                 throw new ArgumentException($"Unexpected record type: {subMeta.Header.RecordType}");
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var locs = UtilityTranslation.FindRepeatingSubrecord(
                     stream.RemainingSpan,
-                    stream.MetaData,
+                    stream.MetaData.Constants,
                     Furniture_Registration.FNPR_HEADER,
                     out var parsed);
                 for (int i = 0; i < locs.Length; i++)
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var marker = getter(i);
 
                     var loc = locs[i];
-                    var subMeta = stream.MetaData.SubrecordFrame(stream.RemainingSpan.Slice(loc));
+                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingSpan.Slice(loc));
                     marker.EntryPoints = new EntryPoints()
                     {
                         Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
             {
-                var subFrame = _package.Meta.ReadSubrecordFrame(stream);
+                var subFrame = _package.MetaData.Constants.ReadSubrecordFrame(stream);
                 // Read flags like normal
                 _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
             }
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void Flags2CustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 this._flags = FurnitureBinaryCreateTranslation.FillBinaryFlags2(
-                    new MutagenInterfaceReadStream(stream, _package.Meta, _package.MasterReferences),
+                    new MutagenInterfaceReadStream(stream, _package.MetaData),
                     this.GetNthMarker,
                     this._flags);
             }
@@ -425,14 +425,14 @@ namespace Mutagen.Bethesda.Skyrim
             partial void DisabledMarkersCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkers(
-                    new MutagenInterfaceReadStream(stream, _package.Meta, _package.MasterReferences),
+                    new MutagenInterfaceReadStream(stream, _package.MetaData),
                     this.GetNthMarker);
             }
 
             partial void MarkersCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryMarkers(
-                    new MutagenInterfaceReadStream(stream, _package.Meta, _package.MasterReferences),
+                    new MutagenInterfaceReadStream(stream, _package.MetaData),
                     this.GetNthMarker);
             }
         }

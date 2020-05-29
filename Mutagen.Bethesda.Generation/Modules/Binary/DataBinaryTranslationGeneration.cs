@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -145,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     break;
             }
-            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
+            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
             if (dataType.HasBeenSet)
             {
                 fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
@@ -160,7 +162,7 @@ namespace Mutagen.Bethesda.Generation
                     if (!generatedStart)
                     {
                         generatedStart = true;
-                        fg.AppendLine($"var subLen = _package.Meta.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                        fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
                     fg.AppendLine($"if (subLen <= 0x{passedLen.Value:X})");
                     using (new BraceWrapper(fg))
@@ -173,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
                     if (!generatedStart)
                     {
                         generatedStart = true;
-                        fg.AppendLine($"var subLen = _package.Meta.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
+                        fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
                 }
                 passedLen += await typeGen.GetPassedAmount(objGen, item.Field);

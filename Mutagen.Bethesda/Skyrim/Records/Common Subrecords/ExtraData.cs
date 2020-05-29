@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
             {
-                item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.RecordInfoCache!, frame.MasterReferences!);
+                item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences!);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ExtraDataBinaryOverlay
         {
-            IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_data.Slice(location), _package.RecordInfoCache, _package.MasterReferences);
+            IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_data.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
         }
     }
 }

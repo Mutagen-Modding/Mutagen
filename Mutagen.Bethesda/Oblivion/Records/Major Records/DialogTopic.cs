@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
                     obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
-                    if (FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
+                    if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
                     {
                         throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                     }
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = ListExt.Empty<IDialogItemGetter>();
 
@@ -105,16 +105,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = this._package.Meta.GetGroup(stream);
+                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                var formKey = FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (formKey != this.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
-                var contentSpan = this._grupData.Value.Slice(_package.Meta.GroupConstants.HeaderLength);
+                var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
                 this.Items = BinaryOverlaySetList<IDialogItemGetter>.FactoryByArray(
                     contentSpan,
                     _package,

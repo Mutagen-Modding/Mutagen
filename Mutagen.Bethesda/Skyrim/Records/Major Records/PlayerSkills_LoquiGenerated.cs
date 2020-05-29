@@ -2808,13 +2808,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region SkillValues
         public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data, _package.Meta, _package.MasterReferences)),
+            new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation.Instance.Parse);
         #endregion
         #region SkillOffsets
         public IReadOnlyDictionary<Skill, Byte> SkillOffsets => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.Meta, _package.MasterReferences)),
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
             ByteBinaryTranslation.Instance.Parse);
         #endregion
@@ -2845,11 +2845,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PlayerSkillsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x34 + package.Meta.SubConstants.HeaderLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x34 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

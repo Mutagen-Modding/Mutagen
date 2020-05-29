@@ -122,11 +122,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
             if (stream.Complete) return;
-            var subMeta = _package.Meta.GetSubrecord(stream);
+            var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
             if (subMeta.RecordType != Road_Registration.PGRP_HEADER) return;
             stream.Position += subMeta.HeaderLength;
             var pointBytes = stream.ReadMemory(subMeta.ContentLength);
-            subMeta = _package.Meta.GetSubrecord(stream);
+            subMeta = _package.MetaData.Constants.GetSubrecord(stream);
             switch (subMeta.RecordTypeInt)
             {
                 case 0x52524750: // "PGRR":

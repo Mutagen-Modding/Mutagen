@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var loc = _bipedObjectNamesLoc.Value;
                     for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                     {
-                        var subHeader = _package.Meta.SubrecordFrame(_data.Slice(loc).Span, Race_Registration.NAME_HEADER);
+                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc).Span, Race_Registration.NAME_HEADER);
                         BipedObject type = (BipedObject)i;
                         var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                         if (!string.IsNullOrEmpty(val))
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 _bipedObjectNamesLoc = (ushort)(stream.Position - offset);
-                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.NAME_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.NAME_HEADER);
             }
 
             partial void FaceFxPhonemesListingParsingCustomParse(BinaryMemoryReadStream stream, int offset)
@@ -206,15 +206,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _faceFxPhonemesLoc = (ushort)(stream.Position - offset);
                 }
-                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.PHTN_HEADER);
-                UtilityTranslation.SkipPastAll(stream, _package.Meta, Race_Registration.PHWT_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.PHTN_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.PHWT_HEADER);
             }
 
             private FaceFxPhonemes GetFaceFx()
             {
                 var ret = new FaceFxPhonemes();
                 if (_faceFxPhonemesLoc == null) return ret;
-                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_faceFxPhonemesLoc.Value), _package.Meta));
+                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_faceFxPhonemesLoc.Value), _package.MetaData));
                 FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, ret);
                 return ret;
             }

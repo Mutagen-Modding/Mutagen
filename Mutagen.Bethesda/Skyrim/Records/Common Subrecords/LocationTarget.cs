@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 return LocationTargetBinaryCreateTranslation.GetLocationTarget(
                     new MutagenFrame(
-                        new MutagenMemoryReadStream(_data.Slice(location), _package.Meta, _package.MasterReferences)));
+                        new MutagenMemoryReadStream(_data.Slice(location), _package.MetaData)));
             }
         }
     }

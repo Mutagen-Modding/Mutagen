@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 1413764163: // CTDT
                     return CustomRecordTypeTrigger(
-                        frame: frame.SpawnWithLength(customLen + frame.MetaData.SubConstants.HeaderLength),
+                        frame: frame.SpawnWithLength(customLen + frame.MetaData.Constants.SubConstants.HeaderLength),
                         recordType: nextRecord,
                         recordTypeConverter: recordTypeConverter);
                 default:
@@ -2484,7 +2484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.GetSubrecord(stream).RecordType);
+            var nextRecord = recordTypeConverter.ConvertToCustom(package.MetaData.Constants.GetSubrecord(stream).RecordType);
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
@@ -2497,11 +2497,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
             var ret = new ConditionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x18 + package.Meta.SubConstants.HeaderLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

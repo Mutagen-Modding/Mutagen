@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4F4D4452: // RDMO
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41534452: // RDSA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sounds = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullableGetter<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.Meta)))) : FormLinkNullable<IMusicGetter>.Null;
+        public IFormLinkNullableGetter<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomCtor(
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41534452: // RDSA
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Sounds = BinaryOverlaySetList<RegionSoundBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

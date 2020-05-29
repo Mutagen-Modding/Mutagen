@@ -1225,9 +1225,6 @@
     <Compile Include="Skyrim\Records\Major Records\TextureSet_LoquiGenerated.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\Textures_LoquiGenerated.cs">
-      <DependentUpon>TextureSet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\TintAssets.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>

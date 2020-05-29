@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException();
                 }
                 var ret = new byte[subLen + 6];
-                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
                 using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     }
                     var data = new byte[subLen + 6];
-                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData);
+                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
                     using (HeaderExport.ExportSubrecordHeader(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Tests
                     dataDict[subType] = data;
                 }
                 byte[] ret = new byte[dataDict.Values.Sum((d) => d.Length)];
-                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
                 foreach (var alignment in SubTypes)
                 {
                     if (dataDict.TryGetValue(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     }
                     var data = new byte[subLen + 6];
-                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData);
+                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
                     using (HeaderExport.ExportSubrecordHeader(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Tests
                     dataList.Add(data);
                 }
                 byte[] ret = new byte[dataList.Sum((d) => d.Length)];
-                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
                 foreach (var data in dataList)
                 {
                     stream.Write(data);
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
-                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.MajorConstants.LengthAfterLength);
+                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength);
                 var endPos = inputStream.Position + len;
                 var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>();
                 ReadOnlyMemorySlice<byte>? rest = null;

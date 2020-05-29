@@ -1175,14 +1175,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x304D414E: // NAM0
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
                 }
                 case 0x314D414E: // NAM1
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -1924,11 +1924,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region PartType
         private int? _PartTypeLocation;
-        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PartTypeLocation!.Value, _package.Meta)) : default(Part.PartTypeEnum?);
+        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.Meta)) : default(string?);
+        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

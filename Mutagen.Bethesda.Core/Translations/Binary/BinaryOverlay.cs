@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeader headerMeta = package.Meta.GetMod(stream);
+            ModHeader headerMeta = package.MetaData.Constants.GetMod(stream);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Binary
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupHeader groupMeta = package.Meta.GetGroup(stream);
+                GroupHeader groupMeta = package.MetaData.Constants.GetGroup(stream);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                MajorRecordHeader majorMeta = _package.Meta.MajorRecord(stream.RemainingSpan);
+                MajorRecordHeader majorMeta = _package.MetaData.Constants.MajorRecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                GroupHeader groupMeta = _package.Meta.Group(stream.RemainingSpan);
+                GroupHeader groupMeta = _package.MetaData.Constants.Group(stream.RemainingSpan);
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException();
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubrecordHeader subMeta = _package.Meta.Subrecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = _package.MetaData.Constants.Subrecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubrecordHeader subMeta = _package.Meta.Subrecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = _package.MetaData.Constants.Subrecord(stream.RemainingSpan);
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.Meta.GetSubrecord(stream);
+                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.Meta.GetSubrecord(stream);
+                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;

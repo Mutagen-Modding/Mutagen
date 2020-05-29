@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E46: // FNAM
                 {
                     GlobalBinaryCreateTranslation.FillBinaryTypeCharCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }

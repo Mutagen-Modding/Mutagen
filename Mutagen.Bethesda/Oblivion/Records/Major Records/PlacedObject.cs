@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item)
             {
                 item.OpenByDefault = true;
-                frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             }
         }
 

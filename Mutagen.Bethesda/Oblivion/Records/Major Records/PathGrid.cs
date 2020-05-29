@@ -156,14 +156,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private int? _UnknownLocation;
         public bool Unknown_IsSet => _UnknownLocation.HasValue;
-        public ReadOnlyMemorySlice<byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
 
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
-            var dataFrame = _package.Meta.ReadSubrecordFrame(stream);
+            var dataFrame = _package.MetaData.Constants.ReadSubrecordFrame(stream);
             uint ptCount = BinaryPrimitives.ReadUInt16LittleEndian(dataFrame.Content);
 
-            var pgrpMeta = _package.Meta.GetSubrecord(stream);
+            var pgrpMeta = _package.MetaData.Constants.GetSubrecord(stream);
             if (pgrpMeta.RecordType != PathGridBinaryCreateTranslation.PGRP) return;
             stream.Position += pgrpMeta.HeaderLength;
             var pointData = stream.ReadMemory(pgrpMeta.ContentLength);
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 if (stream.Complete) break;
-                var subMeta = _package.Meta.GetSubrecord(stream);
+                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x47414750: //"PGAG":

@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, nextRecord, out var subIitem))
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, nextRecord, out var subIitem, recordTypeConverter))
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subItem, recordTypeConverter))
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -156,8 +156,7 @@ namespace Mutagen.Bethesda.Binary
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var header = frame
-                    .MetaData.GetNextRecordVariableMeta(frame.Reader);
+                var header = frame.MetaData.Constants.GetNextRecordVariableMeta(frame.Reader);
                 if (header.RecordType != triggeringRecord) break;
                 if (!IsLoqui)
                 {
@@ -222,7 +221,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subIitem))
@@ -251,7 +250,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subIitem, recordTypeConverter))
@@ -345,7 +344,7 @@ namespace Mutagen.Bethesda.Binary
             }
             if (!IsLoqui)
             {
-                frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             }
             var ret = new List<T>();
             var startingPos = frame.Position;
@@ -381,7 +380,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 if (transl(frame, out var subIitem, recordTypeConverter))
                 {
@@ -410,7 +409,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 if (transl(frame, out var subIitem, recordTypeConverter))
                 {
@@ -699,7 +698,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 var item = await transl(frame).ConfigureAwait(false);
@@ -710,7 +709,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -729,7 +728,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 var item = await transl(frame, recordTypeConverter).ConfigureAwait(false);
@@ -740,7 +739,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -761,7 +760,7 @@ namespace Mutagen.Bethesda.Binary
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
                 var toDo = transl(frame);
@@ -788,7 +787,7 @@ namespace Mutagen.Bethesda.Binary
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
                 var toDo = transl(frame, recordTypeConverter);

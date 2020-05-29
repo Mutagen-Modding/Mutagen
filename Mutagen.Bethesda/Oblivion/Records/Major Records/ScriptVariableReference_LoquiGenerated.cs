@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VariableIndex = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 }
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region VariableIndex
         private int? _VariableIndexLocation;
-        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VariableIndexLocation.Value, _package.Meta)) : default;
+        public Int32 VariableIndex => _VariableIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VariableIndexLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

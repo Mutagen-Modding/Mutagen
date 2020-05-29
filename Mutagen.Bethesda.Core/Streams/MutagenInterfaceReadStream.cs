@@ -16,29 +16,16 @@ namespace Mutagen.Bethesda
         public long OffsetReference { get; }
 
         /// <inheritdoc />
-        public GameConstants MetaData { get; }
-
-        /// <inheritdoc />
-        public MasterReferenceReader? MasterReferences { get; set; }
-
-        /// <inheritdoc/>
-        public RecordInfoCache? RecordInfoCache { get; set; }
-
-        /// <inheritdoc/>
-        public IStringsFolderLookup? StringsLookup { get; set; }
+        public ParsingBundle MetaData { get; }
 
         public MutagenInterfaceReadStream(
             IBinaryReadStream stream,
-            GameConstants metaData,
-            MasterReferenceReader? masterReferences = null,
-            IStringsFolderLookup? stringsLookup = null,
+            ParsingBundle metaData,
             long offsetReference = 0)
         {
             _readStream = stream;
             this.MetaData = metaData;
-            this.MasterReferences = masterReferences;
             this.OffsetReference = offsetReference;
-            this.StringsLookup = stringsLookup;
         }
 
         /// <inheritdoc />
@@ -172,10 +159,7 @@ namespace Mutagen.Bethesda
             return new MutagenMemoryReadStream(
                 this.ReadMemory(length, readSafe: true), 
                 this.MetaData,
-                this.MasterReferences, 
-                offsetReference: offset,
-                infoCache: this.RecordInfoCache,
-                stringsLookup: this.StringsLookup);
+                offsetReference: offset);
         }
 
         /// <inheritdoc />

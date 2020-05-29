@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
                     hopGroup: false);
                 if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
                 frame.Reader.Position += 8;
-                var formKey = FormKey.Factory(frame.MasterReferences!, frame.Reader.ReadUInt32());
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, frame.Reader.ReadUInt32());
                 var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
                 if (grupType == GroupTypeEnum.WorldChildren)
                 {
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _TopCellLocation;
             public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
 
-            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Oblivion
                 _OffsetDataLocation = (ushort)(stream.Position - offset);
                 if (this.UsingOffsetLength)
                 {
-                    var offsetLenFrame = _package.Meta.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
-                    stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.Content)));
+                    var offsetLenFrame = _package.MetaData.Constants.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
+                    stream.Position += checked((int)(_package.MetaData.Constants.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.Content)));
                 }
             }
 
@@ -268,13 +268,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!_OffsetDataLocation.HasValue) return null;
                 if (this.UsingOffsetLength)
                 {
-                    var lenFrame = this._package.Meta.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
+                    var lenFrame = this._package.MetaData.Constants.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.Content);
-                    return _data.Slice(_OffsetDataLocation.Value + this._package.Meta.SubConstants.HeaderLength, len);
+                    return _data.Slice(_OffsetDataLocation.Value + this._package.MetaData.Constants.SubConstants.HeaderLength, len);
                 }
                 else
                 {
-                    var spanFrame = this._package.Meta.SubrecordFrame(this._data.Slice(_OffsetDataLocation.Value));
+                    var spanFrame = this._package.MetaData.Constants.SubrecordFrame(this._data.Slice(_OffsetDataLocation.Value));
                     return spanFrame.Content.ToArray();
                 }
             }
@@ -287,10 +287,10 @@ namespace Mutagen.Bethesda.Oblivion
             partial void CustomEnd(IBinaryReadStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
-                var groupMeta = this._package.Meta.GetGroup(stream);
+                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
                 if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-                if (this.FormKey != FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
+                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Oblivion
                 for (int i = 0; i < 3; i++)
                 {
                     if (stream.Complete) return;
-                    var varMeta = _package.Meta.GetNextRecordVariableMeta(stream);
+                    var varMeta = _package.MetaData.Constants.GetNextRecordVariableMeta(stream);
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x44414F52: // "ROAD":
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
                             stream.Position += checked((int)varMeta.TotalLength);
                             if (!stream.Complete)
                             {
-                                var subCellGroup = this._package.Meta.GetGroup(stream);
+                                var subCellGroup = this._package.MetaData.Constants.GetGroup(stream);
                                 if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
                                 {
                                     stream.Position += checked((int)subCellGroup.TotalLength);

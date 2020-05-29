@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Icon:
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength + rdatFrame.Header.TotalLength;
-                    len = len - frame.MetaData.SubConstants.HeaderLength - rdatFrame.Header.TotalLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + rdatFrame.Header.TotalLength;
+                    len = len - frame.MetaData.Constants.SubConstants.HeaderLength - rdatFrame.Header.TotalLength;
                     if (StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len, checkFraming: false),
                         out var iconVal))
@@ -133,11 +133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (_IconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.MetaData.Constants));
             }
             if (_SecondaryIconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.Meta));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
             }
             return default;
         }
@@ -162,12 +162,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset)
         {
-            var rdat = this._package.Meta.GetSubrecord(stream);
+            var rdat = this._package.MetaData.Constants.GetSubrecord(stream);
             while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
             {
                 ParseRegionData(stream, offset);
                 if (stream.Complete) break;
-                rdat = this._package.Meta.GetSubrecord(stream);
+                rdat = this._package.MetaData.Constants.GetSubrecord(stream);
             }
         }
 
@@ -179,12 +179,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
         {
             int loc = stream.Position - offset;
-            var rdatFrame = this._package.Meta.ReadSubrecordFrame(stream);
+            var rdatFrame = this._package.MetaData.Constants.ReadSubrecordFrame(stream);
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
             var len = rdatFrame.Header.TotalLength;
             if (!stream.Complete)
             {
-                var contentMeta = this._package.Meta.GetSubrecord(stream);
+                var contentMeta = this._package.MetaData.Constants.GetSubrecord(stream);
                 if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
                 {
                     len += contentMeta.TotalLength;
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _GrassesSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Sound:
-                    var nextRec = this._package.Meta.GetSubrecord(stream);
+                    var nextRec = this._package.MetaData.Constants.GetSubrecord(stream);
                     if (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSD) || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMD))
                     {
                         len += nextRec.TotalLength;

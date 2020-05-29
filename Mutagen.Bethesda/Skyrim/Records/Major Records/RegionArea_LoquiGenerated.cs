@@ -1258,14 +1258,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x494C5052: // RPLI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
                 case 0x444C5052: // RPLD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPointListData = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region EdgeFallOff
         private int? _EdgeFallOffLocation;
-        public UInt32? EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.Meta)) : default(UInt32?);
+        public UInt32? EdgeFallOff => _EdgeFallOffLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EdgeFallOffLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public IReadOnlyList<P2Float>? RegionPointListData { get; private set; }
         partial void CustomCtor(
@@ -2133,7 +2133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444C5052: // RPLD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.RegionPointListData = BinaryOverlaySetList<P2Float>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

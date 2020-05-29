@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53474452: // RDGS
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionGrass>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53474452: // RDGS
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Grasses = BinaryOverlaySetList<RegionGrassBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

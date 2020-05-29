@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x544F4452: // RDOT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Objects = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionObject>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x544F4452: // RDOT
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
                     this.Objects = BinaryOverlaySetList<RegionObjectBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

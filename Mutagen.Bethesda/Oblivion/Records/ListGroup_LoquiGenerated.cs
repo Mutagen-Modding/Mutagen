@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 }));
                         return TryGet<int?>.Failure;
                     }
-                    frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
+                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
         }
@@ -2055,11 +2055,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ListGroupBinaryOverlay<T>(
-                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.Meta),
+                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Group(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: finalPos,

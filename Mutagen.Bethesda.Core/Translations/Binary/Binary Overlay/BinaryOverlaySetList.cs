@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlay.SpanFactory<T> getter,
             bool skipHeader = true)
         {
-            if ((mem.Length / (itemLength + package.Meta.SubConstants.HeaderLength)) != count)
+            if ((mem.Length / (itemLength + package.MetaData.Constants.SubConstants.HeaderLength)) != count)
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Binary
             uint count,
             BinaryOverlay.SpanFactory<T> getter)
         {
-            if ((mem.Length / (itemLength + package.Meta.SubConstants.HeaderLength)) != count)
+            if ((mem.Length / (itemLength + package.MetaData.Constants.SubConstants.HeaderLength)) != count)
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
@@ -321,16 +321,16 @@ namespace Mutagen.Bethesda.Binary
                 this._getter = getter;
                 this._itemLength = itemLength;
                 this._recordType = recordType;
-                this._totalItemLength = itemLength + this._package.Meta.SubConstants.HeaderLength;
+                this._totalItemLength = itemLength + this._package.MetaData.Constants.SubConstants.HeaderLength;
                 if (skipHeader)
                 {
-                    _sliceOffset = this._package.Meta.SubConstants.HeaderLength;
+                    _sliceOffset = this._package.MetaData.Constants.SubConstants.HeaderLength;
                     _itemOffset = 0;
                 }
                 else
                 {
                     _sliceOffset = 0;
-                    _itemOffset = this._package.Meta.SubConstants.HeaderLength;
+                    _itemOffset = this._package.MetaData.Constants.SubConstants.HeaderLength;
                 }
             }
 
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Binary
                 get
                 {
                     var startIndex = index * this._totalItemLength;
-                    var subMeta = _package.Meta.Subrecord(_mem.Slice(startIndex));
+                    var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
                     if (subMeta.RecordType != this._recordType)
                     {
                         throw new ArgumentException($"Unexpected record type: {subMeta.RecordType} != {this._recordType}");
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Binary
                 this._getter = getter;
                 this._itemLength = itemLength;
                 this._recordTypes = recordTypes;
-                this._totalItemLength = itemLength + this._package.Meta.SubConstants.HeaderLength;
+                this._totalItemLength = itemLength + this._package.MetaData.Constants.SubConstants.HeaderLength;
             }
 
             public T this[int index]
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Binary
                 get
                 {
                     var startIndex = index * this._totalItemLength;
-                    var subMeta = _package.Meta.Subrecord(_mem.Slice(startIndex));
+                    var subMeta = _package.MetaData.Constants.Subrecord(_mem.Slice(startIndex));
                     if (!this._recordTypes.Contains(subMeta.RecordType))
                     {
                         throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {this._itemLength}");
                     }
-                    return _getter(_mem.Slice(startIndex + _package.Meta.SubConstants.HeaderLength, _itemLength), _package);
+                    return _getter(_mem.Slice(startIndex + _package.MetaData.Constants.SubConstants.HeaderLength, _itemLength), _package);
                 }
             }
 

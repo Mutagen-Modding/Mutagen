@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Generation
                 && data.MarkerType.HasValue
                 && !data.RecordType.HasValue)
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
             if (loqui.TargetObjectGeneration != null)
             {
@@ -183,14 +183,14 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (loqui.Name == "ModHeader")
                     {
-                        fg.AppendLine($"{frameAccessor}.MasterReferences!.SetTo(item.ModHeader.MasterReferences);");
+                        fg.AppendLine($"{frameAccessor}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo(item.ModHeader.MasterReferences);");
                     }
                 }
                 else
                 {
                     if (NeedsHeaderProcessing(loqui))
                     {
-                        fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
+                        fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"{itemAccessor.DirectAccess} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
+                fg.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
             }
 
             if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (NeedsHeaderProcessing(loqui))
                 {
-                    fg.AppendLine("stream.Position += _package.Meta.SubConstants.HeaderLength;");
+                    fg.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
                 }
                 using (var args = new ArgsWrapper(fg,
                     $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))

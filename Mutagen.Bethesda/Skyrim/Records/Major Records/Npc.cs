@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void DataMarkerCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 // Skip marker
-                _package.Meta.ReadSubrecordFrame(stream);
+                _package.MetaData.Constants.ReadSubrecordFrame(stream);
             }
         }
     }

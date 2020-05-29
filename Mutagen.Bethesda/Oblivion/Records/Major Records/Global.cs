@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {
-                var majorFrame = package.Meta.MajorRecordFrame(stream.RemainingSpan);
+                var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingSpan);
                 var globalChar = GlobalCustomParsing.GetGlobalChar(majorFrame);
                 switch (globalChar)
                 {
