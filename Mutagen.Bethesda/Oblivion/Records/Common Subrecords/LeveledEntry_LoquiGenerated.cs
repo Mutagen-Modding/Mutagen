@@ -59,24 +59,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16? _Count;
-        public Int16? Count
-        {
-            get => this._Count;
-            set => this._Count = value;
-        }
+        public Int16? Count { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? ILeveledEntryGetter<T>.Count => this.Count;
         #endregion
         #region Unknown2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16? _Unknown2;
-        public Int16? Unknown2
-        {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
-        }
+        public Int16? Unknown2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? ILeveledEntryGetter<T>.Unknown2 => this.Unknown2;
         #endregion

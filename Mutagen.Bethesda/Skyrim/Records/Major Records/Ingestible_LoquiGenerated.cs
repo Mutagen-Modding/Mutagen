@@ -55,13 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IIngestibleGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IIngestibleGetter.Name => this.Name;
         #endregion
@@ -80,13 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Description;
-        public TranslatedString? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IIngestibleGetter.Description => this.Description;
         #endregion

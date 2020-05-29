@@ -104,13 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _FactionRank;
-        public Int32? FactionRank
-        {
-            get => this._FactionRank;
-            set => this._FactionRank = value;
-        }
+        public Int32? FactionRank { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
@@ -136,13 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.Target => this.Target;
         #endregion
         #region SpeedTreeSeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _SpeedTreeSeed;
-        public Byte? SpeedTreeSeed
-        {
-            get => this._SpeedTreeSeed;
-            set => this._SpeedTreeSeed = value;
-        }
+        public Byte? SpeedTreeSeed { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? IPlacedObjectGetter.SpeedTreeSeed => this.SpeedTreeSeed;
         #endregion
@@ -158,35 +146,17 @@ namespace Mutagen.Bethesda.Oblivion
         IDistantLODDataGetter? IPlacedObjectGetter.DistantLODData => this.DistantLODData;
         #endregion
         #region Charge
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Charge;
-        public Single? Charge
-        {
-            get => this._Charge;
-            set => this._Charge = value;
-        }
+        public Single? Charge { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region Health
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Health;
-        public Int32? Health
-        {
-            get => this._Health;
-            set => this._Health = value;
-        }
+        public Int32? Health { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.Health => this.Health;
         #endregion
         #region LevelModifier
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _LevelModifier;
-        public Int32? LevelModifier
-        {
-            get => this._LevelModifier;
-            set => this._LevelModifier = value;
-        }
+        public Int32? LevelModifier { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
@@ -196,24 +166,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Unknown => this.Unknown;
         #endregion
         #region ActionFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlacedObject.ActionFlag? _ActionFlags;
-        public PlacedObject.ActionFlag? ActionFlags
-        {
-            get => this._ActionFlags;
-            set => this._ActionFlags = value;
-        }
+        public PlacedObject.ActionFlag? ActionFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         PlacedObject.ActionFlag? IPlacedObjectGetter.ActionFlags => this.ActionFlags;
         #endregion
         #region Count
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Count;
-        public Int32? Count
-        {
-            get => this._Count;
-            set => this._Count = value;
-        }
+        public Int32? Count { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.Count => this.Count;
         #endregion
@@ -243,13 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.RagdollData => this.RagdollData;
         #endregion
         #region Scale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Scale;
-        public Single? Scale
-        {
-            get => this._Scale;
-            set => this._Scale = value;
-        }
+        public Single? Scale { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion

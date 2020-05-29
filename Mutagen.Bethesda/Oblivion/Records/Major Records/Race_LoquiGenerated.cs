@@ -50,24 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRaceGetter.Name => this.Name;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRaceGetter.Description => this.Description;
         #endregion
@@ -119,35 +107,17 @@ namespace Mutagen.Bethesda.Oblivion
         IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _DefaultHairColor;
-        public Byte? DefaultHairColor
-        {
-            get => this._DefaultHairColor;
-            set => this._DefaultHairColor = value;
-        }
+        public Byte? DefaultHairColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? IRaceGetter.DefaultHairColor => this.DefaultHairColor;
         #endregion
         #region FaceGenMainClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _FaceGenMainClamp;
-        public Int32? FaceGenMainClamp
-        {
-            get => this._FaceGenMainClamp;
-            set => this._FaceGenMainClamp = value;
-        }
+        public Int32? FaceGenMainClamp { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IRaceGetter.FaceGenMainClamp => this.FaceGenMainClamp;
         #endregion
         #region FaceGenFaceClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _FaceGenFaceClamp;
-        public Int32? FaceGenFaceClamp
-        {
-            get => this._FaceGenFaceClamp;
-            set => this._FaceGenFaceClamp = value;
-        }
+        public Int32? FaceGenFaceClamp { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IRaceGetter.FaceGenFaceClamp => this.FaceGenFaceClamp;
         #endregion
@@ -213,13 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFaceGenDataGetter? IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16? _Unknown;
-        public Int16? Unknown
-        {
-            get => this._Unknown;
-            set => this._Unknown = value;
-        }
+        public Int16? Unknown { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? IRaceGetter.Unknown => this.Unknown;
         #endregion

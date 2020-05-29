@@ -48,35 +48,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Enabled
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Boolean? _Enabled;
-        public Boolean? Enabled
-        {
-            get => this._Enabled;
-            set => this._Enabled = value;
-        }
+        public Boolean? Enabled { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Boolean? ICloudLayerGetter.Enabled => this.Enabled;
         #endregion
         #region XSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _XSpeed;
-        public Single? XSpeed
-        {
-            get => this._XSpeed;
-            set => this._XSpeed = value;
-        }
+        public Single? XSpeed { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICloudLayerGetter.XSpeed => this.XSpeed;
         #endregion
         #region YSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _YSpeed;
-        public Single? YSpeed
-        {
-            get => this._YSpeed;
-            set => this._YSpeed = value;
-        }
+        public Single? YSpeed { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICloudLayerGetter.YSpeed => this.YSpeed;
         #endregion

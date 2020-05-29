@@ -47,24 +47,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region PartType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Part.PartTypeEnum? _PartType;
-        public Part.PartTypeEnum? PartType
-        {
-            get => this._PartType;
-            set => this._PartType = value;
-        }
+        public Part.PartTypeEnum? PartType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Part.PartTypeEnum? IPartGetter.PartType => this.PartType;
         #endregion
         #region FileName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FileName;
-        public String? FileName
-        {
-            get => this._FileName;
-            set => this._FileName = value;
-        }
+        public String? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IPartGetter.FileName => this.FileName;
         #endregion

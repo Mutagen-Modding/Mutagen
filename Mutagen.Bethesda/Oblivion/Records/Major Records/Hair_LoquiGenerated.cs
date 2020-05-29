@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IHairGetter.Name => this.Name;
         #endregion
@@ -72,24 +66,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IHairGetter.Model => this.Model;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IHairGetter.Icon => this.Icon;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Hair.HairFlag? _Flags;
-        public Hair.HairFlag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Hair.HairFlag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Hair.HairFlag? IHairGetter.Flags => this.Flags;
         #endregion

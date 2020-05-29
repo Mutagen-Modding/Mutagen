@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICreatureGetter.Name => this.Name;
         #endregion
@@ -210,13 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureDataGetter? ICreatureGetter.Data => this.Data;
         #endregion
         #region AttackReach
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _AttackReach;
-        public Byte? AttackReach
-        {
-            get => this._AttackReach;
-            set => this._AttackReach = value;
-        }
+        public Byte? AttackReach { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ICreatureGetter.AttackReach => this.AttackReach;
         #endregion
@@ -226,57 +214,27 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region TurningSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _TurningSpeed;
-        public Single? TurningSpeed
-        {
-            get => this._TurningSpeed;
-            set => this._TurningSpeed = value;
-        }
+        public Single? TurningSpeed { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICreatureGetter.TurningSpeed => this.TurningSpeed;
         #endregion
         #region BaseScale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _BaseScale;
-        public Single? BaseScale
-        {
-            get => this._BaseScale;
-            set => this._BaseScale = value;
-        }
+        public Single? BaseScale { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICreatureGetter.BaseScale => this.BaseScale;
         #endregion
         #region FootWeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _FootWeight;
-        public Single? FootWeight
-        {
-            get => this._FootWeight;
-            set => this._FootWeight = value;
-        }
+        public Single? FootWeight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICreatureGetter.FootWeight => this.FootWeight;
         #endregion
         #region BloodSpray
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _BloodSpray;
-        public String? BloodSpray
-        {
-            get => this._BloodSpray;
-            set => this._BloodSpray = value;
-        }
+        public String? BloodSpray { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICreatureGetter.BloodSpray => this.BloodSpray;
         #endregion
         #region BloodDecal
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _BloodDecal;
-        public String? BloodDecal
-        {
-            get => this._BloodDecal;
-            set => this._BloodDecal = value;
-        }
+        public String? BloodDecal { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICreatureGetter.BloodDecal => this.BloodDecal;
         #endregion

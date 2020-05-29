@@ -47,13 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EdgeFallOff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32? _EdgeFallOff;
-        public UInt32? EdgeFallOff
-        {
-            get => this._EdgeFallOff;
-            set => this._EdgeFallOff = value;
-        }
+        public UInt32? EdgeFallOff { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt32? IRegionAreaGetter.EdgeFallOff => this.EdgeFallOff;
         #endregion

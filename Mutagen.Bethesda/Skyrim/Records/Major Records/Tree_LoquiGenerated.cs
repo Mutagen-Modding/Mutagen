@@ -98,13 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISeasonalIngredientProductionGetter? ITreeGetter.Production => this.Production;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? ITreeGetter.Name => this.Name;
         #endregion

@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFactionGetter.Name => this.Name;
         #endregion
@@ -75,24 +69,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Faction.FactionFlag? _Flags;
-        public Faction.FactionFlag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Faction.FactionFlag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Faction.FactionFlag? IFactionGetter.Flags => this.Flags;
         #endregion
         #region CrimeGoldMultiplier
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _CrimeGoldMultiplier;
-        public Single? CrimeGoldMultiplier
-        {
-            get => this._CrimeGoldMultiplier;
-            set => this._CrimeGoldMultiplier = value;
-        }
+        public Single? CrimeGoldMultiplier { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IFactionGetter.CrimeGoldMultiplier => this.CrimeGoldMultiplier;
         #endregion

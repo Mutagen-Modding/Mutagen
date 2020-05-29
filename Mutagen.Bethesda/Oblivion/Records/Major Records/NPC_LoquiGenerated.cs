@@ -51,13 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? INpcGetter.Name => this.Name;
         #endregion
@@ -201,13 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IHairGetter> INpcGetter.Hair => this.Hair;
         #endregion
         #region HairLength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _HairLength;
-        public Single? HairLength
-        {
-            get => this._HairLength;
-            set => this._HairLength = value;
-        }
+        public Single? HairLength { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? INpcGetter.HairLength => this.HairLength;
         #endregion
@@ -226,13 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region HairColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _HairColor;
-        public Color? HairColor
-        {
-            get => this._HairColor;
-            set => this._HairColor = value;
-        }
+        public Color? HairColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? INpcGetter.HairColor => this.HairColor;
         #endregion

@@ -50,35 +50,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICellGetter.Name => this.Name;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Cell.Flag? _Flags;
-        public Cell.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Cell.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Cell.Flag? ICellGetter.Flags => this.Flags;
         #endregion
         #region Grid
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P2Int? _Grid;
-        public P2Int? Grid
-        {
-            get => this._Grid;
-            set => this._Grid = value;
-        }
+        public P2Int? Grid { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Int? ICellGetter.Grid => this.Grid;
         #endregion
@@ -108,24 +90,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MusicType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MusicType? _MusicType;
-        public MusicType? MusicType
-        {
-            get => this._MusicType;
-            set => this._MusicType = value;
-        }
+        public MusicType? MusicType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType? ICellGetter.MusicType => this.MusicType;
         #endregion
         #region WaterHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _WaterHeight;
-        public Single? WaterHeight
-        {
-            get => this._WaterHeight;
-            set => this._WaterHeight = value;
-        }
+        public Single? WaterHeight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ICellGetter.WaterHeight => this.WaterHeight;
         #endregion
@@ -145,13 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _FactionRank;
-        public Int32? FactionRank
-        {
-            get => this._FactionRank;
-            set => this._FactionRank = value;
-        }
+        public Int32? FactionRank { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? ICellGetter.FactionRank => this.FactionRank;
         #endregion

@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Data;
-        public Single? Data
-        {
-            get => this._Data;
-            set => this._Data = value;
-        }
+        public Single? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IGlobalFloatGetter.Data => this.Data;
         #endregion

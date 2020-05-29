@@ -55,13 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptMetaSummaryGetter IScriptFieldsGetter.MetadataSummary => _MetadataSummary_Object;
         #endregion
         #region SourceCode
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SourceCode;
-        public String? SourceCode
-        {
-            get => this._SourceCode;
-            set => this._SourceCode = value;
-        }
+        public String? SourceCode { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IScriptFieldsGetter.SourceCode => this.SourceCode;
         #endregion

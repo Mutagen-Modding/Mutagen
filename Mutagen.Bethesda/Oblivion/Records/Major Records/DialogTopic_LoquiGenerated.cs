@@ -64,24 +64,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDialogTopicGetter.Name => this.Name;
         #endregion
         #region DialogType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DialogType? _DialogType;
-        public DialogType? DialogType
-        {
-            get => this._DialogType;
-            set => this._DialogType = value;
-        }
+        public DialogType? DialogType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         DialogType? IDialogTopicGetter.DialogType => this.DialogType;
         #endregion

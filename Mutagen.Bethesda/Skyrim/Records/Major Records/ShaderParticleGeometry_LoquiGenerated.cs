@@ -106,13 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ParticleTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ParticleTexture;
-        public String? ParticleTexture
-        {
-            get => this._ParticleTexture;
-            set => this._ParticleTexture = value;
-        }
+        public String? ParticleTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IShaderParticleGeometryGetter.ParticleTexture => this.ParticleTexture;
         #endregion

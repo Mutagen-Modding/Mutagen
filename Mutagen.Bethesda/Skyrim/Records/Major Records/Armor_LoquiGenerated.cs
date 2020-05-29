@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IArmorGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IArmorGetter.Name => this.Name;
         #endregion
@@ -82,13 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region EnchantmentAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _EnchantmentAmount;
-        public UInt16? EnchantmentAmount
-        {
-            get => this._EnchantmentAmount;
-            set => this._EnchantmentAmount = value;
-        }
+        public UInt16? EnchantmentAmount { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IArmorGetter.EnchantmentAmount => this.EnchantmentAmount;
         #endregion
@@ -129,13 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region RagdollConstraintTemplate
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _RagdollConstraintTemplate;
-        public String? RagdollConstraintTemplate
-        {
-            get => this._RagdollConstraintTemplate;
-            set => this._RagdollConstraintTemplate = value;
-        }
+        public String? RagdollConstraintTemplate { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IArmorGetter.RagdollConstraintTemplate => this.RagdollConstraintTemplate;
         #endregion
@@ -174,13 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Description;
-        public TranslatedString? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IArmorGetter.Description => this.Description;
         #endregion

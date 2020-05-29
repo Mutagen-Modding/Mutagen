@@ -47,24 +47,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MapMarker.Flag? _Flags;
-        public MapMarker.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public MapMarker.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MapMarker.Flag? IMapMarkerGetter.Flags => this.Flags;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMapMarkerGetter.Name => this.Name;
         #endregion

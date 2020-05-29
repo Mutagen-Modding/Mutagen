@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         public WorkbenchData.Type BenchType { get; set; } = default;
         #endregion
         #region UsesSkill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Skill? _UsesSkill;
-        public Skill? UsesSkill
-        {
-            get => this._UsesSkill;
-            set => this._UsesSkill = value;
-        }
+        public Skill? UsesSkill { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Skill? IWorkbenchDataGetter.UsesSkill => this.UsesSkill;
         #endregion

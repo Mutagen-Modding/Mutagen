@@ -91,24 +91,12 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IModHeaderGetter.Deleted => this.Deleted;
         #endregion
         #region Author
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Author;
-        public String? Author
-        {
-            get => this._Author;
-            set => this._Author = value;
-        }
+        public String? Author { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IModHeaderGetter.Author => this.Author;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IModHeaderGetter.Description => this.Description;
         #endregion
@@ -141,24 +129,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region INTV
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _INTV;
-        public Int32? INTV
-        {
-            get => this._INTV;
-            set => this._INTV = value;
-        }
+        public Int32? INTV { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IModHeaderGetter.INTV => this.INTV;
         #endregion
         #region INCC
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _INCC;
-        public Int32? INCC
-        {
-            get => this._INCC;
-            set => this._INCC = value;
-        }
+        public Int32? INCC { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IModHeaderGetter.INCC => this.INCC;
         #endregion

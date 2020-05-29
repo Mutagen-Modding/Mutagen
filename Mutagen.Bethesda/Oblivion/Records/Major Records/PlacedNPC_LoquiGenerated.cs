@@ -120,13 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? IPlacedNpcGetter.RagdollData => this.RagdollData;
         #endregion
         #region Scale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Scale;
-        public Single? Scale
-        {
-            get => this._Scale;
-            set => this._Scale = value;
-        }
+        public Single? Scale { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedNpcGetter.Scale => this.Scale;
         #endregion

@@ -48,13 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private NpcSoundType.SoundType? _Type;
-        public NpcSoundType.SoundType? Type
-        {
-            get => this._Type;
-            set => this._Type = value;
-        }
+        public NpcSoundType.SoundType? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         NpcSoundType.SoundType? INpcSoundTypeGetter.Type => this.Type;
         #endregion

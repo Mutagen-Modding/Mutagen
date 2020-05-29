@@ -85,24 +85,12 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? IModHeaderGetter.Deleted => this.Deleted;
         #endregion
         #region Author
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Author;
-        public String? Author
-        {
-            get => this._Author;
-            set => this._Author = value;
-        }
+        public String? Author { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IModHeaderGetter.Author => this.Author;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IModHeaderGetter.Description => this.Description;
         #endregion
@@ -121,13 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region VestigialData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt64? _VestigialData;
-        public UInt64? VestigialData
-        {
-            get => this._VestigialData;
-            set => this._VestigialData = value;
-        }
+        public UInt64? VestigialData { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt64? IModHeaderGetter.VestigialData => this.VestigialData;
         #endregion

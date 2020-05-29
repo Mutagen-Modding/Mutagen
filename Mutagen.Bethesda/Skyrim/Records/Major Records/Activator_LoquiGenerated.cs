@@ -67,13 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IActivatorGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IActivatorGetter.Name => this.Name;
         #endregion
@@ -114,13 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MarkerColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _MarkerColor;
-        public Color? MarkerColor
-        {
-            get => this._MarkerColor;
-            set => this._MarkerColor = value;
-        }
+        public Color? MarkerColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? IActivatorGetter.MarkerColor => this.MarkerColor;
         #endregion
@@ -140,24 +128,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
         #endregion
         #region ActivateTextOverride
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ActivateTextOverride;
-        public String? ActivateTextOverride
-        {
-            get => this._ActivateTextOverride;
-            set => this._ActivateTextOverride = value;
-        }
+        public String? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActivatorGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Activator.Flag? _Flags;
-        public Activator.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Activator.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Activator.Flag? IActivatorGetter.Flags => this.Flags;
         #endregion

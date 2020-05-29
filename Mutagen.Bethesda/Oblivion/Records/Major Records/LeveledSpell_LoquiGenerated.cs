@@ -50,24 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _ChanceNone;
-        public Byte? ChanceNone
-        {
-            get => this._ChanceNone;
-            set => this._ChanceNone = value;
-        }
+        public Byte? ChanceNone { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ILeveledSpellGetter.ChanceNone => this.ChanceNone;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LeveledFlag? _Flags;
-        public LeveledFlag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public LeveledFlag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LeveledFlag? ILeveledSpellGetter.Flags => this.Flags;
         #endregion

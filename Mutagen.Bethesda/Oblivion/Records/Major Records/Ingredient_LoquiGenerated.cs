@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIngredientGetter.Name => this.Name;
         #endregion
@@ -72,13 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IIngredientGetter.Model => this.Model;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIngredientGetter.Icon => this.Icon;
         #endregion
@@ -88,13 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> IIngredientGetter.Script => this.Script;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Weight;
-        public Single? Weight
-        {
-            get => this._Weight;
-            set => this._Weight = value;
-        }
+        public Single? Weight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IIngredientGetter.Weight => this.Weight;
         #endregion

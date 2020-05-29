@@ -50,35 +50,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMagicEffectGetter.Name => this.Name;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMagicEffectGetter.Description => this.Description;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMagicEffectGetter.Icon => this.Icon;
         #endregion

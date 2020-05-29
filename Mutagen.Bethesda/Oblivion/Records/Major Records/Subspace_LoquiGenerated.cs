@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Point
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P3Float? _Point;
-        public P3Float? Point
-        {
-            get => this._Point;
-            set => this._Point = value;
-        }
+        public P3Float? Point { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P3Float? ISubspaceGetter.Point => this.Point;
         #endregion

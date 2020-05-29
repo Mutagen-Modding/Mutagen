@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IRaceGetter.Name => this.Name;
         #endregion
@@ -262,13 +256,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
         #endregion
         #region NumberOfTintsInList
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _NumberOfTintsInList;
-        public UInt16? NumberOfTintsInList
-        {
-            get => this._NumberOfTintsInList;
-            set => this._NumberOfTintsInList = value;
-        }
+        public UInt16? NumberOfTintsInList { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IRaceGetter.NumberOfTintsInList => this.NumberOfTintsInList;
         #endregion
@@ -387,13 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region EquipmentFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private EquipTypeFlag? _EquipmentFlags;
-        public EquipTypeFlag? EquipmentFlags
-        {
-            get => this._EquipmentFlags;
-            set => this._EquipmentFlags = value;
-        }
+        public EquipTypeFlag? EquipmentFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EquipTypeFlag? IRaceGetter.EquipmentFlags => this.EquipmentFlags;
         #endregion

@@ -47,46 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region RankNumber
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32? _RankNumber;
-        public UInt32? RankNumber
-        {
-            get => this._RankNumber;
-            set => this._RankNumber = value;
-        }
+        public UInt32? RankNumber { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt32? IRankGetter.RankNumber => this.RankNumber;
         #endregion
         #region MaleRankTitle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MaleRankTitle;
-        public String? MaleRankTitle
-        {
-            get => this._MaleRankTitle;
-            set => this._MaleRankTitle = value;
-        }
+        public String? MaleRankTitle { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.MaleRankTitle => this.MaleRankTitle;
         #endregion
         #region FemaleRankTitle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FemaleRankTitle;
-        public String? FemaleRankTitle
-        {
-            get => this._FemaleRankTitle;
-            set => this._FemaleRankTitle = value;
-        }
+        public String? FemaleRankTitle { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.FemaleRankTitle => this.FemaleRankTitle;
         #endregion
         #region Insignia
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Insignia;
-        public String? Insignia
-        {
-            get => this._Insignia;
-            set => this._Insignia = value;
-        }
+        public String? Insignia { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.Insignia => this.Insignia;
         #endregion

@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoulGemGetter.Name => this.Name;
         #endregion
@@ -72,13 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? ISoulGemGetter.Model => this.Model;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoulGemGetter.Icon => this.Icon;
         #endregion
@@ -99,24 +87,12 @@ namespace Mutagen.Bethesda.Oblivion
         ISoulGemDataGetter? ISoulGemGetter.Data => this.Data;
         #endregion
         #region ContainedSoul
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoulLevel? _ContainedSoul;
-        public SoulLevel? ContainedSoul
-        {
-            get => this._ContainedSoul;
-            set => this._ContainedSoul = value;
-        }
+        public SoulLevel? ContainedSoul { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoulLevel? ISoulGemGetter.ContainedSoul => this.ContainedSoul;
         #endregion
         #region MaximumCapacity
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoulLevel? _MaximumCapacity;
-        public SoulLevel? MaximumCapacity
-        {
-            get => this._MaximumCapacity;
-            set => this._MaximumCapacity = value;
-        }
+        public SoulLevel? MaximumCapacity { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoulLevel? ISoulGemGetter.MaximumCapacity => this.MaximumCapacity;
         #endregion

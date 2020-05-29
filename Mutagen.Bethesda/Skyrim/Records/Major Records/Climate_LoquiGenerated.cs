@@ -64,24 +64,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region SunTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SunTexture;
-        public String? SunTexture
-        {
-            get => this._SunTexture;
-            set => this._SunTexture = value;
-        }
+        public String? SunTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClimateGetter.SunTexture => this.SunTexture;
         #endregion
         #region SunGlareTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SunGlareTexture;
-        public String? SunGlareTexture
-        {
-            get => this._SunGlareTexture;
-            set => this._SunGlareTexture = value;
-        }
+        public String? SunGlareTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
         #endregion

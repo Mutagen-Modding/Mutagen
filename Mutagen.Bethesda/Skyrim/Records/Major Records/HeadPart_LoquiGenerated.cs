@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IHeadPartGetter.Name => this.Name;
         #endregion
@@ -75,13 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public HeadPart.Flag Flags { get; set; } = default;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private HeadPart.TypeEnum? _Type;
-        public HeadPart.TypeEnum? Type
-        {
-            get => this._Type;
-            set => this._Type = value;
-        }
+        public HeadPart.TypeEnum? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         HeadPart.TypeEnum? IHeadPartGetter.Type => this.Type;
         #endregion

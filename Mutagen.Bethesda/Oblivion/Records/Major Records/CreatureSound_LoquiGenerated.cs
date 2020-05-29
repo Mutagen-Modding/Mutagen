@@ -48,13 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SoundType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private CreatureSound.CreatureSoundType? _SoundType;
-        public CreatureSound.CreatureSoundType? SoundType
-        {
-            get => this._SoundType;
-            set => this._SoundType = value;
-        }
+        public CreatureSound.CreatureSoundType? SoundType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         CreatureSound.CreatureSoundType? ICreatureSoundGetter.SoundType => this.SoundType;
         #endregion

@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMeshVersion
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32? _NavMeshVersion;
-        public UInt32? NavMeshVersion
-        {
-            get => this._NavMeshVersion;
-            set => this._NavMeshVersion = value;
-        }
+        public UInt32? NavMeshVersion { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt32? INavigationMeshInfoMapGetter.NavMeshVersion => this.NavMeshVersion;
         #endregion

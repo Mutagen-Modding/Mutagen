@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Name => this.Name;
         #endregion
@@ -72,13 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IBookGetter.Model => this.Model;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Icon => this.Icon;
         #endregion
@@ -93,24 +81,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IEnchantmentGetter> IBookGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _EnchantmentPoints;
-        public UInt16? EnchantmentPoints
-        {
-            get => this._EnchantmentPoints;
-            set => this._EnchantmentPoints = value;
-        }
+        public UInt16? EnchantmentPoints { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IBookGetter.EnchantmentPoints => this.EnchantmentPoints;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Description => this.Description;
         #endregion

@@ -49,13 +49,7 @@ namespace Mutagen.Bethesda
         public ModKey Master { get; set; } = ModKey.Null;
         #endregion
         #region FileSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt64? _FileSize;
-        public UInt64? FileSize
-        {
-            get => this._FileSize;
-            set => this._FileSize = value;
-        }
+        public UInt64? FileSize { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt64? IMasterReferenceGetter.FileSize => this.FileSize;
         #endregion

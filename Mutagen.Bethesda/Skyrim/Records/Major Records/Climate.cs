@@ -26,8 +26,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ClimateBinaryCreateTranslation
         {
-            public const int MasserFlag = 64;
-            public const int SecundaFlag = 128;
+            public const byte MasserFlag = 64;
+            public const byte SecundaFlag = 128;
 
             static partial void FillBinaryMoonAndPhaseLengthCustom(MutagenFrame frame, IClimateInternal item)
             {

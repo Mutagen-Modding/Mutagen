@@ -49,13 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Map
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Map;
-        public String? Map
-        {
-            get => this._Map;
-            set => this._Map = value;
-        }
+        public String? Map { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRegionMapGetter.Map => this.Map;
         #endregion

@@ -52,13 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
         #endregion
         #region Chance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _Chance;
-        public Byte? Chance
-        {
-            get => this._Chance;
-            set => this._Chance = value;
-        }
+        public Byte? Chance { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ISoundItemGetter.Chance => this.Chance;
         #endregion

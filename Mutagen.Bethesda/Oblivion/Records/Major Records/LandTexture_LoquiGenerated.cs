@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILandTextureGetter.Icon => this.Icon;
         #endregion
@@ -72,13 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         IHavokDataGetter? ILandTextureGetter.Havok => this.Havok;
         #endregion
         #region TextureSpecularExponent
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _TextureSpecularExponent;
-        public Byte? TextureSpecularExponent
-        {
-            get => this._TextureSpecularExponent;
-            set => this._TextureSpecularExponent = value;
-        }
+        public Byte? TextureSpecularExponent { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ILandTextureGetter.TextureSpecularExponent => this.TextureSpecularExponent;
         #endregion

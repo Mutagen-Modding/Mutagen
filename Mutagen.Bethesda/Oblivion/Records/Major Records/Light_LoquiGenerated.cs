@@ -66,24 +66,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Name => this.Name;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Icon => this.Icon;
         #endregion
@@ -99,13 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILightDataGetter? ILightGetter.Data => this.Data;
         #endregion
         #region Fade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Fade;
-        public Single? Fade
-        {
-            get => this._Fade;
-            set => this._Fade = value;
-        }
+        public Single? Fade { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ILightGetter.Fade => this.Fade;
         #endregion

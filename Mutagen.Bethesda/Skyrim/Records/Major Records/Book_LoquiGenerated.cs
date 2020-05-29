@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IBookGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IBookGetter.Name => this.Name;
         #endregion
@@ -168,13 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Description => this.Description;
         #endregion

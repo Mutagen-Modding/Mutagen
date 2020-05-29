@@ -47,13 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Number
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Number;
-        public Int32? Number
-        {
-            get => this._Number;
-            set => this._Number = value;
-        }
+        public Int32? Number { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion

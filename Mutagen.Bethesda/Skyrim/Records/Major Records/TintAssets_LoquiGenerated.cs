@@ -48,35 +48,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _Index;
-        public UInt16? Index
-        {
-            get => this._Index;
-            set => this._Index = value;
-        }
+        public UInt16? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? ITintAssetsGetter.Index => this.Index;
         #endregion
         #region FileName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FileName;
-        public String? FileName
-        {
-            get => this._FileName;
-            set => this._FileName = value;
-        }
+        public String? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITintAssetsGetter.FileName => this.FileName;
         #endregion
         #region MaskType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TintAssets.TintMaskType? _MaskType;
-        public TintAssets.TintMaskType? MaskType
-        {
-            get => this._MaskType;
-            set => this._MaskType = value;
-        }
+        public TintAssets.TintMaskType? MaskType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion

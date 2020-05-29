@@ -52,13 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IAItemGetter> IItemEntryGetter.Item => this.Item;
         #endregion
         #region Count
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Count;
-        public Int32? Count
-        {
-            get => this._Count;
-            set => this._Count = value;
-        }
+        public Int32? Count { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IItemEntryGetter.Count => this.Count;
         #endregion

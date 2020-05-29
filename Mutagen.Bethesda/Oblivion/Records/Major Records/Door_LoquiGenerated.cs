@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDoorGetter.Name => this.Name;
         #endregion
@@ -92,13 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Door.DoorFlag? _Flags;
-        public Door.DoorFlag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Door.DoorFlag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Door.DoorFlag? IDoorGetter.Flags => this.Flags;
         #endregion

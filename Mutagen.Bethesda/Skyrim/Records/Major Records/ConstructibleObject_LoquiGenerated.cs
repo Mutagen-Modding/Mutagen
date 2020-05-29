@@ -88,13 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
         #endregion
         #region CreatedObjectCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _CreatedObjectCount;
-        public UInt16? CreatedObjectCount
-        {
-            get => this._CreatedObjectCount;
-            set => this._CreatedObjectCount = value;
-        }
+        public UInt16? CreatedObjectCount { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IConstructibleObjectGetter.CreatedObjectCount => this.CreatedObjectCount;
         #endregion

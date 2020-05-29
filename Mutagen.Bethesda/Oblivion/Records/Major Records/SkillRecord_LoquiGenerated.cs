@@ -50,35 +50,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ActorValue? _Skill;
-        public ActorValue? Skill
-        {
-            get => this._Skill;
-            set => this._Skill = value;
-        }
+        public ActorValue? Skill { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ActorValue? ISkillRecordGetter.Skill => this.Skill;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.Description => this.Description;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.Icon => this.Icon;
         #endregion
@@ -94,46 +76,22 @@ namespace Mutagen.Bethesda.Oblivion
         ISkillDataGetter? ISkillRecordGetter.Data => this.Data;
         #endregion
         #region ApprenticeText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ApprenticeText;
-        public String? ApprenticeText
-        {
-            get => this._ApprenticeText;
-            set => this._ApprenticeText = value;
-        }
+        public String? ApprenticeText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.ApprenticeText => this.ApprenticeText;
         #endregion
         #region JourneymanText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _JourneymanText;
-        public String? JourneymanText
-        {
-            get => this._JourneymanText;
-            set => this._JourneymanText = value;
-        }
+        public String? JourneymanText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.JourneymanText => this.JourneymanText;
         #endregion
         #region ExpertText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ExpertText;
-        public String? ExpertText
-        {
-            get => this._ExpertText;
-            set => this._ExpertText = value;
-        }
+        public String? ExpertText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.ExpertText => this.ExpertText;
         #endregion
         #region MasterText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MasterText;
-        public String? MasterText
-        {
-            get => this._MasterText;
-            set => this._MasterText = value;
-        }
+        public String? MasterText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.MasterText => this.MasterText;
         #endregion

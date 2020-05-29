@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IWeaponGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IWeaponGetter.Name => this.Name;
         #endregion
@@ -104,13 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region EnchantmentAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _EnchantmentAmount;
-        public UInt16? EnchantmentAmount
-        {
-            get => this._EnchantmentAmount;
-            set => this._EnchantmentAmount = value;
-        }
+        public UInt16? EnchantmentAmount { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IWeaponGetter.EnchantmentAmount => this.EnchantmentAmount;
         #endregion
@@ -165,13 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Description;
-        public TranslatedString? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IWeaponGetter.Description => this.Description;
         #endregion
@@ -276,13 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICriticalDataGetter? IWeaponGetter.Critical => this.Critical;
         #endregion
         #region DetectionSoundLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundLevel? _DetectionSoundLevel;
-        public SoundLevel? DetectionSoundLevel
-        {
-            get => this._DetectionSoundLevel;
-            set => this._DetectionSoundLevel = value;
-        }
+        public SoundLevel? DetectionSoundLevel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoundLevel? IWeaponGetter.DetectionSoundLevel => this.DetectionSoundLevel;
         #endregion

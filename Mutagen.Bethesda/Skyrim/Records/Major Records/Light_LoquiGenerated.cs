@@ -89,13 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? ILightGetter.Destructible => this.Destructible;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? ILightGetter.Name => this.Name;
         #endregion

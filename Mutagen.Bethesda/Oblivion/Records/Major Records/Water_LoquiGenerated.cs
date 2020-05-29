@@ -50,46 +50,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Texture;
-        public String? Texture
-        {
-            get => this._Texture;
-            set => this._Texture = value;
-        }
+        public String? Texture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWaterGetter.Texture => this.Texture;
         #endregion
         #region Opacity
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _Opacity;
-        public Byte? Opacity
-        {
-            get => this._Opacity;
-            set => this._Opacity = value;
-        }
+        public Byte? Opacity { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? IWaterGetter.Opacity => this.Opacity;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Water.Flag? _Flags;
-        public Water.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Water.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Water.Flag? IWaterGetter.Flags => this.Flags;
         #endregion
         #region MaterialID
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MaterialID;
-        public String? MaterialID
-        {
-            get => this._MaterialID;
-            set => this._MaterialID = value;
-        }
+        public String? MaterialID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion

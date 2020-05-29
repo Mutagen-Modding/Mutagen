@@ -61,13 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? ITreeGetter.Model => this.Model;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITreeGetter.Icon => this.Icon;
         #endregion

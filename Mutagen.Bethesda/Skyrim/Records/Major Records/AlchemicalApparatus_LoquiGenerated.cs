@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IAlchemicalApparatusGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IAlchemicalApparatusGetter.Name => this.Name;
         #endregion
@@ -120,24 +114,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAlchemicalApparatusGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Quality
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private AlchemicalApparatus.QualityLevel? _Quality;
-        public AlchemicalApparatus.QualityLevel? Quality
-        {
-            get => this._Quality;
-            set => this._Quality = value;
-        }
+        public AlchemicalApparatus.QualityLevel? Quality { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         AlchemicalApparatus.QualityLevel? IAlchemicalApparatusGetter.Quality => this.Quality;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Description;
-        public TranslatedString? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IAlchemicalApparatusGetter.Description => this.Description;
         #endregion

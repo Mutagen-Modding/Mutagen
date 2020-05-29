@@ -55,90 +55,42 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ITextureSetGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Diffuse
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Diffuse;
-        public String? Diffuse
-        {
-            get => this._Diffuse;
-            set => this._Diffuse = value;
-        }
+        public String? Diffuse { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.Diffuse => this.Diffuse;
         #endregion
         #region NormalOrGloss
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _NormalOrGloss;
-        public String? NormalOrGloss
-        {
-            get => this._NormalOrGloss;
-            set => this._NormalOrGloss = value;
-        }
+        public String? NormalOrGloss { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.NormalOrGloss => this.NormalOrGloss;
         #endregion
         #region EnvironmentMaskOrSubsurfaceTint
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _EnvironmentMaskOrSubsurfaceTint;
-        public String? EnvironmentMaskOrSubsurfaceTint
-        {
-            get => this._EnvironmentMaskOrSubsurfaceTint;
-            set => this._EnvironmentMaskOrSubsurfaceTint = value;
-        }
+        public String? EnvironmentMaskOrSubsurfaceTint { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.EnvironmentMaskOrSubsurfaceTint => this.EnvironmentMaskOrSubsurfaceTint;
         #endregion
         #region GlowOrDetailMap
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _GlowOrDetailMap;
-        public String? GlowOrDetailMap
-        {
-            get => this._GlowOrDetailMap;
-            set => this._GlowOrDetailMap = value;
-        }
+        public String? GlowOrDetailMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.GlowOrDetailMap => this.GlowOrDetailMap;
         #endregion
         #region Height
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Height;
-        public String? Height
-        {
-            get => this._Height;
-            set => this._Height = value;
-        }
+        public String? Height { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.Height => this.Height;
         #endregion
         #region Environment
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Environment;
-        public String? Environment
-        {
-            get => this._Environment;
-            set => this._Environment = value;
-        }
+        public String? Environment { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.Environment => this.Environment;
         #endregion
         #region Multilayer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Multilayer;
-        public String? Multilayer
-        {
-            get => this._Multilayer;
-            set => this._Multilayer = value;
-        }
+        public String? Multilayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.Multilayer => this.Multilayer;
         #endregion
         #region BacklightMaskOrSpecular
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _BacklightMaskOrSpecular;
-        public String? BacklightMaskOrSpecular
-        {
-            get => this._BacklightMaskOrSpecular;
-            set => this._BacklightMaskOrSpecular = value;
-        }
+        public String? BacklightMaskOrSpecular { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITextureSetGetter.BacklightMaskOrSpecular => this.BacklightMaskOrSpecular;
         #endregion
@@ -154,13 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? ITextureSetGetter.Decal => this.Decal;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TextureSet.Flag? _Flags;
-        public TextureSet.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public TextureSet.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TextureSet.Flag? ITextureSetGetter.Flags => this.Flags;
         #endregion

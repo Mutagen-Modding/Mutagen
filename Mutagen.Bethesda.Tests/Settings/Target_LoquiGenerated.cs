@@ -54,13 +54,7 @@ namespace Mutagen.Bethesda.Tests
         public Mutagen.Bethesda.GameMode GameMode { get; set; } = default;
         #endregion
         #region ExpectedBaseGroupCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _ExpectedBaseGroupCount;
-        public Byte? ExpectedBaseGroupCount
-        {
-            get => this._ExpectedBaseGroupCount;
-            set => this._ExpectedBaseGroupCount = value;
-        }
+        public Byte? ExpectedBaseGroupCount { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
         #endregion

@@ -51,13 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MapColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _MapColor;
-        public Color? MapColor
-        {
-            get => this._MapColor;
-            set => this._MapColor = value;
-        }
+        public Color? MapColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion

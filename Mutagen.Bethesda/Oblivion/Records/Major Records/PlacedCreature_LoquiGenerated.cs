@@ -60,13 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _FactionRank;
-        public Int32? FactionRank
-        {
-            get => this._FactionRank;
-            set => this._FactionRank = value;
-        }
+        public Int32? FactionRank { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
@@ -98,13 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? IPlacedCreatureGetter.RagdollData => this.RagdollData;
         #endregion
         #region Scale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Scale;
-        public Single? Scale
-        {
-            get => this._Scale;
-            set => this._Scale = value;
-        }
+        public Single? Scale { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedCreatureGetter.Scale => this.Scale;
         #endregion

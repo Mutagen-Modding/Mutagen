@@ -56,13 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Description { get; set; } = string.Empty;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClassGetter.Icon => this.Icon;
         #endregion
@@ -70,13 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Teaches
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Skill? _Teaches;
-        public Skill? Teaches
-        {
-            get => this._Teaches;
-            set => this._Teaches = value;
-        }
+        public Skill? Teaches { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Skill? IClassGetter.Teaches => this.Teaches;
         #endregion

@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IMiscItemGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IMiscItemGetter.Name => this.Name;
         #endregion

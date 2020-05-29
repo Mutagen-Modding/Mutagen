@@ -55,24 +55,12 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IIdleMarkerGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IdleMarker.Flag? _Flags;
-        public IdleMarker.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public IdleMarker.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IdleMarker.Flag? IIdleMarkerGetter.Flags => this.Flags;
         #endregion
         #region IdleTimer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _IdleTimer;
-        public Single? IdleTimer
-        {
-            get => this._IdleTimer;
-            set => this._IdleTimer = value;
-        }
+        public Single? IdleTimer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IIdleMarkerGetter.IdleTimer => this.IdleTimer;
         #endregion

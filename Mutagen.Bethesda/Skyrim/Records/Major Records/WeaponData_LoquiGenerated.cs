@@ -127,13 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IWeaponDataGetter.Unknown3 => this.Unknown3;
         #endregion
         #region Skill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Skill? _Skill;
-        public Skill? Skill
-        {
-            get => this._Skill;
-            set => this._Skill = value;
-        }
+        public Skill? Skill { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Skill? IWeaponDataGetter.Skill => this.Skill;
         #endregion

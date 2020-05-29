@@ -75,13 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region AnimationGroupSection
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IdleAnimation.AnimationGroupSectionEnum? _AnimationGroupSection;
-        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection
-        {
-            get => this._AnimationGroupSection;
-            set => this._AnimationGroupSection = value;
-        }
+        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IdleAnimation.AnimationGroupSectionEnum? IIdleAnimationGetter.AnimationGroupSection => this.AnimationGroupSection;
         #endregion

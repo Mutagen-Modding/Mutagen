@@ -23,8 +23,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.1.12" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.16" />
+    <PackageReference Include="Loqui" Version="1.1.12.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.18" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>

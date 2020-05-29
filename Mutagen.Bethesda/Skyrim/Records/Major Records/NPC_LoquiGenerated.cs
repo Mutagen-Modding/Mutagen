@@ -246,24 +246,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IClassGetter> INpcGetter.Class => this.Class;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? INpcGetter.Name => this.Name;
         #endregion
         #region ShortName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ShortName;
-        public String? ShortName
-        {
-            get => this._ShortName;
-            set => this._ShortName = value;
-        }
+        public String? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? INpcGetter.ShortName => this.ShortName;
         #endregion
@@ -357,13 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture;
         #endregion
         #region TextureLighting
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _TextureLighting;
-        public Color? TextureLighting
-        {
-            get => this._TextureLighting;
-            set => this._TextureLighting = value;
-        }
+        public Color? TextureLighting { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? INpcGetter.TextureLighting => this.TextureLighting;
         #endregion

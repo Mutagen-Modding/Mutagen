@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IFurnitureGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IFurnitureGetter.Name => this.Name;
         #endregion
@@ -124,13 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFurnitureGetter.Unknown => this.Unknown;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Furniture.Flag? _Flags;
-        public Furniture.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Furniture.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
@@ -170,13 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ModelFilename
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ModelFilename;
-        public String? ModelFilename
-        {
-            get => this._ModelFilename;
-            set => this._ModelFilename = value;
-        }
+        public String? ModelFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFurnitureGetter.ModelFilename => this.ModelFilename;
         #endregion

@@ -48,46 +48,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _Index;
-        public UInt16? Index
-        {
-            get => this._Index;
-            set => this._Index = value;
-        }
+        public UInt16? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? ITintLayerGetter.Index => this.Index;
         #endregion
         #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _Color;
-        public Color? Color
-        {
-            get => this._Color;
-            set => this._Color = value;
-        }
+        public Color? Color { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? ITintLayerGetter.Color => this.Color;
         #endregion
         #region InterpolationValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _InterpolationValue;
-        public Single? InterpolationValue
-        {
-            get => this._InterpolationValue;
-            set => this._InterpolationValue = value;
-        }
+        public Single? InterpolationValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ITintLayerGetter.InterpolationValue => this.InterpolationValue;
         #endregion
         #region Preset
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16? _Preset;
-        public Int16? Preset
-        {
-            get => this._Preset;
-            set => this._Preset = value;
-        }
+        public Int16? Preset { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? ITintLayerGetter.Preset => this.Preset;
         #endregion

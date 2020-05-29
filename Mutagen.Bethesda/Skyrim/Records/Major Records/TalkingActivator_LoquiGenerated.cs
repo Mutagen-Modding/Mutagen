@@ -66,13 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ITalkingActivatorGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? ITalkingActivatorGetter.Name => this.Name;
         #endregion
@@ -113,13 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Unknown;
-        public Int32? Unknown
-        {
-            get => this._Unknown;
-            set => this._Unknown = value;
-        }
+        public Int32? Unknown { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? ITalkingActivatorGetter.Unknown => this.Unknown;
         #endregion
@@ -129,13 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound;
         #endregion
         #region Unknown2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16? _Unknown2;
-        public Int16? Unknown2
-        {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
-        }
+        public Int16? Unknown2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? ITalkingActivatorGetter.Unknown2 => this.Unknown2;
         #endregion

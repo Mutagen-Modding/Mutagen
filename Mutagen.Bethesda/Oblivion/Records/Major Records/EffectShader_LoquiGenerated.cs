@@ -50,24 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region FillTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FillTexture;
-        public String? FillTexture
-        {
-            get => this._FillTexture;
-            set => this._FillTexture = value;
-        }
+        public String? FillTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IEffectShaderGetter.FillTexture => this.FillTexture;
         #endregion
         #region ParticleShaderTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ParticleShaderTexture;
-        public String? ParticleShaderTexture
-        {
-            get => this._ParticleShaderTexture;
-            set => this._ParticleShaderTexture = value;
-        }
+        public String? ParticleShaderTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
         #endregion

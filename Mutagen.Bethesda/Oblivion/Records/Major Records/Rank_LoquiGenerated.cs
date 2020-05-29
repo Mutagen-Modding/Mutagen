@@ -47,13 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RankNumber
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _RankNumber;
-        public Int32? RankNumber
-        {
-            get => this._RankNumber;
-            set => this._RankNumber = value;
-        }
+        public Int32? RankNumber { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IRankGetter.RankNumber => this.RankNumber;
         #endregion
@@ -62,13 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGenderedItemGetter<String?>? IRankGetter.Name => this.Name;
         #endregion
         #region Insignia
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Insignia;
-        public String? Insignia
-        {
-            get => this._Insignia;
-            set => this._Insignia = value;
-        }
+        public String? Insignia { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.Insignia => this.Insignia;
         #endregion

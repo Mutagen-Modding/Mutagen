@@ -49,13 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MusicType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MusicType? _MusicType;
-        public MusicType? MusicType
-        {
-            get => this._MusicType;
-            set => this._MusicType = value;
-        }
+        public MusicType? MusicType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType? IRegionSoundsGetter.MusicType => this.MusicType;
         #endregion

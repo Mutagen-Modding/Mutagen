@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Boolean? _Data;
-        public Boolean? Data
-        {
-            get => this._Data;
-            set => this._Data = value;
-        }
+        public Boolean? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Boolean? IGameSettingBoolGetter.Data => this.Data;
         #endregion

@@ -59,13 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAttackDataGetter? IAttackGetter.AttackData => this.AttackData;
         #endregion
         #region AttackEvent
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _AttackEvent;
-        public String? AttackEvent
-        {
-            get => this._AttackEvent;
-            set => this._AttackEvent = value;
-        }
+        public String? AttackEvent { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAttackGetter.AttackEvent => this.AttackEvent;
         #endregion

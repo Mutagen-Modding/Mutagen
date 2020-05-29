@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _File;
-        public String? File
-        {
-            get => this._File;
-            set => this._File = value;
-        }
+        public String? File { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoundGetter.File => this.File;
         #endregion

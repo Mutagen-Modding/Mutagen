@@ -51,24 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRegionGetter.Icon => this.Icon;
         #endregion
         #region MapColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _MapColor;
-        public Color? MapColor
-        {
-            get => this._MapColor;
-            set => this._MapColor = value;
-        }
+        public Color? MapColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion

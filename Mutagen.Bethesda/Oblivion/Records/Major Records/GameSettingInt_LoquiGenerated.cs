@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _Data;
-        public Int32? Data
-        {
-            get => this._Data;
-            set => this._Data = value;
-        }
+        public Int32? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IGameSettingIntGetter.Data => this.Data;
         #endregion

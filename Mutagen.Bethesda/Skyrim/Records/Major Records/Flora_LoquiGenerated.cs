@@ -116,13 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFloraGetter.Unknown => this.Unknown;
         #endregion
         #region ActivateTextOverride
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ActivateTextOverride;
-        public String? ActivateTextOverride
-        {
-            get => this._ActivateTextOverride;
-            set => this._ActivateTextOverride = value;
-        }
+        public String? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion

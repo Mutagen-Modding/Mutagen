@@ -59,24 +59,12 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogResponseDataGetter? IDialogResponseGetter.Data => this.Data;
         #endregion
         #region ResponseText
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ResponseText;
-        public String? ResponseText
-        {
-            get => this._ResponseText;
-            set => this._ResponseText = value;
-        }
+        public String? ResponseText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDialogResponseGetter.ResponseText => this.ResponseText;
         #endregion
         #region ActorNotes
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ActorNotes;
-        public String? ActorNotes
-        {
-            get => this._ActorNotes;
-            set => this._ActorNotes = value;
-        }
+        public String? ActorNotes { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDialogResponseGetter.ActorNotes => this.ActorNotes;
         #endregion

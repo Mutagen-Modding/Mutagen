@@ -52,24 +52,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
         #endregion
         #region DefaultValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _DefaultValue;
-        public Single? DefaultValue
-        {
-            get => this._DefaultValue;
-            set => this._DefaultValue = value;
-        }
+        public Single? DefaultValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ITintPresetGetter.DefaultValue => this.DefaultValue;
         #endregion
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _Index;
-        public UInt16? Index
-        {
-            get => this._Index;
-            set => this._Index = value;
-        }
+        public UInt16? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? ITintPresetGetter.Index => this.Index;
         #endregion

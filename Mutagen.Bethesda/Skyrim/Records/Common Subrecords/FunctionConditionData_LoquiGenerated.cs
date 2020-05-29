@@ -63,13 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 ParameterOneNumber { get; set; } = default;
         #endregion
         #region ParameterOneString
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ParameterOneString;
-        public String? ParameterOneString
-        {
-            get => this._ParameterOneString;
-            set => this._ParameterOneString = value;
-        }
+        public String? ParameterOneString { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
@@ -82,13 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 ParameterTwoNumber { get; set; } = default;
         #endregion
         #region ParameterTwoString
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ParameterTwoString;
-        public String? ParameterTwoString
-        {
-            get => this._ParameterTwoString;
-            set => this._ParameterTwoString = value;
-        }
+        public String? ParameterTwoString { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
         #endregion

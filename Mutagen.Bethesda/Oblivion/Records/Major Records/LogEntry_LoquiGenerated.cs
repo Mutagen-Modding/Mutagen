@@ -48,13 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LogEntry.Flag? _Flags;
-        public LogEntry.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public LogEntry.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LogEntry.Flag? ILogEntryGetter.Flags => this.Flags;
         #endregion
@@ -73,13 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entry
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Entry;
-        public String? Entry
-        {
-            get => this._Entry;
-            set => this._Entry = value;
-        }
+        public String? Entry { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILogEntryGetter.Entry => this.Entry;
         #endregion

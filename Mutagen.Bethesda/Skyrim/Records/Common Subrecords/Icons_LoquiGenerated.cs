@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String LargeIconFilename { get; set; } = string.Empty;
         #endregion
         #region SmallIconFilename
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SmallIconFilename;
-        public String? SmallIconFilename
-        {
-            get => this._SmallIconFilename;
-            set => this._SmallIconFilename = value;
-        }
+        public String? SmallIconFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIconsGetter.SmallIconFilename => this.SmallIconFilename;
         #endregion

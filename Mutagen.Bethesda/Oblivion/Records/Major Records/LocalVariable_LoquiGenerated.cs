@@ -59,13 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILocalVariableDataGetter? ILocalVariableGetter.Data => this.Data;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILocalVariableGetter.Name => this.Name;
         #endregion

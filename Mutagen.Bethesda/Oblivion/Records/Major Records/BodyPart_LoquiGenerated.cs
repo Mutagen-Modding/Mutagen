@@ -47,24 +47,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Race.BodyIndex? _Index;
-        public Race.BodyIndex? Index
-        {
-            get => this._Index;
-            set => this._Index = value;
-        }
+        public Race.BodyIndex? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Race.BodyIndex? IBodyPartGetter.Index => this.Index;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBodyPartGetter.Icon => this.Icon;
         #endregion

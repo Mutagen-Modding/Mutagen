@@ -52,13 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
         #endregion
         #region SoundChance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _SoundChance;
-        public Byte? SoundChance
-        {
-            get => this._SoundChance;
-            set => this._SoundChance = value;
-        }
+        public Byte? SoundChance { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? INpcSoundGetter.SoundChance => this.SoundChance;
         #endregion

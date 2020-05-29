@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAClothingGetter.Name => this.Name;
         #endregion
@@ -71,13 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IEnchantmentGetter> IAClothingGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16? _EnchantmentPoints;
-        public UInt16? EnchantmentPoints
-        {
-            get => this._EnchantmentPoints;
-            set => this._EnchantmentPoints = value;
-        }
+        public UInt16? EnchantmentPoints { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IAClothingGetter.EnchantmentPoints => this.EnchantmentPoints;
         #endregion
@@ -115,13 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IAClothingGetter.MaleWorldModel => this.MaleWorldModel;
         #endregion
         #region MaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _MaleIcon;
-        public String? MaleIcon
-        {
-            get => this._MaleIcon;
-            set => this._MaleIcon = value;
-        }
+        public String? MaleIcon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAClothingGetter.MaleIcon => this.MaleIcon;
         #endregion
@@ -148,13 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IAClothingGetter.FemaleWorldModel => this.FemaleWorldModel;
         #endregion
         #region FemaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _FemaleIcon;
-        public String? FemaleIcon
-        {
-            get => this._FemaleIcon;
-            set => this._FemaleIcon = value;
-        }
+        public String? FemaleIcon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAClothingGetter.FemaleIcon => this.FemaleIcon;
         #endregion

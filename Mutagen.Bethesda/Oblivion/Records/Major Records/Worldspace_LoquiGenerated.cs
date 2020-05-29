@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWorldspaceGetter.Name => this.Name;
         #endregion
@@ -76,13 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
+        public String? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWorldspaceGetter.Icon => this.Icon;
         #endregion
@@ -98,46 +86,22 @@ namespace Mutagen.Bethesda.Oblivion
         IMapDataGetter? IWorldspaceGetter.MapData => this.MapData;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Worldspace.Flag? _Flags;
-        public Worldspace.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
+        public Worldspace.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Worldspace.Flag? IWorldspaceGetter.Flags => this.Flags;
         #endregion
         #region ObjectBoundsMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P2Float? _ObjectBoundsMin;
-        public P2Float? ObjectBoundsMin
-        {
-            get => this._ObjectBoundsMin;
-            set => this._ObjectBoundsMin = value;
-        }
+        public P2Float? ObjectBoundsMin { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Float? IWorldspaceGetter.ObjectBoundsMin => this.ObjectBoundsMin;
         #endregion
         #region ObjectBoundsMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P2Float? _ObjectBoundsMax;
-        public P2Float? ObjectBoundsMax
-        {
-            get => this._ObjectBoundsMax;
-            set => this._ObjectBoundsMax = value;
-        }
+        public P2Float? ObjectBoundsMax { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Float? IWorldspaceGetter.ObjectBoundsMax => this.ObjectBoundsMax;
         #endregion
         #region Music
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MusicType? _Music;
-        public MusicType? Music
-        {
-            get => this._Music;
-            set => this._Music = value;
-        }
+        public MusicType? Music { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType? IWorldspaceGetter.Music => this.Music;
         #endregion

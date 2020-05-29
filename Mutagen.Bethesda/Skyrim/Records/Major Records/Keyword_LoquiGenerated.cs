@@ -51,13 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color? _Color;
-        public Color? Color
-        {
-            get => this._Color;
-            set => this._Color = value;
-        }
+        public Color? Color { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? IKeywordGetter.Color => this.Color;
         #endregion

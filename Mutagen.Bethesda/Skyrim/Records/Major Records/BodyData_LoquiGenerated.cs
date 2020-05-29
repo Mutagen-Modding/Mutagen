@@ -48,13 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private BodyData.PartIndex? _Index;
-        public BodyData.PartIndex? Index
-        {
-            get => this._Index;
-            set => this._Index = value;
-        }
+        public BodyData.PartIndex? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData.PartIndex? IBodyDataGetter.Index => this.Index;
         #endregion

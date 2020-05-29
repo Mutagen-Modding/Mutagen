@@ -50,13 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFurnitureGetter.Name => this.Name;
         #endregion
@@ -77,13 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> IFurnitureGetter.Script => this.Script;
         #endregion
         #region MarkerFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32? _MarkerFlags;
-        public Int32? MarkerFlags
-        {
-            get => this._MarkerFlags;
-            set => this._MarkerFlags = value;
-        }
+        public Int32? MarkerFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IFurnitureGetter.MarkerFlags => this.MarkerFlags;
         #endregion

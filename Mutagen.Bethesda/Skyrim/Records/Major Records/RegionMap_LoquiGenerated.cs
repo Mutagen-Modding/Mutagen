@@ -49,13 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRegionMapGetter.Name => this.Name;
         #endregion

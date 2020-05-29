@@ -50,24 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TextureLowerLayer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _TextureLowerLayer;
-        public String? TextureLowerLayer
-        {
-            get => this._TextureLowerLayer;
-            set => this._TextureLowerLayer = value;
-        }
+        public String? TextureLowerLayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWeatherGetter.TextureLowerLayer => this.TextureLowerLayer;
         #endregion
         #region TextureUpperLayer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _TextureUpperLayer;
-        public String? TextureUpperLayer
-        {
-            get => this._TextureUpperLayer;
-            set => this._TextureUpperLayer = value;
-        }
+        public String? TextureUpperLayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWeatherGetter.TextureUpperLayer => this.TextureUpperLayer;
         #endregion

@@ -55,13 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IAmmunitionGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Name;
-        public TranslatedString? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IAmmunitionGetter.Name => this.Name;
         #endregion
@@ -109,13 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TranslatedString? _Description;
-        public TranslatedString? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TranslatedString? IAmmunitionGetter.Description => this.Description;
         #endregion
@@ -148,13 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 Value { get; set; } = default;
         #endregion
         #region ShortName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ShortName;
-        public String? ShortName
-        {
-            get => this._ShortName;
-            set => this._ShortName = value;
-        }
+        public String? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAmmunitionGetter.ShortName => this.ShortName;
         #endregion
