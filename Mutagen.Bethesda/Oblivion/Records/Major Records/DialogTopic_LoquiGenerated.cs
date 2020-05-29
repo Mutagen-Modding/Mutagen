@@ -51,15 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Quest>>? _Quests;
-        public ExtendedList<IFormLink<Quest>>? Quests
+        private ExtendedList<IFormLink<Quest>> _Quests = new ExtendedList<IFormLink<Quest>>();
+        public ExtendedList<IFormLink<Quest>> Quests
         {
             get => this._Quests;
-            set => this._Quests = value;
+            protected set => this._Quests = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IQuestGetter>>? IDialogTopicGetter.Quests => _Quests;
+        IReadOnlyList<IFormLinkGetter<IQuestGetter>> IDialogTopicGetter.Quests => _Quests;
         #endregion
 
         #endregion
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
-        new ExtendedList<IFormLink<Quest>>? Quests { get; set; }
+        new ExtendedList<IFormLink<Quest>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         static ILoquiRegistration Registration => DialogTopic_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IQuestGetter>>? Quests { get; }
+        IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; }
         String? Name { get; }
         DialogType? DialogType { get; }
         Int32 Timestamp { get; }
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IDialogTopicInternal item)
         {
             ClearPartial();
-            item.Quests = null;
+            item.Quests.Clear();
             item.Name = default;
             item.DialogType = default;
             item.Timestamp = default;
@@ -1629,13 +1629,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x49545351: // QSTI
                 {
-                    item.Quests = 
+                    item.Quests.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Quest>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
                 }
                 case 0x4C4C5546: // FULL
@@ -1790,14 +1789,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Quests?.Overall ?? true)
-                && item.Quests.TryGet(out var QuestsItem))
+            if (printMask?.Quests?.Overall ?? true)
             {
                 fg.AppendLine("Quests =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in QuestsItem)
+                    foreach (var subItem in item.Quests)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1847,7 +1845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter item,
             DialogTopic.Mask<bool?> checkMask)
         {
-            if (checkMask.Quests?.Overall.HasValue ?? false && checkMask.Quests!.Overall.Value != (item.Quests != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.DialogType.HasValue && checkMask.DialogType.Value != (item.DialogType != null)) return false;
             return base.HasBeenSet(
@@ -1859,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter item,
             DialogTopic.Mask<bool> mask)
         {
-            mask.Quests = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Quests != null), default);
+            mask.Quests = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Name = (item.Name != null);
             mask.DialogType = (item.DialogType != null);
             mask.Timestamp = true;
@@ -1983,12 +1980,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Quests.TryGet(out var QuestsItem))
+            foreach (var item in obj.Quests.Select(f => f.FormKey))
             {
-                foreach (var item in QuestsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
             {
@@ -2011,9 +2005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
         {
-            if ((obj.Quests != null))
-            {
-            }
             foreach (var subItem in obj.Items)
             {
                 yield return subItem;
@@ -2095,17 +2086,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
                 try
                 {
-                    if ((rhs.Quests != null))
-                    {
-                        item.Quests = 
-                            rhs.Quests
-                            .Select(r => (IFormLink<Quest>)new FormLink<Quest>(r.FormKey))
-                            .ToExtendedList<IFormLink<Quest>>();
-                    }
-                    else
-                    {
-                        item.Quests = null;
-                    }
+                    item.Quests.SetTo(
+                        rhs.Quests
+                        .Select(r => (IFormLink<Quest>)new FormLink<Quest>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2298,8 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Quests != null)
-                && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IQuestGetter>>.Instance.Write(
                     node: node,
@@ -2484,11 +2466,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Quests = QuestsItem.ToExtendedList();
+                            item.Quests.SetTo(QuestsItem);
                         }
                         else
                         {
-                            item.Quests = null;
+                            item.Quests.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2864,7 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLinkGetter<IQuestGetter>>? Quests { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = ListExt.Empty<IFormLinkGetter<IQuestGetter>>();
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);

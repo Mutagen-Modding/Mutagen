@@ -238,15 +238,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<MagicEffect>>? _CounterEffects;
-        public ExtendedList<IFormLink<MagicEffect>>? CounterEffects
+        private ExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
+        public ExtendedList<IFormLink<MagicEffect>> CounterEffects
         {
             get => this._CounterEffects;
-            set => this._CounterEffects = value;
+            protected set => this._CounterEffects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -2430,7 +2430,7 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
+        new ExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -2494,7 +2494,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundLevel CastingSoundLevel { get; }
         Single ScriptEffectAIScore { get; }
         Single ScriptEffectAIDelayTime { get; }
-        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         TranslatedString? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -3580,7 +3580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CastingSoundLevel = default;
             item.ScriptEffectAIScore = default;
             item.ScriptEffectAIDelayTime = default;
-            item.CounterEffects = null;
+            item.CounterEffects.Clear();
             item.Sounds = null;
             item.Description = default;
             item.Conditions.Clear();
@@ -3814,13 +3814,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x45435345: // ESCE
                 {
-                    item.CounterEffects = 
+                    item.CounterEffects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MagicEffect>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: MagicEffect_Registration.ESCE_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<MagicEffect>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }
                 case 0x44444E53: // SNDD
@@ -4222,14 +4221,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
             }
-            if ((printMask?.CounterEffects?.Overall ?? true)
-                && item.CounterEffects.TryGet(out var CounterEffectsItem))
+            if (printMask?.CounterEffects?.Overall ?? true)
             {
                 fg.AppendLine("CounterEffects =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in CounterEffectsItem)
+                    foreach (var subItem in item.CounterEffects)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -4298,7 +4296,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != (item.CounterEffects != null)) return false;
             if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             return base.HasBeenSet(
@@ -4352,7 +4349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.CastingSoundLevel = true;
             mask.ScriptEffectAIScore = true;
             mask.ScriptEffectAIDelayTime = true;
-            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CounterEffects != null), default);
+            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             if (item.Sounds.TryGet(out var SoundsItem))
             {
                 mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -4602,12 +4599,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield return obj.EquipAbility.FormKey;
             yield return obj.ImageSpaceModifier.FormKey;
             yield return obj.PerkToApply.FormKey;
-            if (obj.CounterEffects.TryGet(out var CounterEffectsItem))
+            foreach (var item in obj.CounterEffects.Select(f => f.FormKey))
             {
-                foreach (var item in CounterEffectsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.Sounds.TryGet(out var SoundsItem))
             {
@@ -4900,17 +4894,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
-                    if ((rhs.CounterEffects != null))
-                    {
-                        item.CounterEffects = 
-                            rhs.CounterEffects
-                            .Select(r => (IFormLink<MagicEffect>)new FormLink<MagicEffect>(r.FormKey))
-                            .ToExtendedList<IFormLink<MagicEffect>>();
-                    }
-                    else
-                    {
-                        item.CounterEffects = null;
-                    }
+                    item.CounterEffects.SetTo(
+                        rhs.CounterEffects
+                        .Select(r => (IFormLink<MagicEffect>)new FormLink<MagicEffect>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5516,8 +5502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime,
                     errorMask: errorMask);
             }
-            if ((item.CounterEffects != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                     node: node,
@@ -6463,11 +6448,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.CounterEffects = CounterEffectsItem.ToExtendedList();
+                            item.CounterEffects.SetTo(CounterEffectsItem);
                         }
                         else
                         {
-                            item.CounterEffects = null;
+                            item.CounterEffects.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -7259,7 +7244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIDelayTimeLocation, 4)) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;

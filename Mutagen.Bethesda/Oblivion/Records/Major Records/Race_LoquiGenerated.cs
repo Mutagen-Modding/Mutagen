@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Spell>>? _Spells;
-        public ExtendedList<IFormLink<Spell>>? Spells
+        private ExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
+        public ExtendedList<IFormLink<Spell>> Spells
         {
             get => this._Spells;
-            set => this._Spells = value;
+            protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ISpellGetter>>? IRaceGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<IFormLink<Spell>>? Spells { get; set; }
+        new ExtendedList<IFormLink<Spell>> Spells { get; }
         new ExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
         new GenderedItem<IFormLink<Race>>? Voices { get; set; }
@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => Race_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
-        IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         IReadOnlyList<IRaceRelationGetter> Relations { get; }
         IRaceDataGetter? Data { get; }
         IGenderedItemGetter<IFormLinkGetter<IRaceGetter>>? Voices { get; }
@@ -2380,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Description = default;
-            item.Spells = null;
+            item.Spells.Clear();
             item.Relations.Clear();
             item.Data = null;
             item.Voices = null;
@@ -2527,13 +2527,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    item.Spells = 
+                    item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Spell>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
                 case 0x4D414E58: // XNAM
@@ -2853,14 +2852,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
-            if ((printMask?.Spells?.Overall ?? true)
-                && item.Spells.TryGet(out var SpellsItem))
+            if (printMask?.Spells?.Overall ?? true)
             {
                 fg.AppendLine("Spells =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in SpellsItem)
+                    foreach (var subItem in item.Spells)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3004,7 +3002,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Voices?.Overall ?? false) return false;
@@ -3030,7 +3027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
-            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
+            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             var RelationsItem = item.Relations;
             mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemData = item.Data;
@@ -3225,12 +3222,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Spells.TryGet(out var SpellsItem))
+            foreach (var item in obj.Spells.Select(f => f.FormKey))
             {
-                foreach (var item in SpellsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Relations.SelectMany(f => f.LinkFormKeys))
             {
@@ -3310,17 +3304,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Spells);
                 try
                 {
-                    if ((rhs.Spells != null))
-                    {
-                        item.Spells = 
-                            rhs.Spells
-                            .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey))
-                            .ToExtendedList<IFormLink<Spell>>();
-                    }
-                    else
-                    {
-                        item.Spells = null;
-                    }
+                    item.Spells.SetTo(
+                        rhs.Spells
+                        .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3712,8 +3698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Race_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if ((item.Spells != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Spells) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                     node: node,
@@ -4115,11 +4100,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Spells = SpellsItem.ToExtendedList();
+                            item.Spells.SetTo(SpellsItem);
                         }
                         else
                         {
-                            item.Spells = null;
+                            item.Spells.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -4819,7 +4804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellGetter>>();
         public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
         #region Data
         private RangeInt32? _DataLocation;

@@ -74,43 +74,43 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Npc>>? _RacePresets;
-        public ExtendedList<IFormLink<Npc>>? RacePresets
+        private ExtendedList<IFormLink<Npc>> _RacePresets = new ExtendedList<IFormLink<Npc>>();
+        public ExtendedList<IFormLink<Npc>> RacePresets
         {
             get => this._RacePresets;
-            set => this._RacePresets = value;
+            protected set => this._RacePresets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? IHeadDataGetter.RacePresets => _RacePresets;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>> IHeadDataGetter.RacePresets => _RacePresets;
         #endregion
 
         #endregion
         #region AvailableHairColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ColorRecord>>? _AvailableHairColors;
-        public ExtendedList<IFormLink<ColorRecord>>? AvailableHairColors
+        private ExtendedList<IFormLink<ColorRecord>> _AvailableHairColors = new ExtendedList<IFormLink<ColorRecord>>();
+        public ExtendedList<IFormLink<ColorRecord>> AvailableHairColors
         {
             get => this._AvailableHairColors;
-            set => this._AvailableHairColors = value;
+            protected set => this._AvailableHairColors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? IHeadDataGetter.AvailableHairColors => _AvailableHairColors;
+        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> IHeadDataGetter.AvailableHairColors => _AvailableHairColors;
         #endregion
 
         #endregion
         #region FaceDetails
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<TextureSet>>? _FaceDetails;
-        public ExtendedList<IFormLink<TextureSet>>? FaceDetails
+        private ExtendedList<IFormLink<TextureSet>> _FaceDetails = new ExtendedList<IFormLink<TextureSet>>();
+        public ExtendedList<IFormLink<TextureSet>> FaceDetails
         {
             get => this._FaceDetails;
-            set => this._FaceDetails = value;
+            protected set => this._FaceDetails = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? IHeadDataGetter.FaceDetails => _FaceDetails;
+        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> IHeadDataGetter.FaceDetails => _FaceDetails;
         #endregion
 
         #endregion
@@ -1295,9 +1295,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new ExtendedList<IFormLink<Npc>>? RacePresets { get; set; }
-        new ExtendedList<IFormLink<ColorRecord>>? AvailableHairColors { get; set; }
-        new ExtendedList<IFormLink<TextureSet>>? FaceDetails { get; set; }
+        new ExtendedList<IFormLink<Npc>> RacePresets { get; }
+        new ExtendedList<IFormLink<ColorRecord>> AvailableHairColors { get; }
+        new ExtendedList<IFormLink<TextureSet>> FaceDetails { get; }
         new FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; }
         new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
@@ -1322,9 +1322,9 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => HeadData_Registration.Instance;
         IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; }
         IAvailableMorphsGetter? AvailableMorphs { get; }
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; }
-        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? AvailableHairColors { get; }
-        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? FaceDetails { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
+        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
+        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
         IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture { get; }
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
         IModelGetter? Model { get; }
@@ -1989,9 +1989,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.HeadParts.Clear();
             item.AvailableMorphs = null;
-            item.RacePresets = null;
-            item.AvailableHairColors = null;
-            item.FaceDetails = null;
+            item.RacePresets.Clear();
+            item.AvailableHairColors.Clear();
+            item.FaceDetails.Clear();
             item.DefaultFaceTexture = null;
             item.TintMasks.Clear();
             item.Model = null;
@@ -2072,37 +2072,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D525052: // RPRM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return TryGet<int?>.Failure;
-                    item.RacePresets = 
+                    item.RacePresets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.RPRM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Npc>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
                 case 0x4D434841: // AHCM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return TryGet<int?>.Failure;
-                    item.AvailableHairColors = 
+                    item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.AHCM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ColorRecord>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
                 }
                 case 0x4D535446: // FTSM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return TryGet<int?>.Failure;
-                    item.FaceDetails = 
+                    item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadData_Registration.FTSM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<TextureSet>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
                 }
                 case 0x4D544644: // DFTM
@@ -2311,14 +2308,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 AvailableMorphsItem?.ToString(fg, "AvailableMorphs");
             }
-            if ((printMask?.RacePresets?.Overall ?? true)
-                && item.RacePresets.TryGet(out var RacePresetsItem))
+            if (printMask?.RacePresets?.Overall ?? true)
             {
                 fg.AppendLine("RacePresets =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in RacePresetsItem)
+                    foreach (var subItem in item.RacePresets)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2330,14 +2326,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.AvailableHairColors?.Overall ?? true)
-                && item.AvailableHairColors.TryGet(out var AvailableHairColorsItem))
+            if (printMask?.AvailableHairColors?.Overall ?? true)
             {
                 fg.AppendLine("AvailableHairColors =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in AvailableHairColorsItem)
+                    foreach (var subItem in item.AvailableHairColors)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2349,14 +2344,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.FaceDetails?.Overall ?? true)
-                && item.FaceDetails.TryGet(out var FaceDetailsItem))
+            if (printMask?.FaceDetails?.Overall ?? true)
             {
                 fg.AppendLine("FaceDetails =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in FaceDetailsItem)
+                    foreach (var subItem in item.FaceDetails)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2414,9 +2408,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.AvailableMorphs?.Overall.HasValue ?? false && checkMask.AvailableMorphs.Overall.Value != (item.AvailableMorphs != null)) return false;
             if (checkMask.AvailableMorphs?.Specific != null && (item.AvailableMorphs == null || !item.AvailableMorphs.HasBeenSet(checkMask.AvailableMorphs.Specific))) return false;
-            if (checkMask.RacePresets?.Overall.HasValue ?? false && checkMask.RacePresets!.Overall.Value != (item.RacePresets != null)) return false;
-            if (checkMask.AvailableHairColors?.Overall.HasValue ?? false && checkMask.AvailableHairColors!.Overall.Value != (item.AvailableHairColors != null)) return false;
-            if (checkMask.FaceDetails?.Overall.HasValue ?? false && checkMask.FaceDetails!.Overall.Value != (item.FaceDetails != null)) return false;
             if (checkMask.DefaultFaceTexture.HasValue && checkMask.DefaultFaceTexture.Value != (item.DefaultFaceTexture.FormKey != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
@@ -2433,9 +2424,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HeadParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, HeadPartReference.Mask<bool>?>>?>(true, HeadPartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, HeadPartReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemAvailableMorphs = item.AvailableMorphs;
             mask.AvailableMorphs = new MaskItem<bool, AvailableMorphs.Mask<bool>?>(itemAvailableMorphs != null, itemAvailableMorphs?.GetHasBeenSetMask());
-            mask.RacePresets = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.RacePresets != null), default);
-            mask.AvailableHairColors = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.AvailableHairColors != null), default);
-            mask.FaceDetails = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.FaceDetails != null), default);
+            mask.RacePresets = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.AvailableHairColors = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.FaceDetails = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.DefaultFaceTexture = (item.DefaultFaceTexture.FormKey != null);
             var TintMasksItem = item.TintMasks;
             mask.TintMasks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintAssets.Mask<bool>?>>?>(true, TintMasksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintAssets.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -2511,26 +2502,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.RacePresets.TryGet(out var RacePresetsItem))
+            foreach (var item in obj.RacePresets.Select(f => f.FormKey))
             {
-                foreach (var item in RacePresetsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.AvailableHairColors.TryGet(out var AvailableHairColorsItem))
+            foreach (var item in obj.AvailableHairColors.Select(f => f.FormKey))
             {
-                foreach (var item in AvailableHairColorsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
-            if (obj.FaceDetails.TryGet(out var FaceDetailsItem))
+            foreach (var item in obj.FaceDetails.Select(f => f.FormKey))
             {
-                foreach (var item in FaceDetailsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.DefaultFaceTexture.FormKey.TryGet(out var DefaultFaceTextureKey))
             {
@@ -2628,17 +2610,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadData_FieldIndex.RacePresets);
                 try
                 {
-                    if ((rhs.RacePresets != null))
-                    {
-                        item.RacePresets = 
-                            rhs.RacePresets
-                            .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey))
-                            .ToExtendedList<IFormLink<Npc>>();
-                    }
-                    else
-                    {
-                        item.RacePresets = null;
-                    }
+                    item.RacePresets.SetTo(
+                        rhs.RacePresets
+                        .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2655,17 +2629,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadData_FieldIndex.AvailableHairColors);
                 try
                 {
-                    if ((rhs.AvailableHairColors != null))
-                    {
-                        item.AvailableHairColors = 
-                            rhs.AvailableHairColors
-                            .Select(r => (IFormLink<ColorRecord>)new FormLink<ColorRecord>(r.FormKey))
-                            .ToExtendedList<IFormLink<ColorRecord>>();
-                    }
-                    else
-                    {
-                        item.AvailableHairColors = null;
-                    }
+                    item.AvailableHairColors.SetTo(
+                        rhs.AvailableHairColors
+                        .Select(r => (IFormLink<ColorRecord>)new FormLink<ColorRecord>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2682,17 +2648,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadData_FieldIndex.FaceDetails);
                 try
                 {
-                    if ((rhs.FaceDetails != null))
-                    {
-                        item.FaceDetails = 
-                            rhs.FaceDetails
-                            .Select(r => (IFormLink<TextureSet>)new FormLink<TextureSet>(r.FormKey))
-                            .ToExtendedList<IFormLink<TextureSet>>();
-                    }
-                    else
-                    {
-                        item.FaceDetails = null;
-                    }
+                    item.FaceDetails.SetTo(
+                        rhs.FaceDetails
+                        .Select(r => (IFormLink<TextureSet>)new FormLink<TextureSet>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2889,8 +2847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)HeadData_FieldIndex.AvailableMorphs));
                 }
             }
-            if ((item.RacePresets != null)
-                && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                     node: node,
@@ -2908,8 +2865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.AvailableHairColors != null)
-                && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                     node: node,
@@ -2927,8 +2883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.FaceDetails != null)
-                && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                     node: node,
@@ -3174,11 +3129,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.RacePresets = RacePresetsItem.ToExtendedList();
+                            item.RacePresets.SetTo(RacePresetsItem);
                         }
                         else
                         {
-                            item.RacePresets = null;
+                            item.RacePresets.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3202,11 +3157,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.AvailableHairColors = AvailableHairColorsItem.ToExtendedList();
+                            item.AvailableHairColors.SetTo(AvailableHairColorsItem);
                         }
                         else
                         {
-                            item.AvailableHairColors = null;
+                            item.AvailableHairColors.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3230,11 +3185,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.FaceDetails = FaceDetailsItem.ToExtendedList();
+                            item.FaceDetails.SetTo(FaceDetailsItem);
                         }
                         else
                         {
-                            item.FaceDetails = null;
+                            item.FaceDetails.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3721,9 +3676,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? AvailableHairColors { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? FaceDetails { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = ListExt.Empty<IFormLinkGetter<INpcGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = ListExt.Empty<IFormLinkGetter<IColorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
         public bool DefaultFaceTexture_IsSet => _DefaultFaceTextureLocation.HasValue;

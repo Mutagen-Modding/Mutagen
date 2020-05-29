@@ -70,15 +70,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Grass>>? _Grasses;
-        public ExtendedList<IFormLink<Grass>>? Grasses
+        private ExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
+        public ExtendedList<IFormLink<Grass>> Grasses
         {
             get => this._Grasses;
-            set => this._Grasses = value;
+            protected set => this._Grasses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? ILandscapeTextureGetter.Grasses => _Grasses;
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>> ILandscapeTextureGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new ExtendedList<IFormLink<Grass>>? Grasses { get; set; }
+        new ExtendedList<IFormLink<Grass>> Grasses { get; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
-        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; }
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
         LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
     }
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HavokFriction = default;
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
-            item.Grasses = null;
+            item.Grasses.Clear();
             item.HNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -1600,13 +1600,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    item.Grasses = 
+                    item.Grasses.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LandscapeTexture_Registration.GNAM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Grass>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
                 }
                 default:
@@ -1764,14 +1763,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.TextureSpecularExponent, "TextureSpecularExponent");
             }
-            if ((printMask?.Grasses?.Overall ?? true)
-                && item.Grasses.TryGet(out var GrassesItem))
+            if (printMask?.Grasses?.Overall ?? true)
             {
                 fg.AppendLine("Grasses =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in GrassesItem)
+                    foreach (var subItem in item.Grasses)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1794,7 +1792,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LandscapeTexture.Mask<bool?> checkMask)
         {
             if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
-            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses!.Overall.Value != (item.Grasses != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1809,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HavokFriction = true;
             mask.HavokRestitution = true;
             mask.TextureSpecularExponent = true;
-            mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Grasses != null), default);
+            mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.HNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1937,12 +1934,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return TextureSetKey;
             }
             yield return obj.MaterialType.FormKey;
-            if (obj.Grasses.TryGet(out var GrassesItem))
+            foreach (var item in obj.Grasses.Select(f => f.FormKey))
             {
-                foreach (var item in GrassesItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2016,17 +2010,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.Grasses);
                 try
                 {
-                    if ((rhs.Grasses != null))
-                    {
-                        item.Grasses = 
-                            rhs.Grasses
-                            .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey))
-                            .ToExtendedList<IFormLink<Grass>>();
-                    }
-                    else
-                    {
-                        item.Grasses = null;
-                    }
+                    item.Grasses.SetTo(
+                        rhs.Grasses
+                        .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2230,8 +2216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)LandscapeTexture_FieldIndex.TextureSpecularExponent,
                     errorMask: errorMask);
             }
-            if ((item.Grasses != null)
-                && (translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                     node: node,
@@ -2466,11 +2451,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Grasses = GrassesItem.ToExtendedList();
+                            item.Grasses.SetTo(GrassesItem);
                         }
                         else
                         {
-                            item.Grasses = null;
+                            item.Grasses.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -2786,7 +2771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TextureSpecularExponentLocation;
         public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default(Byte);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = ListExt.Empty<IFormLinkGetter<IGrassGetter>>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -87,15 +87,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<HeadPart>>? _ExtraParts;
-        public ExtendedList<IFormLink<HeadPart>>? ExtraParts
+        private ExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
+        public ExtendedList<IFormLink<HeadPart>> ExtraParts
         {
             get => this._ExtraParts;
-            set => this._ExtraParts = value;
+            protected set => this._ExtraParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? IHeadPartGetter.ExtraParts => _ExtraParts;
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> IHeadPartGetter.ExtraParts => _ExtraParts;
         #endregion
 
         #endregion
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new ExtendedList<IFormLink<HeadPart>>? ExtraParts { get; set; }
+        new ExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
         new FormLinkNullable<ColorRecord> Color { get; set; }
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
-        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? ExtraParts { get; }
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         IReadOnlyList<IPartGetter> Parts { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IColorRecordGetter> Color { get; }
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Flags = default;
             item.Type = default;
-            item.ExtraParts = null;
+            item.ExtraParts.Clear();
             item.Parts.Clear();
             item.TextureSet = null;
             item.Color = null;
@@ -1828,13 +1828,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    item.ExtraParts = 
+                    item.ExtraParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: HeadPart_Registration.HNAM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<HeadPart>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }
                 case 0x304D414E: // NAM0
@@ -2040,14 +2039,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(TypeItem, "Type");
             }
-            if ((printMask?.ExtraParts?.Overall ?? true)
-                && item.ExtraParts.TryGet(out var ExtraPartsItem))
+            if (printMask?.ExtraParts?.Overall ?? true)
             {
                 fg.AppendLine("ExtraParts =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ExtraPartsItem)
+                    foreach (var subItem in item.ExtraParts)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2102,7 +2100,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            if (checkMask.ExtraParts?.Overall.HasValue ?? false && checkMask.ExtraParts!.Overall.Value != (item.ExtraParts != null)) return false;
             if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
             if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color.FormKey != null)) return false;
             if (checkMask.ValidRaces.HasValue && checkMask.ValidRaces.Value != (item.ValidRaces.FormKey != null)) return false;
@@ -2120,7 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Flags = true;
             mask.Type = (item.Type != null);
-            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ExtraParts != null), default);
+            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             var PartsItem = item.Parts;
             mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.TextureSet = (item.TextureSet.FormKey != null);
@@ -2273,12 +2270,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ExtraParts.TryGet(out var ExtraPartsItem))
+            foreach (var item in obj.ExtraParts.Select(f => f.FormKey))
             {
-                foreach (var item in ExtraPartsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.TextureSet.FormKey.TryGet(out var TextureSetKey))
             {
@@ -2382,17 +2376,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)HeadPart_FieldIndex.ExtraParts);
                 try
                 {
-                    if ((rhs.ExtraParts != null))
-                    {
-                        item.ExtraParts = 
-                            rhs.ExtraParts
-                            .Select(r => (IFormLink<HeadPart>)new FormLink<HeadPart>(r.FormKey))
-                            .ToExtendedList<IFormLink<HeadPart>>();
-                    }
-                    else
-                    {
-                        item.ExtraParts = null;
-                    }
+                    item.ExtraParts.SetTo(
+                        rhs.ExtraParts
+                        .Select(r => (IFormLink<HeadPart>)new FormLink<HeadPart>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2625,8 +2611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)HeadPart_FieldIndex.Type,
                     errorMask: errorMask);
             }
-            if ((item.ExtraParts != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                     node: node,
@@ -2885,11 +2870,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.ExtraParts = ExtraPartsItem.ToExtendedList();
+                            item.ExtraParts.SetTo(ExtraPartsItem);
                         }
                         else
                         {
-                            item.ExtraParts = null;
+                            item.ExtraParts.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -3277,7 +3262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TypeLocation;
         public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.Meta)) : default(HeadPart.TypeEnum?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? ExtraParts { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = ListExt.Empty<PartBinaryOverlay>();
         #region TextureSet
         private int? _TextureSetLocation;

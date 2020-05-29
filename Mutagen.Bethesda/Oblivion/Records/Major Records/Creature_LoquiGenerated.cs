@@ -87,15 +87,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>>? _Spells;
-        public ExtendedList<IFormLink<ASpell>>? Spells
+        private ExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
+        public ExtendedList<IFormLink<ASpell>> Spells
         {
             get => this._Spells;
-            set => this._Spells = value;
+            protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ICreatureGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -172,15 +172,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<AIPackage>>? _AIPackages;
-        public ExtendedList<IFormLink<AIPackage>>? AIPackages
+        private ExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
+        public ExtendedList<IFormLink<AIPackage>> AIPackages
         {
             get => this._AIPackages;
-            set => this._AIPackages = value;
+            protected set => this._AIPackages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? ICreatureGetter.AIPackages => _AIPackages;
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
-        new ExtendedList<IFormLink<ASpell>>? Spells { get; set; }
+        new ExtendedList<IFormLink<ASpell>> Spells { get; }
         new ExtendedList<String>? Models { get; set; }
         new Byte[]? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion
         new FormLinkNullable<AItem> DeathItem { get; set; }
         new FormLinkNullable<Script> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
-        new ExtendedList<IFormLink<AIPackage>>? AIPackages { get; set; }
+        new ExtendedList<IFormLink<AIPackage>> AIPackages { get; }
         new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; }
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; }
         IReadOnlyList<String>? Models { get; }
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         ICreatureConfigurationGetter? Configuration { get; }
@@ -2036,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         ICreatureAIDataGetter? AIData { get; }
-        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; }
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         IReadOnlyList<String>? Animations { get; }
         ICreatureDataGetter? Data { get; }
         Byte? AttackReach { get; }
@@ -2829,7 +2829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Items.Clear();
-            item.Spells = null;
+            item.Spells.Clear();
             item.Models = null;
             item.NIFT = default;
             item.Configuration = null;
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.DeathItem = null;
             item.Script = null;
             item.AIData = null;
-            item.AIPackages = null;
+            item.AIPackages.Clear();
             item.Animations = null;
             item.Data = null;
             item.AttackReach = default;
@@ -3032,13 +3032,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    item.Spells = 
+                    item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.SPLO_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ASpell>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
                 case 0x5A46494E: // NIFZ
@@ -3107,13 +3106,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494B50: // PKID
                 {
-                    item.AIPackages = 
+                    item.AIPackages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Creature_Registration.PKID_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<AIPackage>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
                 }
                 case 0x5A46464B: // KFFZ
@@ -3445,14 +3443,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Spells?.Overall ?? true)
-                && item.Spells.TryGet(out var SpellsItem))
+            if (printMask?.Spells?.Overall ?? true)
             {
                 fg.AppendLine("Spells =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in SpellsItem)
+                    foreach (var subItem in item.Spells)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3526,14 +3523,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 AIDataItem?.ToString(fg, "AIData");
             }
-            if ((printMask?.AIPackages?.Overall ?? true)
-                && item.AIPackages.TryGet(out var AIPackagesItem))
+            if (printMask?.AIPackages?.Overall ?? true)
             {
                 fg.AppendLine("AIPackages =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in AIPackagesItem)
+                    foreach (var subItem in item.AIPackages)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3636,7 +3632,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
             if (checkMask.Models?.Overall.HasValue ?? false && checkMask.Models!.Overall.Value != (item.Models != null)) return false;
             if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != (item.NIFT != null)) return false;
             if (checkMask.Configuration?.Overall.HasValue ?? false && checkMask.Configuration.Overall.Value != (item.Configuration != null)) return false;
@@ -3645,7 +3640,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.AIData?.Overall.HasValue ?? false && checkMask.AIData.Overall.Value != (item.AIData != null)) return false;
             if (checkMask.AIData?.Specific != null && (item.AIData == null || !item.AIData.HasBeenSet(checkMask.AIData.Specific))) return false;
-            if (checkMask.AIPackages?.Overall.HasValue ?? false && checkMask.AIPackages!.Overall.Value != (item.AIPackages != null)) return false;
             if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
@@ -3671,7 +3665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             var ItemsItem = item.Items;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
+            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Models = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Models != null), default);
             mask.NIFT = (item.NIFT != null);
             var itemConfiguration = item.Configuration;
@@ -3682,7 +3676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Script = (item.Script.FormKey != null);
             var itemAIData = item.AIData;
             mask.AIData = new MaskItem<bool, CreatureAIData.Mask<bool>?>(itemAIData != null, itemAIData?.GetHasBeenSetMask());
-            mask.AIPackages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.AIPackages != null), default);
+            mask.AIPackages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Animations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Animations != null), default);
             var itemData = item.Data;
             mask.Data = new MaskItem<bool, CreatureData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
@@ -3962,12 +3956,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Spells.TryGet(out var SpellsItem))
+            foreach (var item in obj.Spells.Select(f => f.FormKey))
             {
-                foreach (var item in SpellsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
             {
@@ -3981,12 +3972,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return ScriptKey;
             }
-            if (obj.AIPackages.TryGet(out var AIPackagesItem))
+            foreach (var item in obj.AIPackages.Select(f => f.FormKey))
             {
-                foreach (var item in AIPackagesItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
             {
@@ -4106,17 +4094,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                 try
                 {
-                    if ((rhs.Spells != null))
-                    {
-                        item.Spells = 
-                            rhs.Spells
-                            .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey))
-                            .ToExtendedList<IFormLink<ASpell>>();
-                    }
-                    else
-                    {
-                        item.Spells = null;
-                    }
+                    item.Spells.SetTo(
+                        rhs.Spells
+                        .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4254,17 +4234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
                 try
                 {
-                    if ((rhs.AIPackages != null))
-                    {
-                        item.AIPackages = 
-                            rhs.AIPackages
-                            .Select(r => (IFormLink<AIPackage>)new FormLink<AIPackage>(r.FormKey))
-                            .ToExtendedList<IFormLink<AIPackage>>();
-                    }
-                    else
-                    {
-                        item.AIPackages = null;
-                    }
+                    item.AIPackages.SetTo(
+                        rhs.AIPackages
+                        .Select(r => (IFormLink<AIPackage>)new FormLink<AIPackage>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4622,8 +4594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if ((item.Spells != null)
-                && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
                     node: node,
@@ -4738,8 +4709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.AIData));
                 }
             }
-            if ((item.AIPackages != null)
-                && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                     node: node,
@@ -5103,11 +5073,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Spells = SpellsItem.ToExtendedList();
+                            item.Spells.SetTo(SpellsItem);
                         }
                         else
                         {
-                            item.Spells = null;
+                            item.Spells.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -5279,11 +5249,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.AIPackages = AIPackagesItem.ToExtendedList();
+                            item.AIPackages.SetTo(AIPackagesItem);
                         }
                         else
                         {
-                            item.AIPackages = null;
+                            item.AIPackages.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -5908,7 +5878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<IASpellGetter>>();
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -5935,7 +5905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package) : default;
         public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLinkGetter<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;

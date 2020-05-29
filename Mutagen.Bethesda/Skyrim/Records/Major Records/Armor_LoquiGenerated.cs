@@ -186,15 +186,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ArmorAddon>>? _Armature;
-        public ExtendedList<IFormLink<ArmorAddon>>? Armature
+        private ExtendedList<IFormLink<ArmorAddon>> _Armature = new ExtendedList<IFormLink<ArmorAddon>>();
+        public ExtendedList<IFormLink<ArmorAddon>> Armature
         {
             get => this._Armature;
-            set => this._Armature = value;
+            protected set => this._Armature = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? IArmorGetter.Armature => _Armature;
+        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> IArmorGetter.Armature => _Armature;
         #endregion
 
         #endregion
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<Race> Race { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<IFormLink<ArmorAddon>>? Armature { get; set; }
+        new ExtendedList<IFormLink<ArmorAddon>> Armature { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
@@ -1619,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         TranslatedString? Description { get; }
-        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; }
+        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         Single ArmorRating { get; }
@@ -2453,7 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Race = null;
             item.Keywords = null;
             item.Description = default;
-            item.Armature = null;
+            item.Armature.Clear();
             item.Value = default;
             item.Weight = default;
             item.ArmorRating = default;
@@ -2712,13 +2712,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Armature = 
+                    item.Armature.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ArmorAddon>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Armor_Registration.MODL_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ArmorAddon>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Armature);
                 }
                 case 0x41544144: // DATA
@@ -3013,14 +3012,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
-            if ((printMask?.Armature?.Overall ?? true)
-                && item.Armature.TryGet(out var ArmatureItem))
+            if (printMask?.Armature?.Overall ?? true)
             {
                 fg.AppendLine("Armature =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ArmatureItem)
+                    foreach (var subItem in item.Armature)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -3078,7 +3076,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Armature?.Overall.HasValue ?? false && checkMask.Armature!.Overall.Value != (item.Armature != null)) return false;
             if (checkMask.TemplateArmor.HasValue && checkMask.TemplateArmor.Value != (item.TemplateArmor.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -3111,7 +3108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Race = (item.Race.FormKey != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             mask.Description = (item.Description != null);
-            mask.Armature = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Armature != null), default);
+            mask.Armature = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Value = true;
             mask.Weight = true;
             mask.ArmorRating = true;
@@ -3364,12 +3361,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Armature.TryGet(out var ArmatureItem))
+            foreach (var item in obj.Armature.Select(f => f.FormKey))
             {
-                foreach (var item in ArmatureItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.TemplateArmor.FormKey.TryGet(out var TemplateArmorKey))
             {
@@ -3612,17 +3606,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Armor_FieldIndex.Armature);
                 try
                 {
-                    if ((rhs.Armature != null))
-                    {
-                        item.Armature = 
-                            rhs.Armature
-                            .Select(r => (IFormLink<ArmorAddon>)new FormLink<ArmorAddon>(r.FormKey))
-                            .ToExtendedList<IFormLink<ArmorAddon>>();
-                    }
-                    else
-                    {
-                        item.Armature = null;
-                    }
+                    item.Armature.SetTo(
+                        rhs.Armature
+                        .Select(r => (IFormLink<ArmorAddon>)new FormLink<ArmorAddon>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4004,8 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Armor_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if ((item.Armature != null)
-                && (translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Armature) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Armature) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IArmorAddonGetter>>.Instance.Write(
                     node: node,
@@ -4513,11 +4498,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Armature = ArmatureItem.ToExtendedList();
+                            item.Armature.SetTo(ArmatureItem);
                         }
                         else
                         {
-                            item.Armature = null;
+                            item.Armature.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -5054,7 +5039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta), StringsSource.DL, _package.StringsLookup) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; private set; } = ListExt.Empty<IFormLinkGetter<IArmorAddonGetter>>();
         private int? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value

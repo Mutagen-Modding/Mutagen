@@ -330,15 +330,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Static>>? _SkyStatics;
-        public ExtendedList<IFormLink<Static>>? SkyStatics
+        private ExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
+        public ExtendedList<IFormLink<Static>> SkyStatics
         {
             get => this._SkyStatics;
-            set => this._SkyStatics = value;
+            protected set => this._SkyStatics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IStaticGetter>>? IWeatherGetter.SkyStatics => _SkyStatics;
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
         #endregion
 
         #endregion
@@ -3128,7 +3128,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
         new ExtendedList<WeatherSound> Sounds { get; }
-        new ExtendedList<IFormLink<Static>>? SkyStatics { get; set; }
+        new ExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherAmbientColors? DirectionalAmbientLightingColors { get; set; }
         new Byte[]? Unknown8 { get; set; }
@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single WindDirection { get; }
         Single WindDirectionRange { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
-        IReadOnlyList<IFormLinkGetter<IStaticGetter>>? SkyStatics { get; }
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
         IWeatherAmbientColorsGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? Unknown8 { get; }
@@ -4500,7 +4500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.WindDirection = default;
             item.WindDirectionRange = default;
             item.Sounds.Clear();
-            item.SkyStatics = null;
+            item.SkyStatics.Clear();
             item.ImageSpaces = null;
             item.DirectionalAmbientLightingColors = null;
             item.Unknown8 = default;
@@ -4828,13 +4828,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    item.SkyStatics = 
+                    item.SkyStatics.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Static>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Weather_Registration.TNAM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Static>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
                 }
                 case 0x50534D49: // IMSP
@@ -5334,14 +5333,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.SkyStatics?.Overall ?? true)
-                && item.SkyStatics.TryGet(out var SkyStaticsItem))
+            if (printMask?.SkyStatics?.Overall ?? true)
             {
                 fg.AppendLine("SkyStatics =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in SkyStaticsItem)
+                    foreach (var subItem in item.SkyStatics)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -5403,7 +5401,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Unknown5.HasValue && checkMask.Unknown5.Value != (item.Unknown5 != null)) return false;
             if (checkMask.Precipitation.HasValue && checkMask.Precipitation.Value != (item.Precipitation.FormKey != null)) return false;
             if (checkMask.Unknown6.HasValue && checkMask.Unknown6.Value != (item.Unknown6 != null)) return false;
-            if (checkMask.SkyStatics?.Overall.HasValue ?? false && checkMask.SkyStatics!.Overall.Value != (item.SkyStatics != null)) return false;
             if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
             if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
@@ -5475,7 +5472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.WindDirectionRange = true;
             var SoundsItem = item.Sounds;
             mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SkyStatics != null), default);
+            mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             var itemImageSpaces = item.ImageSpaces;
             mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
             var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
@@ -5758,12 +5755,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.SkyStatics.TryGet(out var SkyStaticsItem))
+            foreach (var item in obj.SkyStatics.Select(f => f.FormKey))
             {
-                foreach (var item in SkyStaticsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.ImageSpaces.TryGet(out var ImageSpacesItems))
             {
@@ -6414,17 +6408,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.SkyStatics);
                 try
                 {
-                    if ((rhs.SkyStatics != null))
-                    {
-                        item.SkyStatics = 
-                            rhs.SkyStatics
-                            .Select(r => (IFormLink<Static>)new FormLink<Static>(r.FormKey))
-                            .ToExtendedList<IFormLink<Static>>();
-                    }
-                    else
-                    {
-                        item.SkyStatics = null;
-                    }
+                    item.SkyStatics.SetTo(
+                        rhs.SkyStatics
+                        .Select(r => (IFormLink<Static>)new FormLink<Static>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7240,8 +7226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if ((item.SkyStatics != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
                     node: node,
@@ -8451,11 +8436,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.SkyStatics = SkyStaticsItem.ToExtendedList();
+                            item.SkyStatics.SetTo(SkyStaticsItem);
                         }
                         else
                         {
-                            item.SkyStatics = null;
+                            item.SkyStatics.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -9609,7 +9594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>>? SkyStatics { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new BinaryMemoryReadStream(_data.Slice(_ImageSpacesLocation!.Value.Min)), _package) : default;

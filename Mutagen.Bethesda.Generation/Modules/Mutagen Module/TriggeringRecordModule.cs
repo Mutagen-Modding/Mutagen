@@ -375,7 +375,15 @@ namespace Mutagen.Bethesda.Generation
                         data.RecordType = subData.RecordType;
                         // Don't actually want it to be marked has been set
                         listType.SubTypeGeneration.HasBeenSetProperty.OnNext((false, true));
+                        listType.HasBeenSetProperty.OnNext((false, true));
                     }
+                }
+                // If has count, mark as has been set
+                var hasCounter = (listType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter)
+                    && counter != null);
+                if (hasCounter)
+                {
+                    listType.HasBeenSetProperty.OnNext((true, true));
                 }
             }
             else if (field is DictType dictType

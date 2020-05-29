@@ -237,15 +237,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypeNames
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _MovementTypeNames;
-        public ExtendedList<String>? MovementTypeNames
+        private ExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
+        public ExtendedList<String> MovementTypeNames
         {
             get => this._MovementTypeNames;
-            set => this._MovementTypeNames = value;
+            protected set => this._MovementTypeNames = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String>? IRaceGetter.MovementTypeNames => _MovementTypeNames;
+        IReadOnlyList<String> IRaceGetter.MovementTypeNames => _MovementTypeNames;
         #endregion
 
         #endregion
@@ -399,15 +399,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<EquipType>>? _EquipmentSlots;
-        public ExtendedList<IFormLink<EquipType>>? EquipmentSlots
+        private ExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
+        public ExtendedList<IFormLink<EquipType>> EquipmentSlots
         {
             get => this._EquipmentSlots;
-            set => this._EquipmentSlots = value;
+            protected set => this._EquipmentSlots = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? IRaceGetter.EquipmentSlots => _EquipmentSlots;
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> IRaceGetter.EquipmentSlots => _EquipmentSlots;
         #endregion
 
         #endregion
@@ -4007,7 +4007,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngularTolerance { get; set; }
         new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new ExtendedList<String>? MovementTypeNames { get; set; }
+        new ExtendedList<String> MovementTypeNames { get; }
         new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
         new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
         new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
@@ -4029,7 +4029,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
         new ExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
-        new ExtendedList<IFormLink<EquipType>>? EquipmentSlots { get; set; }
+        new ExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
         new FormLinkNullable<EquipType> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultWalk { get; set; }
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AngularTolerance { get; }
         IMountDataGetter MountData { get; }
         IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel { get; }
-        IReadOnlyList<String>? MovementTypeNames { get; }
+        IReadOnlyList<String> MovementTypeNames { get; }
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; }
         IGenderedItemGetter<IFormLinkGetter<IArmorGetter>>? DecapitateArmors { get; }
         IGenderedItemGetter<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; }
@@ -4134,7 +4134,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyDictionary<BipedObject, String> BipedObjectNames { get; }
         IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; }
         EquipTypeFlag? EquipmentFlags { get; }
-        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? EquipmentSlots { get; }
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot { get; }
         IFaceFxPhonemesGetter FaceFxPhonemes { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk { get; }
@@ -5571,7 +5571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AngularTolerance = default;
             item.MountData.Clear();
             item.SkeletalModel = null;
-            item.MovementTypeNames = null;
+            item.MovementTypeNames.Clear();
             item.Voices.Male = new FormLink<VoiceType>(FormKey.Null);
             item.Voices.Female = new FormLink<VoiceType>(FormKey.Null);
             item.DecapitateArmors = null;
@@ -5596,7 +5596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BipedObjectNames.Clear();
             item.MovementTypes.Clear();
             item.EquipmentFlags = default;
-            item.EquipmentSlots = null;
+            item.EquipmentSlots.Clear();
             item.UnarmedEquipSlot = null;
             item.FaceFxPhonemes.Clear();
             item.BaseMovementDefaultWalk = null;
@@ -5848,7 +5848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D4E544D: // MTNM
                 {
-                    item.MovementTypeNames = 
+                    item.MovementTypeNames.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.MTNM_HEADER,
@@ -5858,8 +5858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     r,
                                     item: out listSubItem,
                                     parseWhole: true);
-                            })
-                        .ToExtendedList<String>();
+                            }));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
                 }
                 case 0x4B435456: // VTCK
@@ -6051,13 +6050,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    item.EquipmentSlots = 
+                    item.EquipmentSlots.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Race_Registration.QNAM_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<EquipType>>();
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
                 }
                 case 0x53454E55: // UNES
@@ -6614,14 +6612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 SkeletalModelItem?.ToString(fg, "SkeletalModel");
             }
-            if ((printMask?.MovementTypeNames?.Overall ?? true)
-                && item.MovementTypeNames.TryGet(out var MovementTypeNamesItem))
+            if (printMask?.MovementTypeNames?.Overall ?? true)
             {
                 fg.AppendLine("MovementTypeNames =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in MovementTypeNamesItem)
+                    foreach (var subItem in item.MovementTypeNames)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -6802,14 +6799,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EquipmentFlagsItem, "EquipmentFlags");
             }
-            if ((printMask?.EquipmentSlots?.Overall ?? true)
-                && item.EquipmentSlots.TryGet(out var EquipmentSlotsItem))
+            if (printMask?.EquipmentSlots?.Overall ?? true)
             {
                 fg.AppendLine("EquipmentSlots =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in EquipmentSlotsItem)
+                    foreach (var subItem in item.EquipmentSlots)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -6884,7 +6880,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Starting?.Overall.HasValue ?? false) return false;
             if (checkMask.Regen?.Overall.HasValue ?? false) return false;
             if (checkMask.SkeletalModel?.Overall ?? false) return false;
-            if (checkMask.MovementTypeNames?.Overall.HasValue ?? false && checkMask.MovementTypeNames!.Overall.Value != (item.MovementTypeNames != null)) return false;
             if (checkMask.DecapitateArmors?.Overall ?? false) return false;
             if (checkMask.DefaultHairColors?.Overall ?? false) return false;
             if (checkMask.NumberOfTintsInList.HasValue && checkMask.NumberOfTintsInList.Value != (item.NumberOfTintsInList != null)) return false;
@@ -6901,7 +6896,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.CloseLootSound.HasValue && checkMask.CloseLootSound.Value != (item.CloseLootSound.FormKey != null)) return false;
             if (checkMask.BipedObjectNames?.Overall.HasValue ?? false) return false;
             if (checkMask.EquipmentFlags.HasValue && checkMask.EquipmentFlags.Value != (item.EquipmentFlags != null)) return false;
-            if (checkMask.EquipmentSlots?.Overall.HasValue ?? false && checkMask.EquipmentSlots!.Overall.Value != (item.EquipmentSlots != null)) return false;
             if (checkMask.UnarmedEquipSlot.HasValue && checkMask.UnarmedEquipSlot.Value != (item.UnarmedEquipSlot.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultWalk.HasValue && checkMask.BaseMovementDefaultWalk.Value != (item.BaseMovementDefaultWalk.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultRun.HasValue && checkMask.BaseMovementDefaultRun.Value != (item.BaseMovementDefaultRun.FormKey != null)) return false;
@@ -6959,7 +6953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.SkeletalModel = GenderedItem.HasBeenSetMaskHelper(
                 item.SkeletalModel,
                 (i) => i?.GetHasBeenSetMask());
-            mask.MovementTypeNames = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.MovementTypeNames != null), default);
+            mask.MovementTypeNames = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Voices = new GenderedItem<bool>(true, true);
             mask.DecapitateArmors = item.DecapitateArmors == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.DefaultHairColors = item.DefaultHairColors == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
@@ -6987,7 +6981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var MovementTypesItem = item.MovementTypes;
             mask.MovementTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceMovementType.Mask<bool>?>>?>(true, MovementTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceMovementType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.EquipmentFlags = (item.EquipmentFlags != null);
-            mask.EquipmentSlots = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.EquipmentSlots != null), default);
+            mask.EquipmentSlots = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.UnarmedEquipSlot = (item.UnarmedEquipSlot.FormKey != null);
             mask.FaceFxPhonemes = new MaskItem<bool, FaceFxPhonemes.Mask<bool>?>(true, item.FaceFxPhonemes?.GetHasBeenSetMask());
             mask.BaseMovementDefaultWalk = (item.BaseMovementDefaultWalk.FormKey != null);
@@ -7381,12 +7375,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.EquipmentSlots.TryGet(out var EquipmentSlotsItem))
+            foreach (var item in obj.EquipmentSlots.Select(f => f.FormKey))
             {
-                foreach (var item in EquipmentSlotsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.UnarmedEquipSlot.FormKey.TryGet(out var UnarmedEquipSlotKey))
             {
@@ -7862,16 +7853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
                 try
                 {
-                    if ((rhs.MovementTypeNames != null))
-                    {
-                        item.MovementTypeNames = 
-                            rhs.MovementTypeNames
-                            .ToExtendedList<String>();
-                    }
-                    else
-                    {
-                        item.MovementTypeNames = null;
-                    }
+                    item.MovementTypeNames.SetTo(rhs.MovementTypeNames);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8088,17 +8070,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.EquipmentSlots);
                 try
                 {
-                    if ((rhs.EquipmentSlots != null))
-                    {
-                        item.EquipmentSlots = 
-                            rhs.EquipmentSlots
-                            .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey))
-                            .ToExtendedList<IFormLink<EquipType>>();
-                    }
-                    else
-                    {
-                        item.EquipmentSlots = null;
-                    }
+                    item.EquipmentSlots.SetTo(
+                        rhs.EquipmentSlots
+                        .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8770,8 +8744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            if ((item.MovementTypeNames != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
                 ListXmlTranslation<String>.Instance.Write(
                     node: node,
@@ -9105,8 +9078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.EquipmentFlags,
                     errorMask: errorMask);
             }
-            if ((item.EquipmentSlots != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
                     node: node,
@@ -10052,11 +10024,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.MovementTypeNames = MovementTypeNamesItem.ToExtendedList();
+                            item.MovementTypeNames.SetTo(MovementTypeNamesItem);
                         }
                         else
                         {
-                            item.MovementTypeNames = null;
+                            item.MovementTypeNames.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -10514,11 +10486,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.EquipmentSlots = EquipmentSlotsItem.ToExtendedList();
+                            item.EquipmentSlots.SetTo(EquipmentSlotsItem);
                         }
                         else
                         {
-                            item.EquipmentSlots = null;
+                            item.EquipmentSlots.Clear();
                         }
                     }
                     catch (Exception ex)
@@ -11706,7 +11678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
         public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
         #endregion
-        public IReadOnlyList<String>? MovementTypeNames { get; private set; }
+        public IReadOnlyList<String> MovementTypeNames { get; private set; } = ListExt.Empty<String>();
         #region Voices
         private int? _VoicesLocation;
         public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
@@ -11817,7 +11789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _EquipmentFlagsLocation;
         public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentFlagsLocation!.Value, _package.Meta)) : default(EquipTypeFlag?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? EquipmentSlots { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = ListExt.Empty<IFormLinkGetter<IEquipTypeGetter>>();
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
         public bool UnarmedEquipSlot_IsSet => _UnarmedEquipSlotLocation.HasValue;
