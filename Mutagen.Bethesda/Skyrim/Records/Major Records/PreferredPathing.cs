@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
                     locs[i] = loc;
                     loc += len;
                 }
-                this.NavmeshSets = BinaryOverlaySetList<INavmeshSetGetter>.FactoryByArray(
+                this.NavmeshSets = BinaryOverlayList<INavmeshSetGetter>.FactoryByArray(
                     this._data.Slice(4),
                     this._package,
                     (s, p) => NavmeshSetBinaryOverlay.NavmeshSetFactory(s, p),

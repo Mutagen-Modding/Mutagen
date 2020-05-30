@@ -2607,7 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IAItemGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlayList<LeveledEntryBinaryOverlay<IAItemGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

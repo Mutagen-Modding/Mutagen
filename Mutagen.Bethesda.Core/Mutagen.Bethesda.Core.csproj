@@ -91,7 +91,7 @@
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
+    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayList.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
     <Compile Include="Records\AGroup.cs" />

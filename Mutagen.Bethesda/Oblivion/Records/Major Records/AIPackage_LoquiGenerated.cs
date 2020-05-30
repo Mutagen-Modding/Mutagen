@@ -2889,7 +2889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
+                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

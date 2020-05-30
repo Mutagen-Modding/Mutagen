@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52504158: // XAPR
                 {
-                    this.Parents = BinaryOverlaySetList<ActivateParentBinaryOverlay>.FactoryByArray(
+                    this.Parents = BinaryOverlayList<ActivateParentBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

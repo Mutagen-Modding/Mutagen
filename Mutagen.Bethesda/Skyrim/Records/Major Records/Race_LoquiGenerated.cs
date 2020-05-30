@@ -11896,7 +11896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subLen = checked((int)((4 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
+                    this.ActorEffect = BinaryOverlayList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -11921,7 +11921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -11954,7 +11954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D4E544D: // MTNM
                 {
-                    this.MovementTypeNames = BinaryOverlaySetList<String>.FactoryByArray(
+                    this.MovementTypeNames = BinaryOverlayList<String>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content),
@@ -12028,7 +12028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Hairs = BinaryOverlaySetList<IFormLinkGetter<IHairGetter>>.FactoryByStartIndex(
+                    this.Hairs = BinaryOverlayList<IFormLinkGetter<IHairGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -12040,7 +12040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyesGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlayList<IFormLinkGetter<IEyesGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -12115,7 +12115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    this.EquipmentSlots = BinaryOverlaySetList<IFormLinkGetter<IEquipTypeGetter>>.FactoryByArray(
+                    this.EquipmentSlots = BinaryOverlayList<IFormLinkGetter<IEquipTypeGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

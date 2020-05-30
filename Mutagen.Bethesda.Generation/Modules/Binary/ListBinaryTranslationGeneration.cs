@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     case ListBinaryType.PrependCount 
                     when !data.HasTrigger && expLen.HasValue:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                     default:
                         fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
@@ -541,10 +541,10 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.CounterRecord:
                         throw new NotImplementedException();
                     case ListBinaryType.PrependCount:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                     default:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                 }
             }
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                                $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Generation
                     else if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Generation
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByStartIndex"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByStartIndex"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByLazyParse"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByLazyParse"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Generation
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Generation
                             throw new NotImplementedException();
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
+                        $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount"))
                     {
                         args.AddPassArg($"stream");
                         args.Add($"package: _package");

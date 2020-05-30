@@ -3022,7 +3022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F544E43: // CNTO
                 {
-                    this.Items = BinaryOverlaySetList<ContainerItemBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList<ContainerItemBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

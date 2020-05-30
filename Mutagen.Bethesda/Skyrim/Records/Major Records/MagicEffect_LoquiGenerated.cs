@@ -7327,7 +7327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -7343,7 +7343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x45435345: // ESCE
                 {
-                    this.CounterEffects = BinaryOverlaySetList<IFormLinkGetter<IMagicEffectGetter>>.FactoryByArray(
+                    this.CounterEffects = BinaryOverlayList<IFormLinkGetter<IMagicEffectGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -7360,7 +7360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Sounds = BinaryOverlaySetList<MagicEffectSoundBinaryOverlay>.FactoryByStartIndex(
+                    this.Sounds = BinaryOverlayList<MagicEffectSoundBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

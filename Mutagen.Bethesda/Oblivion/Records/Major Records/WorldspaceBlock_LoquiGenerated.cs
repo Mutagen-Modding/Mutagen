@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x50555247: // GRUP
                 {
-                    this.Items = BinaryOverlaySetList<WorldspaceSubBlockBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList<WorldspaceSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

@@ -2464,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    this.Locations = BinaryOverlaySetList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
+                    this.Locations = BinaryOverlayList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

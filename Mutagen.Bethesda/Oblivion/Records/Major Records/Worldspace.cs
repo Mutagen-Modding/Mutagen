@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryOverlaySetList<IWorldspaceBlockGetter>.FactoryByArray(
+                            this.SubCells = BinaryOverlayList<IWorldspaceBlockGetter>.FactoryByArray(
                                 stream.RemainingMemory,
                                 _package,
                                 getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),

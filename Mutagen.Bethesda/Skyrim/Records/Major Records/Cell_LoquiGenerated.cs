@@ -6708,7 +6708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlaySetList<IFormLinkGetter<IRegionGetter>>.FactoryByStartIndex(
+                    this.Regions = BinaryOverlayList<IFormLinkGetter<IRegionGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

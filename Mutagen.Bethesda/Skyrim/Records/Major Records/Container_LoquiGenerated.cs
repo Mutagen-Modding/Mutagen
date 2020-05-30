@@ -3575,7 +3575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54434F43: // COCT
                 {
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    this.Items = BinaryOverlaySetList<ContainerEntryBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

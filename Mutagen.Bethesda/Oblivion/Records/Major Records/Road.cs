@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52524750: // "PGRR":
                     stream.Position += subMeta.HeaderLength;
                     var connBytes = stream.ReadMemory(subMeta.ContentLength);
-                    this.Points = BinaryOverlaySetList<IRoadPointGetter>.FactoryByLazyParse(
+                    this.Points = BinaryOverlayList<IRoadPointGetter>.FactoryByLazyParse(
                         pointBytes,
                         _package,
                         getter: (s, p) =>
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         });
                     break;
                 default:
-                    this.Points = BinaryOverlaySetList<IRoadPointGetter>.FactoryByStartIndex(
+                    this.Points = BinaryOverlayList<IRoadPointGetter>.FactoryByStartIndex(
                         pointBytes,
                         _package,
                         itemLength: RoadBinaryCreateTranslation.POINT_LEN,

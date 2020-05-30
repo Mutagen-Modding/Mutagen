@@ -8843,7 +8843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    this.Factions = BinaryOverlaySetList<RankPlacementBinaryOverlay>.FactoryByArray(
+                    this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -8880,7 +8880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subLen = checked((int)((4 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
+                    this.ActorEffect = BinaryOverlayList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -8949,7 +8949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subLen = checked((int)((8 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.Perks = BinaryOverlaySetList<PerkPlacementBinaryOverlay>.FactoryByCount(
+                    this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x8,
@@ -8963,7 +8963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54434F43: // COCT
                 {
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    this.Items = BinaryOverlaySetList<ContainerEntryBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -8983,7 +8983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x44494B50: // PKID
                 {
-                    this.Packages = BinaryOverlaySetList<IFormLinkGetter<IPackageGetter>>.FactoryByArray(
+                    this.Packages = BinaryOverlayList<IFormLinkGetter<IPackageGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -9001,7 +9001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -9039,7 +9039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    this.HeadParts = BinaryOverlaySetList<IFormLinkGetter<IHeadPartGetter>>.FactoryByArray(
+                    this.HeadParts = BinaryOverlayList<IFormLinkGetter<IHeadPartGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

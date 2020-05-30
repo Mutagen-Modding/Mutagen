@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     case 0x52524750: // "PGRR":
                         stream.Position += subMeta.HeaderLength;
                         var connectionPtData = stream.ReadMemory(subMeta.ContentLength);
-                        this.PointToPointConnections = BinaryOverlaySetList<IPathGridPointGetter>.FactoryByLazyParse(
+                        this.PointToPointConnections = BinaryOverlayList<IPathGridPointGetter>.FactoryByLazyParse(
                             pointData,
                             _package,
                             getter: (s, p) =>
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (!readPGRR)
             {
-                this.PointToPointConnections = BinaryOverlaySetList<IPathGridPointGetter>.FactoryByStartIndex(
+                this.PointToPointConnections = BinaryOverlayList<IPathGridPointGetter>.FactoryByStartIndex(
                     pointData,
                     this._package,
                     itemLength: 16,

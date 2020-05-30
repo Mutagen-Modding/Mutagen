@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ItemsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
-            this.Items = BinaryOverlaySetList<CellBinaryOverlay>.FactoryByArray(
+            this.Items = BinaryOverlayList<CellBinaryOverlay>.FactoryByArray(
                 mem: stream.RemainingMemory,
                 package: _package,
                 recordTypeConverter: null,

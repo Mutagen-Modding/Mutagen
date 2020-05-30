@@ -2895,7 +2895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54434C4C: // LLCT
                 {
                     var count = _package.MetaData.Constants.ReadSubrecordFrame(stream).Content[0];
-                    this.Entries = BinaryOverlaySetList<LeveledNpcEntryBinaryOverlay>.FactoryByArray(
+                    this.Entries = BinaryOverlayList<LeveledNpcEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

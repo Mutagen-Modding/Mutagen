@@ -2800,7 +2800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.SpeedTreeSeeds = BinaryOverlaySetList<UInt32>.FactoryByStartIndex(
+                    this.SpeedTreeSeeds = BinaryOverlayList<UInt32>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

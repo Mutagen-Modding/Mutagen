@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Grasses = BinaryOverlaySetList<RegionGrassBinaryOverlay>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlayList<RegionGrassBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

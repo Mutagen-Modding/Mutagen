@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
                             {
                                 this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryOverlaySetList<IPlacedGetter>.FactoryByArray(
+                                this.Persistent = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                     stream.Position += (int)majorMeta.TotalLength;
                                 }
-                                this.Temporary = BinaryOverlaySetList<IPlacedGetter>.FactoryByArray(
+                                this.Temporary = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,

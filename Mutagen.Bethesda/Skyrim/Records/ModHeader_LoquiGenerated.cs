@@ -3611,7 +3611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.OverriddenForms = BinaryOverlaySetList<IFormLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
+                    this.OverriddenForms = BinaryOverlayList<IFormLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

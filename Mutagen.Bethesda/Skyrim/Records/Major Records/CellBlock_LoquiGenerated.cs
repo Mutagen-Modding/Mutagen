@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x50555247: // GRUP
                 {
-                    this.SubBlocks = BinaryOverlaySetList<CellSubBlockBinaryOverlay>.FactoryByArray(
+                    this.SubBlocks = BinaryOverlayList<CellSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

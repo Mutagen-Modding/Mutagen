@@ -2914,7 +2914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x49545351: // QSTI
                 {
-                    this.Quests = BinaryOverlaySetList<IFormLinkGetter<IQuestGetter>>.FactoryByArray(
+                    this.Quests = BinaryOverlayList<IFormLinkGetter<IQuestGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IQuestGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x494D564E: // NVMI
                 {
-                    this.MapInfos = BinaryOverlaySetList<NavigationMapInfoBinaryOverlay>.FactoryByArray(
+                    this.MapInfos = BinaryOverlayList<NavigationMapInfoBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

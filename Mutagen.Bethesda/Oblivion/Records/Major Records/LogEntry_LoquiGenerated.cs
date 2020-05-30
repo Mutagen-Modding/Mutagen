@@ -2450,7 +2450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
+                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

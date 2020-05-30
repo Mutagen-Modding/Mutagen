@@ -3420,7 +3420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.WeatherTypes = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
+                    this.WeatherTypes = BinaryOverlayList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

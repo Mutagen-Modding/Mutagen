@@ -2314,8 +2314,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public P3Float Min => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public P3Float Max => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
-        public IReadOnlyList<P3Int16> Triangles => BinaryOverlaySetList<P3Int16>.FactoryByCountLength(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlaySetList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList<P3Int16>.FactoryByCountLength(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         private int TrianglesEndingPos;
         private int VerticesEndingPos;
         partial void CustomCtor(

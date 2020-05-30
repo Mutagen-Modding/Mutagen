@@ -4422,7 +4422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,

@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlaySetList<IFormLinkGetter<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList<IFormLinkGetter<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         private int NavmeshesEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,

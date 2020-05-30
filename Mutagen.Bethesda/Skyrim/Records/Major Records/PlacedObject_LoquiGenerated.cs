@@ -10329,7 +10329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Portals = BinaryOverlaySetList<PortalBinaryOverlay>.FactoryByStartIndex(
+                    this.Portals = BinaryOverlayList<PortalBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -10375,7 +10375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52575058: // XPWR
                 {
-                    this.Reflections = BinaryOverlaySetList<WaterReflectionBinaryOverlay>.FactoryByArray(
+                    this.Reflections = BinaryOverlayList<WaterReflectionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -10390,7 +10390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x57544C58: // XLTW
                 {
-                    this.LitWater = BinaryOverlaySetList<IFormLinkGetter<IPlacedObjectGetter>>.FactoryByArray(
+                    this.LitWater = BinaryOverlayList<IFormLinkGetter<IPlacedObjectGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -10525,7 +10525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.LocationRefTypes = BinaryOverlaySetList<IFormLinkGetter<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
+                    this.LocationRefTypes = BinaryOverlayList<IFormLinkGetter<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -10569,7 +10569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x524B4C58: // XLKR
                 {
-                    this.LinkedReferences = BinaryOverlaySetList<LinkedReferencesBinaryOverlay>.FactoryByArray(
+                    this.LinkedReferences = BinaryOverlayList<LinkedReferencesBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

@@ -9781,7 +9781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    this.Sounds = BinaryOverlaySetList<WeatherSoundBinaryOverlay>.FactoryByArray(
+                    this.Sounds = BinaryOverlayList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -9796,7 +9796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    this.SkyStatics = BinaryOverlaySetList<IFormLinkGetter<IStaticGetter>>.FactoryByArray(
+                    this.SkyStatics = BinaryOverlayList<IFormLinkGetter<IStaticGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

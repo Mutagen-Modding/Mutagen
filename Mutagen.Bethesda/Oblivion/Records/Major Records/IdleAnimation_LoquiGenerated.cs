@@ -2765,7 +2765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
+                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdleAnimations = BinaryOverlaySetList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
+                    this.RelatedIdleAnimations = BinaryOverlayList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

@@ -2921,7 +2921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.InterCellConnections = BinaryOverlaySetList<InterCellPointBinaryOverlay>.FactoryByStartIndex(
+                    this.InterCellConnections = BinaryOverlayList<InterCellPointBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -2931,7 +2931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C524750: // PGRL
                 {
-                    this.PointToReferenceMappings = BinaryOverlaySetList<PointToReferenceMappingBinaryOverlay>.FactoryByArray(
+                    this.PointToReferenceMappings = BinaryOverlayList<PointToReferenceMappingBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

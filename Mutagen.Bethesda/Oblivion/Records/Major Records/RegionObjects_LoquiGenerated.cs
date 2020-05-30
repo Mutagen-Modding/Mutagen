@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Objects = BinaryOverlaySetList<RegionObjectBinaryOverlay>.FactoryByStartIndex(
+                    this.Objects = BinaryOverlayList<RegionObjectBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 52,

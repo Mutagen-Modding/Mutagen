@@ -4941,7 +4941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52575058: // XPWR
                 {
-                    this.Reflections = BinaryOverlaySetList<WaterReflectionBinaryOverlay>.FactoryByArray(
+                    this.Reflections = BinaryOverlayList<WaterReflectionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -4956,7 +4956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x524B4C58: // XLKR
                 {
-                    this.LinkedReferences = BinaryOverlaySetList<LinkedReferencesBinaryOverlay>.FactoryByArray(
+                    this.LinkedReferences = BinaryOverlayList<LinkedReferencesBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -5001,7 +5001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.LocationRefTypes = BinaryOverlaySetList<IFormLinkGetter<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
+                    this.LocationRefTypes = BinaryOverlayList<IFormLinkGetter<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5018,7 +5018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.DistantLodData = BinaryOverlaySetList<Single>.FactoryByStartIndex(
+                    this.DistantLodData = BinaryOverlayList<Single>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

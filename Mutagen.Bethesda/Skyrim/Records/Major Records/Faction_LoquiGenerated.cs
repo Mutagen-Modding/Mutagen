@@ -4429,7 +4429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    this.Relations = BinaryOverlaySetList<RelationBinaryOverlay>.FactoryByArray(
+                    this.Relations = BinaryOverlayList<RelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

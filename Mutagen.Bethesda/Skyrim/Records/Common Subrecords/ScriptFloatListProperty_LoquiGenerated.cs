@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<Single> Data => BinaryOverlaySetList<Single>.FactoryByStartIndex(_data, _package, 4, (s, p) => SpanExt.GetFloat(s));
+        public IReadOnlyList<Single> Data => BinaryOverlayList<Single>.FactoryByStartIndex(_data, _package, 4, (s, p) => SpanExt.GetFloat(s));
         private int DataEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,

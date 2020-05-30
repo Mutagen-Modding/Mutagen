@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.RegionPoints = BinaryOverlaySetList<P2Float>.FactoryByStartIndex(
+                    this.RegionPoints = BinaryOverlayList<P2Float>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

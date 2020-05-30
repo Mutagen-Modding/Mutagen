@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlayList<IFormLinkGetter<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

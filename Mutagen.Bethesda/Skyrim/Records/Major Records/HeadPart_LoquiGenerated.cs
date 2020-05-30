@@ -3353,7 +3353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    this.ExtraParts = BinaryOverlaySetList<IFormLinkGetter<IHeadPartGetter>>.FactoryByArray(
+                    this.ExtraParts = BinaryOverlayList<IFormLinkGetter<IHeadPartGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

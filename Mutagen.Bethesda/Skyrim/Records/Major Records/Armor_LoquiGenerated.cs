@@ -5191,7 +5191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 0x4,
@@ -5207,7 +5207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Armature = BinaryOverlaySetList<IFormLinkGetter<IArmorAddonGetter>>.FactoryByArray(
+                    this.Armature = BinaryOverlayList<IFormLinkGetter<IArmorAddonGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IArmorAddonGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

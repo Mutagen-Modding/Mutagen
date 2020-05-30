@@ -3377,7 +3377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Colors = BinaryOverlaySetList<WeatherColorsBinaryOverlay>.FactoryByStartIndex(
+                    this.Colors = BinaryOverlayList<WeatherColorsBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -3402,7 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    this.Sounds = BinaryOverlaySetList<WeatherSoundBinaryOverlay>.FactoryByArray(
+                    this.Sounds = BinaryOverlayList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

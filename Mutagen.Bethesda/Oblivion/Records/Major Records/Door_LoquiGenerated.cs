@@ -3090,7 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    this.RandomTeleportDestinations = BinaryOverlaySetList<IFormLinkGetter<IPlaceGetter>>.FactoryByArray(
+                    this.RandomTeleportDestinations = BinaryOverlayList<IFormLinkGetter<IPlaceGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

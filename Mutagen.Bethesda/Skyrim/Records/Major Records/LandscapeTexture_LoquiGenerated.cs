@@ -2855,7 +2855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    this.Grasses = BinaryOverlaySetList<IFormLinkGetter<IGrassGetter>>.FactoryByArray(
+                    this.Grasses = BinaryOverlayList<IFormLinkGetter<IGrassGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

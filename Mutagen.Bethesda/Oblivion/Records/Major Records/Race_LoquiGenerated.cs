@@ -4914,7 +4914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryOverlaySetList<IFormLinkGetter<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlayList<IFormLinkGetter<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4929,7 +4929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    this.Relations = BinaryOverlaySetList<RaceRelationBinaryOverlay>.FactoryByArray(
+                    this.Relations = BinaryOverlayList<RaceRelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -5003,7 +5003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Hairs = BinaryOverlaySetList<IFormLinkGetter<IHairGetter>>.FactoryByStartIndex(
+                    this.Hairs = BinaryOverlayList<IFormLinkGetter<IHairGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5015,7 +5015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlayList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
