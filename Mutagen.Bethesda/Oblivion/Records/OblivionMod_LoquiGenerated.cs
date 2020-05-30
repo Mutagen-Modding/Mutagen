@@ -7272,9 +7272,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey)
         {
             var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
+            var bundle = new WritingBundle(GameConstants.Oblivion);
+            bundle.MasterReferences = masterRefs;
             OblivionModBinaryWriteTranslation.WriteModHeader(
                 item,
-                new MutagenWriter(stream, GameConstants.Oblivion, masterRefs),
+                new MutagenWriter(stream, bundle),
                 modKey);
             Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
@@ -7353,6 +7355,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
+            var bundle = new WritingBundle(GameConstants.Oblivion)
+            {
+                MasterReferences = masters
+            };
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
             {
                 stream.Position += 8;
@@ -7362,7 +7368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                using (var stream = new MutagenWriter(trib, GameConstants.Oblivion, masters, dispose: false))
+                using (var stream = new MutagenWriter(trib, bundle, dispose: false))
                 {
                     foreach (var item in cutItems)
                     {
@@ -12484,7 +12490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
-            writer.MasterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
+            writer.MetaData.MasterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -12551,11 +12557,14 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
+            var bundle = new WritingBundle(item.GameMode)
+            {
+            };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
                 memStream,
-                dispose: false,
-                meta: GameConstants.Get(item.GameMode)))
+                bundle,
+                dispose: false))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(
                     item: item,
@@ -12579,7 +12588,10 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask? importMask = null)
         {
             var modKey = item.ModKey;
-            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
+            using (var writer = new MutagenWriter(
+                stream: stream,
+                new WritingBundle(item.GameMode),
+                dispose: false))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(
                     item: item,

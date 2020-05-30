@@ -263,7 +263,15 @@ namespace Mutagen.Bethesda.Generation
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             fg.AppendLine("var modKey = item.ModKey;");
-            fg.AppendLine("using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))");
+            using (var args = new ArgsWrapper(fg,
+                $"using (var writer = new MutagenWriter",
+                suffixLine: ")",
+                semiColon: false))
+            {
+                args.AddPassArg("stream");
+                args.Add($"new {nameof(WritingBundle)}(item.GameMode)");
+                args.Add("dispose: false");
+            }
             using (new BraceWrapper(fg))
             {
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
@@ -1024,6 +1032,14 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
                 fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
+            fg.AppendLine($"var bundle = new {nameof(WritingBundle)}(item.GameMode)");
+            using (var prop = new PropertyCtorWrapper(fg))
+            {
+                if (obj.GetObjectData().UsesStringFiles)
+                {
+                    prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
+                }
+            }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
                 $"using (var writer = new MutagenWriter",
@@ -1033,12 +1049,8 @@ namespace Mutagen.Bethesda.Generation
             })
             {
                 args.Add("memStream");
+                args.Add("bundle");
                 args.Add("dispose: false");
-                if (obj.GetObjectData().UsesStringFiles)
-                {
-                    args.AddPassArg("stringsWriter");
-                }
-                args.Add($"meta: {nameof(GameConstants)}.{nameof(GameConstants.Get)}(item.GameMode)");
             }
             using (new BraceWrapper(fg))
             {
@@ -1328,7 +1340,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine("param ??= BinaryWriteParameters.Default;");
-                    fg.AppendLine($"writer.MasterReferences = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ConstructWriteMasters)}(item, param);");
+                    fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.MasterReferences)} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ConstructWriteMasters)}(item, param);");
                 }
                 if (HasEmbeddedFields(obj))
                 {

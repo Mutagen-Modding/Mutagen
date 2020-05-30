@@ -404,11 +404,13 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);");
+                fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({nameof(GameConstants)}.{obj.GetObjectData().GameMode});");
+                fg.AppendLine($"bundle.{nameof(WritingBundle.MasterReferences)} = masterRefs;");
                 using (var args = new ArgsWrapper(fg,
                     $"{obj.ObjectName}BinaryWriteTranslation.WriteModHeader"))
                 {
                     args.Add("item");
-                    args.Add($"new MutagenWriter(stream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masterRefs)");
+                    args.Add($"new MutagenWriter(stream, bundle)");
                     args.Add("modKey");
                 }
 
@@ -477,6 +479,15 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"byte[] groupBytes = new byte[{nameof(GameConstants)}.{obj.GetObjectData().GameMode}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
+                    fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({nameof(GameConstants)}.{obj.GetObjectData().GameMode})");
+                    using (var prop = new PropertyCtorWrapper(fg))
+                    {
+                        prop.Add($"{nameof(WritingBundle.MasterReferences)} = masters");
+                        if (objData.UsesStringFiles)
+                        {
+                            prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
+                        }
+                    }
                     fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, dispose: false))");
                     using (new BraceWrapper(fg))
                     {
@@ -488,7 +499,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
-                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, {nameof(GameConstants)}.{obj.GetObjectData().GameMode}, masters, {(objData.UsesStringFiles ? "stringsWriter, " : null)}dispose: false))");
+                        fg.AppendLine($"using (var stream = new MutagenWriter(trib, bundle, dispose: false))");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine($"foreach (var item in cutItems)");

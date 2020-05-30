@@ -60,6 +60,7 @@
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Streams\WritingBundle.cs" />
     <Compile Include="Streams\ParsingBundle.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />
     <Compile Include="String Lookup\ITranslatedString.cs" />
@@ -171,7 +172,7 @@
     <Compile Include="Translations\Binary\Fields\LoquiBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\ModKeyBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\MutagenFrame.cs" />
-    <Compile Include="Translations\Binary\MutagenWriter.cs" />
+    <Compile Include="Streams\MutagenWriter.cs" />
     <Compile Include="Translations\Binary\Fields\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\P3Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\P2Int16BinaryTranslation.cs" />

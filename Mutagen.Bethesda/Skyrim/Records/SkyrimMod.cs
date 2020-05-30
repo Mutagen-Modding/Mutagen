@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-                modHeader.MasterReferences.SetTo(writer.MasterReferences!.Masters.Select(m => m.DeepCopy()));
+                modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
                 modHeader.WriteToBinary(writer);
             }
         }

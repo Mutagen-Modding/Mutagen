@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryAssociatedItemCustom(MutagenWriter writer, IMagicEffectGetter item)
             {
-                writer.Write(writer.MasterReferences!.GetFormID(item.Archetype.AssociationKey).Raw);
+                writer.Write(writer.MetaData.MasterReferences!.GetFormID(item.Archetype.AssociationKey).Raw);
             }
         }
 

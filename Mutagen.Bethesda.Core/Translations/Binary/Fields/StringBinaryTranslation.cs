@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Binary
         {
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
-                if (writer.StringsWriter == null)
+                if (writer.MetaData.StringsWriter == null)
                 {
                     writer.Write(
                         item.String,
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    writer.Write(writer.StringsWriter.Register(item, source));
+                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Binary
             if (item == null) return;
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
-                if (writer.StringsWriter == null)
+                if (writer.MetaData.StringsWriter == null)
                 {
                     writer.Write(
                         item.String,
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    writer.Write(writer.StringsWriter.Register(item, source));
+                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
                 }
             }
         }

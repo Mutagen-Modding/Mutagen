@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(record.TypeInt);
             var sizePosition = writer.Position;
-            writer.Write(UtilityTranslation.Zeros.Slice(0, writer.Meta.Constants(type).LengthLength));
-            return new HeaderExport(writer, sizePosition, writer.Meta.Constants(type));
+            writer.Write(UtilityTranslation.Zeros.Slice(0, writer.MetaData.Constants.Constants(type).LengthLength));
+            return new HeaderExport(writer, sizePosition, writer.MetaData.Constants.Constants(type));
         }
 
         /// <summary>

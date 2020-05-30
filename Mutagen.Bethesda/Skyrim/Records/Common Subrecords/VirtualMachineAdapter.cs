@@ -130,10 +130,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 case 2:
                                     writer.Write(obj.Unused);
                                     writer.Write(obj.Alias);
-                                    writer.Write(writer.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
                                     break;
                                 case 1:
-                                    writer.Write(writer.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
                                     writer.Write(obj.Alias);
                                     writer.Write(obj.Unused);
                                     break;

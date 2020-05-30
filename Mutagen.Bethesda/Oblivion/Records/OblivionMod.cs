@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
                 modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-                modHeader.MasterReferences.SetTo(writer.MasterReferences!.Masters.Select(m => m.DeepCopy()));
+                modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
                 modHeader.WriteToBinary(writer);
             }
         }
@@ -175,8 +175,12 @@ namespace Mutagen.Bethesda.Oblivion
                 Stream[] streams = new Stream[(cells?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 var groupByteStream = new MemoryStream(groupBytes);
+                var bundle = new WritingBundle(GameConstants.Oblivion)
+                {
+                    MasterReferences = masters
+                };
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, masters, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
                 {
                     stream.Position += 8;
                     CellSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -187,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Parallel.ForEach(cells, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, GameConstants.Oblivion, masters, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
@@ -204,6 +208,10 @@ namespace Mutagen.Bethesda.Oblivion
                 var cache = group.RecordCache;
                 if (cache == null || cache.Count == 0) return;
                 Stream[] streams = new Stream[cache.Count + 1];
+                var bundle = new WritingBundle(GameConstants.Oblivion)
+                {
+                    MasterReferences = masters
+                };
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
@@ -216,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
-                    using (var writer = new MutagenWriter(worldTrib, GameConstants.Oblivion, masters, dispose: false))
+                    using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
                     {
                         using (HeaderExport.ExportHeader(
                             writer: writer,
@@ -246,7 +254,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Stream[] subStreams = new Stream[(subCells?.Count ?? 0) + 1];
 
                     var worldGroupTrib = new MemoryTributary();
-                    var worldGroupWriter = new MutagenWriter(worldGroupTrib, GameConstants.Oblivion, masters, dispose: false);
+                    var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
                     worldGroupWriter.Write(Group_Registration.GRUP_HEADER.TypeInt);
                     worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
@@ -317,11 +325,15 @@ namespace Mutagen.Bethesda.Oblivion
                 Stream[] streamDepositArray)
             {
                 var items = subBlock.Items;
+                var bundle = new WritingBundle(GameConstants.Oblivion)
+                {
+                    MasterReferences = masters
+                };
                 Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, masters, dispose: false))
+                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
                 {
                     stream.Position += 8;
                     WorldspaceSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -332,7 +344,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Parallel.ForEach(items, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, GameConstants.Oblivion, masters, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
