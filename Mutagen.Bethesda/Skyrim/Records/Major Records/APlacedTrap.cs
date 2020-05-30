@@ -1,0 +1,112 @@
+﻿using Mutagen.Bethesda.Binary;
+using Noggog;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class APlacedTrap
+    {
+        [Flags]
+        public enum MajorFlag : uint
+        {
+            TurnOffFire = 0x0000_0080,
+            Persistent = 0x0000_0400,
+            InitiallyDisabled = 0x0000_0800,
+            ReflectedByAutoWater = 0x1000_0000,
+            DontHavokSettle = 0x2000_0000,
+            NoRespawn = 0x4000_0000,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class APlacedTrapBinaryCreateTranslation
+        {
+            static partial void FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
+            {
+                var subRec = frame.ReadSubrecordFrame();
+                if (subRec.Content.Length != 4)
+                {
+                    throw new ArgumentException("Unexpected length");
+                }
+                var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, frame.MetaData.MasterReferences!);
+                switch (item)
+                {
+                    case IPlacedArrow arrow:
+                        arrow.Projectile = form;
+                        break;
+                    case IPlacedBeam beam:
+                        beam.Projectile = form;
+                        break;
+                    case IPlacedFlame flame:
+                        flame.Projectile = form;
+                        break;
+                    case IPlacedCone cone:
+                        cone.Projectile = form;
+                        break;
+                    case IPlacedBarrier barrier:
+                        barrier.Projectile = form;
+                        break;
+                    case IPlacedTrap trap:
+                        trap.Projectile = form;
+                        break;
+                    case IPlacedHazard hazard:
+                        hazard.Hazard = form;
+                        break;
+                    case IPlacedMissile missile:
+                        missile.Projectile = form;
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        public partial class APlacedTrapBinaryWriteTranslation
+        {
+            static partial void WriteBinaryTrapFormCustom(MutagenWriter writer, IAPlacedTrapGetter item)
+            {
+                using var header = HeaderExport.ExportSubrecordHeader(writer, APlacedTrap_Registration.NAME_HEADER);
+                switch (item)
+                {
+                    case IPlacedArrowGetter arrow:
+                        FormKeyBinaryTranslation.Instance.Write(writer, arrow.Projectile.FormKey);
+                        break;
+                    case IPlacedBeamGetter beam:
+                        FormKeyBinaryTranslation.Instance.Write(writer, beam.Projectile.FormKey);
+                        break;
+                    case IPlacedFlameGetter flame:
+                        FormKeyBinaryTranslation.Instance.Write(writer, flame.Projectile.FormKey);
+                        break;
+                    case IPlacedConeGetter cone:
+                        FormKeyBinaryTranslation.Instance.Write(writer, cone.Projectile.FormKey);
+                        break;
+                    case IPlacedBarrierGetter barrier:
+                        FormKeyBinaryTranslation.Instance.Write(writer, barrier.Projectile.FormKey);
+                        break;
+                    case IPlacedTrapGetter trap:
+                        FormKeyBinaryTranslation.Instance.Write(writer, trap.Projectile.FormKey);
+                        break;
+                    case IPlacedHazardGetter hazard:
+                        FormKeyBinaryTranslation.Instance.Write(writer, hazard.Hazard.FormKey);
+                        break;
+                    case IPlacedMissileGetter missile:
+                        FormKeyBinaryTranslation.Instance.Write(writer, missile.Projectile.FormKey);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        public partial class APlacedTrapBinaryOverlay
+        {
+            partial void TrapFormCustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IObjectId</Interface>
     <Interface>INpcSpawn</Interface>
+    <Interface>ILockList</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />

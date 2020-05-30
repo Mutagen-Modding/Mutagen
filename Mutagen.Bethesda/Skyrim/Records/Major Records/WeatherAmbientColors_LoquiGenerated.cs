@@ -15,7 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
+using System.Drawing;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -47,25 +47,32 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Sunrise
-        public AmbientColors Sunrise { get; set; } = new AmbientColors();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmbientColorsGetter IWeatherAmbientColorsGetter.Sunrise => Sunrise;
+        #region Versioning
+        public WeatherAmbientColors.VersioningBreaks Versioning { get; set; } = default;
         #endregion
-        #region Day
-        public AmbientColors Day { get; set; } = new AmbientColors();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmbientColorsGetter IWeatherAmbientColorsGetter.Day => Day;
+        #region DirectionalXPlus
+        public Color DirectionalXPlus { get; set; } = default;
         #endregion
-        #region Sunset
-        public AmbientColors Sunset { get; set; } = new AmbientColors();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmbientColorsGetter IWeatherAmbientColorsGetter.Sunset => Sunset;
+        #region DirectionalXMinus
+        public Color DirectionalXMinus { get; set; } = default;
         #endregion
-        #region Night
-        public AmbientColors Night { get; set; } = new AmbientColors();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmbientColorsGetter IWeatherAmbientColorsGetter.Night => Night;
+        #region DirectionalYPlus
+        public Color DirectionalYPlus { get; set; } = default;
+        #endregion
+        #region DirectionalYMinus
+        public Color DirectionalYMinus { get; set; } = default;
+        #endregion
+        #region DirectionalZPlus
+        public Color DirectionalZPlus { get; set; } = default;
+        #endregion
+        #region DirectionalZMinus
+        public Color DirectionalZMinus { get; set; } = default;
+        #endregion
+        #region Specular
+        public Color Specular { get; set; } = default;
+        #endregion
+        #region Scale
+        public Single Scale { get; set; } = default;
         #endregion
 
         #region To String
@@ -237,22 +244,37 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Sunrise = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
-                this.Day = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
-                this.Sunset = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
-                this.Night = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.Versioning = initialValue;
+                this.DirectionalXPlus = initialValue;
+                this.DirectionalXMinus = initialValue;
+                this.DirectionalYPlus = initialValue;
+                this.DirectionalYMinus = initialValue;
+                this.DirectionalZPlus = initialValue;
+                this.DirectionalZMinus = initialValue;
+                this.Specular = initialValue;
+                this.Scale = initialValue;
             }
 
             public Mask(
-                TItem Sunrise,
-                TItem Day,
-                TItem Sunset,
-                TItem Night)
+                TItem Versioning,
+                TItem DirectionalXPlus,
+                TItem DirectionalXMinus,
+                TItem DirectionalYPlus,
+                TItem DirectionalYMinus,
+                TItem DirectionalZPlus,
+                TItem DirectionalZMinus,
+                TItem Specular,
+                TItem Scale)
             {
-                this.Sunrise = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Sunrise, new AmbientColors.Mask<TItem>(Sunrise));
-                this.Day = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Day, new AmbientColors.Mask<TItem>(Day));
-                this.Sunset = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Sunset, new AmbientColors.Mask<TItem>(Sunset));
-                this.Night = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Night, new AmbientColors.Mask<TItem>(Night));
+                this.Versioning = Versioning;
+                this.DirectionalXPlus = DirectionalXPlus;
+                this.DirectionalXMinus = DirectionalXMinus;
+                this.DirectionalYPlus = DirectionalYPlus;
+                this.DirectionalYMinus = DirectionalYMinus;
+                this.DirectionalZPlus = DirectionalZPlus;
+                this.DirectionalZMinus = DirectionalZMinus;
+                this.Specular = Specular;
+                this.Scale = Scale;
             }
 
             #pragma warning disable CS8618
@@ -264,10 +286,15 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Sunrise { get; set; }
-            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Day { get; set; }
-            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Sunset { get; set; }
-            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Night { get; set; }
+            public TItem Versioning;
+            public TItem DirectionalXPlus;
+            public TItem DirectionalXMinus;
+            public TItem DirectionalYPlus;
+            public TItem DirectionalYMinus;
+            public TItem DirectionalZPlus;
+            public TItem DirectionalZMinus;
+            public TItem Specular;
+            public TItem Scale;
             #endregion
 
             #region Equals
@@ -280,19 +307,29 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Sunrise, rhs.Sunrise)) return false;
-                if (!object.Equals(this.Day, rhs.Day)) return false;
-                if (!object.Equals(this.Sunset, rhs.Sunset)) return false;
-                if (!object.Equals(this.Night, rhs.Night)) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
+                if (!object.Equals(this.DirectionalXPlus, rhs.DirectionalXPlus)) return false;
+                if (!object.Equals(this.DirectionalXMinus, rhs.DirectionalXMinus)) return false;
+                if (!object.Equals(this.DirectionalYPlus, rhs.DirectionalYPlus)) return false;
+                if (!object.Equals(this.DirectionalYMinus, rhs.DirectionalYMinus)) return false;
+                if (!object.Equals(this.DirectionalZPlus, rhs.DirectionalZPlus)) return false;
+                if (!object.Equals(this.DirectionalZMinus, rhs.DirectionalZMinus)) return false;
+                if (!object.Equals(this.Specular, rhs.Specular)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Sunrise);
-                hash.Add(this.Day);
-                hash.Add(this.Sunset);
-                hash.Add(this.Night);
+                hash.Add(this.Versioning);
+                hash.Add(this.DirectionalXPlus);
+                hash.Add(this.DirectionalXMinus);
+                hash.Add(this.DirectionalYPlus);
+                hash.Add(this.DirectionalYMinus);
+                hash.Add(this.DirectionalZPlus);
+                hash.Add(this.DirectionalZMinus);
+                hash.Add(this.Specular);
+                hash.Add(this.Scale);
                 return hash.ToHashCode();
             }
 
@@ -301,26 +338,15 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Sunrise != null)
-                {
-                    if (!eval(this.Sunrise.Overall)) return false;
-                    if (this.Sunrise.Specific != null && !this.Sunrise.Specific.All(eval)) return false;
-                }
-                if (Day != null)
-                {
-                    if (!eval(this.Day.Overall)) return false;
-                    if (this.Day.Specific != null && !this.Day.Specific.All(eval)) return false;
-                }
-                if (Sunset != null)
-                {
-                    if (!eval(this.Sunset.Overall)) return false;
-                    if (this.Sunset.Specific != null && !this.Sunset.Specific.All(eval)) return false;
-                }
-                if (Night != null)
-                {
-                    if (!eval(this.Night.Overall)) return false;
-                    if (this.Night.Specific != null && !this.Night.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Versioning)) return false;
+                if (!eval(this.DirectionalXPlus)) return false;
+                if (!eval(this.DirectionalXMinus)) return false;
+                if (!eval(this.DirectionalYPlus)) return false;
+                if (!eval(this.DirectionalYMinus)) return false;
+                if (!eval(this.DirectionalZPlus)) return false;
+                if (!eval(this.DirectionalZMinus)) return false;
+                if (!eval(this.Specular)) return false;
+                if (!eval(this.Scale)) return false;
                 return true;
             }
             #endregion
@@ -328,26 +354,15 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Sunrise != null)
-                {
-                    if (eval(this.Sunrise.Overall)) return true;
-                    if (this.Sunrise.Specific != null && this.Sunrise.Specific.Any(eval)) return true;
-                }
-                if (Day != null)
-                {
-                    if (eval(this.Day.Overall)) return true;
-                    if (this.Day.Specific != null && this.Day.Specific.Any(eval)) return true;
-                }
-                if (Sunset != null)
-                {
-                    if (eval(this.Sunset.Overall)) return true;
-                    if (this.Sunset.Specific != null && this.Sunset.Specific.Any(eval)) return true;
-                }
-                if (Night != null)
-                {
-                    if (eval(this.Night.Overall)) return true;
-                    if (this.Night.Specific != null && this.Night.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Versioning)) return true;
+                if (eval(this.DirectionalXPlus)) return true;
+                if (eval(this.DirectionalXMinus)) return true;
+                if (eval(this.DirectionalYPlus)) return true;
+                if (eval(this.DirectionalYMinus)) return true;
+                if (eval(this.DirectionalZPlus)) return true;
+                if (eval(this.DirectionalZMinus)) return true;
+                if (eval(this.Specular)) return true;
+                if (eval(this.Scale)) return true;
                 return false;
             }
             #endregion
@@ -362,10 +377,15 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Sunrise = this.Sunrise == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Sunrise.Overall), this.Sunrise.Specific?.Translate(eval));
-                obj.Day = this.Day == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Day.Overall), this.Day.Specific?.Translate(eval));
-                obj.Sunset = this.Sunset == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Sunset.Overall), this.Sunset.Specific?.Translate(eval));
-                obj.Night = this.Night == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Night.Overall), this.Night.Specific?.Translate(eval));
+                obj.Versioning = eval(this.Versioning);
+                obj.DirectionalXPlus = eval(this.DirectionalXPlus);
+                obj.DirectionalXMinus = eval(this.DirectionalXMinus);
+                obj.DirectionalYPlus = eval(this.DirectionalYPlus);
+                obj.DirectionalYMinus = eval(this.DirectionalYMinus);
+                obj.DirectionalZPlus = eval(this.DirectionalZPlus);
+                obj.DirectionalZMinus = eval(this.DirectionalZMinus);
+                obj.Specular = eval(this.Specular);
+                obj.Scale = eval(this.Scale);
             }
             #endregion
 
@@ -388,21 +408,41 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Sunrise?.Overall ?? true)
+                    if (printMask?.Versioning ?? true)
                     {
-                        Sunrise?.ToString(fg);
+                        fg.AppendItem(Versioning, "Versioning");
                     }
-                    if (printMask?.Day?.Overall ?? true)
+                    if (printMask?.DirectionalXPlus ?? true)
                     {
-                        Day?.ToString(fg);
+                        fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
                     }
-                    if (printMask?.Sunset?.Overall ?? true)
+                    if (printMask?.DirectionalXMinus ?? true)
                     {
-                        Sunset?.ToString(fg);
+                        fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
                     }
-                    if (printMask?.Night?.Overall ?? true)
+                    if (printMask?.DirectionalYPlus ?? true)
                     {
-                        Night?.ToString(fg);
+                        fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                    }
+                    if (printMask?.DirectionalYMinus ?? true)
+                    {
+                        fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                    }
+                    if (printMask?.DirectionalZPlus ?? true)
+                    {
+                        fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                    }
+                    if (printMask?.DirectionalZMinus ?? true)
+                    {
+                        fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                    }
+                    if (printMask?.Specular ?? true)
+                    {
+                        fg.AppendItem(Specular, "Specular");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        fg.AppendItem(Scale, "Scale");
                     }
                 }
                 fg.AppendLine("]");
@@ -429,10 +469,15 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Sunrise;
-            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Day;
-            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Sunset;
-            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Night;
+            public Exception? Versioning;
+            public Exception? DirectionalXPlus;
+            public Exception? DirectionalXMinus;
+            public Exception? DirectionalYPlus;
+            public Exception? DirectionalYMinus;
+            public Exception? DirectionalZPlus;
+            public Exception? DirectionalZMinus;
+            public Exception? Specular;
+            public Exception? Scale;
             #endregion
 
             #region IErrorMask
@@ -441,14 +486,24 @@ namespace Mutagen.Bethesda.Skyrim
                 WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Sunrise:
-                        return Sunrise;
-                    case WeatherAmbientColors_FieldIndex.Day:
-                        return Day;
-                    case WeatherAmbientColors_FieldIndex.Sunset:
-                        return Sunset;
-                    case WeatherAmbientColors_FieldIndex.Night:
-                        return Night;
+                    case WeatherAmbientColors_FieldIndex.Versioning:
+                        return Versioning;
+                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                        return DirectionalXPlus;
+                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                        return DirectionalXMinus;
+                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                        return DirectionalYPlus;
+                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                        return DirectionalYMinus;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                        return DirectionalZPlus;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                        return DirectionalZMinus;
+                    case WeatherAmbientColors_FieldIndex.Specular:
+                        return Specular;
+                    case WeatherAmbientColors_FieldIndex.Scale:
+                        return Scale;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -459,17 +514,32 @@ namespace Mutagen.Bethesda.Skyrim
                 WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Sunrise:
-                        this.Sunrise = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                    case WeatherAmbientColors_FieldIndex.Versioning:
+                        this.Versioning = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Day:
-                        this.Day = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                        this.DirectionalXPlus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Sunset:
-                        this.Sunset = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                        this.DirectionalXMinus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Night:
-                        this.Night = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                        this.DirectionalYPlus = ex;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                        this.DirectionalYMinus = ex;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                        this.DirectionalZPlus = ex;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                        this.DirectionalZMinus = ex;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.Specular:
+                        this.Specular = ex;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.Scale:
+                        this.Scale = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -481,17 +551,32 @@ namespace Mutagen.Bethesda.Skyrim
                 WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Sunrise:
-                        this.Sunrise = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                    case WeatherAmbientColors_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Day:
-                        this.Day = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                        this.DirectionalXPlus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Sunset:
-                        this.Sunset = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                        this.DirectionalXMinus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Night:
-                        this.Night = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                        this.DirectionalYPlus = (Exception?)obj;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                        this.DirectionalYMinus = (Exception?)obj;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                        this.DirectionalZPlus = (Exception?)obj;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                        this.DirectionalZMinus = (Exception?)obj;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.Specular:
+                        this.Specular = (Exception?)obj;
+                        break;
+                    case WeatherAmbientColors_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -501,10 +586,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Sunrise != null) return true;
-                if (Day != null) return true;
-                if (Sunset != null) return true;
-                if (Night != null) return true;
+                if (Versioning != null) return true;
+                if (DirectionalXPlus != null) return true;
+                if (DirectionalXMinus != null) return true;
+                if (DirectionalYPlus != null) return true;
+                if (DirectionalYMinus != null) return true;
+                if (DirectionalZPlus != null) return true;
+                if (DirectionalZMinus != null) return true;
+                if (Specular != null) return true;
+                if (Scale != null) return true;
                 return false;
             }
             #endregion
@@ -539,10 +629,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                Sunrise?.ToString(fg);
-                Day?.ToString(fg);
-                Sunset?.ToString(fg);
-                Night?.ToString(fg);
+                fg.AppendItem(Versioning, "Versioning");
+                fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
+                fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
+                fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                fg.AppendItem(Specular, "Specular");
+                fg.AppendItem(Scale, "Scale");
             }
             #endregion
 
@@ -551,10 +646,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Sunrise = this.Sunrise.Combine(rhs.Sunrise, (l, r) => l.Combine(r));
-                ret.Day = this.Day.Combine(rhs.Day, (l, r) => l.Combine(r));
-                ret.Sunset = this.Sunset.Combine(rhs.Sunset, (l, r) => l.Combine(r));
-                ret.Night = this.Night.Combine(rhs.Night, (l, r) => l.Combine(r));
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
+                ret.DirectionalXPlus = this.DirectionalXPlus.Combine(rhs.DirectionalXPlus);
+                ret.DirectionalXMinus = this.DirectionalXMinus.Combine(rhs.DirectionalXMinus);
+                ret.DirectionalYPlus = this.DirectionalYPlus.Combine(rhs.DirectionalYPlus);
+                ret.DirectionalYMinus = this.DirectionalYMinus.Combine(rhs.DirectionalYMinus);
+                ret.DirectionalZPlus = this.DirectionalZPlus.Combine(rhs.DirectionalZPlus);
+                ret.DirectionalZMinus = this.DirectionalZMinus.Combine(rhs.DirectionalZMinus);
+                ret.Specular = this.Specular.Combine(rhs.Specular);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -576,19 +676,29 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Sunrise;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Day;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Sunset;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Night;
+            public bool Versioning;
+            public bool DirectionalXPlus;
+            public bool DirectionalXMinus;
+            public bool DirectionalYPlus;
+            public bool DirectionalYMinus;
+            public bool DirectionalZPlus;
+            public bool DirectionalZMinus;
+            public bool Specular;
+            public bool Scale;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Sunrise = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Day = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Sunset = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Night = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.Versioning = defaultOn;
+                this.DirectionalXPlus = defaultOn;
+                this.DirectionalXMinus = defaultOn;
+                this.DirectionalYPlus = defaultOn;
+                this.DirectionalYMinus = defaultOn;
+                this.DirectionalZPlus = defaultOn;
+                this.DirectionalZMinus = defaultOn;
+                this.Specular = defaultOn;
+                this.Scale = defaultOn;
             }
 
             #endregion
@@ -604,16 +714,25 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Sunrise?.Overall ?? true, Sunrise?.Specific?.GetCrystal()));
-                ret.Add((Day?.Overall ?? true, Day?.Specific?.GetCrystal()));
-                ret.Add((Sunset?.Overall ?? true, Sunset?.Specific?.GetCrystal()));
-                ret.Add((Night?.Overall ?? true, Night?.Specific?.GetCrystal()));
+                ret.Add((Versioning, null));
+                ret.Add((DirectionalXPlus, null));
+                ret.Add((DirectionalXMinus, null));
+                ret.Add((DirectionalYPlus, null));
+                ret.Add((DirectionalYMinus, null));
+                ret.Add((DirectionalZPlus, null));
+                ret.Add((DirectionalZMinus, null));
+                ret.Add((Specular, null));
+                ret.Add((Scale, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = WeatherAmbientColors_Registration.TriggeringRecordType;
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -675,16 +794,23 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IWeatherAmbientColors :
         IWeatherAmbientColorsGetter,
+        IAmbientColors,
         ILoquiObjectSetter<IWeatherAmbientColors>
     {
-        new AmbientColors Sunrise { get; set; }
-        new AmbientColors Day { get; set; }
-        new AmbientColors Sunset { get; set; }
-        new AmbientColors Night { get; set; }
+        new WeatherAmbientColors.VersioningBreaks Versioning { get; set; }
+        new Color DirectionalXPlus { get; set; }
+        new Color DirectionalXMinus { get; set; }
+        new Color DirectionalYPlus { get; set; }
+        new Color DirectionalYMinus { get; set; }
+        new Color DirectionalZPlus { get; set; }
+        new Color DirectionalZMinus { get; set; }
+        new Color Specular { get; set; }
+        new Single Scale { get; set; }
     }
 
     public partial interface IWeatherAmbientColorsGetter :
         ILoquiObject,
+        IAmbientColorsGetter,
         ILoquiObject<IWeatherAmbientColorsGetter>,
         IXmlItem,
         IBinaryItem
@@ -696,10 +822,15 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherAmbientColors_Registration.Instance;
-        IAmbientColorsGetter Sunrise { get; }
-        IAmbientColorsGetter Day { get; }
-        IAmbientColorsGetter Sunset { get; }
-        IAmbientColorsGetter Night { get; }
+        WeatherAmbientColors.VersioningBreaks Versioning { get; }
+        Color DirectionalXPlus { get; }
+        Color DirectionalXMinus { get; }
+        Color DirectionalYPlus { get; }
+        Color DirectionalYMinus { get; }
+        Color DirectionalZPlus { get; }
+        Color DirectionalZMinus { get; }
+        Color Specular { get; }
+        Single Scale { get; }
 
     }
 
@@ -1017,10 +1148,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum WeatherAmbientColors_FieldIndex
     {
-        Sunrise = 0,
-        Day = 1,
-        Sunset = 2,
-        Night = 3,
+        Versioning = 0,
+        DirectionalXPlus = 1,
+        DirectionalXMinus = 2,
+        DirectionalYPlus = 3,
+        DirectionalYMinus = 4,
+        DirectionalZPlus = 5,
+        DirectionalZMinus = 6,
+        Specular = 7,
+        Scale = 8,
     }
     #endregion
 
@@ -1033,14 +1169,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 255,
+            msgID: 243,
             version: 0);
 
-        public const string GUID = "b0ef3c9c-7f5e-4b05-bb7c-c8054c9d255e";
+        public const string GUID = "8c4df544-5141-4ea2-8dba-94c10e0d2bf6";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(WeatherAmbientColors.Mask<>);
 
@@ -1070,14 +1206,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "SUNRISE":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Sunrise;
-                case "DAY":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Day;
-                case "SUNSET":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Sunset;
-                case "NIGHT":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Night;
+                case "VERSIONING":
+                    return (ushort)WeatherAmbientColors_FieldIndex.Versioning;
+                case "DIRECTIONALXPLUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalXPlus;
+                case "DIRECTIONALXMINUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalXMinus;
+                case "DIRECTIONALYPLUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalYPlus;
+                case "DIRECTIONALYMINUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalYMinus;
+                case "DIRECTIONALZPLUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalZPlus;
+                case "DIRECTIONALZMINUS":
+                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalZMinus;
+                case "SPECULAR":
+                    return (ushort)WeatherAmbientColors_FieldIndex.Specular;
+                case "SCALE":
+                    return (ushort)WeatherAmbientColors_FieldIndex.Scale;
                 default:
                     return null;
             }
@@ -1088,10 +1234,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                case WeatherAmbientColors_FieldIndex.Day:
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                case WeatherAmbientColors_FieldIndex.Night:
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case WeatherAmbientColors_FieldIndex.Specular:
+                case WeatherAmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1103,11 +1254,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                case WeatherAmbientColors_FieldIndex.Day:
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                case WeatherAmbientColors_FieldIndex.Night:
-                    return true;
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case WeatherAmbientColors_FieldIndex.Specular:
+                case WeatherAmbientColors_FieldIndex.Scale:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1118,10 +1274,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                case WeatherAmbientColors_FieldIndex.Day:
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                case WeatherAmbientColors_FieldIndex.Night:
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case WeatherAmbientColors_FieldIndex.Specular:
+                case WeatherAmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1133,14 +1294,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                    return "Sunrise";
-                case WeatherAmbientColors_FieldIndex.Day:
-                    return "Day";
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                    return "Sunset";
-                case WeatherAmbientColors_FieldIndex.Night:
-                    return "Night";
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                    return "Versioning";
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                    return "DirectionalXPlus";
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                    return "DirectionalXMinus";
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                    return "DirectionalYPlus";
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                    return "DirectionalYMinus";
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                    return "DirectionalZPlus";
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                    return "DirectionalZMinus";
+                case WeatherAmbientColors_FieldIndex.Specular:
+                    return "Specular";
+                case WeatherAmbientColors_FieldIndex.Scale:
+                    return "Scale";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1151,10 +1322,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                case WeatherAmbientColors_FieldIndex.Day:
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                case WeatherAmbientColors_FieldIndex.Night:
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case WeatherAmbientColors_FieldIndex.Specular:
+                case WeatherAmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1166,10 +1342,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                case WeatherAmbientColors_FieldIndex.Day:
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                case WeatherAmbientColors_FieldIndex.Night:
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case WeatherAmbientColors_FieldIndex.Specular:
+                case WeatherAmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1181,23 +1362,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Sunrise:
-                    return typeof(AmbientColors);
-                case WeatherAmbientColors_FieldIndex.Day:
-                    return typeof(AmbientColors);
-                case WeatherAmbientColors_FieldIndex.Sunset:
-                    return typeof(AmbientColors);
-                case WeatherAmbientColors_FieldIndex.Night:
-                    return typeof(AmbientColors);
+                case WeatherAmbientColors_FieldIndex.Versioning:
+                    return typeof(WeatherAmbientColors.VersioningBreaks);
+                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.Specular:
+                    return typeof(Color);
+                case WeatherAmbientColors_FieldIndex.Scale:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherAmbientColorsXmlWriteTranslation);
-        public static readonly RecordType DALC_HEADER = new RecordType("DALC");
-        public static readonly RecordType TriggeringRecordType = DALC_HEADER;
-        public const int NumStructFields = 4;
+        public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherAmbientColorsBinaryWriteTranslation);
         #region Interface
@@ -1241,10 +1430,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherAmbientColors item)
         {
             ClearPartial();
-            item.Sunrise.Clear();
-            item.Day.Clear();
-            item.Sunset.Clear();
-            item.Night.Clear();
+            item.Versioning = default;
+            item.DirectionalXPlus = default;
+            item.DirectionalXMinus = default;
+            item.DirectionalYPlus = default;
+            item.DirectionalYMinus = default;
+            item.DirectionalZPlus = default;
+            item.DirectionalZMinus = default;
+            item.Specular = default;
+            item.Scale = default;
         }
         
         #region Xml Translation
@@ -1280,10 +1474,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColors item,
             MutagenFrame frame)
         {
-            item.Sunrise = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
-            item.Day = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
-            item.Sunset = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
-            item.Night = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
+            item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            if (frame.Complete)
+            {
+                item.Versioning |= WeatherAmbientColors.VersioningBreaks.Break0;
+                return;
+            }
+            item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
@@ -1291,9 +1494,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(WeatherAmbientColors_Registration.DALC_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1329,10 +1529,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sunrise = MaskItemExt.Factory(item.Sunrise.GetEqualsMask(rhs.Sunrise, include), include);
-            ret.Day = MaskItemExt.Factory(item.Day.GetEqualsMask(rhs.Day, include), include);
-            ret.Sunset = MaskItemExt.Factory(item.Sunset.GetEqualsMask(rhs.Sunset, include), include);
-            ret.Night = MaskItemExt.Factory(item.Night.GetEqualsMask(rhs.Night, include), include);
+            ret.Versioning = item.Versioning == rhs.Versioning;
+            ret.DirectionalXPlus = item.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus);
+            ret.DirectionalXMinus = item.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus);
+            ret.DirectionalYPlus = item.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus);
+            ret.DirectionalYMinus = item.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus);
+            ret.DirectionalZPlus = item.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus);
+            ret.DirectionalZMinus = item.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus);
+            ret.Specular = item.Specular.ColorOnlyEquals(rhs.Specular);
+            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
         }
         
         public string ToString(
@@ -1379,21 +1584,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             WeatherAmbientColors.Mask<bool>? printMask = null)
         {
-            if (printMask?.Sunrise?.Overall ?? true)
+            if (printMask?.Versioning ?? true)
             {
-                item.Sunrise?.ToString(fg, "Sunrise");
+                fg.AppendItem(item.Versioning, "Versioning");
             }
-            if (printMask?.Day?.Overall ?? true)
+            if (printMask?.DirectionalXPlus ?? true)
             {
-                item.Day?.ToString(fg, "Day");
+                fg.AppendItem(item.DirectionalXPlus, "DirectionalXPlus");
             }
-            if (printMask?.Sunset?.Overall ?? true)
+            if (printMask?.DirectionalXMinus ?? true)
             {
-                item.Sunset?.ToString(fg, "Sunset");
+                fg.AppendItem(item.DirectionalXMinus, "DirectionalXMinus");
             }
-            if (printMask?.Night?.Overall ?? true)
+            if (printMask?.DirectionalYPlus ?? true)
             {
-                item.Night?.ToString(fg, "Night");
+                fg.AppendItem(item.DirectionalYPlus, "DirectionalYPlus");
+            }
+            if (printMask?.DirectionalYMinus ?? true)
+            {
+                fg.AppendItem(item.DirectionalYMinus, "DirectionalYMinus");
+            }
+            if (printMask?.DirectionalZPlus ?? true)
+            {
+                fg.AppendItem(item.DirectionalZPlus, "DirectionalZPlus");
+            }
+            if (printMask?.DirectionalZMinus ?? true)
+            {
+                fg.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
+            }
+            if (printMask?.Specular ?? true)
+            {
+                fg.AppendItem(item.Specular, "Specular");
+            }
+            if (printMask?.Scale ?? true)
+            {
+                fg.AppendItem(item.Scale, "Scale");
             }
         }
         
@@ -1408,10 +1633,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorsGetter item,
             WeatherAmbientColors.Mask<bool> mask)
         {
-            mask.Sunrise = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunrise?.GetHasBeenSetMask());
-            mask.Day = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Day?.GetHasBeenSetMask());
-            mask.Sunset = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunset?.GetHasBeenSetMask());
-            mask.Night = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Night?.GetHasBeenSetMask());
+            mask.Versioning = true;
+            mask.DirectionalXPlus = true;
+            mask.DirectionalXMinus = true;
+            mask.DirectionalYPlus = true;
+            mask.DirectionalYMinus = true;
+            mask.DirectionalZPlus = true;
+            mask.DirectionalZMinus = true;
+            mask.Specular = true;
+            mask.Scale = true;
         }
         
         #region Equals and Hash
@@ -1421,20 +1651,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Sunrise, rhs.Sunrise)) return false;
-            if (!object.Equals(lhs.Day, rhs.Day)) return false;
-            if (!object.Equals(lhs.Sunset, rhs.Sunset)) return false;
-            if (!object.Equals(lhs.Night, rhs.Night)) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
+            if (!lhs.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus)) return false;
+            if (!lhs.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus)) return false;
+            if (!lhs.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus)) return false;
+            if (!lhs.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus)) return false;
+            if (!lhs.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus)) return false;
+            if (!lhs.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus)) return false;
+            if (!lhs.Specular.ColorOnlyEquals(rhs.Specular)) return false;
+            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IWeatherAmbientColorsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Sunrise);
-            hash.Add(item.Day);
-            hash.Add(item.Sunset);
-            hash.Add(item.Night);
+            hash.Add(item.Versioning);
+            hash.Add(item.DirectionalXPlus);
+            hash.Add(item.DirectionalXMinus);
+            hash.Add(item.DirectionalYPlus);
+            hash.Add(item.DirectionalYMinus);
+            hash.Add(item.DirectionalZPlus);
+            hash.Add(item.DirectionalZMinus);
+            hash.Add(item.Specular);
+            hash.Add(item.Scale);
             return hash.ToHashCode();
         }
         
@@ -1467,93 +1707,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunrise) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Versioning) ?? true))
             {
-                errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Sunrise);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunrise) ?? true))
-                    {
-                        item.Sunrise = rhs.Sunrise.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunrise),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Versioning = rhs.Versioning;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Day) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus) ?? true))
             {
-                errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Day);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Day) ?? true))
-                    {
-                        item.Day = rhs.Day.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Day),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalXPlus = rhs.DirectionalXPlus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus) ?? true))
             {
-                errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Sunset);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunset) ?? true))
-                    {
-                        item.Sunset = rhs.Sunset.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunset),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalXMinus = rhs.DirectionalXMinus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Night) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus) ?? true))
             {
-                errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Night);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Night) ?? true))
-                    {
-                        item.Night = rhs.Night.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Night),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DirectionalYPlus = rhs.DirectionalYPlus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            {
+                item.DirectionalYMinus = rhs.DirectionalYMinus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            {
+                item.DirectionalZPlus = rhs.DirectionalZPlus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            {
+                item.DirectionalZMinus = rhs.DirectionalZMinus;
+            }
+            if (rhs.Versioning.HasFlag(WeatherAmbientColors.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Specular) ?? true))
+            {
+                item.Specular = rhs.Specular;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
             }
         }
         
@@ -1644,49 +1833,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunrise) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Versioning) ?? true))
             {
-                var SunriseItem = item.Sunrise;
-                ((AmbientColorsXmlWriteTranslation)((IXmlItem)SunriseItem).XmlWriteTranslator).Write(
-                    item: SunriseItem,
+                EnumXmlTranslation<WeatherAmbientColors.VersioningBreaks>.Instance.Write(
                     node: node,
-                    name: nameof(item.Sunrise),
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Sunrise,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunrise));
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Versioning,
+                    errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Day) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus) ?? true))
             {
-                var DayItem = item.Day;
-                ((AmbientColorsXmlWriteTranslation)((IXmlItem)DayItem).XmlWriteTranslator).Write(
-                    item: DayItem,
+                ColorXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Day),
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Day,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Day));
+                    name: nameof(item.DirectionalXPlus),
+                    item: item.DirectionalXPlus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalXPlus,
+                    errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Sunset) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus) ?? true))
             {
-                var SunsetItem = item.Sunset;
-                ((AmbientColorsXmlWriteTranslation)((IXmlItem)SunsetItem).XmlWriteTranslator).Write(
-                    item: SunsetItem,
+                ColorXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Sunset),
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Sunset,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunset));
+                    name: nameof(item.DirectionalXMinus),
+                    item: item.DirectionalXMinus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalXMinus,
+                    errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Night) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus) ?? true))
             {
-                var NightItem = item.Night;
-                ((AmbientColorsXmlWriteTranslation)((IXmlItem)NightItem).XmlWriteTranslator).Write(
-                    item: NightItem,
+                ColorXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Night),
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Night,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Night));
+                    name: nameof(item.DirectionalYPlus),
+                    item: item.DirectionalYPlus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalYPlus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalYMinus),
+                    item: item.DirectionalYMinus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalYMinus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalZPlus),
+                    item: item.DirectionalZPlus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalZPlus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalZMinus),
+                    item: item.DirectionalZMinus,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalZMinus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Specular) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Specular),
+                    item: item.Specular,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Specular,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Scale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Scale),
+                    item: item.Scale,
+                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Scale,
+                    errorMask: errorMask);
             }
         }
 
@@ -1794,14 +2020,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Sunrise":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Sunrise);
+                case "Versioning":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Versioning);
                     try
                     {
-                        item.Sunrise = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
+                        item.Versioning = EnumXmlTranslation<WeatherAmbientColors.VersioningBreaks>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunrise));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1813,14 +2038,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Day":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Day);
+                case "DirectionalXPlus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus);
                     try
                     {
-                        item.Day = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
+                        item.DirectionalXPlus = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Day));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1832,14 +2056,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Sunset":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Sunset);
+                case "DirectionalXMinus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus);
                     try
                     {
-                        item.Sunset = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
+                        item.DirectionalXMinus = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Sunset));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1851,14 +2074,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Night":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Night);
+                case "DirectionalYPlus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus);
                     try
                     {
-                        item.Night = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
+                        item.DirectionalYPlus = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColors_FieldIndex.Night));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalYMinus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus);
+                    try
+                    {
+                        item.DirectionalYMinus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalZPlus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus);
+                    try
+                    {
+                        item.DirectionalZPlus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalZMinus":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus);
+                    try
+                    {
+                        item.DirectionalZMinus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Specular":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Specular);
+                    try
+                    {
+                        item.Specular = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Scale":
+                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Scale);
+                    try
+                    {
+                        item.Scale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2045,22 +2357,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorsGetter item,
             MutagenWriter writer)
         {
-            var SunriseItem = item.Sunrise;
-            ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)SunriseItem).BinaryWriteTranslator).Write(
-                item: SunriseItem,
-                writer: writer);
-            var DayItem = item.Day;
-            ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)DayItem).BinaryWriteTranslator).Write(
-                item: DayItem,
-                writer: writer);
-            var SunsetItem = item.Sunset;
-            ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)SunsetItem).BinaryWriteTranslator).Write(
-                item: SunsetItem,
-                writer: writer);
-            var NightItem = item.Night;
-            ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)NightItem).BinaryWriteTranslator).Write(
-                item: NightItem,
-                writer: writer);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalXPlus);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalXMinus);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalYPlus);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalYMinus);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalZPlus);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DirectionalZMinus);
+            if (!item.Versioning.HasFlag(WeatherAmbientColors.VersioningBreaks.Break0))
+            {
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Specular);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Scale);
+            }
         }
 
         public void Write(
@@ -2068,15 +2391,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WeatherAmbientColors_Registration.DALC_HEADER),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -2177,10 +2494,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IAmbientColorsGetter Sunrise => AmbientColorsBinaryOverlay.AmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x0)), _package, default(RecordTypeConverter));
-        public IAmbientColorsGetter Day => AmbientColorsBinaryOverlay.AmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x24)), _package, default(RecordTypeConverter));
-        public IAmbientColorsGetter Sunset => AmbientColorsBinaryOverlay.AmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x48)), _package, default(RecordTypeConverter));
-        public IAmbientColorsGetter Night => AmbientColorsBinaryOverlay.AmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x6C)), _package, default(RecordTypeConverter));
+        public WeatherAmbientColors.VersioningBreaks Versioning { get; private set; }
+        public Color DirectionalXPlus => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalXMinus => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYPlus => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYMinus => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZPlus => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZMinus => _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single Scale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2201,11 +2523,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new WeatherAmbientColorsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                bytes: stream.RemainingMemory.Slice(0, 0x20),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x90 + package.MetaData.Constants.SubConstants.HeaderLength;
+            int offset = stream.Position;
+            stream.Position += 0x20;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

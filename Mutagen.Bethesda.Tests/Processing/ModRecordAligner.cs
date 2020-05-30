@@ -326,6 +326,7 @@ namespace Mutagen.Bethesda.Tests
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
                 inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength);
+                var writerEndPos = writer.Position + len;
                 var endPos = inputStream.Position + len;
                 var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>();
                 ReadOnlyMemorySlice<byte>? rest = null;
@@ -343,7 +344,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new ArgumentException($"Encountered an unknown record: {subType}");
                     }
-                    dataDict[subType] = rule.GetBytes(inputStream);
+                    dataDict.Add(subType, rule.GetBytes(inputStream));
                 }
                 foreach (var alignment in alignmentRules.Alignments[recType])
                 {
@@ -362,6 +363,10 @@ namespace Mutagen.Bethesda.Tests
                 if (rest != null)
                 {
                     writer.Write(rest.Value);
+                }
+                if (writer.Position != writerEndPos)
+                {
+                    throw new ArgumentException("Record alignment changed length");
                 }
             }
         }

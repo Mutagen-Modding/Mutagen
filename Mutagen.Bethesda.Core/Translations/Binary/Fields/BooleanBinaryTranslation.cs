@@ -18,5 +18,17 @@ namespace Mutagen.Bethesda.Binary
         {
             writer.Write(item);
         }
+
+        public void WriteAsMarker(
+            MutagenWriter writer,
+            bool item,
+            RecordType header)
+        {
+            if (!item) return;
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            {
+                // Presence of marker signifies true
+            }
+        }
     }
 }

@@ -1299,6 +1299,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
+        public static readonly RecordType ECZN_HEADER = new RecordType("ECZN");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
         public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
@@ -1310,9 +1311,12 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LENS_HEADER = new RecordType("LENS");
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
+        public static readonly RecordType LGTM_HEADER = new RecordType("LGTM");
+        public static readonly RecordType LCTN_HEADER = new RecordType("LCTN");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MESG_HEADER = new RecordType("MESG");
         public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType MUSC_HEADER = new RecordType("MUSC");
@@ -1320,6 +1324,25 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType NAME_HEADER = new RecordType("NAME");
+        public static readonly RecordType XEZN_HEADER = new RecordType("XEZN");
+        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
+        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
+        public static readonly RecordType XHTW_HEADER = new RecordType("XHTW");
+        public static readonly RecordType XFVC_HEADER = new RecordType("XFVC");
+        public static readonly RecordType XPWR_HEADER = new RecordType("XPWR");
+        public static readonly RecordType XLKR_HEADER = new RecordType("XLKR");
+        public static readonly RecordType XAPD_HEADER = new RecordType("XAPD");
+        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
+        public static readonly RecordType XEMI_HEADER = new RecordType("XEMI");
+        public static readonly RecordType XMBR_HEADER = new RecordType("XMBR");
+        public static readonly RecordType XIS2_HEADER = new RecordType("XIS2");
+        public static readonly RecordType XLRT_HEADER = new RecordType("XLRT");
+        public static readonly RecordType XLRL_HEADER = new RecordType("XLRL");
+        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
+        public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
@@ -1331,6 +1354,14 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
+        public static readonly RecordType PARW_HEADER = new RecordType("PARW");
+        public static readonly RecordType PBEA_HEADER = new RecordType("PBEA");
+        public static readonly RecordType PFLA_HEADER = new RecordType("PFLA");
+        public static readonly RecordType PCON_HEADER = new RecordType("PCON");
+        public static readonly RecordType PBAR_HEADER = new RecordType("PBAR");
+        public static readonly RecordType PGRE_HEADER = new RecordType("PGRE");
+        public static readonly RecordType PHZD_HEADER = new RecordType("PHZD");
+        public static readonly RecordType PMIS_HEADER = new RecordType("PMIS");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1423,6 +1454,7 @@ namespace Mutagen.Bethesda.Internals
                         COBJ_HEADER,
                         DEBR_HEADER,
                         DUAL_HEADER,
+                        ECZN_HEADER,
                         EQUP_HEADER,
                         EXPL_HEADER,
                         FLST_HEADER,
@@ -1434,9 +1466,12 @@ namespace Mutagen.Bethesda.Internals
                         KYWD_HEADER,
                         LENS_HEADER,
                         LVLN_HEADER,
+                        LGTM_HEADER,
+                        LCTN_HEADER,
                         LCRT_HEADER,
                         MATO_HEADER,
                         MATT_HEADER,
+                        MESG_HEADER,
                         MSTT_HEADER,
                         MOVT_HEADER,
                         MUSC_HEADER,
@@ -1444,6 +1479,25 @@ namespace Mutagen.Bethesda.Internals
                         NAVI_HEADER,
                         OTFT_HEADER,
                         PERK_HEADER,
+                        VMAD_HEADER,
+                        NAME_HEADER,
+                        XEZN_HEADER,
+                        XOWN_HEADER,
+                        XRNK_HEADER,
+                        XHTW_HEADER,
+                        XFVC_HEADER,
+                        XPWR_HEADER,
+                        XLKR_HEADER,
+                        XAPD_HEADER,
+                        XESP_HEADER,
+                        XEMI_HEADER,
+                        XMBR_HEADER,
+                        XIS2_HEADER,
+                        XLRT_HEADER,
+                        XLRL_HEADER,
+                        XLOD_HEADER,
+                        XSCL_HEADER,
+                        DATA_HEADER,
                         PROJ_HEADER,
                         REVB_HEADER,
                         SCRL_HEADER,
@@ -1454,7 +1508,15 @@ namespace Mutagen.Bethesda.Internals
                         RFCT_HEADER,
                         VTYP_HEADER,
                         VOLI_HEADER,
-                        SHOU_HEADER
+                        SHOU_HEADER,
+                        PARW_HEADER,
+                        PBEA_HEADER,
+                        PFLA_HEADER,
+                        PCON_HEADER,
+                        PBAR_HEADER,
+                        PGRE_HEADER,
+                        PHZD_HEADER,
+                        PMIS_HEADER
                     })
             );
         });

@@ -19,6 +19,8 @@ namespace Mutagen.Bethesda.Generation
                     return 4;
                 case ColorBinaryType.NoAlphaFloat:
                     return 12;
+                case ColorBinaryType.AlphaFloat:
+                    return 16;
                 default:
                     throw new NotImplementedException();
             }

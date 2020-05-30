@@ -49,6 +49,484 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IPlacedObjectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Base
+        public FormLinkNullable<SkyrimMajorRecord> Base { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
+        #endregion
+        #region BoundHalfExtents
+        public P3Float? BoundHalfExtents { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IPlacedObjectGetter.BoundHalfExtents => this.BoundHalfExtents;
+        #endregion
+        #region Primitive
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedPrimitive? _Primitive;
+        public PlacedPrimitive? Primitive
+        {
+            get => _Primitive;
+            set => _Primitive = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacedPrimitiveGetter? IPlacedObjectGetter.Primitive => this.Primitive;
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _Unknown;
+        public Byte[]? Unknown
+        {
+            get => this._Unknown;
+            set => this._Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown => this.Unknown;
+        #endregion
+        #region OcclusionPlane
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Placement? _OcclusionPlane;
+        public Placement? OcclusionPlane
+        {
+            get => _OcclusionPlane;
+            set => _OcclusionPlane = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedObjectGetter.OcclusionPlane => this.OcclusionPlane;
+        #endregion
+        #region Portals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Portal>? _Portals;
+        public ExtendedList<Portal>? Portals
+        {
+            get => this._Portals;
+            set => this._Portals = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPortalGetter>? IPlacedObjectGetter.Portals => _Portals;
+        #endregion
+
+        #endregion
+        #region RoomPortal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Placement? _RoomPortal;
+        public Placement? RoomPortal
+        {
+            get => _RoomPortal;
+            set => _RoomPortal = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
+        #endregion
+        #region Unknown2
+        public Int16 Unknown2 { get; set; } = default;
+        #endregion
+        #region LightingTemplate
+        public FormLinkNullable<Light> LightingTemplate { get; set; } = new FormLinkNullable<Light>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate;
+        #endregion
+        #region ImageSpace
+        public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace;
+        #endregion
+        #region LinkedRooms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<PlacedObject>> _LinkedRooms = new ExtendedList<IFormLink<PlacedObject>>();
+        public ExtendedList<IFormLink<PlacedObject>> LinkedRooms
+        {
+            get => this._LinkedRooms;
+            protected set => this._LinkedRooms = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> IPlacedObjectGetter.LinkedRooms => _LinkedRooms;
+        #endregion
+
+        #endregion
+        #region MultiBoundPrimitive
+        public Boolean MultiBoundPrimitive { get; set; } = default;
+        #endregion
+        #region RagdollData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _RagdollData;
+        public Byte[]? RagdollData
+        {
+            get => this._RagdollData;
+            set => this._RagdollData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.RagdollData => this.RagdollData;
+        #endregion
+        #region RagdollBipedData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _RagdollBipedData;
+        public Byte[]? RagdollBipedData
+        {
+            get => this._RagdollBipedData;
+            set => this._RagdollBipedData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.RagdollBipedData => this.RagdollBipedData;
+        #endregion
+        #region Radius
+        public Single? Radius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.Radius => this.Radius;
+        #endregion
+        #region Reflections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
+        public ExtendedList<WaterReflection> Reflections
+        {
+            get => this._Reflections;
+            protected set => this._Reflections = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IWaterReflectionGetter> IPlacedObjectGetter.Reflections => _Reflections;
+        #endregion
+
+        #endregion
+        #region LitWater
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<PlacedObject>> _LitWater = new ExtendedList<IFormLink<PlacedObject>>();
+        public ExtendedList<IFormLink<PlacedObject>> LitWater
+        {
+            get => this._LitWater;
+            protected set => this._LitWater = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> IPlacedObjectGetter.LitWater => _LitWater;
+        #endregion
+
+        #endregion
+        #region Emittance
+        public FormLinkNullable<IEmittance> Emittance { get; set; } = new FormLinkNullable<IEmittance>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEmittanceGetter> IPlacedObjectGetter.Emittance => this.Emittance;
+        #endregion
+        #region LightData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LightData? _LightData;
+        public LightData? LightData
+        {
+            get => _LightData;
+            set => _LightData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILightDataGetter? IPlacedObjectGetter.LightData => this.LightData;
+        #endregion
+        #region Alpha
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Alpha? _Alpha;
+        public Alpha? Alpha
+        {
+            get => _Alpha;
+            set => _Alpha = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAlphaGetter? IPlacedObjectGetter.Alpha => this.Alpha;
+        #endregion
+        #region TeleportDestination
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private TeleportDestination? _TeleportDestination;
+        public TeleportDestination? TeleportDestination
+        {
+            get => _TeleportDestination;
+            set => _TeleportDestination = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITeleportDestinationGetter? IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
+        #endregion
+        #region TeleportMessageBox
+        public FormLinkNullable<Message> TeleportMessageBox { get; set; } = new FormLinkNullable<Message>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportMessageBox => this.TeleportMessageBox;
+        #endregion
+        #region MultiboundReference
+        public FormLinkNullable<PlacedObject> MultiboundReference { get; set; } = new FormLinkNullable<PlacedObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
+        #endregion
+        #region Unknown3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _Unknown3;
+        public Byte[]? Unknown3
+        {
+            get => this._Unknown3;
+            set => this._Unknown3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown3 => this.Unknown3;
+        #endregion
+        #region Unknown4
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _Unknown4;
+        public Byte[]? Unknown4
+        {
+            get => this._Unknown4;
+            set => this._Unknown4 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown4 => this.Unknown4;
+        #endregion
+        #region WaterVelocity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WaterVelocity? _WaterVelocity;
+        public WaterVelocity? WaterVelocity
+        {
+            get => _WaterVelocity;
+            set => _WaterVelocity = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWaterVelocityGetter? IPlacedObjectGetter.WaterVelocity => this.WaterVelocity;
+        #endregion
+        #region Unknown5
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _Unknown5;
+        public Byte[]? Unknown5
+        {
+            get => this._Unknown5;
+            set => this._Unknown5 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown5 => this.Unknown5;
+        #endregion
+        #region Unknown6
+        public FormLinkNullable<ILinkedReference> Unknown6 { get; set; } = new FormLinkNullable<ILinkedReference>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.Unknown6 => this.Unknown6;
+        #endregion
+        #region Unknown7
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _Unknown7;
+        public Byte[]? Unknown7
+        {
+            get => this._Unknown7;
+            set => this._Unknown7 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown7 => this.Unknown7;
+        #endregion
+        #region Unknown8
+        public FormLinkNullable<Cell> Unknown8 { get; set; } = new FormLinkNullable<Cell>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICellGetter> IPlacedObjectGetter.Unknown8 => this.Unknown8;
+        #endregion
+        #region Scale
+        public Single? Scale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.Scale => this.Scale;
+        #endregion
+        #region SpawnContainer
+        public FormLinkNullable<PlacedObject> SpawnContainer { get; set; } = new FormLinkNullable<PlacedObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.SpawnContainer => this.SpawnContainer;
+        #endregion
+        #region ActivateParents
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ActivateParents? _ActivateParents;
+        public ActivateParents? ActivateParents
+        {
+            get => _ActivateParents;
+            set => _ActivateParents = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IActivateParentsGetter? IPlacedObjectGetter.ActivateParents => this.ActivateParents;
+        #endregion
+        #region LeveledItemBaseObject
+        public FormLinkNullable<LeveledItem> LeveledItemBaseObject { get; set; } = new FormLinkNullable<LeveledItem>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILeveledItemGetter> IPlacedObjectGetter.LeveledItemBaseObject => this.LeveledItemBaseObject;
+        #endregion
+        #region LevelModifier
+        public LevelModifier? LevelModifier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        LevelModifier? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
+        #endregion
+        #region PersistentLocation
+        public FormLinkNullable<Location> PersistentLocation { get; set; } = new FormLinkNullable<Location>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.PersistentLocation => this.PersistentLocation;
+        #endregion
+        #region CollisionLayer
+        public UInt32? CollisionLayer { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPlacedObjectGetter.CollisionLayer => this.CollisionLayer;
+        #endregion
+        #region Lock
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LockData? _Lock;
+        public LockData? Lock
+        {
+            get => _Lock;
+            set => _Lock = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILockDataGetter? IPlacedObjectGetter.Lock => this.Lock;
+        #endregion
+        #region EncounterZone
+        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedObjectGetter.EncounterZone => this.EncounterZone;
+        #endregion
+        #region NavigationDoorLink
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NavigationDoorLink? _NavigationDoorLink;
+        public NavigationDoorLink? NavigationDoorLink
+        {
+            get => _NavigationDoorLink;
+            set => _NavigationDoorLink = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
+        #endregion
+        #region LocationRefTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
+        public ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        {
+            get => this._LocationRefTypes;
+            set => this._LocationRefTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPlacedObjectGetter.LocationRefTypes => _LocationRefTypes;
+        #endregion
+
+        #endregion
+        #region IgnoredBySandbox
+        public Boolean IgnoredBySandbox { get; set; } = default;
+        #endregion
+        #region Ownership
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Ownership? _Ownership;
+        public Ownership? Ownership
+        {
+            get => _Ownership;
+            set => _Ownership = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IOwnershipGetter? IPlacedObjectGetter.Ownership => this.Ownership;
+        #endregion
+        #region ItemCount
+        public Int32? ItemCount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.ItemCount => this.ItemCount;
+        #endregion
+        #region Charge
+        public Single? Charge { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.Charge => this.Charge;
+        #endregion
+        #region LocationReference
+        public FormLinkNullable<ILocationRecord> LocationReference { get; set; } = new FormLinkNullable<ILocationRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        #endregion
+        #region EnableParent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EnableParent? _EnableParent;
+        public EnableParent? EnableParent
+        {
+            get => _EnableParent;
+            set => _EnableParent = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnableParentGetter? IPlacedObjectGetter.EnableParent => this.EnableParent;
+        #endregion
+        #region LinkedReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
+        {
+            get => this._LinkedReferences;
+            protected set => this._LinkedReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILinkedReferencesGetter> IPlacedObjectGetter.LinkedReferences => _LinkedReferences;
+        #endregion
+
+        #endregion
+        #region Patrol
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Patrol? _Patrol;
+        public Patrol? Patrol
+        {
+            get => _Patrol;
+            set => _Patrol = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPatrolGetter? IPlacedObjectGetter.Patrol => this.Patrol;
+        #endregion
+        #region Action
+        public PlacedObject.ActionFlag? Action { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        PlacedObject.ActionFlag? IPlacedObjectGetter.Action => this.Action;
+        #endregion
+        #region HeadTrackingWeight
+        public Single? HeadTrackingWeight { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.HeadTrackingWeight => this.HeadTrackingWeight;
+        #endregion
+        #region FavorCost
+        public Single? FavorCost { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.FavorCost => this.FavorCost;
+        #endregion
+        #region OpenByDefault
+        public Boolean OpenByDefault { get; set; } = default;
+        #endregion
+        #region MapMarker
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MapMarker? _MapMarker;
+        public MapMarker? MapMarker
+        {
+            get => _MapMarker;
+            set => _MapMarker = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
+        #endregion
+        #region AttachRef
+        public FormLinkNullable<IPlacedThing> AttachRef { get; set; } = new FormLinkNullable<IPlacedThing>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedThingGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
+        #endregion
+        #region DistantLodData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[]? _DistantLodData;
+        public Byte[]? DistantLodData
+        {
+            get => this._DistantLodData;
+            set => this._DistantLodData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.DistantLodData => this.DistantLodData;
+        #endregion
+        #region Position
+        public P3Float Position { get; set; } = default;
+        #endregion
+        #region Rotation
+        public P3Float Rotation { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public PlacedObject.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +697,66 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.Base = initialValue;
+                this.BoundHalfExtents = initialValue;
+                this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
+                this.Unknown = initialValue;
+                this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
+                this.Unknown2 = initialValue;
+                this.LightingTemplate = initialValue;
+                this.ImageSpace = initialValue;
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MultiBoundPrimitive = initialValue;
+                this.RagdollData = initialValue;
+                this.RagdollBipedData = initialValue;
+                this.Radius = initialValue;
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Emittance = initialValue;
+                this.LightData = new MaskItem<TItem, LightData.Mask<TItem>?>(initialValue, new LightData.Mask<TItem>(initialValue));
+                this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(initialValue, new Alpha.Mask<TItem>(initialValue));
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
+                this.TeleportMessageBox = initialValue;
+                this.MultiboundReference = initialValue;
+                this.Unknown3 = initialValue;
+                this.Unknown4 = initialValue;
+                this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(initialValue, new WaterVelocity.Mask<TItem>(initialValue));
+                this.Unknown5 = initialValue;
+                this.Unknown6 = initialValue;
+                this.Unknown7 = initialValue;
+                this.Unknown8 = initialValue;
+                this.Scale = initialValue;
+                this.SpawnContainer = initialValue;
+                this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(initialValue, new ActivateParents.Mask<TItem>(initialValue));
+                this.LeveledItemBaseObject = initialValue;
+                this.LevelModifier = initialValue;
+                this.PersistentLocation = initialValue;
+                this.CollisionLayer = initialValue;
+                this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
+                this.EncounterZone = initialValue;
+                this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.IgnoredBySandbox = initialValue;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.ItemCount = initialValue;
+                this.Charge = initialValue;
+                this.LocationReference = initialValue;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
+                this.Action = initialValue;
+                this.HeadTrackingWeight = initialValue;
+                this.FavorCost = initialValue;
+                this.OpenByDefault = initialValue;
+                this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(initialValue, new MapMarker.Mask<TItem>(initialValue));
+                this.AttachRef = initialValue;
+                this.DistantLodData = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +765,67 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem Base,
+                TItem BoundHalfExtents,
+                TItem Primitive,
+                TItem Unknown,
+                TItem OcclusionPlane,
+                TItem Portals,
+                TItem RoomPortal,
+                TItem Unknown2,
+                TItem LightingTemplate,
+                TItem ImageSpace,
+                TItem LinkedRooms,
+                TItem MultiBoundPrimitive,
+                TItem RagdollData,
+                TItem RagdollBipedData,
+                TItem Radius,
+                TItem Reflections,
+                TItem LitWater,
+                TItem Emittance,
+                TItem LightData,
+                TItem Alpha,
+                TItem TeleportDestination,
+                TItem TeleportMessageBox,
+                TItem MultiboundReference,
+                TItem Unknown3,
+                TItem Unknown4,
+                TItem WaterVelocity,
+                TItem Unknown5,
+                TItem Unknown6,
+                TItem Unknown7,
+                TItem Unknown8,
+                TItem Scale,
+                TItem SpawnContainer,
+                TItem ActivateParents,
+                TItem LeveledItemBaseObject,
+                TItem LevelModifier,
+                TItem PersistentLocation,
+                TItem CollisionLayer,
+                TItem Lock,
+                TItem EncounterZone,
+                TItem NavigationDoorLink,
+                TItem LocationRefTypes,
+                TItem IgnoredBySandbox,
+                TItem Ownership,
+                TItem ItemCount,
+                TItem Charge,
+                TItem LocationReference,
+                TItem EnableParent,
+                TItem LinkedReferences,
+                TItem Patrol,
+                TItem Action,
+                TItem HeadTrackingWeight,
+                TItem FavorCost,
+                TItem OpenByDefault,
+                TItem MapMarker,
+                TItem AttachRef,
+                TItem DistantLodData,
+                TItem Position,
+                TItem Rotation,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +834,66 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Base = Base;
+                this.BoundHalfExtents = BoundHalfExtents;
+                this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
+                this.Unknown = Unknown;
+                this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(OcclusionPlane, new Placement.Mask<TItem>(OcclusionPlane));
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(RoomPortal, new Placement.Mask<TItem>(RoomPortal));
+                this.Unknown2 = Unknown2;
+                this.LightingTemplate = LightingTemplate;
+                this.ImageSpace = ImageSpace;
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MultiBoundPrimitive = MultiBoundPrimitive;
+                this.RagdollData = RagdollData;
+                this.RagdollBipedData = RagdollBipedData;
+                this.Radius = Radius;
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Emittance = Emittance;
+                this.LightData = new MaskItem<TItem, LightData.Mask<TItem>?>(LightData, new LightData.Mask<TItem>(LightData));
+                this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(Alpha, new Alpha.Mask<TItem>(Alpha));
+                this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
+                this.TeleportMessageBox = TeleportMessageBox;
+                this.MultiboundReference = MultiboundReference;
+                this.Unknown3 = Unknown3;
+                this.Unknown4 = Unknown4;
+                this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(WaterVelocity, new WaterVelocity.Mask<TItem>(WaterVelocity));
+                this.Unknown5 = Unknown5;
+                this.Unknown6 = Unknown6;
+                this.Unknown7 = Unknown7;
+                this.Unknown8 = Unknown8;
+                this.Scale = Scale;
+                this.SpawnContainer = SpawnContainer;
+                this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(ActivateParents, new ActivateParents.Mask<TItem>(ActivateParents));
+                this.LeveledItemBaseObject = LeveledItemBaseObject;
+                this.LevelModifier = LevelModifier;
+                this.PersistentLocation = PersistentLocation;
+                this.CollisionLayer = CollisionLayer;
+                this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
+                this.EncounterZone = EncounterZone;
+                this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.IgnoredBySandbox = IgnoredBySandbox;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.ItemCount = ItemCount;
+                this.Charge = Charge;
+                this.LocationReference = LocationReference;
+                this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
+                this.Action = Action;
+                this.HeadTrackingWeight = HeadTrackingWeight;
+                this.FavorCost = FavorCost;
+                this.OpenByDefault = OpenByDefault;
+                this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(MapMarker, new MapMarker.Mask<TItem>(MapMarker));
+                this.AttachRef = AttachRef;
+                this.DistantLodData = DistantLodData;
+                this.Position = Position;
+                this.Rotation = Rotation;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +902,69 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Base;
+            public TItem BoundHalfExtents;
+            public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
+            public TItem Unknown;
+            public MaskItem<TItem, Placement.Mask<TItem>?>? OcclusionPlane { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>? Portals;
+            public MaskItem<TItem, Placement.Mask<TItem>?>? RoomPortal { get; set; }
+            public TItem Unknown2;
+            public TItem LightingTemplate;
+            public TItem ImageSpace;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkedRooms;
+            public TItem MultiBoundPrimitive;
+            public TItem RagdollData;
+            public TItem RagdollBipedData;
+            public TItem Radius;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>? Reflections;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LitWater;
+            public TItem Emittance;
+            public MaskItem<TItem, LightData.Mask<TItem>?>? LightData { get; set; }
+            public MaskItem<TItem, Alpha.Mask<TItem>?>? Alpha { get; set; }
+            public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
+            public TItem TeleportMessageBox;
+            public TItem MultiboundReference;
+            public TItem Unknown3;
+            public TItem Unknown4;
+            public MaskItem<TItem, WaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
+            public TItem Unknown5;
+            public TItem Unknown6;
+            public TItem Unknown7;
+            public TItem Unknown8;
+            public TItem Scale;
+            public TItem SpawnContainer;
+            public MaskItem<TItem, ActivateParents.Mask<TItem>?>? ActivateParents { get; set; }
+            public TItem LeveledItemBaseObject;
+            public TItem LevelModifier;
+            public TItem PersistentLocation;
+            public TItem CollisionLayer;
+            public MaskItem<TItem, LockData.Mask<TItem>?>? Lock { get; set; }
+            public TItem EncounterZone;
+            public MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>? NavigationDoorLink { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
+            public TItem IgnoredBySandbox;
+            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem ItemCount;
+            public TItem Charge;
+            public TItem LocationReference;
+            public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>? LinkedReferences;
+            public MaskItem<TItem, Patrol.Mask<TItem>?>? Patrol { get; set; }
+            public TItem Action;
+            public TItem HeadTrackingWeight;
+            public TItem FavorCost;
+            public TItem OpenByDefault;
+            public MaskItem<TItem, MapMarker.Mask<TItem>?>? MapMarker { get; set; }
+            public TItem AttachRef;
+            public TItem DistantLodData;
+            public TItem Position;
+            public TItem Rotation;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +978,131 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.BoundHalfExtents, rhs.BoundHalfExtents)) return false;
+                if (!object.Equals(this.Primitive, rhs.Primitive)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.OcclusionPlane, rhs.OcclusionPlane)) return false;
+                if (!object.Equals(this.Portals, rhs.Portals)) return false;
+                if (!object.Equals(this.RoomPortal, rhs.RoomPortal)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
+                if (!object.Equals(this.LinkedRooms, rhs.LinkedRooms)) return false;
+                if (!object.Equals(this.MultiBoundPrimitive, rhs.MultiBoundPrimitive)) return false;
+                if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
+                if (!object.Equals(this.RagdollBipedData, rhs.RagdollBipedData)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Reflections, rhs.Reflections)) return false;
+                if (!object.Equals(this.LitWater, rhs.LitWater)) return false;
+                if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
+                if (!object.Equals(this.LightData, rhs.LightData)) return false;
+                if (!object.Equals(this.Alpha, rhs.Alpha)) return false;
+                if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
+                if (!object.Equals(this.TeleportMessageBox, rhs.TeleportMessageBox)) return false;
+                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
+                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
+                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
+                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.SpawnContainer, rhs.SpawnContainer)) return false;
+                if (!object.Equals(this.ActivateParents, rhs.ActivateParents)) return false;
+                if (!object.Equals(this.LeveledItemBaseObject, rhs.LeveledItemBaseObject)) return false;
+                if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
+                if (!object.Equals(this.PersistentLocation, rhs.PersistentLocation)) return false;
+                if (!object.Equals(this.CollisionLayer, rhs.CollisionLayer)) return false;
+                if (!object.Equals(this.Lock, rhs.Lock)) return false;
+                if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
+                if (!object.Equals(this.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
+                if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
+                if (!object.Equals(this.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
+                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.ItemCount, rhs.ItemCount)) return false;
+                if (!object.Equals(this.Charge, rhs.Charge)) return false;
+                if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
+                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+                if (!object.Equals(this.LinkedReferences, rhs.LinkedReferences)) return false;
+                if (!object.Equals(this.Patrol, rhs.Patrol)) return false;
+                if (!object.Equals(this.Action, rhs.Action)) return false;
+                if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
+                if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
+                if (!object.Equals(this.OpenByDefault, rhs.OpenByDefault)) return false;
+                if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
+                if (!object.Equals(this.AttachRef, rhs.AttachRef)) return false;
+                if (!object.Equals(this.DistantLodData, rhs.DistantLodData)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Base);
+                hash.Add(this.BoundHalfExtents);
+                hash.Add(this.Primitive);
+                hash.Add(this.Unknown);
+                hash.Add(this.OcclusionPlane);
+                hash.Add(this.Portals);
+                hash.Add(this.RoomPortal);
+                hash.Add(this.Unknown2);
+                hash.Add(this.LightingTemplate);
+                hash.Add(this.ImageSpace);
+                hash.Add(this.LinkedRooms);
+                hash.Add(this.MultiBoundPrimitive);
+                hash.Add(this.RagdollData);
+                hash.Add(this.RagdollBipedData);
+                hash.Add(this.Radius);
+                hash.Add(this.Reflections);
+                hash.Add(this.LitWater);
+                hash.Add(this.Emittance);
+                hash.Add(this.LightData);
+                hash.Add(this.Alpha);
+                hash.Add(this.TeleportDestination);
+                hash.Add(this.TeleportMessageBox);
+                hash.Add(this.MultiboundReference);
+                hash.Add(this.Unknown3);
+                hash.Add(this.Unknown4);
+                hash.Add(this.WaterVelocity);
+                hash.Add(this.Unknown5);
+                hash.Add(this.Unknown6);
+                hash.Add(this.Unknown7);
+                hash.Add(this.Unknown8);
+                hash.Add(this.Scale);
+                hash.Add(this.SpawnContainer);
+                hash.Add(this.ActivateParents);
+                hash.Add(this.LeveledItemBaseObject);
+                hash.Add(this.LevelModifier);
+                hash.Add(this.PersistentLocation);
+                hash.Add(this.CollisionLayer);
+                hash.Add(this.Lock);
+                hash.Add(this.EncounterZone);
+                hash.Add(this.NavigationDoorLink);
+                hash.Add(this.LocationRefTypes);
+                hash.Add(this.IgnoredBySandbox);
+                hash.Add(this.Ownership);
+                hash.Add(this.ItemCount);
+                hash.Add(this.Charge);
+                hash.Add(this.LocationReference);
+                hash.Add(this.EnableParent);
+                hash.Add(this.LinkedReferences);
+                hash.Add(this.Patrol);
+                hash.Add(this.Action);
+                hash.Add(this.HeadTrackingWeight);
+                hash.Add(this.FavorCost);
+                hash.Add(this.OpenByDefault);
+                hash.Add(this.MapMarker);
+                hash.Add(this.AttachRef);
+                hash.Add(this.DistantLodData);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +1113,189 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Base)) return false;
+                if (!eval(this.BoundHalfExtents)) return false;
+                if (Primitive != null)
+                {
+                    if (!eval(this.Primitive.Overall)) return false;
+                    if (this.Primitive.Specific != null && !this.Primitive.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Unknown)) return false;
+                if (OcclusionPlane != null)
+                {
+                    if (!eval(this.OcclusionPlane.Overall)) return false;
+                    if (this.OcclusionPlane.Specific != null && !this.OcclusionPlane.Specific.All(eval)) return false;
+                }
+                if (this.Portals != null)
+                {
+                    if (!eval(this.Portals.Overall)) return false;
+                    if (this.Portals.Specific != null)
+                    {
+                        foreach (var item in this.Portals.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (RoomPortal != null)
+                {
+                    if (!eval(this.RoomPortal.Overall)) return false;
+                    if (this.RoomPortal.Specific != null && !this.RoomPortal.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.LightingTemplate)) return false;
+                if (!eval(this.ImageSpace)) return false;
+                if (this.LinkedRooms != null)
+                {
+                    if (!eval(this.LinkedRooms.Overall)) return false;
+                    if (this.LinkedRooms.Specific != null)
+                    {
+                        foreach (var item in this.LinkedRooms.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.MultiBoundPrimitive)) return false;
+                if (!eval(this.RagdollData)) return false;
+                if (!eval(this.RagdollBipedData)) return false;
+                if (!eval(this.Radius)) return false;
+                if (this.Reflections != null)
+                {
+                    if (!eval(this.Reflections.Overall)) return false;
+                    if (this.Reflections.Specific != null)
+                    {
+                        foreach (var item in this.Reflections.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LitWater != null)
+                {
+                    if (!eval(this.LitWater.Overall)) return false;
+                    if (this.LitWater.Specific != null)
+                    {
+                        foreach (var item in this.LitWater.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Emittance)) return false;
+                if (LightData != null)
+                {
+                    if (!eval(this.LightData.Overall)) return false;
+                    if (this.LightData.Specific != null && !this.LightData.Specific.All(eval)) return false;
+                }
+                if (Alpha != null)
+                {
+                    if (!eval(this.Alpha.Overall)) return false;
+                    if (this.Alpha.Specific != null && !this.Alpha.Specific.All(eval)) return false;
+                }
+                if (TeleportDestination != null)
+                {
+                    if (!eval(this.TeleportDestination.Overall)) return false;
+                    if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.All(eval)) return false;
+                }
+                if (!eval(this.TeleportMessageBox)) return false;
+                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (WaterVelocity != null)
+                {
+                    if (!eval(this.WaterVelocity.Overall)) return false;
+                    if (this.WaterVelocity.Specific != null && !this.WaterVelocity.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Unknown5)) return false;
+                if (!eval(this.Unknown6)) return false;
+                if (!eval(this.Unknown7)) return false;
+                if (!eval(this.Unknown8)) return false;
+                if (!eval(this.Scale)) return false;
+                if (!eval(this.SpawnContainer)) return false;
+                if (ActivateParents != null)
+                {
+                    if (!eval(this.ActivateParents.Overall)) return false;
+                    if (this.ActivateParents.Specific != null && !this.ActivateParents.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LeveledItemBaseObject)) return false;
+                if (!eval(this.LevelModifier)) return false;
+                if (!eval(this.PersistentLocation)) return false;
+                if (!eval(this.CollisionLayer)) return false;
+                if (Lock != null)
+                {
+                    if (!eval(this.Lock.Overall)) return false;
+                    if (this.Lock.Specific != null && !this.Lock.Specific.All(eval)) return false;
+                }
+                if (!eval(this.EncounterZone)) return false;
+                if (NavigationDoorLink != null)
+                {
+                    if (!eval(this.NavigationDoorLink.Overall)) return false;
+                    if (this.NavigationDoorLink.Specific != null && !this.NavigationDoorLink.Specific.All(eval)) return false;
+                }
+                if (this.LocationRefTypes != null)
+                {
+                    if (!eval(this.LocationRefTypes.Overall)) return false;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.IgnoredBySandbox)) return false;
+                if (Ownership != null)
+                {
+                    if (!eval(this.Ownership.Overall)) return false;
+                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ItemCount)) return false;
+                if (!eval(this.Charge)) return false;
+                if (!eval(this.LocationReference)) return false;
+                if (EnableParent != null)
+                {
+                    if (!eval(this.EnableParent.Overall)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (!eval(this.LinkedReferences.Overall)) return false;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Patrol != null)
+                {
+                    if (!eval(this.Patrol.Overall)) return false;
+                    if (this.Patrol.Specific != null && !this.Patrol.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Action)) return false;
+                if (!eval(this.HeadTrackingWeight)) return false;
+                if (!eval(this.FavorCost)) return false;
+                if (!eval(this.OpenByDefault)) return false;
+                if (MapMarker != null)
+                {
+                    if (!eval(this.MapMarker.Overall)) return false;
+                    if (this.MapMarker.Specific != null && !this.MapMarker.Specific.All(eval)) return false;
+                }
+                if (!eval(this.AttachRef)) return false;
+                if (!eval(this.DistantLodData)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +1304,189 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Base)) return true;
+                if (eval(this.BoundHalfExtents)) return true;
+                if (Primitive != null)
+                {
+                    if (eval(this.Primitive.Overall)) return true;
+                    if (this.Primitive.Specific != null && this.Primitive.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown)) return true;
+                if (OcclusionPlane != null)
+                {
+                    if (eval(this.OcclusionPlane.Overall)) return true;
+                    if (this.OcclusionPlane.Specific != null && this.OcclusionPlane.Specific.Any(eval)) return true;
+                }
+                if (this.Portals != null)
+                {
+                    if (eval(this.Portals.Overall)) return true;
+                    if (this.Portals.Specific != null)
+                    {
+                        foreach (var item in this.Portals.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (RoomPortal != null)
+                {
+                    if (eval(this.RoomPortal.Overall)) return true;
+                    if (this.RoomPortal.Specific != null && this.RoomPortal.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.LightingTemplate)) return true;
+                if (eval(this.ImageSpace)) return true;
+                if (this.LinkedRooms != null)
+                {
+                    if (eval(this.LinkedRooms.Overall)) return true;
+                    if (this.LinkedRooms.Specific != null)
+                    {
+                        foreach (var item in this.LinkedRooms.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.MultiBoundPrimitive)) return true;
+                if (eval(this.RagdollData)) return true;
+                if (eval(this.RagdollBipedData)) return true;
+                if (eval(this.Radius)) return true;
+                if (this.Reflections != null)
+                {
+                    if (eval(this.Reflections.Overall)) return true;
+                    if (this.Reflections.Specific != null)
+                    {
+                        foreach (var item in this.Reflections.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LitWater != null)
+                {
+                    if (eval(this.LitWater.Overall)) return true;
+                    if (this.LitWater.Specific != null)
+                    {
+                        foreach (var item in this.LitWater.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Emittance)) return true;
+                if (LightData != null)
+                {
+                    if (eval(this.LightData.Overall)) return true;
+                    if (this.LightData.Specific != null && this.LightData.Specific.Any(eval)) return true;
+                }
+                if (Alpha != null)
+                {
+                    if (eval(this.Alpha.Overall)) return true;
+                    if (this.Alpha.Specific != null && this.Alpha.Specific.Any(eval)) return true;
+                }
+                if (TeleportDestination != null)
+                {
+                    if (eval(this.TeleportDestination.Overall)) return true;
+                    if (this.TeleportDestination.Specific != null && this.TeleportDestination.Specific.Any(eval)) return true;
+                }
+                if (eval(this.TeleportMessageBox)) return true;
+                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.Unknown3)) return true;
+                if (eval(this.Unknown4)) return true;
+                if (WaterVelocity != null)
+                {
+                    if (eval(this.WaterVelocity.Overall)) return true;
+                    if (this.WaterVelocity.Specific != null && this.WaterVelocity.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown5)) return true;
+                if (eval(this.Unknown6)) return true;
+                if (eval(this.Unknown7)) return true;
+                if (eval(this.Unknown8)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.SpawnContainer)) return true;
+                if (ActivateParents != null)
+                {
+                    if (eval(this.ActivateParents.Overall)) return true;
+                    if (this.ActivateParents.Specific != null && this.ActivateParents.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LeveledItemBaseObject)) return true;
+                if (eval(this.LevelModifier)) return true;
+                if (eval(this.PersistentLocation)) return true;
+                if (eval(this.CollisionLayer)) return true;
+                if (Lock != null)
+                {
+                    if (eval(this.Lock.Overall)) return true;
+                    if (this.Lock.Specific != null && this.Lock.Specific.Any(eval)) return true;
+                }
+                if (eval(this.EncounterZone)) return true;
+                if (NavigationDoorLink != null)
+                {
+                    if (eval(this.NavigationDoorLink.Overall)) return true;
+                    if (this.NavigationDoorLink.Specific != null && this.NavigationDoorLink.Specific.Any(eval)) return true;
+                }
+                if (this.LocationRefTypes != null)
+                {
+                    if (eval(this.LocationRefTypes.Overall)) return true;
+                    if (this.LocationRefTypes.Specific != null)
+                    {
+                        foreach (var item in this.LocationRefTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.IgnoredBySandbox)) return true;
+                if (Ownership != null)
+                {
+                    if (eval(this.Ownership.Overall)) return true;
+                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ItemCount)) return true;
+                if (eval(this.Charge)) return true;
+                if (eval(this.LocationReference)) return true;
+                if (EnableParent != null)
+                {
+                    if (eval(this.EnableParent.Overall)) return true;
+                    if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
+                }
+                if (this.LinkedReferences != null)
+                {
+                    if (eval(this.LinkedReferences.Overall)) return true;
+                    if (this.LinkedReferences.Specific != null)
+                    {
+                        foreach (var item in this.LinkedReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Patrol != null)
+                {
+                    if (eval(this.Patrol.Overall)) return true;
+                    if (this.Patrol.Specific != null && this.Patrol.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Action)) return true;
+                if (eval(this.HeadTrackingWeight)) return true;
+                if (eval(this.FavorCost)) return true;
+                if (eval(this.OpenByDefault)) return true;
+                if (MapMarker != null)
+                {
+                    if (eval(this.MapMarker.Overall)) return true;
+                    if (this.MapMarker.Specific != null && this.MapMarker.Specific.Any(eval)) return true;
+                }
+                if (eval(this.AttachRef)) return true;
+                if (eval(this.DistantLodData)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +1502,147 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Base = eval(this.Base);
+                obj.BoundHalfExtents = eval(this.BoundHalfExtents);
+                obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
+                obj.Unknown = eval(this.Unknown);
+                obj.OcclusionPlane = this.OcclusionPlane == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.OcclusionPlane.Overall), this.OcclusionPlane.Specific?.Translate(eval));
+                if (Portals != null)
+                {
+                    obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), Enumerable.Empty<MaskItemIndexed<R, Portal.Mask<R>?>>());
+                    if (Portals.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Portal.Mask<R>?>>();
+                        obj.Portals.Specific = l;
+                        foreach (var item in Portals.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Portal.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Portal.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.RoomPortal = this.RoomPortal == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.RoomPortal.Overall), this.RoomPortal.Specific?.Translate(eval));
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.LightingTemplate = eval(this.LightingTemplate);
+                obj.ImageSpace = eval(this.ImageSpace);
+                if (LinkedRooms != null)
+                {
+                    obj.LinkedRooms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkedRooms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LinkedRooms.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LinkedRooms.Specific = l;
+                        foreach (var item in LinkedRooms.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.MultiBoundPrimitive = eval(this.MultiBoundPrimitive);
+                obj.RagdollData = eval(this.RagdollData);
+                obj.RagdollBipedData = eval(this.RagdollBipedData);
+                obj.Radius = eval(this.Radius);
+                if (Reflections != null)
+                {
+                    obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), Enumerable.Empty<MaskItemIndexed<R, WaterReflection.Mask<R>?>>());
+                    if (Reflections.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WaterReflection.Mask<R>?>>();
+                        obj.Reflections.Specific = l;
+                        foreach (var item in Reflections.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, WaterReflection.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WaterReflection.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LitWater != null)
+                {
+                    obj.LitWater = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LitWater.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LitWater.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LitWater.Specific = l;
+                        foreach (var item in LitWater.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Emittance = eval(this.Emittance);
+                obj.LightData = this.LightData == null ? null : new MaskItem<R, LightData.Mask<R>?>(eval(this.LightData.Overall), this.LightData.Specific?.Translate(eval));
+                obj.Alpha = this.Alpha == null ? null : new MaskItem<R, Alpha.Mask<R>?>(eval(this.Alpha.Overall), this.Alpha.Specific?.Translate(eval));
+                obj.TeleportDestination = this.TeleportDestination == null ? null : new MaskItem<R, TeleportDestination.Mask<R>?>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
+                obj.TeleportMessageBox = eval(this.TeleportMessageBox);
+                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, WaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
+                obj.Unknown5 = eval(this.Unknown5);
+                obj.Unknown6 = eval(this.Unknown6);
+                obj.Unknown7 = eval(this.Unknown7);
+                obj.Unknown8 = eval(this.Unknown8);
+                obj.Scale = eval(this.Scale);
+                obj.SpawnContainer = eval(this.SpawnContainer);
+                obj.ActivateParents = this.ActivateParents == null ? null : new MaskItem<R, ActivateParents.Mask<R>?>(eval(this.ActivateParents.Overall), this.ActivateParents.Specific?.Translate(eval));
+                obj.LeveledItemBaseObject = eval(this.LeveledItemBaseObject);
+                obj.LevelModifier = eval(this.LevelModifier);
+                obj.PersistentLocation = eval(this.PersistentLocation);
+                obj.CollisionLayer = eval(this.CollisionLayer);
+                obj.Lock = this.Lock == null ? null : new MaskItem<R, LockData.Mask<R>?>(eval(this.Lock.Overall), this.Lock.Specific?.Translate(eval));
+                obj.EncounterZone = eval(this.EncounterZone);
+                obj.NavigationDoorLink = this.NavigationDoorLink == null ? null : new MaskItem<R, NavigationDoorLink.Mask<R>?>(eval(this.NavigationDoorLink.Overall), this.NavigationDoorLink.Specific?.Translate(eval));
+                if (LocationRefTypes != null)
+                {
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LocationRefTypes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LocationRefTypes.Specific = l;
+                        foreach (var item in LocationRefTypes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.IgnoredBySandbox = eval(this.IgnoredBySandbox);
+                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.ItemCount = eval(this.ItemCount);
+                obj.Charge = eval(this.Charge);
+                obj.LocationReference = eval(this.LocationReference);
+                obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
+                if (LinkedReferences != null)
+                {
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    if (LinkedReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
+                        obj.LinkedReferences.Specific = l;
+                        foreach (var item in LinkedReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Patrol = this.Patrol == null ? null : new MaskItem<R, Patrol.Mask<R>?>(eval(this.Patrol.Overall), this.Patrol.Specific?.Translate(eval));
+                obj.Action = eval(this.Action);
+                obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
+                obj.FavorCost = eval(this.FavorCost);
+                obj.OpenByDefault = eval(this.OpenByDefault);
+                obj.MapMarker = this.MapMarker == null ? null : new MaskItem<R, MapMarker.Mask<R>?>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
+                obj.AttachRef = eval(this.AttachRef);
+                obj.DistantLodData = eval(this.DistantLodData);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -317,6 +1665,360 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.Base ?? true)
+                    {
+                        fg.AppendItem(Base, "Base");
+                    }
+                    if (printMask?.BoundHalfExtents ?? true)
+                    {
+                        fg.AppendItem(BoundHalfExtents, "BoundHalfExtents");
+                    }
+                    if (printMask?.Primitive?.Overall ?? true)
+                    {
+                        Primitive?.ToString(fg);
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.OcclusionPlane?.Overall ?? true)
+                    {
+                        OcclusionPlane?.ToString(fg);
+                    }
+                    if ((printMask?.Portals?.Overall ?? true)
+                        && Portals.TryGet(out var PortalsItem))
+                    {
+                        fg.AppendLine("Portals =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PortalsItem.Overall);
+                            if (PortalsItem.Specific != null)
+                            {
+                                foreach (var subItem in PortalsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.RoomPortal?.Overall ?? true)
+                    {
+                        RoomPortal?.ToString(fg);
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.LightingTemplate ?? true)
+                    {
+                        fg.AppendItem(LightingTemplate, "LightingTemplate");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        fg.AppendItem(ImageSpace, "ImageSpace");
+                    }
+                    if ((printMask?.LinkedRooms?.Overall ?? true)
+                        && LinkedRooms.TryGet(out var LinkedRoomsItem))
+                    {
+                        fg.AppendLine("LinkedRooms =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LinkedRoomsItem.Overall);
+                            if (LinkedRoomsItem.Specific != null)
+                            {
+                                foreach (var subItem in LinkedRoomsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.MultiBoundPrimitive ?? true)
+                    {
+                        fg.AppendItem(MultiBoundPrimitive, "MultiBoundPrimitive");
+                    }
+                    if (printMask?.RagdollData ?? true)
+                    {
+                        fg.AppendItem(RagdollData, "RagdollData");
+                    }
+                    if (printMask?.RagdollBipedData ?? true)
+                    {
+                        fg.AppendItem(RagdollBipedData, "RagdollBipedData");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendItem(Radius, "Radius");
+                    }
+                    if ((printMask?.Reflections?.Overall ?? true)
+                        && Reflections.TryGet(out var ReflectionsItem))
+                    {
+                        fg.AppendLine("Reflections =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ReflectionsItem.Overall);
+                            if (ReflectionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ReflectionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LitWater?.Overall ?? true)
+                        && LitWater.TryGet(out var LitWaterItem))
+                    {
+                        fg.AppendLine("LitWater =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LitWaterItem.Overall);
+                            if (LitWaterItem.Specific != null)
+                            {
+                                foreach (var subItem in LitWaterItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Emittance ?? true)
+                    {
+                        fg.AppendItem(Emittance, "Emittance");
+                    }
+                    if (printMask?.LightData?.Overall ?? true)
+                    {
+                        LightData?.ToString(fg);
+                    }
+                    if (printMask?.Alpha?.Overall ?? true)
+                    {
+                        Alpha?.ToString(fg);
+                    }
+                    if (printMask?.TeleportDestination?.Overall ?? true)
+                    {
+                        TeleportDestination?.ToString(fg);
+                    }
+                    if (printMask?.TeleportMessageBox ?? true)
+                    {
+                        fg.AppendItem(TeleportMessageBox, "TeleportMessageBox");
+                    }
+                    if (printMask?.MultiboundReference ?? true)
+                    {
+                        fg.AppendItem(MultiboundReference, "MultiboundReference");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        fg.AppendItem(Unknown4, "Unknown4");
+                    }
+                    if (printMask?.WaterVelocity?.Overall ?? true)
+                    {
+                        WaterVelocity?.ToString(fg);
+                    }
+                    if (printMask?.Unknown5 ?? true)
+                    {
+                        fg.AppendItem(Unknown5, "Unknown5");
+                    }
+                    if (printMask?.Unknown6 ?? true)
+                    {
+                        fg.AppendItem(Unknown6, "Unknown6");
+                    }
+                    if (printMask?.Unknown7 ?? true)
+                    {
+                        fg.AppendItem(Unknown7, "Unknown7");
+                    }
+                    if (printMask?.Unknown8 ?? true)
+                    {
+                        fg.AppendItem(Unknown8, "Unknown8");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        fg.AppendItem(Scale, "Scale");
+                    }
+                    if (printMask?.SpawnContainer ?? true)
+                    {
+                        fg.AppendItem(SpawnContainer, "SpawnContainer");
+                    }
+                    if (printMask?.ActivateParents?.Overall ?? true)
+                    {
+                        ActivateParents?.ToString(fg);
+                    }
+                    if (printMask?.LeveledItemBaseObject ?? true)
+                    {
+                        fg.AppendItem(LeveledItemBaseObject, "LeveledItemBaseObject");
+                    }
+                    if (printMask?.LevelModifier ?? true)
+                    {
+                        fg.AppendItem(LevelModifier, "LevelModifier");
+                    }
+                    if (printMask?.PersistentLocation ?? true)
+                    {
+                        fg.AppendItem(PersistentLocation, "PersistentLocation");
+                    }
+                    if (printMask?.CollisionLayer ?? true)
+                    {
+                        fg.AppendItem(CollisionLayer, "CollisionLayer");
+                    }
+                    if (printMask?.Lock?.Overall ?? true)
+                    {
+                        Lock?.ToString(fg);
+                    }
+                    if (printMask?.EncounterZone ?? true)
+                    {
+                        fg.AppendItem(EncounterZone, "EncounterZone");
+                    }
+                    if (printMask?.NavigationDoorLink?.Overall ?? true)
+                    {
+                        NavigationDoorLink?.ToString(fg);
+                    }
+                    if ((printMask?.LocationRefTypes?.Overall ?? true)
+                        && LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                    {
+                        fg.AppendLine("LocationRefTypes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationRefTypesItem.Overall);
+                            if (LocationRefTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationRefTypesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.IgnoredBySandbox ?? true)
+                    {
+                        fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                    }
+                    if (printMask?.Ownership?.Overall ?? true)
+                    {
+                        Ownership?.ToString(fg);
+                    }
+                    if (printMask?.ItemCount ?? true)
+                    {
+                        fg.AppendItem(ItemCount, "ItemCount");
+                    }
+                    if (printMask?.Charge ?? true)
+                    {
+                        fg.AppendItem(Charge, "Charge");
+                    }
+                    if (printMask?.LocationReference ?? true)
+                    {
+                        fg.AppendItem(LocationReference, "LocationReference");
+                    }
+                    if (printMask?.EnableParent?.Overall ?? true)
+                    {
+                        EnableParent?.ToString(fg);
+                    }
+                    if ((printMask?.LinkedReferences?.Overall ?? true)
+                        && LinkedReferences.TryGet(out var LinkedReferencesItem))
+                    {
+                        fg.AppendLine("LinkedReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LinkedReferencesItem.Overall);
+                            if (LinkedReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LinkedReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Patrol?.Overall ?? true)
+                    {
+                        Patrol?.ToString(fg);
+                    }
+                    if (printMask?.Action ?? true)
+                    {
+                        fg.AppendItem(Action, "Action");
+                    }
+                    if (printMask?.HeadTrackingWeight ?? true)
+                    {
+                        fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                    }
+                    if (printMask?.FavorCost ?? true)
+                    {
+                        fg.AppendItem(FavorCost, "FavorCost");
+                    }
+                    if (printMask?.OpenByDefault ?? true)
+                    {
+                        fg.AppendItem(OpenByDefault, "OpenByDefault");
+                    }
+                    if (printMask?.MapMarker?.Overall ?? true)
+                    {
+                        MapMarker?.ToString(fg);
+                    }
+                    if (printMask?.AttachRef ?? true)
+                    {
+                        fg.AppendItem(AttachRef, "AttachRef");
+                    }
+                    if (printMask?.DistantLodData ?? true)
+                    {
+                        fg.AppendItem(DistantLodData, "DistantLodData");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        fg.AppendItem(Position, "Position");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        fg.AppendItem(Rotation, "Rotation");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +2030,195 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Base;
+            public Exception? BoundHalfExtents;
+            public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
+            public Exception? Unknown;
+            public MaskItem<Exception?, Placement.ErrorMask?>? OcclusionPlane;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>? Portals;
+            public MaskItem<Exception?, Placement.ErrorMask?>? RoomPortal;
+            public Exception? Unknown2;
+            public Exception? LightingTemplate;
+            public Exception? ImageSpace;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkedRooms;
+            public Exception? MultiBoundPrimitive;
+            public Exception? RagdollData;
+            public Exception? RagdollBipedData;
+            public Exception? Radius;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>? Reflections;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LitWater;
+            public Exception? Emittance;
+            public MaskItem<Exception?, LightData.ErrorMask?>? LightData;
+            public MaskItem<Exception?, Alpha.ErrorMask?>? Alpha;
+            public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
+            public Exception? TeleportMessageBox;
+            public Exception? MultiboundReference;
+            public Exception? Unknown3;
+            public Exception? Unknown4;
+            public MaskItem<Exception?, WaterVelocity.ErrorMask?>? WaterVelocity;
+            public Exception? Unknown5;
+            public Exception? Unknown6;
+            public Exception? Unknown7;
+            public Exception? Unknown8;
+            public Exception? Scale;
+            public Exception? SpawnContainer;
+            public MaskItem<Exception?, ActivateParents.ErrorMask?>? ActivateParents;
+            public Exception? LeveledItemBaseObject;
+            public Exception? LevelModifier;
+            public Exception? PersistentLocation;
+            public Exception? CollisionLayer;
+            public MaskItem<Exception?, LockData.ErrorMask?>? Lock;
+            public Exception? EncounterZone;
+            public MaskItem<Exception?, NavigationDoorLink.ErrorMask?>? NavigationDoorLink;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
+            public Exception? IgnoredBySandbox;
+            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? ItemCount;
+            public Exception? Charge;
+            public Exception? LocationReference;
+            public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>? LinkedReferences;
+            public MaskItem<Exception?, Patrol.ErrorMask?>? Patrol;
+            public Exception? Action;
+            public Exception? HeadTrackingWeight;
+            public Exception? FavorCost;
+            public Exception? OpenByDefault;
+            public MaskItem<Exception?, MapMarker.ErrorMask?>? MapMarker;
+            public Exception? AttachRef;
+            public Exception? DistantLodData;
+            public Exception? Position;
+            public Exception? Rotation;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case PlacedObject_FieldIndex.Base:
+                        return Base;
+                    case PlacedObject_FieldIndex.BoundHalfExtents:
+                        return BoundHalfExtents;
+                    case PlacedObject_FieldIndex.Primitive:
+                        return Primitive;
+                    case PlacedObject_FieldIndex.Unknown:
+                        return Unknown;
+                    case PlacedObject_FieldIndex.OcclusionPlane:
+                        return OcclusionPlane;
+                    case PlacedObject_FieldIndex.Portals:
+                        return Portals;
+                    case PlacedObject_FieldIndex.RoomPortal:
+                        return RoomPortal;
+                    case PlacedObject_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case PlacedObject_FieldIndex.LightingTemplate:
+                        return LightingTemplate;
+                    case PlacedObject_FieldIndex.ImageSpace:
+                        return ImageSpace;
+                    case PlacedObject_FieldIndex.LinkedRooms:
+                        return LinkedRooms;
+                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                        return MultiBoundPrimitive;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        return RagdollData;
+                    case PlacedObject_FieldIndex.RagdollBipedData:
+                        return RagdollBipedData;
+                    case PlacedObject_FieldIndex.Radius:
+                        return Radius;
+                    case PlacedObject_FieldIndex.Reflections:
+                        return Reflections;
+                    case PlacedObject_FieldIndex.LitWater:
+                        return LitWater;
+                    case PlacedObject_FieldIndex.Emittance:
+                        return Emittance;
+                    case PlacedObject_FieldIndex.LightData:
+                        return LightData;
+                    case PlacedObject_FieldIndex.Alpha:
+                        return Alpha;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        return TeleportDestination;
+                    case PlacedObject_FieldIndex.TeleportMessageBox:
+                        return TeleportMessageBox;
+                    case PlacedObject_FieldIndex.MultiboundReference:
+                        return MultiboundReference;
+                    case PlacedObject_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case PlacedObject_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case PlacedObject_FieldIndex.WaterVelocity:
+                        return WaterVelocity;
+                    case PlacedObject_FieldIndex.Unknown5:
+                        return Unknown5;
+                    case PlacedObject_FieldIndex.Unknown6:
+                        return Unknown6;
+                    case PlacedObject_FieldIndex.Unknown7:
+                        return Unknown7;
+                    case PlacedObject_FieldIndex.Unknown8:
+                        return Unknown8;
+                    case PlacedObject_FieldIndex.Scale:
+                        return Scale;
+                    case PlacedObject_FieldIndex.SpawnContainer:
+                        return SpawnContainer;
+                    case PlacedObject_FieldIndex.ActivateParents:
+                        return ActivateParents;
+                    case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                        return LeveledItemBaseObject;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        return LevelModifier;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        return PersistentLocation;
+                    case PlacedObject_FieldIndex.CollisionLayer:
+                        return CollisionLayer;
+                    case PlacedObject_FieldIndex.Lock:
+                        return Lock;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        return EncounterZone;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        return NavigationDoorLink;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        return LocationRefTypes;
+                    case PlacedObject_FieldIndex.IgnoredBySandbox:
+                        return IgnoredBySandbox;
+                    case PlacedObject_FieldIndex.Ownership:
+                        return Ownership;
+                    case PlacedObject_FieldIndex.ItemCount:
+                        return ItemCount;
+                    case PlacedObject_FieldIndex.Charge:
+                        return Charge;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        return LocationReference;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        return EnableParent;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        return LinkedReferences;
+                    case PlacedObject_FieldIndex.Patrol:
+                        return Patrol;
+                    case PlacedObject_FieldIndex.Action:
+                        return Action;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        return HeadTrackingWeight;
+                    case PlacedObject_FieldIndex.FavorCost:
+                        return FavorCost;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        return OpenByDefault;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        return MapMarker;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        return AttachRef;
+                    case PlacedObject_FieldIndex.DistantLodData:
+                        return DistantLodData;
+                    case PlacedObject_FieldIndex.Position:
+                        return Position;
+                    case PlacedObject_FieldIndex.Rotation:
+                        return Rotation;
+                    case PlacedObject_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +2229,186 @@ namespace Mutagen.Bethesda.Skyrim
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
+                    case PlacedObject_FieldIndex.BoundHalfExtents:
+                        this.BoundHalfExtents = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Primitive:
+                        this.Primitive = new MaskItem<Exception?, PlacedPrimitive.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case PlacedObject_FieldIndex.OcclusionPlane:
+                        this.OcclusionPlane = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Portals:
+                        this.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.RoomPortal:
+                        this.RoomPortal = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightingTemplate:
+                        this.LightingTemplate = ex;
+                        break;
+                    case PlacedObject_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LinkedRooms:
+                        this.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                        this.MultiBoundPrimitive = ex;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        this.RagdollData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollBipedData:
+                        this.RagdollBipedData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Reflections:
+                        this.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LitWater:
+                        this.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Emittance:
+                        this.Emittance = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightData:
+                        this.LightData = new MaskItem<Exception?, LightData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Alpha:
+                        this.Alpha = new MaskItem<Exception?, Alpha.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        this.TeleportDestination = new MaskItem<Exception?, TeleportDestination.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.TeleportMessageBox:
+                        this.TeleportMessageBox = ex;
+                        break;
+                    case PlacedObject_FieldIndex.MultiboundReference:
+                        this.MultiboundReference = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.WaterVelocity:
+                        this.WaterVelocity = new MaskItem<Exception?, WaterVelocity.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Unknown5:
+                        this.Unknown5 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown6:
+                        this.Unknown6 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown7:
+                        this.Unknown7 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown8:
+                        this.Unknown8 = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
+                    case PlacedObject_FieldIndex.SpawnContainer:
+                        this.SpawnContainer = ex;
+                        break;
+                    case PlacedObject_FieldIndex.ActivateParents:
+                        this.ActivateParents = new MaskItem<Exception?, ActivateParents.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                        this.LeveledItemBaseObject = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        this.LevelModifier = ex;
+                        break;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = ex;
+                        break;
+                    case PlacedObject_FieldIndex.CollisionLayer:
+                        this.CollisionLayer = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Lock:
+                        this.Lock = new MaskItem<Exception?, LockData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        this.EncounterZone = ex;
+                        break;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        this.NavigationDoorLink = new MaskItem<Exception?, NavigationDoorLink.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.IgnoredBySandbox:
+                        this.IgnoredBySandbox = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Ownership:
+                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.ItemCount:
+                        this.ItemCount = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Charge:
+                        this.Charge = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        this.LocationReference = ex;
+                        break;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Patrol:
+                        this.Patrol = new MaskItem<Exception?, Patrol.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.Action:
+                        this.Action = ex;
+                        break;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = ex;
+                        break;
+                    case PlacedObject_FieldIndex.FavorCost:
+                        this.FavorCost = ex;
+                        break;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        this.OpenByDefault = ex;
+                        break;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        this.MapMarker = new MaskItem<Exception?, MapMarker.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        this.AttachRef = ex;
+                        break;
+                    case PlacedObject_FieldIndex.DistantLodData:
+                        this.DistantLodData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case PlacedObject_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
+                    case PlacedObject_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +2420,186 @@ namespace Mutagen.Bethesda.Skyrim
                 PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.BoundHalfExtents:
+                        this.BoundHalfExtents = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Primitive:
+                        this.Primitive = (MaskItem<Exception?, PlacedPrimitive.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.OcclusionPlane:
+                        this.OcclusionPlane = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Portals:
+                        this.Portals = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.RoomPortal:
+                        this.RoomPortal = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightingTemplate:
+                        this.LightingTemplate = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LinkedRooms:
+                        this.LinkedRooms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                        this.MultiBoundPrimitive = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollData:
+                        this.RagdollData = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.RagdollBipedData:
+                        this.RagdollBipedData = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Reflections:
+                        this.Reflections = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LitWater:
+                        this.LitWater = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Emittance:
+                        this.Emittance = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LightData:
+                        this.LightData = (MaskItem<Exception?, LightData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Alpha:
+                        this.Alpha = (MaskItem<Exception?, Alpha.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.TeleportDestination:
+                        this.TeleportDestination = (MaskItem<Exception?, TeleportDestination.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.TeleportMessageBox:
+                        this.TeleportMessageBox = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.MultiboundReference:
+                        this.MultiboundReference = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.WaterVelocity:
+                        this.WaterVelocity = (MaskItem<Exception?, WaterVelocity.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown5:
+                        this.Unknown5 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown6:
+                        this.Unknown6 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown7:
+                        this.Unknown7 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Unknown8:
+                        this.Unknown8 = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.SpawnContainer:
+                        this.SpawnContainer = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ActivateParents:
+                        this.ActivateParents = (MaskItem<Exception?, ActivateParents.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                        this.LeveledItemBaseObject = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LevelModifier:
+                        this.LevelModifier = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.PersistentLocation:
+                        this.PersistentLocation = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.CollisionLayer:
+                        this.CollisionLayer = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Lock:
+                        this.Lock = (MaskItem<Exception?, LockData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.EncounterZone:
+                        this.EncounterZone = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.NavigationDoorLink:
+                        this.NavigationDoorLink = (MaskItem<Exception?, NavigationDoorLink.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LocationRefTypes:
+                        this.LocationRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.IgnoredBySandbox:
+                        this.IgnoredBySandbox = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Ownership:
+                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.ItemCount:
+                        this.ItemCount = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Charge:
+                        this.Charge = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LocationReference:
+                        this.LocationReference = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.EnableParent:
+                        this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.LinkedReferences:
+                        this.LinkedReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Patrol:
+                        this.Patrol = (MaskItem<Exception?, Patrol.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Action:
+                        this.Action = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.HeadTrackingWeight:
+                        this.HeadTrackingWeight = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.FavorCost:
+                        this.FavorCost = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.OpenByDefault:
+                        this.OpenByDefault = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.MapMarker:
+                        this.MapMarker = (MaskItem<Exception?, MapMarker.ErrorMask?>?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.AttachRef:
+                        this.AttachRef = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.DistantLodData:
+                        this.DistantLodData = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +2609,66 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Base != null) return true;
+                if (BoundHalfExtents != null) return true;
+                if (Primitive != null) return true;
+                if (Unknown != null) return true;
+                if (OcclusionPlane != null) return true;
+                if (Portals != null) return true;
+                if (RoomPortal != null) return true;
+                if (Unknown2 != null) return true;
+                if (LightingTemplate != null) return true;
+                if (ImageSpace != null) return true;
+                if (LinkedRooms != null) return true;
+                if (MultiBoundPrimitive != null) return true;
+                if (RagdollData != null) return true;
+                if (RagdollBipedData != null) return true;
+                if (Radius != null) return true;
+                if (Reflections != null) return true;
+                if (LitWater != null) return true;
+                if (Emittance != null) return true;
+                if (LightData != null) return true;
+                if (Alpha != null) return true;
+                if (TeleportDestination != null) return true;
+                if (TeleportMessageBox != null) return true;
+                if (MultiboundReference != null) return true;
+                if (Unknown3 != null) return true;
+                if (Unknown4 != null) return true;
+                if (WaterVelocity != null) return true;
+                if (Unknown5 != null) return true;
+                if (Unknown6 != null) return true;
+                if (Unknown7 != null) return true;
+                if (Unknown8 != null) return true;
+                if (Scale != null) return true;
+                if (SpawnContainer != null) return true;
+                if (ActivateParents != null) return true;
+                if (LeveledItemBaseObject != null) return true;
+                if (LevelModifier != null) return true;
+                if (PersistentLocation != null) return true;
+                if (CollisionLayer != null) return true;
+                if (Lock != null) return true;
+                if (EncounterZone != null) return true;
+                if (NavigationDoorLink != null) return true;
+                if (LocationRefTypes != null) return true;
+                if (IgnoredBySandbox != null) return true;
+                if (Ownership != null) return true;
+                if (ItemCount != null) return true;
+                if (Charge != null) return true;
+                if (LocationReference != null) return true;
+                if (EnableParent != null) return true;
+                if (LinkedReferences != null) return true;
+                if (Patrol != null) return true;
+                if (Action != null) return true;
+                if (HeadTrackingWeight != null) return true;
+                if (FavorCost != null) return true;
+                if (OpenByDefault != null) return true;
+                if (MapMarker != null) return true;
+                if (AttachRef != null) return true;
+                if (DistantLodData != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +2704,192 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                fg.AppendItem(Base, "Base");
+                fg.AppendItem(BoundHalfExtents, "BoundHalfExtents");
+                Primitive?.ToString(fg);
+                fg.AppendItem(Unknown, "Unknown");
+                OcclusionPlane?.ToString(fg);
+                if (Portals.TryGet(out var PortalsItem))
+                {
+                    fg.AppendLine("Portals =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PortalsItem.Overall);
+                        if (PortalsItem.Specific != null)
+                        {
+                            foreach (var subItem in PortalsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                RoomPortal?.ToString(fg);
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(LightingTemplate, "LightingTemplate");
+                fg.AppendItem(ImageSpace, "ImageSpace");
+                if (LinkedRooms.TryGet(out var LinkedRoomsItem))
+                {
+                    fg.AppendLine("LinkedRooms =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LinkedRoomsItem.Overall);
+                        if (LinkedRoomsItem.Specific != null)
+                        {
+                            foreach (var subItem in LinkedRoomsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(MultiBoundPrimitive, "MultiBoundPrimitive");
+                fg.AppendItem(RagdollData, "RagdollData");
+                fg.AppendItem(RagdollBipedData, "RagdollBipedData");
+                fg.AppendItem(Radius, "Radius");
+                if (Reflections.TryGet(out var ReflectionsItem))
+                {
+                    fg.AppendLine("Reflections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ReflectionsItem.Overall);
+                        if (ReflectionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ReflectionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LitWater.TryGet(out var LitWaterItem))
+                {
+                    fg.AppendLine("LitWater =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LitWaterItem.Overall);
+                        if (LitWaterItem.Specific != null)
+                        {
+                            foreach (var subItem in LitWaterItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Emittance, "Emittance");
+                LightData?.ToString(fg);
+                Alpha?.ToString(fg);
+                TeleportDestination?.ToString(fg);
+                fg.AppendItem(TeleportMessageBox, "TeleportMessageBox");
+                fg.AppendItem(MultiboundReference, "MultiboundReference");
+                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(Unknown4, "Unknown4");
+                WaterVelocity?.ToString(fg);
+                fg.AppendItem(Unknown5, "Unknown5");
+                fg.AppendItem(Unknown6, "Unknown6");
+                fg.AppendItem(Unknown7, "Unknown7");
+                fg.AppendItem(Unknown8, "Unknown8");
+                fg.AppendItem(Scale, "Scale");
+                fg.AppendItem(SpawnContainer, "SpawnContainer");
+                ActivateParents?.ToString(fg);
+                fg.AppendItem(LeveledItemBaseObject, "LeveledItemBaseObject");
+                fg.AppendItem(LevelModifier, "LevelModifier");
+                fg.AppendItem(PersistentLocation, "PersistentLocation");
+                fg.AppendItem(CollisionLayer, "CollisionLayer");
+                Lock?.ToString(fg);
+                fg.AppendItem(EncounterZone, "EncounterZone");
+                NavigationDoorLink?.ToString(fg);
+                if (LocationRefTypes.TryGet(out var LocationRefTypesItem))
+                {
+                    fg.AppendLine("LocationRefTypes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationRefTypesItem.Overall);
+                        if (LocationRefTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationRefTypesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                Ownership?.ToString(fg);
+                fg.AppendItem(ItemCount, "ItemCount");
+                fg.AppendItem(Charge, "Charge");
+                fg.AppendItem(LocationReference, "LocationReference");
+                EnableParent?.ToString(fg);
+                if (LinkedReferences.TryGet(out var LinkedReferencesItem))
+                {
+                    fg.AppendLine("LinkedReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LinkedReferencesItem.Overall);
+                        if (LinkedReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LinkedReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Patrol?.ToString(fg);
+                fg.AppendItem(Action, "Action");
+                fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                fg.AppendItem(FavorCost, "FavorCost");
+                fg.AppendItem(OpenByDefault, "OpenByDefault");
+                MapMarker?.ToString(fg);
+                fg.AppendItem(AttachRef, "AttachRef");
+                fg.AppendItem(DistantLodData, "DistantLodData");
+                fg.AppendItem(Position, "Position");
+                fg.AppendItem(Rotation, "Rotation");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -407,6 +2898,66 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Base = this.Base.Combine(rhs.Base);
+                ret.BoundHalfExtents = this.BoundHalfExtents.Combine(rhs.BoundHalfExtents);
+                ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.OcclusionPlane = this.OcclusionPlane.Combine(rhs.OcclusionPlane, (l, r) => l.Combine(r));
+                ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
+                ret.RoomPortal = this.RoomPortal.Combine(rhs.RoomPortal, (l, r) => l.Combine(r));
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
+                ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
+                ret.MultiBoundPrimitive = this.MultiBoundPrimitive.Combine(rhs.MultiBoundPrimitive);
+                ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
+                ret.RagdollBipedData = this.RagdollBipedData.Combine(rhs.RagdollBipedData);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
+                ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
+                ret.Emittance = this.Emittance.Combine(rhs.Emittance);
+                ret.LightData = this.LightData.Combine(rhs.LightData, (l, r) => l.Combine(r));
+                ret.Alpha = this.Alpha.Combine(rhs.Alpha, (l, r) => l.Combine(r));
+                ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
+                ret.TeleportMessageBox = this.TeleportMessageBox.Combine(rhs.TeleportMessageBox);
+                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
+                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
+                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
+                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.SpawnContainer = this.SpawnContainer.Combine(rhs.SpawnContainer);
+                ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
+                ret.LeveledItemBaseObject = this.LeveledItemBaseObject.Combine(rhs.LeveledItemBaseObject);
+                ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
+                ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
+                ret.CollisionLayer = this.CollisionLayer.Combine(rhs.CollisionLayer);
+                ret.Lock = this.Lock.Combine(rhs.Lock, (l, r) => l.Combine(r));
+                ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
+                ret.NavigationDoorLink = this.NavigationDoorLink.Combine(rhs.NavigationDoorLink, (l, r) => l.Combine(r));
+                ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
+                ret.IgnoredBySandbox = this.IgnoredBySandbox.Combine(rhs.IgnoredBySandbox);
+                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.ItemCount = this.ItemCount.Combine(rhs.ItemCount);
+                ret.Charge = this.Charge.Combine(rhs.Charge);
+                ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
+                ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
+                ret.LinkedReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedReferences.ErrorMask?>>?>(ExceptionExt.Combine(this.LinkedReferences?.Overall, rhs.LinkedReferences?.Overall), ExceptionExt.Combine(this.LinkedReferences?.Specific, rhs.LinkedReferences?.Specific));
+                ret.Patrol = this.Patrol.Combine(rhs.Patrol, (l, r) => l.Combine(r));
+                ret.Action = this.Action.Combine(rhs.Action);
+                ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
+                ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
+                ret.OpenByDefault = this.OpenByDefault.Combine(rhs.OpenByDefault);
+                ret.MapMarker = this.MapMarker.Combine(rhs.MapMarker, (l, r) => l.Combine(r));
+                ret.AttachRef = this.AttachRef.Combine(rhs.AttachRef);
+                ret.DistantLodData = this.DistantLodData.Combine(rhs.DistantLodData);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +2979,212 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public bool Base;
+            public bool BoundHalfExtents;
+            public MaskItem<bool, PlacedPrimitive.TranslationMask?> Primitive;
+            public bool Unknown;
+            public MaskItem<bool, Placement.TranslationMask?> OcclusionPlane;
+            public MaskItem<bool, Portal.TranslationMask?> Portals;
+            public MaskItem<bool, Placement.TranslationMask?> RoomPortal;
+            public bool Unknown2;
+            public bool LightingTemplate;
+            public bool ImageSpace;
+            public bool LinkedRooms;
+            public bool MultiBoundPrimitive;
+            public bool RagdollData;
+            public bool RagdollBipedData;
+            public bool Radius;
+            public MaskItem<bool, WaterReflection.TranslationMask?> Reflections;
+            public bool LitWater;
+            public bool Emittance;
+            public MaskItem<bool, LightData.TranslationMask?> LightData;
+            public MaskItem<bool, Alpha.TranslationMask?> Alpha;
+            public MaskItem<bool, TeleportDestination.TranslationMask?> TeleportDestination;
+            public bool TeleportMessageBox;
+            public bool MultiboundReference;
+            public bool Unknown3;
+            public bool Unknown4;
+            public MaskItem<bool, WaterVelocity.TranslationMask?> WaterVelocity;
+            public bool Unknown5;
+            public bool Unknown6;
+            public bool Unknown7;
+            public bool Unknown8;
+            public bool Scale;
+            public bool SpawnContainer;
+            public MaskItem<bool, ActivateParents.TranslationMask?> ActivateParents;
+            public bool LeveledItemBaseObject;
+            public bool LevelModifier;
+            public bool PersistentLocation;
+            public bool CollisionLayer;
+            public MaskItem<bool, LockData.TranslationMask?> Lock;
+            public bool EncounterZone;
+            public MaskItem<bool, NavigationDoorLink.TranslationMask?> NavigationDoorLink;
+            public bool LocationRefTypes;
+            public bool IgnoredBySandbox;
+            public MaskItem<bool, Ownership.TranslationMask?> Ownership;
+            public bool ItemCount;
+            public bool Charge;
+            public bool LocationReference;
+            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
+            public MaskItem<bool, Patrol.TranslationMask?> Patrol;
+            public bool Action;
+            public bool HeadTrackingWeight;
+            public bool FavorCost;
+            public bool OpenByDefault;
+            public MaskItem<bool, MapMarker.TranslationMask?> MapMarker;
+            public bool AttachRef;
+            public bool DistantLodData;
+            public bool Position;
+            public bool Rotation;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
+                this.Base = defaultOn;
+                this.BoundHalfExtents = defaultOn;
+                this.Primitive = new MaskItem<bool, PlacedPrimitive.TranslationMask?>(defaultOn, null);
+                this.Unknown = defaultOn;
+                this.OcclusionPlane = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
+                this.Portals = new MaskItem<bool, Portal.TranslationMask?>(defaultOn, null);
+                this.RoomPortal = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
+                this.Unknown2 = defaultOn;
+                this.LightingTemplate = defaultOn;
+                this.ImageSpace = defaultOn;
+                this.LinkedRooms = defaultOn;
+                this.MultiBoundPrimitive = defaultOn;
+                this.RagdollData = defaultOn;
+                this.RagdollBipedData = defaultOn;
+                this.Radius = defaultOn;
+                this.Reflections = new MaskItem<bool, WaterReflection.TranslationMask?>(defaultOn, null);
+                this.LitWater = defaultOn;
+                this.Emittance = defaultOn;
+                this.LightData = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
+                this.Alpha = new MaskItem<bool, Alpha.TranslationMask?>(defaultOn, null);
+                this.TeleportDestination = new MaskItem<bool, TeleportDestination.TranslationMask?>(defaultOn, null);
+                this.TeleportMessageBox = defaultOn;
+                this.MultiboundReference = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.WaterVelocity = new MaskItem<bool, WaterVelocity.TranslationMask?>(defaultOn, null);
+                this.Unknown5 = defaultOn;
+                this.Unknown6 = defaultOn;
+                this.Unknown7 = defaultOn;
+                this.Unknown8 = defaultOn;
+                this.Scale = defaultOn;
+                this.SpawnContainer = defaultOn;
+                this.ActivateParents = new MaskItem<bool, ActivateParents.TranslationMask?>(defaultOn, null);
+                this.LeveledItemBaseObject = defaultOn;
+                this.LevelModifier = defaultOn;
+                this.PersistentLocation = defaultOn;
+                this.CollisionLayer = defaultOn;
+                this.Lock = new MaskItem<bool, LockData.TranslationMask?>(defaultOn, null);
+                this.EncounterZone = defaultOn;
+                this.NavigationDoorLink = new MaskItem<bool, NavigationDoorLink.TranslationMask?>(defaultOn, null);
+                this.LocationRefTypes = defaultOn;
+                this.IgnoredBySandbox = defaultOn;
+                this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
+                this.ItemCount = defaultOn;
+                this.Charge = defaultOn;
+                this.LocationReference = defaultOn;
+                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
+                this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
+                this.Patrol = new MaskItem<bool, Patrol.TranslationMask?>(defaultOn, null);
+                this.Action = defaultOn;
+                this.HeadTrackingWeight = defaultOn;
+                this.FavorCost = defaultOn;
+                this.OpenByDefault = defaultOn;
+                this.MapMarker = new MaskItem<bool, MapMarker.TranslationMask?>(defaultOn, null);
+                this.AttachRef = defaultOn;
+                this.DistantLodData = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((Base, null));
+                ret.Add((BoundHalfExtents, null));
+                ret.Add((Primitive?.Overall ?? true, Primitive?.Specific?.GetCrystal()));
+                ret.Add((Unknown, null));
+                ret.Add((OcclusionPlane?.Overall ?? true, OcclusionPlane?.Specific?.GetCrystal()));
+                ret.Add((Portals?.Overall ?? true, Portals?.Specific?.GetCrystal()));
+                ret.Add((RoomPortal?.Overall ?? true, RoomPortal?.Specific?.GetCrystal()));
+                ret.Add((Unknown2, null));
+                ret.Add((LightingTemplate, null));
+                ret.Add((ImageSpace, null));
+                ret.Add((LinkedRooms, null));
+                ret.Add((MultiBoundPrimitive, null));
+                ret.Add((RagdollData, null));
+                ret.Add((RagdollBipedData, null));
+                ret.Add((Radius, null));
+                ret.Add((Reflections?.Overall ?? true, Reflections?.Specific?.GetCrystal()));
+                ret.Add((LitWater, null));
+                ret.Add((Emittance, null));
+                ret.Add((LightData?.Overall ?? true, LightData?.Specific?.GetCrystal()));
+                ret.Add((Alpha?.Overall ?? true, Alpha?.Specific?.GetCrystal()));
+                ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
+                ret.Add((TeleportMessageBox, null));
+                ret.Add((MultiboundReference, null));
+                ret.Add((Unknown3, null));
+                ret.Add((Unknown4, null));
+                ret.Add((WaterVelocity?.Overall ?? true, WaterVelocity?.Specific?.GetCrystal()));
+                ret.Add((Unknown5, null));
+                ret.Add((Unknown6, null));
+                ret.Add((Unknown7, null));
+                ret.Add((Unknown8, null));
+                ret.Add((Scale, null));
+                ret.Add((SpawnContainer, null));
+                ret.Add((ActivateParents?.Overall ?? true, ActivateParents?.Specific?.GetCrystal()));
+                ret.Add((LeveledItemBaseObject, null));
+                ret.Add((LevelModifier, null));
+                ret.Add((PersistentLocation, null));
+                ret.Add((CollisionLayer, null));
+                ret.Add((Lock?.Overall ?? true, Lock?.Specific?.GetCrystal()));
+                ret.Add((EncounterZone, null));
+                ret.Add((NavigationDoorLink?.Overall ?? true, NavigationDoorLink?.Specific?.GetCrystal()));
+                ret.Add((LocationRefTypes, null));
+                ret.Add((IgnoredBySandbox, null));
+                ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
+                ret.Add((ItemCount, null));
+                ret.Add((Charge, null));
+                ret.Add((LocationReference, null));
+                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
+                ret.Add((Patrol?.Overall ?? true, Patrol?.Specific?.GetCrystal()));
+                ret.Add((Action, null));
+                ret.Add((HeadTrackingWeight, null));
+                ret.Add((FavorCost, null));
+                ret.Add((OpenByDefault, null));
+                ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
+                ret.Add((AttachRef, null));
+                ret.Add((DistantLodData, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +3202,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -519,8 +3267,72 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedObjectGetter,
         ISkyrimMajorRecord,
         ILocationReferencable,
+        IPlaced,
+        IPlacedThing,
+        ILinkedReference,
+        IPositionRotation,
         ILoquiObjectSetter<IPlacedObjectInternal>
     {
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new FormLinkNullable<SkyrimMajorRecord> Base { get; set; }
+        new P3Float? BoundHalfExtents { get; set; }
+        new PlacedPrimitive? Primitive { get; set; }
+        new Byte[]? Unknown { get; set; }
+        new Placement? OcclusionPlane { get; set; }
+        new ExtendedList<Portal>? Portals { get; set; }
+        new Placement? RoomPortal { get; set; }
+        new Int16 Unknown2 { get; set; }
+        new FormLinkNullable<Light> LightingTemplate { get; set; }
+        new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
+        new ExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
+        new Boolean MultiBoundPrimitive { get; set; }
+        new Byte[]? RagdollData { get; set; }
+        new Byte[]? RagdollBipedData { get; set; }
+        new Single? Radius { get; set; }
+        new ExtendedList<WaterReflection> Reflections { get; }
+        new ExtendedList<IFormLink<PlacedObject>> LitWater { get; }
+        new FormLinkNullable<IEmittance> Emittance { get; set; }
+        new LightData? LightData { get; set; }
+        new Alpha? Alpha { get; set; }
+        new TeleportDestination? TeleportDestination { get; set; }
+        new FormLinkNullable<Message> TeleportMessageBox { get; set; }
+        new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
+        new Byte[]? Unknown3 { get; set; }
+        new Byte[]? Unknown4 { get; set; }
+        new WaterVelocity? WaterVelocity { get; set; }
+        new Byte[]? Unknown5 { get; set; }
+        new FormLinkNullable<ILinkedReference> Unknown6 { get; set; }
+        new Byte[]? Unknown7 { get; set; }
+        new FormLinkNullable<Cell> Unknown8 { get; set; }
+        new Single? Scale { get; set; }
+        new FormLinkNullable<PlacedObject> SpawnContainer { get; set; }
+        new ActivateParents? ActivateParents { get; set; }
+        new FormLinkNullable<LeveledItem> LeveledItemBaseObject { get; set; }
+        new LevelModifier? LevelModifier { get; set; }
+        new FormLinkNullable<Location> PersistentLocation { get; set; }
+        new UInt32? CollisionLayer { get; set; }
+        new LockData? Lock { get; set; }
+        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
+        new NavigationDoorLink? NavigationDoorLink { get; set; }
+        new ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new Boolean IgnoredBySandbox { get; set; }
+        new Ownership? Ownership { get; set; }
+        new Int32? ItemCount { get; set; }
+        new Single? Charge { get; set; }
+        new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
+        new EnableParent? EnableParent { get; set; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new Patrol? Patrol { get; set; }
+        new PlacedObject.ActionFlag? Action { get; set; }
+        new Single? HeadTrackingWeight { get; set; }
+        new Single? FavorCost { get; set; }
+        new Boolean OpenByDefault { get; set; }
+        new MapMarker? MapMarker { get; set; }
+        new FormLinkNullable<IPlacedThing> AttachRef { get; set; }
+        new Byte[]? DistantLodData { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
+        new PlacedObject.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IPlacedObjectInternal :
@@ -533,11 +3345,76 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedObjectGetter :
         ISkyrimMajorRecordGetter,
         ILocationReferencableGetter,
+        IPlacedGetter,
+        IPlacedThingGetter,
+        ILinkedReferenceGetter,
+        IPositionRotationGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> Base { get; }
+        P3Float? BoundHalfExtents { get; }
+        IPlacedPrimitiveGetter? Primitive { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        IPlacementGetter? OcclusionPlane { get; }
+        IReadOnlyList<IPortalGetter>? Portals { get; }
+        IPlacementGetter? RoomPortal { get; }
+        Int16 Unknown2 { get; }
+        IFormLinkNullableGetter<ILightGetter> LightingTemplate { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
+        Boolean MultiBoundPrimitive { get; }
+        ReadOnlyMemorySlice<Byte>? RagdollData { get; }
+        ReadOnlyMemorySlice<Byte>? RagdollBipedData { get; }
+        Single? Radius { get; }
+        IReadOnlyList<IWaterReflectionGetter> Reflections { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
+        IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
+        ILightDataGetter? LightData { get; }
+        IAlphaGetter? Alpha { get; }
+        ITeleportDestinationGetter? TeleportDestination { get; }
+        IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown4 { get; }
+        IWaterVelocityGetter? WaterVelocity { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown5 { get; }
+        IFormLinkNullableGetter<ILinkedReferenceGetter> Unknown6 { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown7 { get; }
+        IFormLinkNullableGetter<ICellGetter> Unknown8 { get; }
+        Single? Scale { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer { get; }
+        IActivateParentsGetter? ActivateParents { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject { get; }
+        LevelModifier? LevelModifier { get; }
+        IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
+        UInt32? CollisionLayer { get; }
+        ILockDataGetter? Lock { get; }
+        IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
+        INavigationDoorLinkGetter? NavigationDoorLink { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
+        Boolean IgnoredBySandbox { get; }
+        IOwnershipGetter? Ownership { get; }
+        Int32? ItemCount { get; }
+        Single? Charge { get; }
+        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IEnableParentGetter? EnableParent { get; }
+        IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
+        IPatrolGetter? Patrol { get; }
+        PlacedObject.ActionFlag? Action { get; }
+        Single? HeadTrackingWeight { get; }
+        Single? FavorCost { get; }
+        Boolean OpenByDefault { get; }
+        IMapMarkerGetter? MapMarker { get; }
+        IFormLinkNullableGetter<IPlacedThingGetter> AttachRef { get; }
+        ReadOnlyMemorySlice<Byte>? DistantLodData { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
+        PlacedObject.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -838,6 +3715,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Base = 7,
+        BoundHalfExtents = 8,
+        Primitive = 9,
+        Unknown = 10,
+        OcclusionPlane = 11,
+        Portals = 12,
+        RoomPortal = 13,
+        Unknown2 = 14,
+        LightingTemplate = 15,
+        ImageSpace = 16,
+        LinkedRooms = 17,
+        MultiBoundPrimitive = 18,
+        RagdollData = 19,
+        RagdollBipedData = 20,
+        Radius = 21,
+        Reflections = 22,
+        LitWater = 23,
+        Emittance = 24,
+        LightData = 25,
+        Alpha = 26,
+        TeleportDestination = 27,
+        TeleportMessageBox = 28,
+        MultiboundReference = 29,
+        Unknown3 = 30,
+        Unknown4 = 31,
+        WaterVelocity = 32,
+        Unknown5 = 33,
+        Unknown6 = 34,
+        Unknown7 = 35,
+        Unknown8 = 36,
+        Scale = 37,
+        SpawnContainer = 38,
+        ActivateParents = 39,
+        LeveledItemBaseObject = 40,
+        LevelModifier = 41,
+        PersistentLocation = 42,
+        CollisionLayer = 43,
+        Lock = 44,
+        EncounterZone = 45,
+        NavigationDoorLink = 46,
+        LocationRefTypes = 47,
+        IgnoredBySandbox = 48,
+        Ownership = 49,
+        ItemCount = 50,
+        Charge = 51,
+        LocationReference = 52,
+        EnableParent = 53,
+        LinkedReferences = 54,
+        Patrol = 55,
+        Action = 56,
+        HeadTrackingWeight = 57,
+        FavorCost = 58,
+        OpenByDefault = 59,
+        MapMarker = 60,
+        AttachRef = 61,
+        DistantLodData = 62,
+        Position = 63,
+        Rotation = 64,
+        DATADataTypeState = 65,
     }
     #endregion
 
@@ -855,9 +3792,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "15cab6c0-7390-410a-b2a8-7ee0e58569a6";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 60;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 66;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -887,6 +3824,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)PlacedObject_FieldIndex.VirtualMachineAdapter;
+                case "BASE":
+                    return (ushort)PlacedObject_FieldIndex.Base;
+                case "BOUNDHALFEXTENTS":
+                    return (ushort)PlacedObject_FieldIndex.BoundHalfExtents;
+                case "PRIMITIVE":
+                    return (ushort)PlacedObject_FieldIndex.Primitive;
+                case "UNKNOWN":
+                    return (ushort)PlacedObject_FieldIndex.Unknown;
+                case "OCCLUSIONPLANE":
+                    return (ushort)PlacedObject_FieldIndex.OcclusionPlane;
+                case "PORTALS":
+                    return (ushort)PlacedObject_FieldIndex.Portals;
+                case "ROOMPORTAL":
+                    return (ushort)PlacedObject_FieldIndex.RoomPortal;
+                case "UNKNOWN2":
+                    return (ushort)PlacedObject_FieldIndex.Unknown2;
+                case "LIGHTINGTEMPLATE":
+                    return (ushort)PlacedObject_FieldIndex.LightingTemplate;
+                case "IMAGESPACE":
+                    return (ushort)PlacedObject_FieldIndex.ImageSpace;
+                case "LINKEDROOMS":
+                    return (ushort)PlacedObject_FieldIndex.LinkedRooms;
+                case "MULTIBOUNDPRIMITIVE":
+                    return (ushort)PlacedObject_FieldIndex.MultiBoundPrimitive;
+                case "RAGDOLLDATA":
+                    return (ushort)PlacedObject_FieldIndex.RagdollData;
+                case "RAGDOLLBIPEDDATA":
+                    return (ushort)PlacedObject_FieldIndex.RagdollBipedData;
+                case "RADIUS":
+                    return (ushort)PlacedObject_FieldIndex.Radius;
+                case "REFLECTIONS":
+                    return (ushort)PlacedObject_FieldIndex.Reflections;
+                case "LITWATER":
+                    return (ushort)PlacedObject_FieldIndex.LitWater;
+                case "EMITTANCE":
+                    return (ushort)PlacedObject_FieldIndex.Emittance;
+                case "LIGHTDATA":
+                    return (ushort)PlacedObject_FieldIndex.LightData;
+                case "ALPHA":
+                    return (ushort)PlacedObject_FieldIndex.Alpha;
+                case "TELEPORTDESTINATION":
+                    return (ushort)PlacedObject_FieldIndex.TeleportDestination;
+                case "TELEPORTMESSAGEBOX":
+                    return (ushort)PlacedObject_FieldIndex.TeleportMessageBox;
+                case "MULTIBOUNDREFERENCE":
+                    return (ushort)PlacedObject_FieldIndex.MultiboundReference;
+                case "UNKNOWN3":
+                    return (ushort)PlacedObject_FieldIndex.Unknown3;
+                case "UNKNOWN4":
+                    return (ushort)PlacedObject_FieldIndex.Unknown4;
+                case "WATERVELOCITY":
+                    return (ushort)PlacedObject_FieldIndex.WaterVelocity;
+                case "UNKNOWN5":
+                    return (ushort)PlacedObject_FieldIndex.Unknown5;
+                case "UNKNOWN6":
+                    return (ushort)PlacedObject_FieldIndex.Unknown6;
+                case "UNKNOWN7":
+                    return (ushort)PlacedObject_FieldIndex.Unknown7;
+                case "UNKNOWN8":
+                    return (ushort)PlacedObject_FieldIndex.Unknown8;
+                case "SCALE":
+                    return (ushort)PlacedObject_FieldIndex.Scale;
+                case "SPAWNCONTAINER":
+                    return (ushort)PlacedObject_FieldIndex.SpawnContainer;
+                case "ACTIVATEPARENTS":
+                    return (ushort)PlacedObject_FieldIndex.ActivateParents;
+                case "LEVELEDITEMBASEOBJECT":
+                    return (ushort)PlacedObject_FieldIndex.LeveledItemBaseObject;
+                case "LEVELMODIFIER":
+                    return (ushort)PlacedObject_FieldIndex.LevelModifier;
+                case "PERSISTENTLOCATION":
+                    return (ushort)PlacedObject_FieldIndex.PersistentLocation;
+                case "COLLISIONLAYER":
+                    return (ushort)PlacedObject_FieldIndex.CollisionLayer;
+                case "LOCK":
+                    return (ushort)PlacedObject_FieldIndex.Lock;
+                case "ENCOUNTERZONE":
+                    return (ushort)PlacedObject_FieldIndex.EncounterZone;
+                case "NAVIGATIONDOORLINK":
+                    return (ushort)PlacedObject_FieldIndex.NavigationDoorLink;
+                case "LOCATIONREFTYPES":
+                    return (ushort)PlacedObject_FieldIndex.LocationRefTypes;
+                case "IGNOREDBYSANDBOX":
+                    return (ushort)PlacedObject_FieldIndex.IgnoredBySandbox;
+                case "OWNERSHIP":
+                    return (ushort)PlacedObject_FieldIndex.Ownership;
+                case "ITEMCOUNT":
+                    return (ushort)PlacedObject_FieldIndex.ItemCount;
+                case "CHARGE":
+                    return (ushort)PlacedObject_FieldIndex.Charge;
+                case "LOCATIONREFERENCE":
+                    return (ushort)PlacedObject_FieldIndex.LocationReference;
+                case "ENABLEPARENT":
+                    return (ushort)PlacedObject_FieldIndex.EnableParent;
+                case "LINKEDREFERENCES":
+                    return (ushort)PlacedObject_FieldIndex.LinkedReferences;
+                case "PATROL":
+                    return (ushort)PlacedObject_FieldIndex.Patrol;
+                case "ACTION":
+                    return (ushort)PlacedObject_FieldIndex.Action;
+                case "HEADTRACKINGWEIGHT":
+                    return (ushort)PlacedObject_FieldIndex.HeadTrackingWeight;
+                case "FAVORCOST":
+                    return (ushort)PlacedObject_FieldIndex.FavorCost;
+                case "OPENBYDEFAULT":
+                    return (ushort)PlacedObject_FieldIndex.OpenByDefault;
+                case "MAPMARKER":
+                    return (ushort)PlacedObject_FieldIndex.MapMarker;
+                case "ATTACHREF":
+                    return (ushort)PlacedObject_FieldIndex.AttachRef;
+                case "DISTANTLODDATA":
+                    return (ushort)PlacedObject_FieldIndex.DistantLodData;
+                case "POSITION":
+                    return (ushort)PlacedObject_FieldIndex.Position;
+                case "ROTATION":
+                    return (ushort)PlacedObject_FieldIndex.Rotation;
+                case "DATADATATYPESTATE":
+                    return (ushort)PlacedObject_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -897,6 +3954,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.Portals:
+                case PlacedObject_FieldIndex.LinkedRooms:
+                case PlacedObject_FieldIndex.Reflections:
+                case PlacedObject_FieldIndex.LitWater:
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                case PlacedObject_FieldIndex.LinkedReferences:
+                    return true;
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.Primitive:
+                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                case PlacedObject_FieldIndex.RoomPortal:
+                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.LightingTemplate:
+                case PlacedObject_FieldIndex.ImageSpace:
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                case PlacedObject_FieldIndex.Radius:
+                case PlacedObject_FieldIndex.Emittance:
+                case PlacedObject_FieldIndex.LightData:
+                case PlacedObject_FieldIndex.Alpha:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                case PlacedObject_FieldIndex.MultiboundReference:
+                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.WaterVelocity:
+                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.Scale:
+                case PlacedObject_FieldIndex.SpawnContainer:
+                case PlacedObject_FieldIndex.ActivateParents:
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.PersistentLocation:
+                case PlacedObject_FieldIndex.CollisionLayer:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.EncounterZone:
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                case PlacedObject_FieldIndex.Ownership:
+                case PlacedObject_FieldIndex.ItemCount:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.LocationReference:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.Patrol:
+                case PlacedObject_FieldIndex.Action:
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                case PlacedObject_FieldIndex.FavorCost:
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.AttachRef:
+                case PlacedObject_FieldIndex.DistantLodData:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -907,6 +4026,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                case PlacedObject_FieldIndex.Primitive:
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                case PlacedObject_FieldIndex.Portals:
+                case PlacedObject_FieldIndex.RoomPortal:
+                case PlacedObject_FieldIndex.Reflections:
+                case PlacedObject_FieldIndex.LightData:
+                case PlacedObject_FieldIndex.Alpha:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.WaterVelocity:
+                case PlacedObject_FieldIndex.ActivateParents:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                case PlacedObject_FieldIndex.Ownership:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.LinkedReferences:
+                case PlacedObject_FieldIndex.Patrol:
+                case PlacedObject_FieldIndex.MapMarker:
+                    return true;
+                case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.LightingTemplate:
+                case PlacedObject_FieldIndex.ImageSpace:
+                case PlacedObject_FieldIndex.LinkedRooms:
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                case PlacedObject_FieldIndex.Radius:
+                case PlacedObject_FieldIndex.LitWater:
+                case PlacedObject_FieldIndex.Emittance:
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                case PlacedObject_FieldIndex.MultiboundReference:
+                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.Scale:
+                case PlacedObject_FieldIndex.SpawnContainer:
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.PersistentLocation:
+                case PlacedObject_FieldIndex.CollisionLayer:
+                case PlacedObject_FieldIndex.EncounterZone:
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                case PlacedObject_FieldIndex.ItemCount:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.LocationReference:
+                case PlacedObject_FieldIndex.Action:
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                case PlacedObject_FieldIndex.FavorCost:
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.AttachRef:
+                case PlacedObject_FieldIndex.DistantLodData:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -917,6 +4098,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.Primitive:
+                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                case PlacedObject_FieldIndex.Portals:
+                case PlacedObject_FieldIndex.RoomPortal:
+                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.LightingTemplate:
+                case PlacedObject_FieldIndex.ImageSpace:
+                case PlacedObject_FieldIndex.LinkedRooms:
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                case PlacedObject_FieldIndex.Radius:
+                case PlacedObject_FieldIndex.Reflections:
+                case PlacedObject_FieldIndex.LitWater:
+                case PlacedObject_FieldIndex.Emittance:
+                case PlacedObject_FieldIndex.LightData:
+                case PlacedObject_FieldIndex.Alpha:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                case PlacedObject_FieldIndex.MultiboundReference:
+                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.WaterVelocity:
+                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.Scale:
+                case PlacedObject_FieldIndex.SpawnContainer:
+                case PlacedObject_FieldIndex.ActivateParents:
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.PersistentLocation:
+                case PlacedObject_FieldIndex.CollisionLayer:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.EncounterZone:
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                case PlacedObject_FieldIndex.Ownership:
+                case PlacedObject_FieldIndex.ItemCount:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.LocationReference:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.LinkedReferences:
+                case PlacedObject_FieldIndex.Patrol:
+                case PlacedObject_FieldIndex.Action:
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                case PlacedObject_FieldIndex.FavorCost:
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.AttachRef:
+                case PlacedObject_FieldIndex.DistantLodData:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -927,6 +4169,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case PlacedObject_FieldIndex.Base:
+                    return "Base";
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                    return "BoundHalfExtents";
+                case PlacedObject_FieldIndex.Primitive:
+                    return "Primitive";
+                case PlacedObject_FieldIndex.Unknown:
+                    return "Unknown";
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                    return "OcclusionPlane";
+                case PlacedObject_FieldIndex.Portals:
+                    return "Portals";
+                case PlacedObject_FieldIndex.RoomPortal:
+                    return "RoomPortal";
+                case PlacedObject_FieldIndex.Unknown2:
+                    return "Unknown2";
+                case PlacedObject_FieldIndex.LightingTemplate:
+                    return "LightingTemplate";
+                case PlacedObject_FieldIndex.ImageSpace:
+                    return "ImageSpace";
+                case PlacedObject_FieldIndex.LinkedRooms:
+                    return "LinkedRooms";
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                    return "MultiBoundPrimitive";
+                case PlacedObject_FieldIndex.RagdollData:
+                    return "RagdollData";
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                    return "RagdollBipedData";
+                case PlacedObject_FieldIndex.Radius:
+                    return "Radius";
+                case PlacedObject_FieldIndex.Reflections:
+                    return "Reflections";
+                case PlacedObject_FieldIndex.LitWater:
+                    return "LitWater";
+                case PlacedObject_FieldIndex.Emittance:
+                    return "Emittance";
+                case PlacedObject_FieldIndex.LightData:
+                    return "LightData";
+                case PlacedObject_FieldIndex.Alpha:
+                    return "Alpha";
+                case PlacedObject_FieldIndex.TeleportDestination:
+                    return "TeleportDestination";
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                    return "TeleportMessageBox";
+                case PlacedObject_FieldIndex.MultiboundReference:
+                    return "MultiboundReference";
+                case PlacedObject_FieldIndex.Unknown3:
+                    return "Unknown3";
+                case PlacedObject_FieldIndex.Unknown4:
+                    return "Unknown4";
+                case PlacedObject_FieldIndex.WaterVelocity:
+                    return "WaterVelocity";
+                case PlacedObject_FieldIndex.Unknown5:
+                    return "Unknown5";
+                case PlacedObject_FieldIndex.Unknown6:
+                    return "Unknown6";
+                case PlacedObject_FieldIndex.Unknown7:
+                    return "Unknown7";
+                case PlacedObject_FieldIndex.Unknown8:
+                    return "Unknown8";
+                case PlacedObject_FieldIndex.Scale:
+                    return "Scale";
+                case PlacedObject_FieldIndex.SpawnContainer:
+                    return "SpawnContainer";
+                case PlacedObject_FieldIndex.ActivateParents:
+                    return "ActivateParents";
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                    return "LeveledItemBaseObject";
+                case PlacedObject_FieldIndex.LevelModifier:
+                    return "LevelModifier";
+                case PlacedObject_FieldIndex.PersistentLocation:
+                    return "PersistentLocation";
+                case PlacedObject_FieldIndex.CollisionLayer:
+                    return "CollisionLayer";
+                case PlacedObject_FieldIndex.Lock:
+                    return "Lock";
+                case PlacedObject_FieldIndex.EncounterZone:
+                    return "EncounterZone";
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                    return "NavigationDoorLink";
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                    return "LocationRefTypes";
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                    return "IgnoredBySandbox";
+                case PlacedObject_FieldIndex.Ownership:
+                    return "Ownership";
+                case PlacedObject_FieldIndex.ItemCount:
+                    return "ItemCount";
+                case PlacedObject_FieldIndex.Charge:
+                    return "Charge";
+                case PlacedObject_FieldIndex.LocationReference:
+                    return "LocationReference";
+                case PlacedObject_FieldIndex.EnableParent:
+                    return "EnableParent";
+                case PlacedObject_FieldIndex.LinkedReferences:
+                    return "LinkedReferences";
+                case PlacedObject_FieldIndex.Patrol:
+                    return "Patrol";
+                case PlacedObject_FieldIndex.Action:
+                    return "Action";
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                    return "HeadTrackingWeight";
+                case PlacedObject_FieldIndex.FavorCost:
+                    return "FavorCost";
+                case PlacedObject_FieldIndex.OpenByDefault:
+                    return "OpenByDefault";
+                case PlacedObject_FieldIndex.MapMarker:
+                    return "MapMarker";
+                case PlacedObject_FieldIndex.AttachRef:
+                    return "AttachRef";
+                case PlacedObject_FieldIndex.DistantLodData:
+                    return "DistantLodData";
+                case PlacedObject_FieldIndex.Position:
+                    return "Position";
+                case PlacedObject_FieldIndex.Rotation:
+                    return "Rotation";
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -937,6 +4299,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.Primitive:
+                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                case PlacedObject_FieldIndex.Portals:
+                case PlacedObject_FieldIndex.RoomPortal:
+                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.LightingTemplate:
+                case PlacedObject_FieldIndex.ImageSpace:
+                case PlacedObject_FieldIndex.LinkedRooms:
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                case PlacedObject_FieldIndex.Radius:
+                case PlacedObject_FieldIndex.Reflections:
+                case PlacedObject_FieldIndex.LitWater:
+                case PlacedObject_FieldIndex.Emittance:
+                case PlacedObject_FieldIndex.LightData:
+                case PlacedObject_FieldIndex.Alpha:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                case PlacedObject_FieldIndex.MultiboundReference:
+                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.WaterVelocity:
+                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.Scale:
+                case PlacedObject_FieldIndex.SpawnContainer:
+                case PlacedObject_FieldIndex.ActivateParents:
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.PersistentLocation:
+                case PlacedObject_FieldIndex.CollisionLayer:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.EncounterZone:
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                case PlacedObject_FieldIndex.Ownership:
+                case PlacedObject_FieldIndex.ItemCount:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.LocationReference:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.LinkedReferences:
+                case PlacedObject_FieldIndex.Patrol:
+                case PlacedObject_FieldIndex.Action:
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                case PlacedObject_FieldIndex.FavorCost:
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.AttachRef:
+                case PlacedObject_FieldIndex.DistantLodData:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -947,6 +4370,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                case PlacedObject_FieldIndex.Base:
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.Primitive:
+                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                case PlacedObject_FieldIndex.Portals:
+                case PlacedObject_FieldIndex.RoomPortal:
+                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.LightingTemplate:
+                case PlacedObject_FieldIndex.ImageSpace:
+                case PlacedObject_FieldIndex.LinkedRooms:
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                case PlacedObject_FieldIndex.RagdollData:
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                case PlacedObject_FieldIndex.Radius:
+                case PlacedObject_FieldIndex.Reflections:
+                case PlacedObject_FieldIndex.LitWater:
+                case PlacedObject_FieldIndex.Emittance:
+                case PlacedObject_FieldIndex.LightData:
+                case PlacedObject_FieldIndex.Alpha:
+                case PlacedObject_FieldIndex.TeleportDestination:
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                case PlacedObject_FieldIndex.MultiboundReference:
+                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.WaterVelocity:
+                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.Scale:
+                case PlacedObject_FieldIndex.SpawnContainer:
+                case PlacedObject_FieldIndex.ActivateParents:
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.PersistentLocation:
+                case PlacedObject_FieldIndex.CollisionLayer:
+                case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.EncounterZone:
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                case PlacedObject_FieldIndex.Ownership:
+                case PlacedObject_FieldIndex.ItemCount:
+                case PlacedObject_FieldIndex.Charge:
+                case PlacedObject_FieldIndex.LocationReference:
+                case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.LinkedReferences:
+                case PlacedObject_FieldIndex.Patrol:
+                case PlacedObject_FieldIndex.Action:
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                case PlacedObject_FieldIndex.FavorCost:
+                case PlacedObject_FieldIndex.OpenByDefault:
+                case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.AttachRef:
+                case PlacedObject_FieldIndex.DistantLodData:
+                case PlacedObject_FieldIndex.Position:
+                case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -957,6 +4441,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
             switch (enu)
             {
+                case PlacedObject_FieldIndex.VirtualMachineAdapter:
+                    return typeof(VirtualMachineAdapter);
+                case PlacedObject_FieldIndex.Base:
+                    return typeof(FormLinkNullable<SkyrimMajorRecord>);
+                case PlacedObject_FieldIndex.BoundHalfExtents:
+                    return typeof(P3Float);
+                case PlacedObject_FieldIndex.Primitive:
+                    return typeof(PlacedPrimitive);
+                case PlacedObject_FieldIndex.Unknown:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.OcclusionPlane:
+                    return typeof(Placement);
+                case PlacedObject_FieldIndex.Portals:
+                    return typeof(ExtendedList<Portal>);
+                case PlacedObject_FieldIndex.RoomPortal:
+                    return typeof(Placement);
+                case PlacedObject_FieldIndex.Unknown2:
+                    return typeof(Int16);
+                case PlacedObject_FieldIndex.LightingTemplate:
+                    return typeof(FormLinkNullable<Light>);
+                case PlacedObject_FieldIndex.ImageSpace:
+                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
+                case PlacedObject_FieldIndex.LinkedRooms:
+                    return typeof(ExtendedList<IFormLink<PlacedObject>>);
+                case PlacedObject_FieldIndex.MultiBoundPrimitive:
+                    return typeof(Boolean);
+                case PlacedObject_FieldIndex.RagdollData:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.RagdollBipedData:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.Radius:
+                    return typeof(Single);
+                case PlacedObject_FieldIndex.Reflections:
+                    return typeof(ExtendedList<WaterReflection>);
+                case PlacedObject_FieldIndex.LitWater:
+                    return typeof(ExtendedList<IFormLink<PlacedObject>>);
+                case PlacedObject_FieldIndex.Emittance:
+                    return typeof(FormLinkNullable<IEmittance>);
+                case PlacedObject_FieldIndex.LightData:
+                    return typeof(LightData);
+                case PlacedObject_FieldIndex.Alpha:
+                    return typeof(Alpha);
+                case PlacedObject_FieldIndex.TeleportDestination:
+                    return typeof(TeleportDestination);
+                case PlacedObject_FieldIndex.TeleportMessageBox:
+                    return typeof(FormLinkNullable<Message>);
+                case PlacedObject_FieldIndex.MultiboundReference:
+                    return typeof(FormLinkNullable<PlacedObject>);
+                case PlacedObject_FieldIndex.Unknown3:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.Unknown4:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.WaterVelocity:
+                    return typeof(WaterVelocity);
+                case PlacedObject_FieldIndex.Unknown5:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.Unknown6:
+                    return typeof(FormLinkNullable<ILinkedReference>);
+                case PlacedObject_FieldIndex.Unknown7:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.Unknown8:
+                    return typeof(FormLinkNullable<Cell>);
+                case PlacedObject_FieldIndex.Scale:
+                    return typeof(Single);
+                case PlacedObject_FieldIndex.SpawnContainer:
+                    return typeof(FormLinkNullable<PlacedObject>);
+                case PlacedObject_FieldIndex.ActivateParents:
+                    return typeof(ActivateParents);
+                case PlacedObject_FieldIndex.LeveledItemBaseObject:
+                    return typeof(FormLinkNullable<LeveledItem>);
+                case PlacedObject_FieldIndex.LevelModifier:
+                    return typeof(LevelModifier);
+                case PlacedObject_FieldIndex.PersistentLocation:
+                    return typeof(FormLinkNullable<Location>);
+                case PlacedObject_FieldIndex.CollisionLayer:
+                    return typeof(UInt32);
+                case PlacedObject_FieldIndex.Lock:
+                    return typeof(LockData);
+                case PlacedObject_FieldIndex.EncounterZone:
+                    return typeof(FormLinkNullable<EncounterZone>);
+                case PlacedObject_FieldIndex.NavigationDoorLink:
+                    return typeof(NavigationDoorLink);
+                case PlacedObject_FieldIndex.LocationRefTypes:
+                    return typeof(ExtendedList<IFormLink<LocationReferenceType>>);
+                case PlacedObject_FieldIndex.IgnoredBySandbox:
+                    return typeof(Boolean);
+                case PlacedObject_FieldIndex.Ownership:
+                    return typeof(Ownership);
+                case PlacedObject_FieldIndex.ItemCount:
+                    return typeof(Int32);
+                case PlacedObject_FieldIndex.Charge:
+                    return typeof(Single);
+                case PlacedObject_FieldIndex.LocationReference:
+                    return typeof(FormLinkNullable<ILocationRecord>);
+                case PlacedObject_FieldIndex.EnableParent:
+                    return typeof(EnableParent);
+                case PlacedObject_FieldIndex.LinkedReferences:
+                    return typeof(ExtendedList<LinkedReferences>);
+                case PlacedObject_FieldIndex.Patrol:
+                    return typeof(Patrol);
+                case PlacedObject_FieldIndex.Action:
+                    return typeof(PlacedObject.ActionFlag);
+                case PlacedObject_FieldIndex.HeadTrackingWeight:
+                    return typeof(Single);
+                case PlacedObject_FieldIndex.FavorCost:
+                    return typeof(Single);
+                case PlacedObject_FieldIndex.OpenByDefault:
+                    return typeof(Boolean);
+                case PlacedObject_FieldIndex.MapMarker:
+                    return typeof(MapMarker);
+                case PlacedObject_FieldIndex.AttachRef:
+                    return typeof(FormLinkNullable<IPlacedThing>);
+                case PlacedObject_FieldIndex.DistantLodData:
+                    return typeof(Byte[]);
+                case PlacedObject_FieldIndex.Position:
+                    return typeof(P3Float);
+                case PlacedObject_FieldIndex.Rotation:
+                    return typeof(P3Float);
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return typeof(PlacedObject.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -964,9 +4568,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedObjectXmlWriteTranslation);
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType NAME_HEADER = new RecordType("NAME");
+        public static readonly RecordType XMBO_HEADER = new RecordType("XMBO");
+        public static readonly RecordType XPRM_HEADER = new RecordType("XPRM");
+        public static readonly RecordType XORD_HEADER = new RecordType("XORD");
+        public static readonly RecordType XOCP_HEADER = new RecordType("XOCP");
+        public static readonly RecordType XPOD_HEADER = new RecordType("XPOD");
+        public static readonly RecordType XPTL_HEADER = new RecordType("XPTL");
+        public static readonly RecordType XRMR_HEADER = new RecordType("XRMR");
+        public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
+        public static readonly RecordType XLRM_HEADER = new RecordType("XLRM");
+        public static readonly RecordType XMBP_HEADER = new RecordType("XMBP");
+        public static readonly RecordType XRGD_HEADER = new RecordType("XRGD");
+        public static readonly RecordType XRGB_HEADER = new RecordType("XRGB");
+        public static readonly RecordType XRDS_HEADER = new RecordType("XRDS");
+        public static readonly RecordType XPWR_HEADER = new RecordType("XPWR");
+        public static readonly RecordType XLTW_HEADER = new RecordType("XLTW");
+        public static readonly RecordType XEMI_HEADER = new RecordType("XEMI");
+        public static readonly RecordType XLIG_HEADER = new RecordType("XLIG");
+        public static readonly RecordType XALP_HEADER = new RecordType("XALP");
+        public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
+        public static readonly RecordType XTNM_HEADER = new RecordType("XTNM");
+        public static readonly RecordType XMBR_HEADER = new RecordType("XMBR");
+        public static readonly RecordType XWCN_HEADER = new RecordType("XWCN");
+        public static readonly RecordType XWCS_HEADER = new RecordType("XWCS");
+        public static readonly RecordType XWCU_HEADER = new RecordType("XWCU");
+        public static readonly RecordType XCVL_HEADER = new RecordType("XCVL");
+        public static readonly RecordType XCZR_HEADER = new RecordType("XCZR");
+        public static readonly RecordType XCZA_HEADER = new RecordType("XCZA");
+        public static readonly RecordType XCZC_HEADER = new RecordType("XCZC");
+        public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
+        public static readonly RecordType XSPC_HEADER = new RecordType("XSPC");
+        public static readonly RecordType XAPD_HEADER = new RecordType("XAPD");
+        public static readonly RecordType XLIB_HEADER = new RecordType("XLIB");
+        public static readonly RecordType XLCM_HEADER = new RecordType("XLCM");
+        public static readonly RecordType XLCN_HEADER = new RecordType("XLCN");
+        public static readonly RecordType XTRI_HEADER = new RecordType("XTRI");
+        public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
+        public static readonly RecordType XEZN_HEADER = new RecordType("XEZN");
+        public static readonly RecordType XNDP_HEADER = new RecordType("XNDP");
+        public static readonly RecordType XLRT_HEADER = new RecordType("XLRT");
+        public static readonly RecordType XIS2_HEADER = new RecordType("XIS2");
+        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
+        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
+        public static readonly RecordType XCNT_HEADER = new RecordType("XCNT");
+        public static readonly RecordType XCHG_HEADER = new RecordType("XCHG");
+        public static readonly RecordType XLRL_HEADER = new RecordType("XLRL");
+        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
+        public static readonly RecordType XLKR_HEADER = new RecordType("XLKR");
+        public static readonly RecordType XPRD_HEADER = new RecordType("XPRD");
+        public static readonly RecordType XACT_HEADER = new RecordType("XACT");
+        public static readonly RecordType XHTW_HEADER = new RecordType("XHTW");
+        public static readonly RecordType XFVC_HEADER = new RecordType("XFVC");
+        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
+        public static readonly RecordType XMRK_HEADER = new RecordType("XMRK");
+        public static readonly RecordType XATR_HEADER = new RecordType("XATR");
+        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = REFR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 56;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1009,6 +4672,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Base = null;
+            item.BoundHalfExtents = default;
+            item.Primitive = null;
+            item.Unknown = default;
+            item.OcclusionPlane = null;
+            item.Portals = null;
+            item.RoomPortal = null;
+            item.Unknown2 = default;
+            item.LightingTemplate = null;
+            item.ImageSpace = null;
+            item.LinkedRooms.Clear();
+            item.MultiBoundPrimitive = default;
+            item.RagdollData = default;
+            item.RagdollBipedData = default;
+            item.Radius = default;
+            item.Reflections.Clear();
+            item.LitWater.Clear();
+            item.Emittance = null;
+            item.LightData = null;
+            item.Alpha = null;
+            item.TeleportDestination = null;
+            item.TeleportMessageBox = null;
+            item.MultiboundReference = null;
+            item.Unknown3 = default;
+            item.Unknown4 = default;
+            item.WaterVelocity = null;
+            item.Unknown5 = default;
+            item.Unknown6 = null;
+            item.Unknown7 = default;
+            item.Unknown8 = null;
+            item.Scale = default;
+            item.SpawnContainer = null;
+            item.ActivateParents = null;
+            item.LeveledItemBaseObject = null;
+            item.LevelModifier = default;
+            item.PersistentLocation = null;
+            item.CollisionLayer = default;
+            item.Lock = null;
+            item.EncounterZone = null;
+            item.NavigationDoorLink = null;
+            item.LocationRefTypes = null;
+            item.IgnoredBySandbox = default;
+            item.Ownership = null;
+            item.ItemCount = default;
+            item.Charge = default;
+            item.LocationReference = null;
+            item.EnableParent = null;
+            item.LinkedReferences.Clear();
+            item.Patrol = null;
+            item.Action = default;
+            item.HeadTrackingWeight = default;
+            item.FavorCost = default;
+            item.OpenByDefault = default;
+            item.MapMarker = null;
+            item.AttachRef = null;
+            item.DistantLodData = default;
+            item.Position = default;
+            item.Rotation = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1113,6 +4836,415 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IPlacedObjectInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x454D414E: // NAME
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                }
+                case 0x4F424D58: // XMBO
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BoundHalfExtents = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                }
+                case 0x4D525058: // XPRM
+                {
+                    item.Primitive = Mutagen.Bethesda.Skyrim.PlacedPrimitive.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
+                }
+                case 0x44524F58: // XORD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                }
+                case 0x50434F58: // XOCP
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
+                }
+                case 0x444F5058: // XPOD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Portals = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Portal>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out Portal listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Portal>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<Portal>();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
+                }
+                case 0x4C545058: // XPTL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
+                }
+                case 0x524D5258: // XRMR
+                {
+                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x50424D58: // XMBP
+                {
+                    item.MultiBoundPrimitive = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                }
+                case 0x44475258: // XRGD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                }
+                case 0x42475258: // XRGB
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollBipedData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
+                }
+                case 0x53445258: // XRDS
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
+                }
+                case 0x52575058: // XPWR
+                {
+                    item.Reflections.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WaterReflection>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XPWR_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out WaterReflection listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<WaterReflection>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
+                }
+                case 0x57544C58: // XLTW
+                {
+                    item.LitWater.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<PlacedObject>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XLTW_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
+                }
+                case 0x494D4558: // XEMI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Emittance = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
+                }
+                case 0x47494C58: // XLIG
+                {
+                    item.LightData = Mutagen.Bethesda.Skyrim.LightData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
+                }
+                case 0x504C4158: // XALP
+                {
+                    item.Alpha = Mutagen.Bethesda.Skyrim.Alpha.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
+                }
+                case 0x4C455458: // XTEL
+                {
+                    item.TeleportDestination = Mutagen.Bethesda.Skyrim.TeleportDestination.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                }
+                case 0x4D4E5458: // XTNM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TeleportMessageBox = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                }
+                case 0x52424D58: // XMBR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MultiboundReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
+                }
+                case 0x4E435758: // XWCN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
+                }
+                case 0x53435758: // XWCS
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
+                }
+                case 0x55435758: // XWCU
+                {
+                    item.WaterVelocity = Mutagen.Bethesda.Skyrim.WaterVelocity.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
+                }
+                case 0x4C564358: // XCVL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
+                }
+                case 0x525A4358: // XCZR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown6 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
+                }
+                case 0x415A4358: // XCZA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown7 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
+                }
+                case 0x435A4358: // XCZC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown8 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                }
+                case 0x43505358: // XSPC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SpawnContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
+                }
+                case 0x44504158: // XAPD
+                {
+                    item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
+                }
+                case 0x42494C58: // XLIB
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LeveledItemBaseObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                }
+                case 0x4D434C58: // XLCM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LevelModifier = EnumBinaryTranslation<LevelModifier>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                }
+                case 0x4E434C58: // XLCN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PersistentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
+                }
+                case 0x49525458: // XTRI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CollisionLayer = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
+                }
+                case 0x434F4C58: // XLOC
+                {
+                    item.Lock = Mutagen.Bethesda.Skyrim.LockData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                }
+                case 0x4E5A4558: // XEZN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
+                }
+                case 0x50444E58: // XNDP
+                {
+                    item.NavigationDoorLink = Mutagen.Bethesda.Skyrim.NavigationDoorLink.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                }
+                case 0x54524C58: // XLRT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationRefTypes = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<LocationReferenceType>>();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
+                }
+                case 0x32534958: // XIS2
+                {
+                    item.IgnoredBySandbox = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                }
+                case 0x4E574F58: // XOWN
+                case 0x4B4E5258: // XRNK
+                {
+                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
+                }
+                case 0x544E4358: // XCNT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ItemCount = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
+                }
+                case 0x47484358: // XCHG
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Charge = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                }
+                case 0x4C524C58: // XLRL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
+                }
+                case 0x50534558: // XESP
+                {
+                    item.EnableParent = Mutagen.Bethesda.Skyrim.EnableParent.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                }
+                case 0x524B4C58: // XLKR
+                {
+                    item.LinkedReferences.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XLKR_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LinkedReferences listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LinkedReferences>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
+                }
+                case 0x44525058: // XPRD
+                {
+                    item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
+                }
+                case 0x54434158: // XACT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
+                }
+                case 0x57544858: // XHTW
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeadTrackingWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                }
+                case 0x43564658: // XFVC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FavorCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
+                }
+                case 0x4D414E4F: // ONAM
+                {
+                    item.OpenByDefault = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                }
+                case 0x4B524D58: // XMRK
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                }
+                case 0x52544158: // XATR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
+                }
+                case 0x444F4C58: // XLOD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DistantLodData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IPlacedObjectInternal item,
             MutagenFrame frame,
@@ -1176,6 +5308,144 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Base = object.Equals(item.Base, rhs.Base);
+            ret.BoundHalfExtents = item.BoundHalfExtents.Equals(rhs.BoundHalfExtents);
+            ret.Primitive = EqualsMaskHelper.EqualsHelper(
+                item.Primitive,
+                rhs.Primitive,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.OcclusionPlane = EqualsMaskHelper.EqualsHelper(
+                item.OcclusionPlane,
+                rhs.OcclusionPlane,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Portals = item.Portals.CollectionEqualsHelper(
+                rhs.Portals,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RoomPortal = EqualsMaskHelper.EqualsHelper(
+                item.RoomPortal,
+                rhs.RoomPortal,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.LightingTemplate = object.Equals(item.LightingTemplate, rhs.LightingTemplate);
+            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.LinkedRooms = item.LinkedRooms.CollectionEqualsHelper(
+                rhs.LinkedRooms,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.MultiBoundPrimitive = item.MultiBoundPrimitive == rhs.MultiBoundPrimitive;
+            ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
+            ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Reflections = item.Reflections.CollectionEqualsHelper(
+                rhs.Reflections,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LitWater = item.LitWater.CollectionEqualsHelper(
+                rhs.LitWater,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
+            ret.LightData = EqualsMaskHelper.EqualsHelper(
+                item.LightData,
+                rhs.LightData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Alpha = EqualsMaskHelper.EqualsHelper(
+                item.Alpha,
+                rhs.Alpha,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.TeleportDestination = EqualsMaskHelper.EqualsHelper(
+                item.TeleportDestination,
+                rhs.TeleportDestination,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.TeleportMessageBox = object.Equals(item.TeleportMessageBox, rhs.TeleportMessageBox);
+            ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
+            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
+            ret.Unknown4 = MemorySliceExt.Equal(item.Unknown4, rhs.Unknown4);
+            ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
+                item.WaterVelocity,
+                rhs.WaterVelocity,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unknown5 = MemorySliceExt.Equal(item.Unknown5, rhs.Unknown5);
+            ret.Unknown6 = object.Equals(item.Unknown6, rhs.Unknown6);
+            ret.Unknown7 = MemorySliceExt.Equal(item.Unknown7, rhs.Unknown7);
+            ret.Unknown8 = object.Equals(item.Unknown8, rhs.Unknown8);
+            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
+            ret.SpawnContainer = object.Equals(item.SpawnContainer, rhs.SpawnContainer);
+            ret.ActivateParents = EqualsMaskHelper.EqualsHelper(
+                item.ActivateParents,
+                rhs.ActivateParents,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LeveledItemBaseObject = object.Equals(item.LeveledItemBaseObject, rhs.LeveledItemBaseObject);
+            ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
+            ret.PersistentLocation = object.Equals(item.PersistentLocation, rhs.PersistentLocation);
+            ret.CollisionLayer = item.CollisionLayer == rhs.CollisionLayer;
+            ret.Lock = EqualsMaskHelper.EqualsHelper(
+                item.Lock,
+                rhs.Lock,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.NavigationDoorLink = EqualsMaskHelper.EqualsHelper(
+                item.NavigationDoorLink,
+                rhs.NavigationDoorLink,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
+                rhs.LocationRefTypes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.IgnoredBySandbox = item.IgnoredBySandbox == rhs.IgnoredBySandbox;
+            ret.Ownership = EqualsMaskHelper.EqualsHelper(
+                item.Ownership,
+                rhs.Ownership,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ItemCount = item.ItemCount == rhs.ItemCount;
+            ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
+            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
+                item.EnableParent,
+                rhs.EnableParent,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LinkedReferences = item.LinkedReferences.CollectionEqualsHelper(
+                rhs.LinkedReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Patrol = EqualsMaskHelper.EqualsHelper(
+                item.Patrol,
+                rhs.Patrol,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Action = item.Action == rhs.Action;
+            ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
+            ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
+            ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
+            ret.MapMarker = EqualsMaskHelper.EqualsHelper(
+                item.MapMarker,
+                rhs.MapMarker,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.AttachRef = object.Equals(item.AttachRef, rhs.AttachRef);
+            ret.DistantLodData = MemorySliceExt.Equal(item.DistantLodData, rhs.DistantLodData);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,12 +5497,449 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Base ?? true)
+                && item.Base.TryGet(out var BaseItem))
+            {
+                fg.AppendItem(BaseItem, "Base");
+            }
+            if ((printMask?.BoundHalfExtents ?? true)
+                && item.BoundHalfExtents.TryGet(out var BoundHalfExtentsItem))
+            {
+                fg.AppendItem(BoundHalfExtentsItem, "BoundHalfExtents");
+            }
+            if ((printMask?.Primitive?.Overall ?? true)
+                && item.Primitive.TryGet(out var PrimitiveItem))
+            {
+                PrimitiveItem?.ToString(fg, "Primitive");
+            }
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown.TryGet(out var UnknownItem))
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+            }
+            if ((printMask?.OcclusionPlane?.Overall ?? true)
+                && item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
+            {
+                OcclusionPlaneItem?.ToString(fg, "OcclusionPlane");
+            }
+            if ((printMask?.Portals?.Overall ?? true)
+                && item.Portals.TryGet(out var PortalsItem))
+            {
+                fg.AppendLine("Portals =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in PortalsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RoomPortal?.Overall ?? true)
+                && item.RoomPortal.TryGet(out var RoomPortalItem))
+            {
+                RoomPortalItem?.ToString(fg, "RoomPortal");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if ((printMask?.LightingTemplate ?? true)
+                && item.LightingTemplate.TryGet(out var LightingTemplateItem))
+            {
+                fg.AppendItem(LightingTemplateItem, "LightingTemplate");
+            }
+            if ((printMask?.ImageSpace ?? true)
+                && item.ImageSpace.TryGet(out var ImageSpaceItem))
+            {
+                fg.AppendItem(ImageSpaceItem, "ImageSpace");
+            }
+            if (printMask?.LinkedRooms?.Overall ?? true)
+            {
+                fg.AppendLine("LinkedRooms =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.LinkedRooms)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.MultiBoundPrimitive ?? true)
+            {
+                fg.AppendItem(item.MultiBoundPrimitive, "MultiBoundPrimitive");
+            }
+            if ((printMask?.RagdollData ?? true)
+                && item.RagdollData.TryGet(out var RagdollDataItem))
+            {
+                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+            }
+            if ((printMask?.RagdollBipedData ?? true)
+                && item.RagdollBipedData.TryGet(out var RagdollBipedDataItem))
+            {
+                fg.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
+            }
+            if ((printMask?.Radius ?? true)
+                && item.Radius.TryGet(out var RadiusItem))
+            {
+                fg.AppendItem(RadiusItem, "Radius");
+            }
+            if (printMask?.Reflections?.Overall ?? true)
+            {
+                fg.AppendLine("Reflections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Reflections)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.LitWater?.Overall ?? true)
+            {
+                fg.AppendLine("LitWater =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.LitWater)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Emittance ?? true)
+                && item.Emittance.TryGet(out var EmittanceItem))
+            {
+                fg.AppendItem(EmittanceItem, "Emittance");
+            }
+            if ((printMask?.LightData?.Overall ?? true)
+                && item.LightData.TryGet(out var LightDataItem))
+            {
+                LightDataItem?.ToString(fg, "LightData");
+            }
+            if ((printMask?.Alpha?.Overall ?? true)
+                && item.Alpha.TryGet(out var AlphaItem))
+            {
+                AlphaItem?.ToString(fg, "Alpha");
+            }
+            if ((printMask?.TeleportDestination?.Overall ?? true)
+                && item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+            {
+                TeleportDestinationItem?.ToString(fg, "TeleportDestination");
+            }
+            if ((printMask?.TeleportMessageBox ?? true)
+                && item.TeleportMessageBox.TryGet(out var TeleportMessageBoxItem))
+            {
+                fg.AppendItem(TeleportMessageBoxItem, "TeleportMessageBox");
+            }
+            if ((printMask?.MultiboundReference ?? true)
+                && item.MultiboundReference.TryGet(out var MultiboundReferenceItem))
+            {
+                fg.AppendItem(MultiboundReferenceItem, "MultiboundReference");
+            }
+            if ((printMask?.Unknown3 ?? true)
+                && item.Unknown3.TryGet(out var Unknown3Item))
+            {
+                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+            }
+            if ((printMask?.Unknown4 ?? true)
+                && item.Unknown4.TryGet(out var Unknown4Item))
+            {
+                fg.AppendLine($"Unknown4 => {SpanExt.ToHexString(Unknown4Item)}");
+            }
+            if ((printMask?.WaterVelocity?.Overall ?? true)
+                && item.WaterVelocity.TryGet(out var WaterVelocityItem))
+            {
+                WaterVelocityItem?.ToString(fg, "WaterVelocity");
+            }
+            if ((printMask?.Unknown5 ?? true)
+                && item.Unknown5.TryGet(out var Unknown5Item))
+            {
+                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(Unknown5Item)}");
+            }
+            if ((printMask?.Unknown6 ?? true)
+                && item.Unknown6.TryGet(out var Unknown6Item))
+            {
+                fg.AppendItem(Unknown6Item, "Unknown6");
+            }
+            if ((printMask?.Unknown7 ?? true)
+                && item.Unknown7.TryGet(out var Unknown7Item))
+            {
+                fg.AppendLine($"Unknown7 => {SpanExt.ToHexString(Unknown7Item)}");
+            }
+            if ((printMask?.Unknown8 ?? true)
+                && item.Unknown8.TryGet(out var Unknown8Item))
+            {
+                fg.AppendItem(Unknown8Item, "Unknown8");
+            }
+            if ((printMask?.Scale ?? true)
+                && item.Scale.TryGet(out var ScaleItem))
+            {
+                fg.AppendItem(ScaleItem, "Scale");
+            }
+            if ((printMask?.SpawnContainer ?? true)
+                && item.SpawnContainer.TryGet(out var SpawnContainerItem))
+            {
+                fg.AppendItem(SpawnContainerItem, "SpawnContainer");
+            }
+            if ((printMask?.ActivateParents?.Overall ?? true)
+                && item.ActivateParents.TryGet(out var ActivateParentsItem))
+            {
+                ActivateParentsItem?.ToString(fg, "ActivateParents");
+            }
+            if ((printMask?.LeveledItemBaseObject ?? true)
+                && item.LeveledItemBaseObject.TryGet(out var LeveledItemBaseObjectItem))
+            {
+                fg.AppendItem(LeveledItemBaseObjectItem, "LeveledItemBaseObject");
+            }
+            if ((printMask?.LevelModifier ?? true)
+                && item.LevelModifier.TryGet(out var LevelModifierItem))
+            {
+                fg.AppendItem(LevelModifierItem, "LevelModifier");
+            }
+            if ((printMask?.PersistentLocation ?? true)
+                && item.PersistentLocation.TryGet(out var PersistentLocationItem))
+            {
+                fg.AppendItem(PersistentLocationItem, "PersistentLocation");
+            }
+            if ((printMask?.CollisionLayer ?? true)
+                && item.CollisionLayer.TryGet(out var CollisionLayerItem))
+            {
+                fg.AppendItem(CollisionLayerItem, "CollisionLayer");
+            }
+            if ((printMask?.Lock?.Overall ?? true)
+                && item.Lock.TryGet(out var LockItem))
+            {
+                LockItem?.ToString(fg, "Lock");
+            }
+            if ((printMask?.EncounterZone ?? true)
+                && item.EncounterZone.TryGet(out var EncounterZoneItem))
+            {
+                fg.AppendItem(EncounterZoneItem, "EncounterZone");
+            }
+            if ((printMask?.NavigationDoorLink?.Overall ?? true)
+                && item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
+            {
+                NavigationDoorLinkItem?.ToString(fg, "NavigationDoorLink");
+            }
+            if ((printMask?.LocationRefTypes?.Overall ?? true)
+                && item.LocationRefTypes.TryGet(out var LocationRefTypesItem))
+            {
+                fg.AppendLine("LocationRefTypes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationRefTypesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.IgnoredBySandbox ?? true)
+            {
+                fg.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
+            }
+            if ((printMask?.Ownership?.Overall ?? true)
+                && item.Ownership.TryGet(out var OwnershipItem))
+            {
+                OwnershipItem?.ToString(fg, "Ownership");
+            }
+            if ((printMask?.ItemCount ?? true)
+                && item.ItemCount.TryGet(out var ItemCountItem))
+            {
+                fg.AppendItem(ItemCountItem, "ItemCount");
+            }
+            if ((printMask?.Charge ?? true)
+                && item.Charge.TryGet(out var ChargeItem))
+            {
+                fg.AppendItem(ChargeItem, "Charge");
+            }
+            if ((printMask?.LocationReference ?? true)
+                && item.LocationReference.TryGet(out var LocationReferenceItem))
+            {
+                fg.AppendItem(LocationReferenceItem, "LocationReference");
+            }
+            if ((printMask?.EnableParent?.Overall ?? true)
+                && item.EnableParent.TryGet(out var EnableParentItem))
+            {
+                EnableParentItem?.ToString(fg, "EnableParent");
+            }
+            if (printMask?.LinkedReferences?.Overall ?? true)
+            {
+                fg.AppendLine("LinkedReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.LinkedReferences)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Patrol?.Overall ?? true)
+                && item.Patrol.TryGet(out var PatrolItem))
+            {
+                PatrolItem?.ToString(fg, "Patrol");
+            }
+            if ((printMask?.Action ?? true)
+                && item.Action.TryGet(out var ActionItem))
+            {
+                fg.AppendItem(ActionItem, "Action");
+            }
+            if ((printMask?.HeadTrackingWeight ?? true)
+                && item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightItem))
+            {
+                fg.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+            }
+            if ((printMask?.FavorCost ?? true)
+                && item.FavorCost.TryGet(out var FavorCostItem))
+            {
+                fg.AppendItem(FavorCostItem, "FavorCost");
+            }
+            if (printMask?.OpenByDefault ?? true)
+            {
+                fg.AppendItem(item.OpenByDefault, "OpenByDefault");
+            }
+            if ((printMask?.MapMarker?.Overall ?? true)
+                && item.MapMarker.TryGet(out var MapMarkerItem))
+            {
+                MapMarkerItem?.ToString(fg, "MapMarker");
+            }
+            if ((printMask?.AttachRef ?? true)
+                && item.AttachRef.TryGet(out var AttachRefItem))
+            {
+                fg.AppendItem(AttachRefItem, "AttachRef");
+            }
+            if ((printMask?.DistantLodData ?? true)
+                && item.DistantLodData.TryGet(out var DistantLodDataItem))
+            {
+                fg.AppendLine($"DistantLodData => {SpanExt.ToHexString(DistantLodDataItem)}");
+            }
+            if (printMask?.Position ?? true)
+            {
+                fg.AppendItem(item.Position, "Position");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendItem(item.Rotation, "Rotation");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IPlacedObjectGetter item,
             PlacedObject.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Base.HasValue && checkMask.Base.Value != (item.Base.FormKey != null)) return false;
+            if (checkMask.BoundHalfExtents.HasValue && checkMask.BoundHalfExtents.Value != (item.BoundHalfExtents != null)) return false;
+            if (checkMask.Primitive?.Overall.HasValue ?? false && checkMask.Primitive.Overall.Value != (item.Primitive != null)) return false;
+            if (checkMask.Primitive?.Specific != null && (item.Primitive == null || !item.Primitive.HasBeenSet(checkMask.Primitive.Specific))) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.OcclusionPlane?.Overall.HasValue ?? false && checkMask.OcclusionPlane.Overall.Value != (item.OcclusionPlane != null)) return false;
+            if (checkMask.OcclusionPlane?.Specific != null && (item.OcclusionPlane == null || !item.OcclusionPlane.HasBeenSet(checkMask.OcclusionPlane.Specific))) return false;
+            if (checkMask.Portals?.Overall.HasValue ?? false && checkMask.Portals!.Overall.Value != (item.Portals != null)) return false;
+            if (checkMask.RoomPortal?.Overall.HasValue ?? false && checkMask.RoomPortal.Overall.Value != (item.RoomPortal != null)) return false;
+            if (checkMask.RoomPortal?.Specific != null && (item.RoomPortal == null || !item.RoomPortal.HasBeenSet(checkMask.RoomPortal.Specific))) return false;
+            if (checkMask.LightingTemplate.HasValue && checkMask.LightingTemplate.Value != (item.LightingTemplate.FormKey != null)) return false;
+            if (checkMask.ImageSpace.HasValue && checkMask.ImageSpace.Value != (item.ImageSpace.FormKey != null)) return false;
+            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != (item.RagdollData != null)) return false;
+            if (checkMask.RagdollBipedData.HasValue && checkMask.RagdollBipedData.Value != (item.RagdollBipedData != null)) return false;
+            if (checkMask.Radius.HasValue && checkMask.Radius.Value != (item.Radius != null)) return false;
+            if (checkMask.Emittance.HasValue && checkMask.Emittance.Value != (item.Emittance.FormKey != null)) return false;
+            if (checkMask.LightData?.Overall.HasValue ?? false && checkMask.LightData.Overall.Value != (item.LightData != null)) return false;
+            if (checkMask.LightData?.Specific != null && (item.LightData == null || !item.LightData.HasBeenSet(checkMask.LightData.Specific))) return false;
+            if (checkMask.Alpha?.Overall.HasValue ?? false && checkMask.Alpha.Overall.Value != (item.Alpha != null)) return false;
+            if (checkMask.Alpha?.Specific != null && (item.Alpha == null || !item.Alpha.HasBeenSet(checkMask.Alpha.Specific))) return false;
+            if (checkMask.TeleportDestination?.Overall.HasValue ?? false && checkMask.TeleportDestination.Overall.Value != (item.TeleportDestination != null)) return false;
+            if (checkMask.TeleportDestination?.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
+            if (checkMask.TeleportMessageBox.HasValue && checkMask.TeleportMessageBox.Value != (item.TeleportMessageBox.FormKey != null)) return false;
+            if (checkMask.MultiboundReference.HasValue && checkMask.MultiboundReference.Value != (item.MultiboundReference.FormKey != null)) return false;
+            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
+            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
+            if (checkMask.WaterVelocity?.Overall.HasValue ?? false && checkMask.WaterVelocity.Overall.Value != (item.WaterVelocity != null)) return false;
+            if (checkMask.WaterVelocity?.Specific != null && (item.WaterVelocity == null || !item.WaterVelocity.HasBeenSet(checkMask.WaterVelocity.Specific))) return false;
+            if (checkMask.Unknown5.HasValue && checkMask.Unknown5.Value != (item.Unknown5 != null)) return false;
+            if (checkMask.Unknown6.HasValue && checkMask.Unknown6.Value != (item.Unknown6.FormKey != null)) return false;
+            if (checkMask.Unknown7.HasValue && checkMask.Unknown7.Value != (item.Unknown7 != null)) return false;
+            if (checkMask.Unknown8.HasValue && checkMask.Unknown8.Value != (item.Unknown8.FormKey != null)) return false;
+            if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
+            if (checkMask.SpawnContainer.HasValue && checkMask.SpawnContainer.Value != (item.SpawnContainer.FormKey != null)) return false;
+            if (checkMask.ActivateParents?.Overall.HasValue ?? false && checkMask.ActivateParents.Overall.Value != (item.ActivateParents != null)) return false;
+            if (checkMask.ActivateParents?.Specific != null && (item.ActivateParents == null || !item.ActivateParents.HasBeenSet(checkMask.ActivateParents.Specific))) return false;
+            if (checkMask.LeveledItemBaseObject.HasValue && checkMask.LeveledItemBaseObject.Value != (item.LeveledItemBaseObject.FormKey != null)) return false;
+            if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != (item.LevelModifier != null)) return false;
+            if (checkMask.PersistentLocation.HasValue && checkMask.PersistentLocation.Value != (item.PersistentLocation.FormKey != null)) return false;
+            if (checkMask.CollisionLayer.HasValue && checkMask.CollisionLayer.Value != (item.CollisionLayer != null)) return false;
+            if (checkMask.Lock?.Overall.HasValue ?? false && checkMask.Lock.Overall.Value != (item.Lock != null)) return false;
+            if (checkMask.Lock?.Specific != null && (item.Lock == null || !item.Lock.HasBeenSet(checkMask.Lock.Specific))) return false;
+            if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
+            if (checkMask.NavigationDoorLink?.Overall.HasValue ?? false && checkMask.NavigationDoorLink.Overall.Value != (item.NavigationDoorLink != null)) return false;
+            if (checkMask.NavigationDoorLink?.Specific != null && (item.NavigationDoorLink == null || !item.NavigationDoorLink.HasBeenSet(checkMask.NavigationDoorLink.Specific))) return false;
+            if (checkMask.LocationRefTypes?.Overall.HasValue ?? false && checkMask.LocationRefTypes!.Overall.Value != (item.LocationRefTypes != null)) return false;
+            if (checkMask.Ownership?.Overall.HasValue ?? false && checkMask.Ownership.Overall.Value != (item.Ownership != null)) return false;
+            if (checkMask.Ownership?.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
+            if (checkMask.ItemCount.HasValue && checkMask.ItemCount.Value != (item.ItemCount != null)) return false;
+            if (checkMask.Charge.HasValue && checkMask.Charge.Value != (item.Charge != null)) return false;
+            if (checkMask.LocationReference.HasValue && checkMask.LocationReference.Value != (item.LocationReference.FormKey != null)) return false;
+            if (checkMask.EnableParent?.Overall.HasValue ?? false && checkMask.EnableParent.Overall.Value != (item.EnableParent != null)) return false;
+            if (checkMask.EnableParent?.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
+            if (checkMask.Patrol?.Overall.HasValue ?? false && checkMask.Patrol.Overall.Value != (item.Patrol != null)) return false;
+            if (checkMask.Patrol?.Specific != null && (item.Patrol == null || !item.Patrol.HasBeenSet(checkMask.Patrol.Specific))) return false;
+            if (checkMask.Action.HasValue && checkMask.Action.Value != (item.Action != null)) return false;
+            if (checkMask.HeadTrackingWeight.HasValue && checkMask.HeadTrackingWeight.Value != (item.HeadTrackingWeight != null)) return false;
+            if (checkMask.FavorCost.HasValue && checkMask.FavorCost.Value != (item.FavorCost != null)) return false;
+            if (checkMask.MapMarker?.Overall.HasValue ?? false && checkMask.MapMarker.Overall.Value != (item.MapMarker != null)) return false;
+            if (checkMask.MapMarker?.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
+            if (checkMask.AttachRef.HasValue && checkMask.AttachRef.Value != (item.AttachRef.FormKey != null)) return false;
+            if (checkMask.DistantLodData.HasValue && checkMask.DistantLodData.Value != (item.DistantLodData != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,6 +5949,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedObjectGetter item,
             PlacedObject.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.Base = (item.Base.FormKey != null);
+            mask.BoundHalfExtents = (item.BoundHalfExtents != null);
+            var itemPrimitive = item.Primitive;
+            mask.Primitive = new MaskItem<bool, PlacedPrimitive.Mask<bool>?>(itemPrimitive != null, itemPrimitive?.GetHasBeenSetMask());
+            mask.Unknown = (item.Unknown != null);
+            var itemOcclusionPlane = item.OcclusionPlane;
+            mask.OcclusionPlane = new MaskItem<bool, Placement.Mask<bool>?>(itemOcclusionPlane != null, itemOcclusionPlane?.GetHasBeenSetMask());
+            if (item.Portals.TryGet(out var PortalsItem))
+            {
+                mask.Portals = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Portal.Mask<bool>?>>?>(true, PortalsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Portal.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            var itemRoomPortal = item.RoomPortal;
+            mask.RoomPortal = new MaskItem<bool, Placement.Mask<bool>?>(itemRoomPortal != null, itemRoomPortal?.GetHasBeenSetMask());
+            mask.Unknown2 = true;
+            mask.LightingTemplate = (item.LightingTemplate.FormKey != null);
+            mask.ImageSpace = (item.ImageSpace.FormKey != null);
+            mask.LinkedRooms = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.MultiBoundPrimitive = true;
+            mask.RagdollData = (item.RagdollData != null);
+            mask.RagdollBipedData = (item.RagdollBipedData != null);
+            mask.Radius = (item.Radius != null);
+            var ReflectionsItem = item.Reflections;
+            mask.Reflections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WaterReflection.Mask<bool>?>>?>(true, ReflectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WaterReflection.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.LitWater = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.Emittance = (item.Emittance.FormKey != null);
+            var itemLightData = item.LightData;
+            mask.LightData = new MaskItem<bool, LightData.Mask<bool>?>(itemLightData != null, itemLightData?.GetHasBeenSetMask());
+            var itemAlpha = item.Alpha;
+            mask.Alpha = new MaskItem<bool, Alpha.Mask<bool>?>(itemAlpha != null, itemAlpha?.GetHasBeenSetMask());
+            var itemTeleportDestination = item.TeleportDestination;
+            mask.TeleportDestination = new MaskItem<bool, TeleportDestination.Mask<bool>?>(itemTeleportDestination != null, itemTeleportDestination?.GetHasBeenSetMask());
+            mask.TeleportMessageBox = (item.TeleportMessageBox.FormKey != null);
+            mask.MultiboundReference = (item.MultiboundReference.FormKey != null);
+            mask.Unknown3 = (item.Unknown3 != null);
+            mask.Unknown4 = (item.Unknown4 != null);
+            var itemWaterVelocity = item.WaterVelocity;
+            mask.WaterVelocity = new MaskItem<bool, WaterVelocity.Mask<bool>?>(itemWaterVelocity != null, itemWaterVelocity?.GetHasBeenSetMask());
+            mask.Unknown5 = (item.Unknown5 != null);
+            mask.Unknown6 = (item.Unknown6.FormKey != null);
+            mask.Unknown7 = (item.Unknown7 != null);
+            mask.Unknown8 = (item.Unknown8.FormKey != null);
+            mask.Scale = (item.Scale != null);
+            mask.SpawnContainer = (item.SpawnContainer.FormKey != null);
+            var itemActivateParents = item.ActivateParents;
+            mask.ActivateParents = new MaskItem<bool, ActivateParents.Mask<bool>?>(itemActivateParents != null, itemActivateParents?.GetHasBeenSetMask());
+            mask.LeveledItemBaseObject = (item.LeveledItemBaseObject.FormKey != null);
+            mask.LevelModifier = (item.LevelModifier != null);
+            mask.PersistentLocation = (item.PersistentLocation.FormKey != null);
+            mask.CollisionLayer = (item.CollisionLayer != null);
+            var itemLock = item.Lock;
+            mask.Lock = new MaskItem<bool, LockData.Mask<bool>?>(itemLock != null, itemLock?.GetHasBeenSetMask());
+            mask.EncounterZone = (item.EncounterZone.FormKey != null);
+            var itemNavigationDoorLink = item.NavigationDoorLink;
+            mask.NavigationDoorLink = new MaskItem<bool, NavigationDoorLink.Mask<bool>?>(itemNavigationDoorLink != null, itemNavigationDoorLink?.GetHasBeenSetMask());
+            mask.LocationRefTypes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LocationRefTypes != null), default);
+            mask.IgnoredBySandbox = true;
+            var itemOwnership = item.Ownership;
+            mask.Ownership = new MaskItem<bool, Ownership.Mask<bool>?>(itemOwnership != null, itemOwnership?.GetHasBeenSetMask());
+            mask.ItemCount = (item.ItemCount != null);
+            mask.Charge = (item.Charge != null);
+            mask.LocationReference = (item.LocationReference.FormKey != null);
+            var itemEnableParent = item.EnableParent;
+            mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
+            var LinkedReferencesItem = item.LinkedReferences;
+            mask.LinkedReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>>?>(true, LinkedReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var itemPatrol = item.Patrol;
+            mask.Patrol = new MaskItem<bool, Patrol.Mask<bool>?>(itemPatrol != null, itemPatrol?.GetHasBeenSetMask());
+            mask.Action = (item.Action != null);
+            mask.HeadTrackingWeight = (item.HeadTrackingWeight != null);
+            mask.FavorCost = (item.FavorCost != null);
+            mask.OpenByDefault = true;
+            var itemMapMarker = item.MapMarker;
+            mask.MapMarker = new MaskItem<bool, MapMarker.Mask<bool>?>(itemMapMarker != null, itemMapMarker?.GetHasBeenSetMask());
+            mask.AttachRef = (item.AttachRef.FormKey != null);
+            mask.DistantLodData = (item.DistantLodData != null);
+            mask.Position = true;
+            mask.Rotation = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1293,6 +6080,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!lhs.Base.Equals(rhs.Base)) return false;
+            if (!lhs.BoundHalfExtents.Equals(rhs.BoundHalfExtents)) return false;
+            if (!object.Equals(lhs.Primitive, rhs.Primitive)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!object.Equals(lhs.OcclusionPlane, rhs.OcclusionPlane)) return false;
+            if (!lhs.Portals.SequenceEqual(rhs.Portals)) return false;
+            if (!object.Equals(lhs.RoomPortal, rhs.RoomPortal)) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
+            if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            if (!lhs.LinkedRooms.SequenceEqual(rhs.LinkedRooms)) return false;
+            if (lhs.MultiBoundPrimitive != rhs.MultiBoundPrimitive) return false;
+            if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+            if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            if (!lhs.Reflections.SequenceEqual(rhs.Reflections)) return false;
+            if (!lhs.LitWater.SequenceEqual(rhs.LitWater)) return false;
+            if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
+            if (!object.Equals(lhs.LightData, rhs.LightData)) return false;
+            if (!object.Equals(lhs.Alpha, rhs.Alpha)) return false;
+            if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
+            if (!lhs.TeleportMessageBox.Equals(rhs.TeleportMessageBox)) return false;
+            if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown4, rhs.Unknown4)) return false;
+            if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown5, rhs.Unknown5)) return false;
+            if (!lhs.Unknown6.Equals(rhs.Unknown6)) return false;
+            if (!MemorySliceExt.Equal(lhs.Unknown7, rhs.Unknown7)) return false;
+            if (!lhs.Unknown8.Equals(rhs.Unknown8)) return false;
+            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            if (!lhs.SpawnContainer.Equals(rhs.SpawnContainer)) return false;
+            if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
+            if (!lhs.LeveledItemBaseObject.Equals(rhs.LeveledItemBaseObject)) return false;
+            if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
+            if (lhs.CollisionLayer != rhs.CollisionLayer) return false;
+            if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
+            if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            if (!object.Equals(lhs.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
+            if (!lhs.LocationRefTypes.SequenceEqual(rhs.LocationRefTypes)) return false;
+            if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
+            if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+            if (lhs.ItemCount != rhs.ItemCount) return false;
+            if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
+            if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
+            if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences)) return false;
+            if (!object.Equals(lhs.Patrol, rhs.Patrol)) return false;
+            if (lhs.Action != rhs.Action) return false;
+            if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
+            if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
+            if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
+            if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
+            if (!lhs.AttachRef.Equals(rhs.AttachRef)) return false;
+            if (!MemorySliceExt.Equal(lhs.DistantLodData, rhs.DistantLodData)) return false;
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1317,6 +6164,207 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Base.TryGet(out var Baseitem))
+            {
+                hash.Add(Baseitem);
+            }
+            if (item.BoundHalfExtents.TryGet(out var BoundHalfExtentsitem))
+            {
+                hash.Add(BoundHalfExtentsitem);
+            }
+            if (item.Primitive.TryGet(out var Primitiveitem))
+            {
+                hash.Add(Primitiveitem);
+            }
+            if (item.Unknown.TryGet(out var UnknownItem))
+            {
+                hash.Add(UnknownItem);
+            }
+            if (item.OcclusionPlane.TryGet(out var OcclusionPlaneitem))
+            {
+                hash.Add(OcclusionPlaneitem);
+            }
+            hash.Add(item.Portals);
+            if (item.RoomPortal.TryGet(out var RoomPortalitem))
+            {
+                hash.Add(RoomPortalitem);
+            }
+            hash.Add(item.Unknown2);
+            if (item.LightingTemplate.TryGet(out var LightingTemplateitem))
+            {
+                hash.Add(LightingTemplateitem);
+            }
+            if (item.ImageSpace.TryGet(out var ImageSpaceitem))
+            {
+                hash.Add(ImageSpaceitem);
+            }
+            hash.Add(item.LinkedRooms);
+            hash.Add(item.MultiBoundPrimitive);
+            if (item.RagdollData.TryGet(out var RagdollDataItem))
+            {
+                hash.Add(RagdollDataItem);
+            }
+            if (item.RagdollBipedData.TryGet(out var RagdollBipedDataItem))
+            {
+                hash.Add(RagdollBipedDataItem);
+            }
+            if (item.Radius.TryGet(out var Radiusitem))
+            {
+                hash.Add(Radiusitem);
+            }
+            hash.Add(item.Reflections);
+            hash.Add(item.LitWater);
+            if (item.Emittance.TryGet(out var Emittanceitem))
+            {
+                hash.Add(Emittanceitem);
+            }
+            if (item.LightData.TryGet(out var LightDataitem))
+            {
+                hash.Add(LightDataitem);
+            }
+            if (item.Alpha.TryGet(out var Alphaitem))
+            {
+                hash.Add(Alphaitem);
+            }
+            if (item.TeleportDestination.TryGet(out var TeleportDestinationitem))
+            {
+                hash.Add(TeleportDestinationitem);
+            }
+            if (item.TeleportMessageBox.TryGet(out var TeleportMessageBoxitem))
+            {
+                hash.Add(TeleportMessageBoxitem);
+            }
+            if (item.MultiboundReference.TryGet(out var MultiboundReferenceitem))
+            {
+                hash.Add(MultiboundReferenceitem);
+            }
+            if (item.Unknown3.TryGet(out var Unknown3Item))
+            {
+                hash.Add(Unknown3Item);
+            }
+            if (item.Unknown4.TryGet(out var Unknown4Item))
+            {
+                hash.Add(Unknown4Item);
+            }
+            if (item.WaterVelocity.TryGet(out var WaterVelocityitem))
+            {
+                hash.Add(WaterVelocityitem);
+            }
+            if (item.Unknown5.TryGet(out var Unknown5Item))
+            {
+                hash.Add(Unknown5Item);
+            }
+            if (item.Unknown6.TryGet(out var Unknown6item))
+            {
+                hash.Add(Unknown6item);
+            }
+            if (item.Unknown7.TryGet(out var Unknown7Item))
+            {
+                hash.Add(Unknown7Item);
+            }
+            if (item.Unknown8.TryGet(out var Unknown8item))
+            {
+                hash.Add(Unknown8item);
+            }
+            if (item.Scale.TryGet(out var Scaleitem))
+            {
+                hash.Add(Scaleitem);
+            }
+            if (item.SpawnContainer.TryGet(out var SpawnContaineritem))
+            {
+                hash.Add(SpawnContaineritem);
+            }
+            if (item.ActivateParents.TryGet(out var ActivateParentsitem))
+            {
+                hash.Add(ActivateParentsitem);
+            }
+            if (item.LeveledItemBaseObject.TryGet(out var LeveledItemBaseObjectitem))
+            {
+                hash.Add(LeveledItemBaseObjectitem);
+            }
+            if (item.LevelModifier.TryGet(out var LevelModifieritem))
+            {
+                hash.Add(LevelModifieritem);
+            }
+            if (item.PersistentLocation.TryGet(out var PersistentLocationitem))
+            {
+                hash.Add(PersistentLocationitem);
+            }
+            if (item.CollisionLayer.TryGet(out var CollisionLayeritem))
+            {
+                hash.Add(CollisionLayeritem);
+            }
+            if (item.Lock.TryGet(out var Lockitem))
+            {
+                hash.Add(Lockitem);
+            }
+            if (item.EncounterZone.TryGet(out var EncounterZoneitem))
+            {
+                hash.Add(EncounterZoneitem);
+            }
+            if (item.NavigationDoorLink.TryGet(out var NavigationDoorLinkitem))
+            {
+                hash.Add(NavigationDoorLinkitem);
+            }
+            hash.Add(item.LocationRefTypes);
+            hash.Add(item.IgnoredBySandbox);
+            if (item.Ownership.TryGet(out var Ownershipitem))
+            {
+                hash.Add(Ownershipitem);
+            }
+            if (item.ItemCount.TryGet(out var ItemCountitem))
+            {
+                hash.Add(ItemCountitem);
+            }
+            if (item.Charge.TryGet(out var Chargeitem))
+            {
+                hash.Add(Chargeitem);
+            }
+            if (item.LocationReference.TryGet(out var LocationReferenceitem))
+            {
+                hash.Add(LocationReferenceitem);
+            }
+            if (item.EnableParent.TryGet(out var EnableParentitem))
+            {
+                hash.Add(EnableParentitem);
+            }
+            hash.Add(item.LinkedReferences);
+            if (item.Patrol.TryGet(out var Patrolitem))
+            {
+                hash.Add(Patrolitem);
+            }
+            if (item.Action.TryGet(out var Actionitem))
+            {
+                hash.Add(Actionitem);
+            }
+            if (item.HeadTrackingWeight.TryGet(out var HeadTrackingWeightitem))
+            {
+                hash.Add(HeadTrackingWeightitem);
+            }
+            if (item.FavorCost.TryGet(out var FavorCostitem))
+            {
+                hash.Add(FavorCostitem);
+            }
+            hash.Add(item.OpenByDefault);
+            if (item.MapMarker.TryGet(out var MapMarkeritem))
+            {
+                hash.Add(MapMarkeritem);
+            }
+            if (item.AttachRef.TryGet(out var AttachRefitem))
+            {
+                hash.Add(AttachRefitem);
+            }
+            if (item.DistantLodData.TryGet(out var DistantLodDataItem))
+            {
+                hash.Add(DistantLodDataItem);
+            }
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1345,6 +6393,148 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            {
+                yield return BaseKey;
+            }
+            if (obj.Portals.TryGet(out var PortalsItem))
+            {
+                foreach (var item in PortalsItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LightingTemplate.FormKey.TryGet(out var LightingTemplateKey))
+            {
+                yield return LightingTemplateKey;
+            }
+            if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
+            {
+                yield return ImageSpaceKey;
+            }
+            foreach (var item in obj.LinkedRooms.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Reflections.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LitWater.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            if (obj.Emittance.FormKey.TryGet(out var EmittanceKey))
+            {
+                yield return EmittanceKey;
+            }
+            if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
+            {
+                foreach (var item in TeleportDestinationItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.TeleportMessageBox.FormKey.TryGet(out var TeleportMessageBoxKey))
+            {
+                yield return TeleportMessageBoxKey;
+            }
+            if (obj.MultiboundReference.FormKey.TryGet(out var MultiboundReferenceKey))
+            {
+                yield return MultiboundReferenceKey;
+            }
+            if (obj.Unknown6.FormKey.TryGet(out var Unknown6Key))
+            {
+                yield return Unknown6Key;
+            }
+            if (obj.Unknown8.FormKey.TryGet(out var Unknown8Key))
+            {
+                yield return Unknown8Key;
+            }
+            if (obj.SpawnContainer.FormKey.TryGet(out var SpawnContainerKey))
+            {
+                yield return SpawnContainerKey;
+            }
+            if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
+            {
+                foreach (var item in ActivateParentsItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledItemBaseObject.FormKey.TryGet(out var LeveledItemBaseObjectKey))
+            {
+                yield return LeveledItemBaseObjectKey;
+            }
+            if (obj.PersistentLocation.FormKey.TryGet(out var PersistentLocationKey))
+            {
+                yield return PersistentLocationKey;
+            }
+            if (obj.Lock.TryGet(out var LockItems))
+            {
+                foreach (var item in LockItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.EncounterZone.FormKey.TryGet(out var EncounterZoneKey))
+            {
+                yield return EncounterZoneKey;
+            }
+            if (obj.NavigationDoorLink.TryGet(out var NavigationDoorLinkItems))
+            {
+                foreach (var item in NavigationDoorLinkItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationRefTypes.TryGet(out var LocationRefTypesItem))
+            {
+                foreach (var item in LocationRefTypesItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Ownership.TryGet(out var OwnershipItems))
+            {
+                foreach (var item in OwnershipItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationReference.FormKey.TryGet(out var LocationReferenceKey))
+            {
+                yield return LocationReferenceKey;
+            }
+            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            {
+                foreach (var item in EnableParentItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            if (obj.Patrol.TryGet(out var PatrolItems))
+            {
+                foreach (var item in PatrolItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AttachRef.FormKey.TryGet(out var AttachRefKey))
+            {
+                yield return AttachRefKey;
             }
             yield break;
         }
@@ -1393,6 +6583,753 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                item.Base = rhs.Base.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
+            {
+                item.BoundHalfExtents = rhs.BoundHalfExtents;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Primitive);
+                try
+                {
+                    if(rhs.Primitive.TryGet(out var rhsPrimitive))
+                    {
+                        item.Primitive = rhsPrimitive.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive));
+                    }
+                    else
+                    {
+                        item.Primitive = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            {
+                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                {
+                    item.Unknown = Unknownrhs.ToArray();
+                }
+                else
+                {
+                    item.Unknown = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.OcclusionPlane);
+                try
+                {
+                    if(rhs.OcclusionPlane.TryGet(out var rhsOcclusionPlane))
+                    {
+                        item.OcclusionPlane = rhsOcclusionPlane.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane));
+                    }
+                    else
+                    {
+                        item.OcclusionPlane = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Portals);
+                try
+                {
+                    if ((rhs.Portals != null))
+                    {
+                        item.Portals = 
+                            rhs.Portals
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Portal>();
+                    }
+                    else
+                    {
+                        item.Portals = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.RoomPortal);
+                try
+                {
+                    if(rhs.RoomPortal.TryGet(out var rhsRoomPortal))
+                    {
+                        item.RoomPortal = rhsRoomPortal.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal));
+                    }
+                    else
+                    {
+                        item.RoomPortal = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
+            {
+                item.LightingTemplate = rhs.LightingTemplate.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace = rhs.ImageSpace.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LinkedRooms);
+                try
+                {
+                    item.LinkedRooms.SetTo(
+                        rhs.LinkedRooms
+                        .Select(r => (IFormLink<PlacedObject>)new FormLink<PlacedObject>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundPrimitive) ?? true))
+            {
+                item.MultiBoundPrimitive = rhs.MultiBoundPrimitive;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                if(rhs.RagdollData.TryGet(out var RagdollDatarhs))
+                {
+                    item.RagdollData = RagdollDatarhs.ToArray();
+                }
+                else
+                {
+                    item.RagdollData = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
+            {
+                if(rhs.RagdollBipedData.TryGet(out var RagdollBipedDatarhs))
+                {
+                    item.RagdollBipedData = RagdollBipedDatarhs.ToArray();
+                }
+                else
+                {
+                    item.RagdollBipedData = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Reflections);
+                try
+                {
+                    item.Reflections.SetTo(
+                        rhs.Reflections
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LitWater) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LitWater);
+                try
+                {
+                    item.LitWater.SetTo(
+                        rhs.LitWater
+                        .Select(r => (IFormLink<PlacedObject>)new FormLink<PlacedObject>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
+            {
+                item.Emittance = rhs.Emittance.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightData);
+                try
+                {
+                    if(rhs.LightData.TryGet(out var rhsLightData))
+                    {
+                        item.LightData = rhsLightData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData));
+                    }
+                    else
+                    {
+                        item.LightData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Alpha) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Alpha);
+                try
+                {
+                    if(rhs.Alpha.TryGet(out var rhsAlpha))
+                    {
+                        item.Alpha = rhsAlpha.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha));
+                    }
+                    else
+                    {
+                        item.Alpha = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
+                try
+                {
+                    if(rhs.TeleportDestination.TryGet(out var rhsTeleportDestination))
+                    {
+                        item.TeleportDestination = rhsTeleportDestination.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                    }
+                    else
+                    {
+                        item.TeleportDestination = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
+            {
+                item.TeleportMessageBox = rhs.TeleportMessageBox.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            {
+                item.MultiboundReference = rhs.MultiboundReference.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown3) ?? true))
+            {
+                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                {
+                    item.Unknown3 = Unknown3rhs.ToArray();
+                }
+                else
+                {
+                    item.Unknown3 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown4) ?? true))
+            {
+                if(rhs.Unknown4.TryGet(out var Unknown4rhs))
+                {
+                    item.Unknown4 = Unknown4rhs.ToArray();
+                }
+                else
+                {
+                    item.Unknown4 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.WaterVelocity);
+                try
+                {
+                    if(rhs.WaterVelocity.TryGet(out var rhsWaterVelocity))
+                    {
+                        item.WaterVelocity = rhsWaterVelocity.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity));
+                    }
+                    else
+                    {
+                        item.WaterVelocity = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown5) ?? true))
+            {
+                if(rhs.Unknown5.TryGet(out var Unknown5rhs))
+                {
+                    item.Unknown5 = Unknown5rhs.ToArray();
+                }
+                else
+                {
+                    item.Unknown5 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown6) ?? true))
+            {
+                item.Unknown6 = rhs.Unknown6.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown7) ?? true))
+            {
+                if(rhs.Unknown7.TryGet(out var Unknown7rhs))
+                {
+                    item.Unknown7 = Unknown7rhs.ToArray();
+                }
+                else
+                {
+                    item.Unknown7 = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown8) ?? true))
+            {
+                item.Unknown8 = rhs.Unknown8.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
+            {
+                item.SpawnContainer = rhs.SpawnContainer.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActivateParents);
+                try
+                {
+                    if(rhs.ActivateParents.TryGet(out var rhsActivateParents))
+                    {
+                        item.ActivateParents = rhsActivateParents.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents));
+                    }
+                    else
+                    {
+                        item.ActivateParents = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
+            {
+                item.LeveledItemBaseObject = rhs.LeveledItemBaseObject.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                item.LevelModifier = rhs.LevelModifier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
+            {
+                item.PersistentLocation = rhs.PersistentLocation.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
+            {
+                item.CollisionLayer = rhs.CollisionLayer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
+                try
+                {
+                    if(rhs.Lock.TryGet(out var rhsLock))
+                    {
+                        item.Lock = rhsLock.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                    }
+                    else
+                    {
+                        item.Lock = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
+            {
+                item.EncounterZone = rhs.EncounterZone.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                try
+                {
+                    if(rhs.NavigationDoorLink.TryGet(out var rhsNavigationDoorLink))
+                    {
+                        item.NavigationDoorLink = rhsNavigationDoorLink.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink));
+                    }
+                    else
+                    {
+                        item.NavigationDoorLink = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LocationRefTypes);
+                try
+                {
+                    if ((rhs.LocationRefTypes != null))
+                    {
+                        item.LocationRefTypes = 
+                            rhs.LocationRefTypes
+                            .Select(r => (IFormLink<LocationReferenceType>)new FormLink<LocationReferenceType>(r.FormKey))
+                            .ToExtendedList<IFormLink<LocationReferenceType>>();
+                    }
+                    else
+                    {
+                        item.LocationRefTypes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IgnoredBySandbox) ?? true))
+            {
+                item.IgnoredBySandbox = rhs.IgnoredBySandbox;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
+                try
+                {
+                    if(rhs.Ownership.TryGet(out var rhsOwnership))
+                    {
+                        item.Ownership = rhsOwnership.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership));
+                    }
+                    else
+                    {
+                        item.Ownership = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
+            {
+                item.ItemCount = rhs.ItemCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
+            {
+                item.Charge = rhs.Charge;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
+            {
+                item.LocationReference = rhs.LocationReference.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
+                try
+                {
+                    if(rhs.EnableParent.TryGet(out var rhsEnableParent))
+                    {
+                        item.EnableParent = rhsEnableParent.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                    }
+                    else
+                    {
+                        item.EnableParent = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.LinkedReferences);
+                try
+                {
+                    item.LinkedReferences.SetTo(
+                        rhs.LinkedReferences
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Patrol);
+                try
+                {
+                    if(rhs.Patrol.TryGet(out var rhsPatrol))
+                    {
+                        item.Patrol = rhsPatrol.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol));
+                    }
+                    else
+                    {
+                        item.Patrol = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
+            {
+                item.Action = rhs.Action;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                item.HeadTrackingWeight = rhs.HeadTrackingWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FavorCost) ?? true))
+            {
+                item.FavorCost = rhs.FavorCost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                item.OpenByDefault = rhs.OpenByDefault;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
+                try
+                {
+                    if(rhs.MapMarker.TryGet(out var rhsMapMarker))
+                    {
+                        item.MapMarker = rhsMapMarker.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                    }
+                    else
+                    {
+                        item.MapMarker = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
+            {
+                item.AttachRef = rhs.AttachRef.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
+            {
+                if(rhs.DistantLodData.TryGet(out var DistantLodDatarhs))
+                {
+                    item.DistantLodData = DistantLodDatarhs.ToArray();
+                }
+                else
+                {
+                    item.DistantLodData = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            {
+                item.Position = rhs.Position;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
+            {
+                item.Rotation = rhs.Rotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1535,6 +7472,715 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)PlacedObject_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((item.Base.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Base),
+                    item: item.Base.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Base,
+                    errorMask: errorMask);
+            }
+            if ((item.BoundHalfExtents != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BoundHalfExtents),
+                    item: item.BoundHalfExtents.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.BoundHalfExtents,
+                    errorMask: errorMask);
+            }
+            if ((item.Primitive != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
+            {
+                if (item.Primitive.TryGet(out var PrimitiveItem))
+                {
+                    ((PlacedPrimitiveXmlWriteTranslation)((IXmlItem)PrimitiveItem).XmlWriteTranslator).Write(
+                        item: PrimitiveItem,
+                        node: node,
+                        name: nameof(item.Primitive),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Primitive,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive));
+                }
+            }
+            if ((item.Unknown != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((item.OcclusionPlane != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
+            {
+                if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
+                {
+                    ((PlacementXmlWriteTranslation)((IXmlItem)OcclusionPlaneItem).XmlWriteTranslator).Write(
+                        item: OcclusionPlaneItem,
+                        node: node,
+                        name: nameof(item.OcclusionPlane),
+                        fieldIndex: (int)PlacedObject_FieldIndex.OcclusionPlane,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane));
+                }
+            }
+            if ((item.Portals != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
+            {
+                ListXmlTranslation<IPortalGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Portals),
+                    item: item.Portals,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Portals,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Portals),
+                    transl: (XElement subNode, IPortalGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((PortalXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RoomPortal != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
+            {
+                if (item.RoomPortal.TryGet(out var RoomPortalItem))
+                {
+                    ((PlacementXmlWriteTranslation)((IXmlItem)RoomPortalItem).XmlWriteTranslator).Write(
+                        item: RoomPortalItem,
+                        node: node,
+                        name: nameof(item.RoomPortal),
+                        fieldIndex: (int)PlacedObject_FieldIndex.RoomPortal,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown2) ?? true))
+            {
+                Int16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+            if ((item.LightingTemplate.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LightingTemplate),
+                    item: item.LightingTemplate.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LightingTemplate,
+                    errorMask: errorMask);
+            }
+            if ((item.ImageSpace.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImageSpace),
+                    item: item.ImageSpace.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ImageSpace,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LinkedRooms),
+                    item: item.LinkedRooms,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LinkedRooms,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedRooms),
+                    transl: (XElement subNode, IFormLinkGetter<IPlacedObjectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundPrimitive) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MultiBoundPrimitive),
+                    item: item.MultiBoundPrimitive,
+                    fieldIndex: (int)PlacedObject_FieldIndex.MultiBoundPrimitive,
+                    errorMask: errorMask);
+            }
+            if ((item.RagdollData != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RagdollData),
+                    item: item.RagdollData.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
+                    errorMask: errorMask);
+            }
+            if ((item.RagdollBipedData != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollBipedData) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RagdollBipedData),
+                    item: item.RagdollBipedData.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollBipedData,
+                    errorMask: errorMask);
+            }
+            if ((item.Radius != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Radius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Radius),
+                    item: item.Radius.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Radius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
+            {
+                ListXmlTranslation<IWaterReflectionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Reflections),
+                    item: item.Reflections,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Reflections,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Reflections),
+                    transl: (XElement subNode, IWaterReflectionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((WaterReflectionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LitWater) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LitWater),
+                    item: item.LitWater,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LitWater,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LitWater),
+                    transl: (XElement subNode, IFormLinkGetter<IPlacedObjectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.Emittance.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Emittance),
+                    item: item.Emittance.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Emittance,
+                    errorMask: errorMask);
+            }
+            if ((item.LightData != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
+            {
+                if (item.LightData.TryGet(out var LightDataItem))
+                {
+                    ((LightDataXmlWriteTranslation)((IXmlItem)LightDataItem).XmlWriteTranslator).Write(
+                        item: LightDataItem,
+                        node: node,
+                        name: nameof(item.LightData),
+                        fieldIndex: (int)PlacedObject_FieldIndex.LightData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData));
+                }
+            }
+            if ((item.Alpha != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Alpha) ?? true))
+            {
+                if (item.Alpha.TryGet(out var AlphaItem))
+                {
+                    ((AlphaXmlWriteTranslation)((IXmlItem)AlphaItem).XmlWriteTranslator).Write(
+                        item: AlphaItem,
+                        node: node,
+                        name: nameof(item.Alpha),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Alpha,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha));
+                }
+            }
+            if ((item.TeleportDestination != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                if (item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+                {
+                    ((TeleportDestinationXmlWriteTranslation)((IXmlItem)TeleportDestinationItem).XmlWriteTranslator).Write(
+                        item: TeleportDestinationItem,
+                        node: node,
+                        name: nameof(item.TeleportDestination),
+                        fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                }
+            }
+            if ((item.TeleportMessageBox.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TeleportMessageBox),
+                    item: item.TeleportMessageBox.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.TeleportMessageBox,
+                    errorMask: errorMask);
+            }
+            if ((item.MultiboundReference.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MultiboundReference),
+                    item: item.MultiboundReference.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.MultiboundReference,
+                    errorMask: errorMask);
+            }
+            if ((item.Unknown3 != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown3) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown3),
+                    item: item.Unknown3.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown3,
+                    errorMask: errorMask);
+            }
+            if ((item.Unknown4 != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown4) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4),
+                    item: item.Unknown4.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown4,
+                    errorMask: errorMask);
+            }
+            if ((item.WaterVelocity != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
+            {
+                if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
+                {
+                    ((WaterVelocityXmlWriteTranslation)((IXmlItem)WaterVelocityItem).XmlWriteTranslator).Write(
+                        item: WaterVelocityItem,
+                        node: node,
+                        name: nameof(item.WaterVelocity),
+                        fieldIndex: (int)PlacedObject_FieldIndex.WaterVelocity,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity));
+                }
+            }
+            if ((item.Unknown5 != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown5) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown5),
+                    item: item.Unknown5.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown5,
+                    errorMask: errorMask);
+            }
+            if ((item.Unknown6.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown6) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown6),
+                    item: item.Unknown6.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown6,
+                    errorMask: errorMask);
+            }
+            if ((item.Unknown7 != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown7) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown7),
+                    item: item.Unknown7.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown7,
+                    errorMask: errorMask);
+            }
+            if ((item.Unknown8.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown8) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown8),
+                    item: item.Unknown8.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown8,
+                    errorMask: errorMask);
+            }
+            if ((item.Scale != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Scale),
+                    item: item.Scale.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Scale,
+                    errorMask: errorMask);
+            }
+            if ((item.SpawnContainer.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpawnContainer),
+                    item: item.SpawnContainer.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.SpawnContainer,
+                    errorMask: errorMask);
+            }
+            if ((item.ActivateParents != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
+            {
+                if (item.ActivateParents.TryGet(out var ActivateParentsItem))
+                {
+                    ((ActivateParentsXmlWriteTranslation)((IXmlItem)ActivateParentsItem).XmlWriteTranslator).Write(
+                        item: ActivateParentsItem,
+                        node: node,
+                        name: nameof(item.ActivateParents),
+                        fieldIndex: (int)PlacedObject_FieldIndex.ActivateParents,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents));
+                }
+            }
+            if ((item.LeveledItemBaseObject.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LeveledItemBaseObject),
+                    item: item.LeveledItemBaseObject.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LeveledItemBaseObject,
+                    errorMask: errorMask);
+            }
+            if ((item.LevelModifier != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                EnumXmlTranslation<LevelModifier>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LevelModifier),
+                    item: item.LevelModifier,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
+                    errorMask: errorMask);
+            }
+            if ((item.PersistentLocation.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PersistentLocation),
+                    item: item.PersistentLocation.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.PersistentLocation,
+                    errorMask: errorMask);
+            }
+            if ((item.CollisionLayer != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CollisionLayer),
+                    item: item.CollisionLayer.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.CollisionLayer,
+                    errorMask: errorMask);
+            }
+            if ((item.Lock != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                if (item.Lock.TryGet(out var LockItem))
+                {
+                    ((LockDataXmlWriteTranslation)((IXmlItem)LockItem).XmlWriteTranslator).Write(
+                        item: LockItem,
+                        node: node,
+                        name: nameof(item.Lock),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Lock,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                }
+            }
+            if ((item.EncounterZone.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EncounterZone),
+                    item: item.EncounterZone.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.EncounterZone,
+                    errorMask: errorMask);
+            }
+            if ((item.NavigationDoorLink != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
+            {
+                if (item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
+                {
+                    ((NavigationDoorLinkXmlWriteTranslation)((IXmlItem)NavigationDoorLinkItem).XmlWriteTranslator).Write(
+                        item: NavigationDoorLinkItem,
+                        node: node,
+                        name: nameof(item.NavigationDoorLink),
+                        fieldIndex: (int)PlacedObject_FieldIndex.NavigationDoorLink,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink));
+                }
+            }
+            if ((item.LocationRefTypes != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationRefTypes),
+                    item: item.LocationRefTypes,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LocationRefTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LocationRefTypes),
+                    transl: (XElement subNode, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.IgnoredBySandbox) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.IgnoredBySandbox),
+                    item: item.IgnoredBySandbox,
+                    fieldIndex: (int)PlacedObject_FieldIndex.IgnoredBySandbox,
+                    errorMask: errorMask);
+            }
+            if ((item.Ownership != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
+            {
+                if (item.Ownership.TryGet(out var OwnershipItem))
+                {
+                    ((OwnershipXmlWriteTranslation)((IXmlItem)OwnershipItem).XmlWriteTranslator).Write(
+                        item: OwnershipItem,
+                        node: node,
+                        name: nameof(item.Ownership),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Ownership,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership));
+                }
+            }
+            if ((item.ItemCount != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ItemCount),
+                    item: item.ItemCount.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ItemCount,
+                    errorMask: errorMask);
+            }
+            if ((item.Charge != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Charge),
+                    item: item.Charge.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Charge,
+                    errorMask: errorMask);
+            }
+            if ((item.LocationReference.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationReference),
+                    item: item.LocationReference.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LocationReference,
+                    errorMask: errorMask);
+            }
+            if ((item.EnableParent != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                if (item.EnableParent.TryGet(out var EnableParentItem))
+                {
+                    ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
+                        item: EnableParentItem,
+                        node: node,
+                        name: nameof(item.EnableParent),
+                        fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
+            {
+                ListXmlTranslation<ILinkedReferencesGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LinkedReferences),
+                    item: item.LinkedReferences,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LinkedReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LinkedReferences),
+                    transl: (XElement subNode, ILinkedReferencesGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LinkedReferencesXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Patrol != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
+            {
+                if (item.Patrol.TryGet(out var PatrolItem))
+                {
+                    ((PatrolXmlWriteTranslation)((IXmlItem)PatrolItem).XmlWriteTranslator).Write(
+                        item: PatrolItem,
+                        node: node,
+                        name: nameof(item.Patrol),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Patrol,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol));
+                }
+            }
+            if ((item.Action != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
+            {
+                EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Action),
+                    item: item.Action,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Action,
+                    errorMask: errorMask);
+            }
+            if ((item.HeadTrackingWeight != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HeadTrackingWeight),
+                    item: item.HeadTrackingWeight.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.HeadTrackingWeight,
+                    errorMask: errorMask);
+            }
+            if ((item.FavorCost != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FavorCost) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FavorCost),
+                    item: item.FavorCost.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.FavorCost,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.OpenByDefault),
+                    item: item.OpenByDefault,
+                    fieldIndex: (int)PlacedObject_FieldIndex.OpenByDefault,
+                    errorMask: errorMask);
+            }
+            if ((item.MapMarker != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                if (item.MapMarker.TryGet(out var MapMarkerItem))
+                {
+                    ((MapMarkerXmlWriteTranslation)((IXmlItem)MapMarkerItem).XmlWriteTranslator).Write(
+                        item: MapMarkerItem,
+                        node: node,
+                        name: nameof(item.MapMarker),
+                        fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                }
+            }
+            if ((item.AttachRef.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AttachRef),
+                    item: item.AttachRef.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.AttachRef,
+                    errorMask: errorMask);
+            }
+            if ((item.DistantLodData != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DistantLodData),
+                    item: item.DistantLodData.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.DistantLodData,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Position),
+                    item: item.Position,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Position,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Rotation),
+                    item: item.Rotation,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)PlacedObject_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1642,6 +8288,1161 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Base":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Base);
+                    try
+                    {
+                        item.Base = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BoundHalfExtents":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                    try
+                    {
+                        item.BoundHalfExtents = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Primitive":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Primitive);
+                    try
+                    {
+                        item.Primitive = LoquiXmlTranslation<PlacedPrimitive>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OcclusionPlane":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.OcclusionPlane);
+                    try
+                    {
+                        item.OcclusionPlane = LoquiXmlTranslation<Placement>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Portals":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Portals);
+                    try
+                    {
+                        if (ListXmlTranslation<Portal>.Instance.Parse(
+                            node: node,
+                            enumer: out var PortalsItem,
+                            transl: LoquiXmlTranslation<Portal>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Portals = PortalsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Portals = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RoomPortal":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.RoomPortal);
+                    try
+                    {
+                        item.RoomPortal = LoquiXmlTranslation<Placement>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown2":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown2);
+                    try
+                    {
+                        item.Unknown2 = Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightingTemplate":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightingTemplate);
+                    try
+                    {
+                        item.LightingTemplate = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImageSpace":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.ImageSpace);
+                    try
+                    {
+                        item.ImageSpace = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LinkedRooms":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LinkedRooms);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<PlacedObject>>.Instance.Parse(
+                            node: node,
+                            enumer: out var LinkedRoomsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LinkedRooms.SetTo(LinkedRoomsItem);
+                        }
+                        else
+                        {
+                            item.LinkedRooms.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MultiBoundPrimitive":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                    try
+                    {
+                        item.MultiBoundPrimitive = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RagdollData":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
+                    try
+                    {
+                        item.RagdollData = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RagdollBipedData":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollBipedData);
+                    try
+                    {
+                        item.RagdollBipedData = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Radius":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Radius);
+                    try
+                    {
+                        item.Radius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Reflections":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Reflections);
+                    try
+                    {
+                        if (ListXmlTranslation<WaterReflection>.Instance.Parse(
+                            node: node,
+                            enumer: out var ReflectionsItem,
+                            transl: LoquiXmlTranslation<WaterReflection>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Reflections.SetTo(ReflectionsItem);
+                        }
+                        else
+                        {
+                            item.Reflections.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LitWater":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LitWater);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<PlacedObject>>.Instance.Parse(
+                            node: node,
+                            enumer: out var LitWaterItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LitWater.SetTo(LitWaterItem);
+                        }
+                        else
+                        {
+                            item.LitWater.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Emittance":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Emittance);
+                    try
+                    {
+                        item.Emittance = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightData":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LightData);
+                    try
+                    {
+                        item.LightData = LoquiXmlTranslation<LightData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Alpha":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Alpha);
+                    try
+                    {
+                        item.Alpha = LoquiXmlTranslation<Alpha>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TeleportDestination":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
+                    try
+                    {
+                        item.TeleportDestination = LoquiXmlTranslation<TeleportDestination>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TeleportMessageBox":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                    try
+                    {
+                        item.TeleportMessageBox = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MultiboundReference":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.MultiboundReference);
+                    try
+                    {
+                        item.MultiboundReference = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown3":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown3);
+                    try
+                    {
+                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown4);
+                    try
+                    {
+                        item.Unknown4 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterVelocity":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.WaterVelocity);
+                    try
+                    {
+                        item.WaterVelocity = LoquiXmlTranslation<WaterVelocity>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown5":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown5);
+                    try
+                    {
+                        item.Unknown5 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown6":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown6);
+                    try
+                    {
+                        item.Unknown6 = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown7":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown7);
+                    try
+                    {
+                        item.Unknown7 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown8":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown8);
+                    try
+                    {
+                        item.Unknown8 = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Scale":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Scale);
+                    try
+                    {
+                        item.Scale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpawnContainer":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.SpawnContainer);
+                    try
+                    {
+                        item.SpawnContainer = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActivateParents":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActivateParents);
+                    try
+                    {
+                        item.ActivateParents = LoquiXmlTranslation<ActivateParents>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeveledItemBaseObject":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                    try
+                    {
+                        item.LeveledItemBaseObject = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LevelModifier":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LevelModifier);
+                    try
+                    {
+                        item.LevelModifier = EnumXmlTranslation<LevelModifier>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PersistentLocation":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.PersistentLocation);
+                    try
+                    {
+                        item.PersistentLocation = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CollisionLayer":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.CollisionLayer);
+                    try
+                    {
+                        item.CollisionLayer = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Lock":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
+                    try
+                    {
+                        item.Lock = LoquiXmlTranslation<LockData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EncounterZone":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.EncounterZone);
+                    try
+                    {
+                        item.EncounterZone = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NavigationDoorLink":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                    try
+                    {
+                        item.NavigationDoorLink = LoquiXmlTranslation<NavigationDoorLink>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationRefTypes":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LocationRefTypes);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationRefTypesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationRefTypes = LocationRefTypesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationRefTypes = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IgnoredBySandbox":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                    try
+                    {
+                        item.IgnoredBySandbox = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Ownership":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
+                    try
+                    {
+                        item.Ownership = LoquiXmlTranslation<Ownership>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ItemCount":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.ItemCount);
+                    try
+                    {
+                        item.ItemCount = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Charge":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Charge);
+                    try
+                    {
+                        item.Charge = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationReference":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LocationReference);
+                    try
+                    {
+                        item.LocationReference = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnableParent":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
+                    try
+                    {
+                        item.EnableParent = LoquiXmlTranslation<EnableParent>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LinkedReferences":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.LinkedReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<LinkedReferences>.Instance.Parse(
+                            node: node,
+                            enumer: out var LinkedReferencesItem,
+                            transl: LoquiXmlTranslation<LinkedReferences>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LinkedReferences.SetTo(LinkedReferencesItem);
+                        }
+                        else
+                        {
+                            item.LinkedReferences.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Patrol":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Patrol);
+                    try
+                    {
+                        item.Patrol = LoquiXmlTranslation<Patrol>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Action":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Action);
+                    try
+                    {
+                        item.Action = EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HeadTrackingWeight":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                    try
+                    {
+                        item.HeadTrackingWeight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FavorCost":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.FavorCost);
+                    try
+                    {
+                        item.FavorCost = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OpenByDefault":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.OpenByDefault);
+                    try
+                    {
+                        item.OpenByDefault = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MapMarker":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
+                    try
+                    {
+                        item.MapMarker = LoquiXmlTranslation<MapMarker>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttachRef":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.AttachRef);
+                    try
+                    {
+                        item.AttachRef = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DistantLodData":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLodData);
+                    try
+                    {
+                        item.DistantLodData = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Position":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
+                    try
+                    {
+                        item.Position = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rotation":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
+                    try
+                    {
+                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1728,6 +9529,351 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
+        static partial void WriteBinaryBoundDataCustom(
+            MutagenWriter writer,
+            IPlacedObjectGetter item);
+
+        public static void WriteBinaryBoundData(
+            MutagenWriter writer,
+            IPlacedObjectGetter item)
+        {
+            WriteBinaryBoundDataCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IPlacedObjectGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IPlacedObjectGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Base,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER));
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BoundHalfExtents,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XMBO_HEADER));
+            if (item.Primitive.TryGet(out var PrimitiveItem))
+            {
+                ((PlacedPrimitiveBinaryWriteTranslation)((IBinaryItem)PrimitiveItem).BinaryWriteTranslator).Write(
+                    item: PrimitiveItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XORD_HEADER));
+            if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
+            {
+                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XOCP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                {
+                    ((PlacementBinaryWriteTranslation)((IBinaryItem)OcclusionPlaneItem).BinaryWriteTranslator).Write(
+                        item: OcclusionPlaneItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPortalGetter>.Instance.Write(
+                writer: writer,
+                items: item.Portals,
+                recordType: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XPOD_HEADER),
+                transl: (MutagenWriter subWriter, IPortalGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((PortalBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            if (item.RoomPortal.TryGet(out var RoomPortalItem))
+            {
+                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XPTL_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                {
+                    ((PlacementBinaryWriteTranslation)((IBinaryItem)RoomPortalItem).BinaryWriteTranslator).Write(
+                        item: RoomPortalItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            PlacedObjectBinaryWriteTranslation.WriteBinaryBoundData(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.MultiBoundPrimitive,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XMBP_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RagdollData,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGD_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RagdollBipedData,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGB_HEADER));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Radius,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRDS_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWaterReflectionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Reflections,
+                transl: (MutagenWriter subWriter, IWaterReflectionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((WaterReflectionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LitWater,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedObjectGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLTW_HEADER));
+                });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Emittance,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XEMI_HEADER));
+            if (item.LightData.TryGet(out var LightDataItem))
+            {
+                ((LightDataBinaryWriteTranslation)((IBinaryItem)LightDataItem).BinaryWriteTranslator).Write(
+                    item: LightDataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Alpha.TryGet(out var AlphaItem))
+            {
+                ((AlphaBinaryWriteTranslation)((IBinaryItem)AlphaItem).BinaryWriteTranslator).Write(
+                    item: AlphaItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.TeleportDestination.TryGet(out var TeleportDestinationItem))
+            {
+                ((TeleportDestinationBinaryWriteTranslation)((IBinaryItem)TeleportDestinationItem).BinaryWriteTranslator).Write(
+                    item: TeleportDestinationItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TeleportMessageBox,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTNM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MultiboundReference,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XMBR_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown3,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XWCN_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown4,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XWCS_HEADER));
+            if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
+            {
+                ((WaterVelocityBinaryWriteTranslation)((IBinaryItem)WaterVelocityItem).BinaryWriteTranslator).Write(
+                    item: WaterVelocityItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown5,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCVL_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Unknown6,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZR_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown7,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZA_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Unknown8,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZC_HEADER));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Scale,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SpawnContainer,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSPC_HEADER));
+            if (item.ActivateParents.TryGet(out var ActivateParentsItem))
+            {
+                ((ActivateParentsBinaryWriteTranslation)((IBinaryItem)ActivateParentsItem).BinaryWriteTranslator).Write(
+                    item: ActivateParentsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LeveledItemBaseObject,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLIB_HEADER));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LevelModifier>.Instance.WriteNullable(
+                writer,
+                item.LevelModifier,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PersistentLocation,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCN_HEADER));
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CollisionLayer,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRI_HEADER));
+            if (item.Lock.TryGet(out var LockItem))
+            {
+                ((LockDataBinaryWriteTranslation)((IBinaryItem)LockItem).BinaryWriteTranslator).Write(
+                    item: LockItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterZone,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XEZN_HEADER));
+            if (item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
+            {
+                ((NavigationDoorLinkBinaryWriteTranslation)((IBinaryItem)NavigationDoorLinkItem).BinaryWriteTranslator).Write(
+                    item: NavigationDoorLinkItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LocationRefTypes,
+                recordType: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLRT_HEADER),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IgnoredBySandbox,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XIS2_HEADER));
+            if (item.Ownership.TryGet(out var OwnershipItem))
+            {
+                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
+                    item: OwnershipItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ItemCount,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Charge,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCHG_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LocationReference,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLRL_HEADER));
+            if (item.EnableParent.TryGet(out var EnableParentItem))
+            {
+                ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
+                    item: EnableParentItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
+                writer: writer,
+                items: item.LinkedReferences,
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            if (item.Patrol.TryGet(out var PatrolItem))
+            {
+                ((PatrolBinaryWriteTranslation)((IBinaryItem)PatrolItem).BinaryWriteTranslator).Write(
+                    item: PatrolItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.WriteNullable(
+                writer,
+                item.Action,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XACT_HEADER));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HeadTrackingWeight,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XHTW_HEADER));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FavorCost,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XFVC_HEADER));
+            Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.OpenByDefault,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.ONAM_HEADER));
+            if (item.MapMarker.TryGet(out var MapMarkerItem))
+            {
+                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
+                ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
+                    item: MapMarkerItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttachRef,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XATR_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DistantLodData,
+                header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLOD_HEADER));
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Position);
+                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Rotation);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IPlacedObjectGetter item,
@@ -1738,10 +9884,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.REFR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1787,6 +9933,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
+        static partial void FillBinaryBoundDataCustom(
+            MutagenFrame frame,
+            IPlacedObjectInternal item);
+
+        public static void FillBinaryBoundDataCustomPublic(
+            MutagenFrame frame,
+            IPlacedObjectInternal item)
+        {
+            FillBinaryBoundDataCustom(
+                frame: frame,
+                item: item);
+        }
+
     }
 
 }
@@ -1822,6 +9981,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1848,6 +10013,223 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region Base
+        private int? _BaseLocation;
+        public bool Base_IsSet => _BaseLocation.HasValue;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        #endregion
+        #region BoundHalfExtents
+        private int? _BoundHalfExtentsLocation;
+        public P3Float? BoundHalfExtents => _BoundHalfExtentsLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _BoundHalfExtentsLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region Primitive
+        private RangeInt32? _PrimitiveLocation;
+        public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(new BinaryMemoryReadStream(_data.Slice(_PrimitiveLocation!.Value.Min)), _package) : default;
+        public bool Primitive_IsSet => _PrimitiveLocation.HasValue;
+        #endregion
+        #region Unknown
+        private int? _UnknownLocation;
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IPlacementGetter? OcclusionPlane { get; private set; }
+        public IReadOnlyList<IPortalGetter>? Portals { get; private set; }
+        public IPlacementGetter? RoomPortal { get; private set; }
+        #region BoundData
+        partial void BoundDataCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region MultiBoundPrimitive
+        private int? _MultiBoundPrimitiveLocation;
+        public Boolean MultiBoundPrimitive => _MultiBoundPrimitiveLocation.HasValue ? true : default;
+        #endregion
+        #region RagdollData
+        private int? _RagdollDataLocation;
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region RagdollBipedData
+        private int? _RagdollBipedDataLocation;
+        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollBipedDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Radius
+        private int? _RadiusLocation;
+        public Single? Radius => _RadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _RadiusLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = ListExt.Empty<WaterReflectionBinaryOverlay>();
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
+        #region Emittance
+        private int? _EmittanceLocation;
+        public bool Emittance_IsSet => _EmittanceLocation.HasValue;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        #endregion
+        #region LightData
+        private RangeInt32? _LightDataLocation;
+        public ILightDataGetter? LightData => _LightDataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_LightDataLocation!.Value.Min)), _package) : default;
+        public bool LightData_IsSet => _LightDataLocation.HasValue;
+        #endregion
+        #region Alpha
+        private RangeInt32? _AlphaLocation;
+        public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(new BinaryMemoryReadStream(_data.Slice(_AlphaLocation!.Value.Min)), _package) : default;
+        public bool Alpha_IsSet => _AlphaLocation.HasValue;
+        #endregion
+        #region TeleportDestination
+        private RangeInt32? _TeleportDestinationLocation;
+        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation!.Value.Min)), _package) : default;
+        public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
+        #endregion
+        #region TeleportMessageBox
+        private int? _TeleportMessageBoxLocation;
+        public bool TeleportMessageBox_IsSet => _TeleportMessageBoxLocation.HasValue;
+        public IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox => _TeleportMessageBoxLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TeleportMessageBoxLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        #endregion
+        #region MultiboundReference
+        private int? _MultiboundReferenceLocation;
+        public bool MultiboundReference_IsSet => _MultiboundReferenceLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => _MultiboundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MultiboundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        #endregion
+        #region Unknown3
+        private int? _Unknown3Location;
+        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Unknown4
+        private int? _Unknown4Location;
+        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown4Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region WaterVelocity
+        private RangeInt32? _WaterVelocityLocation;
+        public IWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? WaterVelocityBinaryOverlay.WaterVelocityFactory(new BinaryMemoryReadStream(_data.Slice(_WaterVelocityLocation!.Value.Min)), _package) : default;
+        public bool WaterVelocity_IsSet => _WaterVelocityLocation.HasValue;
+        #endregion
+        #region Unknown5
+        private int? _Unknown5Location;
+        public ReadOnlyMemorySlice<Byte>? Unknown5 => _Unknown5Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown5Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Unknown6
+        private int? _Unknown6Location;
+        public bool Unknown6_IsSet => _Unknown6Location.HasValue;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> Unknown6 => _Unknown6Location.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown6Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        #endregion
+        #region Unknown7
+        private int? _Unknown7Location;
+        public ReadOnlyMemorySlice<Byte>? Unknown7 => _Unknown7Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown7Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Unknown8
+        private int? _Unknown8Location;
+        public bool Unknown8_IsSet => _Unknown8Location.HasValue;
+        public IFormLinkNullableGetter<ICellGetter> Unknown8 => _Unknown8Location.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown8Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region SpawnContainer
+        private int? _SpawnContainerLocation;
+        public bool SpawnContainer_IsSet => _SpawnContainerLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> SpawnContainer => _SpawnContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpawnContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        #endregion
+        public IActivateParentsGetter? ActivateParents { get; private set; }
+        #region LeveledItemBaseObject
+        private int? _LeveledItemBaseObjectLocation;
+        public bool LeveledItemBaseObject_IsSet => _LeveledItemBaseObjectLocation.HasValue;
+        public IFormLinkNullableGetter<ILeveledItemGetter> LeveledItemBaseObject => _LeveledItemBaseObjectLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LeveledItemBaseObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        #endregion
+        #region LevelModifier
+        private int? _LevelModifierLocation;
+        public LevelModifier? LevelModifier => _LevelModifierLocation.HasValue ? (LevelModifier)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(LevelModifier?);
+        #endregion
+        #region PersistentLocation
+        private int? _PersistentLocationLocation;
+        public bool PersistentLocation_IsSet => _PersistentLocationLocation.HasValue;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region CollisionLayer
+        private int? _CollisionLayerLocation;
+        public UInt32? CollisionLayer => _CollisionLayerLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CollisionLayerLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region Lock
+        private RangeInt32? _LockLocation;
+        public ILockDataGetter? Lock => _LockLocation.HasValue ? LockDataBinaryOverlay.LockDataFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation!.Value.Min)), _package) : default;
+        public bool Lock_IsSet => _LockLocation.HasValue;
+        #endregion
+        #region EncounterZone
+        private int? _EncounterZoneLocation;
+        public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        #endregion
+        #region NavigationDoorLink
+        private RangeInt32? _NavigationDoorLinkLocation;
+        public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new BinaryMemoryReadStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min)), _package) : default;
+        public bool NavigationDoorLink_IsSet => _NavigationDoorLinkLocation.HasValue;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
+        #region IgnoredBySandbox
+        private int? _IgnoredBySandboxLocation;
+        public Boolean IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? true : default;
+        #endregion
+        public IOwnershipGetter? Ownership { get; private set; }
+        #region ItemCount
+        private int? _ItemCountLocation;
+        public Int32? ItemCount => _ItemCountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ItemCountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region Charge
+        private int? _ChargeLocation;
+        public Single? Charge => _ChargeLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ChargeLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region LocationReference
+        private int? _LocationReferenceLocation;
+        public bool LocationReference_IsSet => _LocationReferenceLocation.HasValue;
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
+        #endregion
+        #region EnableParent
+        private RangeInt32? _EnableParentLocation;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package) : default;
+        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
+        #endregion
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
+        public IPatrolGetter? Patrol { get; private set; }
+        #region Action
+        private int? _ActionLocation;
+        public PlacedObject.ActionFlag? Action => _ActionLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ActionLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        #endregion
+        #region HeadTrackingWeight
+        private int? _HeadTrackingWeightLocation;
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region FavorCost
+        private int? _FavorCostLocation;
+        public Single? FavorCost => _FavorCostLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region OpenByDefault
+        private int? _OpenByDefaultLocation;
+        public Boolean OpenByDefault => _OpenByDefaultLocation.HasValue ? true : default;
+        #endregion
+        public IMapMarkerGetter? MapMarker { get; private set; }
+        #region AttachRef
+        private int? _AttachRefLocation;
+        public bool AttachRef_IsSet => _AttachRefLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedThingGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<IPlacedThingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedThingGetter>.Null;
+        #endregion
+        #region DistantLodData
+        private int? _DistantLodDataLocation;
+        public ReadOnlyMemorySlice<Byte>? DistantLodData => _DistantLodDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DistantLodDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private int? _DATALocation;
+        public PlacedObject.DATADataType DATADataTypeState { get; private set; }
+        #region Position
+        private int _PositionLocation => _DATALocation!.Value + 0x0;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation!.Value + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1898,6 +10280,370 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x454D414E: // NAME
+                {
+                    _BaseLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                }
+                case 0x4F424D58: // XMBO
+                {
+                    _BoundHalfExtentsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                }
+                case 0x4D525058: // XPRM
+                {
+                    _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
+                }
+                case 0x44524F58: // XORD
+                {
+                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                }
+                case 0x50434F58: // XOCP
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.OcclusionPlane = PlacementBinaryOverlay.PlacementFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
+                }
+                case 0x444F5058: // XPOD
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Portals = BinaryOverlaySetList<PortalBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => PortalBinaryOverlay.PortalFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
+                }
+                case 0x4C545058: // XPTL
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.RoomPortal = PlacementBinaryOverlay.PlacementFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
+                }
+                case 0x524D5258: // XRMR
+                {
+                    BoundDataCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x50424D58: // XMBP
+                {
+                    _MultiBoundPrimitiveLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                }
+                case 0x44475258: // XRGD
+                {
+                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                }
+                case 0x42475258: // XRGB
+                {
+                    _RagdollBipedDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
+                }
+                case 0x53445258: // XRDS
+                {
+                    _RadiusLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
+                }
+                case 0x52575058: // XPWR
+                {
+                    this.Reflections = BinaryOverlaySetList<WaterReflectionBinaryOverlay>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter,
+                        getter: (s, p, recConv) => WaterReflectionBinaryOverlay.WaterReflectionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
+                }
+                case 0x57544C58: // XLTW
+                {
+                    this.LitWater = BinaryOverlaySetList<IFormLinkGetter<IPlacedObjectGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
+                }
+                case 0x494D4558: // XEMI
+                {
+                    _EmittanceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
+                }
+                case 0x47494C58: // XLIG
+                {
+                    _LightDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
+                }
+                case 0x504C4158: // XALP
+                {
+                    _AlphaLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
+                }
+                case 0x4C455458: // XTEL
+                {
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                }
+                case 0x4D4E5458: // XTNM
+                {
+                    _TeleportMessageBoxLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                }
+                case 0x52424D58: // XMBR
+                {
+                    _MultiboundReferenceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
+                }
+                case 0x4E435758: // XWCN
+                {
+                    _Unknown3Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
+                }
+                case 0x53435758: // XWCS
+                {
+                    _Unknown4Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
+                }
+                case 0x55435758: // XWCU
+                {
+                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
+                }
+                case 0x4C564358: // XCVL
+                {
+                    _Unknown5Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
+                }
+                case 0x525A4358: // XCZR
+                {
+                    _Unknown6Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
+                }
+                case 0x415A4358: // XCZA
+                {
+                    _Unknown7Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
+                }
+                case 0x435A4358: // XCZC
+                {
+                    _Unknown8Location = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                }
+                case 0x43505358: // XSPC
+                {
+                    _SpawnContainerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
+                }
+                case 0x44504158: // XAPD
+                {
+                    this.ActivateParents = ActivateParentsBinaryOverlay.ActivateParentsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
+                }
+                case 0x42494C58: // XLIB
+                {
+                    _LeveledItemBaseObjectLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                }
+                case 0x4D434C58: // XLCM
+                {
+                    _LevelModifierLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                }
+                case 0x4E434C58: // XLCN
+                {
+                    _PersistentLocationLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
+                }
+                case 0x49525458: // XTRI
+                {
+                    _CollisionLayerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
+                }
+                case 0x434F4C58: // XLOC
+                {
+                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                }
+                case 0x4E5A4558: // XEZN
+                {
+                    _EncounterZoneLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
+                }
+                case 0x50444E58: // XNDP
+                {
+                    _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                }
+                case 0x54524C58: // XLRT
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationRefTypes = BinaryOverlaySetList<IFormLinkGetter<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
+                }
+                case 0x32534958: // XIS2
+                {
+                    _IgnoredBySandboxLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                }
+                case 0x4E574F58: // XOWN
+                case 0x4B4E5258: // XRNK
+                {
+                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
+                }
+                case 0x544E4358: // XCNT
+                {
+                    _ItemCountLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
+                }
+                case 0x47484358: // XCHG
+                {
+                    _ChargeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                }
+                case 0x4C524C58: // XLRL
+                {
+                    _LocationReferenceLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
+                }
+                case 0x50534558: // XESP
+                {
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                }
+                case 0x524B4C58: // XLKR
+                {
+                    this.LinkedReferences = BinaryOverlaySetList<LinkedReferencesBinaryOverlay>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter,
+                        getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
+                }
+                case 0x44525058: // XPRD
+                {
+                    this.Patrol = PatrolBinaryOverlay.PatrolFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
+                }
+                case 0x54434158: // XACT
+                {
+                    _ActionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
+                }
+                case 0x57544858: // XHTW
+                {
+                    _HeadTrackingWeightLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                }
+                case 0x43564658: // XFVC
+                {
+                    _FavorCostLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
+                }
+                case 0x4D414E4F: // ONAM
+                {
+                    _OpenByDefaultLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                }
+                case 0x4B524D58: // XMRK
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                }
+                case 0x52544158: // XATR
+                {
+                    _AttachRefLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
+                }
+                case 0x444F4C58: // XLOD
+                {
+                    _DistantLodDataLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

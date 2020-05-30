@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord" GUID="9450f7b5-2485-4eb3-ad52-910e7f254018" ID="286">
+    <Interface>ILocationRecord</Interface>
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

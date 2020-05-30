@@ -56,6 +56,11 @@
       <Group name="VisualEffects" refName="VisualEffect" />
       <Group name="Regions" refName="Region" />
       <Group name="NavigationMeshInfoMaps" refName="NavigationMeshInfoMap" />
+      <Ref name="Cells" singleton="true" >
+        <Direct refName="ListGroup" >
+          <GenericSpecification Definition="Skyrim.CellBlock" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

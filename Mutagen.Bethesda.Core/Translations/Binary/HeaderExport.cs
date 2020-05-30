@@ -74,6 +74,25 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <summary>
+        /// Exports a subrecord header, and creates disposable to track content length.
+        /// When disposed, header will automatically update its length bytes.
+        /// </summary>
+        /// <param name="writer">Writer to export header to</param>
+        /// <param name="record">RecordType of the header</param>
+        /// <param name="largeLengthRecord">RecordType to use for an extra preceding subrecord, if the length is too large</param>
+        /// <returns>Object to dispose when header's content has been written</returns>
+        public static ExtraLengthHeaderExport ExportSubrecordHeader(
+            MutagenWriter writer,
+            RecordType record,
+            RecordType largeLengthRecord)
+        {
+            return new ExtraLengthHeaderExport(
+                writer,
+                record,
+                largeLengthRecord);
+        }
+
+        /// <summary>
         /// Measures length of content and writes results to header
         /// </summary>
         public void Dispose()

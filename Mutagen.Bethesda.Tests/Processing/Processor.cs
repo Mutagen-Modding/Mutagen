@@ -238,6 +238,21 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        public void ProcessColorFloat(IMutagenReadStream stream)
+        {
+            var inBytes = stream.ReadSpan(12);
+            var color = IBinaryStreamExt.ReadColor(inBytes, ColorBinaryType.NoAlphaFloat);
+            var outBytes = new byte[12];
+            using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), null!))
+            {
+                writer.Write(color, ColorBinaryType.NoAlphaFloat);
+            }
+            if (inBytes.SequenceEqual(outBytes)) return;
+            this._Instructions.SetSubstitution(
+                stream.Position - 12,
+                outBytes);
+        }
+
         public void RemoveEmptyGroups(IMutagenReadStream stream)
         {
             foreach (var loc in this._AlignedFileLocs.GrupLocations)

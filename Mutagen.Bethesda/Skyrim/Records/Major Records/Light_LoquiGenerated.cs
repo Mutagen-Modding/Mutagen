@@ -1283,6 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IWeightValue,
+        IEmittance,
         ILoquiObjectSetter<ILightInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1328,6 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectIdGetter,
         IWeightValueGetter,
+        IEmittanceGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

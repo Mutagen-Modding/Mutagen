@@ -565,6 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IKeyword :
         IKeywordGetter,
         ISkyrimMajorRecord,
+        IKeywordLinkedReference,
         ILoquiObjectSetter<IKeywordInternal>
     {
         new Color? Color { get; set; }
@@ -579,6 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeywordGetter :
         ISkyrimMajorRecordGetter,
+        IKeywordLinkedReferenceGetter,
         ILoquiObject<IKeywordGetter>,
         IXmlItem,
         IBinaryItem

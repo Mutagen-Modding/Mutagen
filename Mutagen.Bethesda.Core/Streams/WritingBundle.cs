@@ -25,6 +25,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public StringsWriter? StringsWriter { get; set; }
 
+        /// <summary>
+        /// Optional RecordInfoCache to reference while reading
+        /// </summary>
+        public RecordInfoCache? RecordInfoCache { get; set; }
+
         public WritingBundle(GameConstants constants)
         {
             this.Constants = constants;

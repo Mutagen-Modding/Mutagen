@@ -536,6 +536,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -573,6 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMajorRecord :
         ISkyrimMajorRecordGetter,
         IMajorRecord,
+        IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>
     {
         new UInt16 FormVersion { get; set; }
@@ -588,6 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimMajorRecordGetter :
         IMajorRecordGetter,
+        IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimMajorRecordGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -855,6 +865,35 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimMajorRecordGetter obj)
+        {
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMajorRecordInternal obj)
+        {
+            return ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
+        #endregion
+
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1067,9 +1106,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
+        public static readonly RecordType ECZN_HEADER = new RecordType("ECZN");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
         public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
@@ -1091,15 +1132,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LENS_HEADER = new RecordType("LENS");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType LGTM_HEADER = new RecordType("LGTM");
+        public static readonly RecordType LCTN_HEADER = new RecordType("LCTN");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MESG_HEADER = new RecordType("MESG");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
@@ -1113,6 +1158,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType NAME_HEADER = new RecordType("NAME");
+        public static readonly RecordType XEZN_HEADER = new RecordType("XEZN");
+        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
+        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
+        public static readonly RecordType XHTW_HEADER = new RecordType("XHTW");
+        public static readonly RecordType XFVC_HEADER = new RecordType("XFVC");
+        public static readonly RecordType XPWR_HEADER = new RecordType("XPWR");
+        public static readonly RecordType XLKR_HEADER = new RecordType("XLKR");
+        public static readonly RecordType XAPD_HEADER = new RecordType("XAPD");
+        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
+        public static readonly RecordType XEMI_HEADER = new RecordType("XEMI");
+        public static readonly RecordType XMBR_HEADER = new RecordType("XMBR");
+        public static readonly RecordType XIS2_HEADER = new RecordType("XIS2");
+        public static readonly RecordType XLRT_HEADER = new RecordType("XLRT");
+        public static readonly RecordType XLRL_HEADER = new RecordType("XLRL");
+        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
+        public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
@@ -1135,6 +1199,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static readonly RecordType PARW_HEADER = new RecordType("PARW");
+        public static readonly RecordType PBEA_HEADER = new RecordType("PBEA");
+        public static readonly RecordType PFLA_HEADER = new RecordType("PFLA");
+        public static readonly RecordType PCON_HEADER = new RecordType("PCON");
+        public static readonly RecordType PBAR_HEADER = new RecordType("PBAR");
+        public static readonly RecordType PGRE_HEADER = new RecordType("PGRE");
+        public static readonly RecordType PHZD_HEADER = new RecordType("PHZD");
+        public static readonly RecordType PMIS_HEADER = new RecordType("PMIS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1161,9 +1233,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         COBJ_HEADER,
                         CONT_HEADER,
                         DEBR_HEADER,
+                        DIAL_HEADER,
                         DOOR_HEADER,
                         DUAL_HEADER,
                         EFSH_HEADER,
+                        ECZN_HEADER,
                         EQUP_HEADER,
                         EXPL_HEADER,
                         EYES_HEADER,
@@ -1185,15 +1259,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         INGR_HEADER,
                         KEYM_HEADER,
                         KYWD_HEADER,
+                        LAND_HEADER,
                         LTEX_HEADER,
                         LENS_HEADER,
                         LVLI_HEADER,
                         LVLN_HEADER,
                         LIGH_HEADER,
+                        LGTM_HEADER,
+                        LCTN_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,
                         MATO_HEADER,
                         MATT_HEADER,
+                        MESG_HEADER,
                         MISC_HEADER,
                         MSTT_HEADER,
                         MOVT_HEADER,
@@ -1207,6 +1285,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         PERK_HEADER,
                         ACHR_HEADER,
                         REFR_HEADER,
+                        VMAD_HEADER,
+                        NAME_HEADER,
+                        XEZN_HEADER,
+                        XOWN_HEADER,
+                        XRNK_HEADER,
+                        XHTW_HEADER,
+                        XFVC_HEADER,
+                        XPWR_HEADER,
+                        XLKR_HEADER,
+                        XAPD_HEADER,
+                        XESP_HEADER,
+                        XEMI_HEADER,
+                        XMBR_HEADER,
+                        XIS2_HEADER,
+                        XLRT_HEADER,
+                        XLRL_HEADER,
+                        XLOD_HEADER,
+                        XSCL_HEADER,
+                        DATA_HEADER,
                         PROJ_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
@@ -1228,7 +1325,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         WRLD_HEADER,
                         LVSP_HEADER,
                         SHOU_HEADER,
-                        SPEL_HEADER
+                        SPEL_HEADER,
+                        PARW_HEADER,
+                        PBEA_HEADER,
+                        PFLA_HEADER,
+                        PCON_HEADER,
+                        PBAR_HEADER,
+                        PGRE_HEADER,
+                        PHZD_HEADER,
+                        PMIS_HEADER
                     })
             );
         });
@@ -1349,6 +1454,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+        }
+        
+        #endregion
+        
+        #region Mutagen
+        public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMajorRecordInternal obj)
+        {
+            foreach (var item in SkyrimMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecordCommon)!;
+            }
+        }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ISkyrimMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in SkyrimMajorRecordCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return (item as TMajor)!;
+            }
         }
         
         #endregion
@@ -1572,6 +1697,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             throw new NotImplementedException();
+        }
+        
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimMajorRecordGetter obj)
+        {
+            yield break;
+        }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ISkyrimMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "ISkyrimMajorRecordGetter":
+                case "SkyrimMajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return (item as TMajor)!;
+                    }
+                    yield break;
+                default:
+                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+            }
         }
         
         #endregion
@@ -2055,6 +2206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

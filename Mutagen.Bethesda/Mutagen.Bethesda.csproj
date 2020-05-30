@@ -63,6 +63,8 @@
     <Compile Include="Skyrim\Enums\Assistance.cs" />
     <Compile Include="Skyrim\Enums\BasicStat.cs" />
     <Compile Include="Skyrim\Enums\Confidence.cs" />
+    <Compile Include="Skyrim\Enums\LevelModifier.cs" />
+    <Compile Include="Skyrim\Enums\LockLevel.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
     <Compile Include="Skyrim\Enums\ObjectType.cs" />
     <Compile Include="Skyrim\Enums\Responsibility.cs" />
@@ -70,9 +72,15 @@
     <Compile Include="Skyrim\Enums\SpellDataFlag.cs" />
     <Compile Include="Skyrim\Enums\SpellType.cs" />
     <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
+    <Compile Include="Skyrim\Interfaces\IAmbientColors.cs" />
+    <Compile Include="Skyrim\Interfaces\IEmittance.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
     <Compile Include="Skyrim\Interfaces\IHasIcons.cs" />
+    <Compile Include="Skyrim\Interfaces\IKeywordLinkedReference.cs" />
+    <Compile Include="Skyrim\Interfaces\ILinkedReference.cs" />
     <Compile Include="Skyrim\Interfaces\ILocationReferencable.cs" />
+    <Compile Include="Skyrim\Interfaces\ILocationRecord.cs" />
+    <Compile Include="Skyrim\Interfaces\ILockList.cs" />
     <Compile Include="Skyrim\Interfaces\IModeled.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
@@ -80,10 +88,21 @@
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
+    <Compile Include="Skyrim\Interfaces\IOwner.cs" />
+    <Compile Include="Skyrim\Interfaces\IPlacedThing.cs" />
+    <Compile Include="Skyrim\Interfaces\IPlaced.cs" />
+    <Compile Include="Skyrim\Interfaces\IPlacedTrapTarget.cs" />
+    <Compile Include="Skyrim\Interfaces\IPositionRotation.cs" />
     <Compile Include="Skyrim\Interfaces\IRegionObject.cs" />
     <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
     <Compile Include="Skyrim\Interfaces\ISound.cs" />
     <Compile Include="Skyrim\Interfaces\IWeightValue.cs" />
+    <Compile Include="Skyrim\Records\Common Subrecords\ActivateParents.cs">
+      <DependentUpon>ActivateParents.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ATopicReference.cs">
+      <DependentUpon>TopicReference.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -93,11 +112,23 @@
     <Compile Include="Skyrim\Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\EnableParent.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationTarget.cs">
       <DependentUpon>LocationTarget.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Patrol.cs">
+      <DependentUpon>Patrol.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\WaterReflection.cs">
+      <DependentUpon>WaterReflection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\ListGroup.cs">
+      <DependentUpon>Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
@@ -111,6 +142,12 @@
     <Compile Include="Skyrim\Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APlacedTrap.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -120,8 +157,59 @@
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANavigationMeshData.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedArrow.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedBarrier.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedBeam.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedCone.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedFlame.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedHazard.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedMissile.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedTrap.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellNavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellNavigationMeshData.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Cell.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellBlock.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellGrid.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellLighting.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellSubBlock.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
@@ -177,8 +265,14 @@
     <Compile Include="Skyrim\Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LockData.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Lod.cs">
       <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MapMarker.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
@@ -189,7 +283,7 @@
     <Compile Include="Skyrim\Records\Major Records\NavigationMapInfo.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\NavigationMesh.cs">
+    <Compile Include="Skyrim\Records\Major Records\NavmeshTriangle.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Npc.cs">
@@ -206,6 +300,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedNpc.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedObject.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedPrimitive.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PreferredPathing.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
@@ -252,6 +355,9 @@
     <Compile Include="Skyrim\Records\Major Records\TalkingActivator.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TeleportDestination.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Tree.cs">
       <DependentUpon>Tree.xml</DependentUpon>
     </Compile>
@@ -272,6 +378,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMeshData.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
@@ -1843,9 +1952,6 @@
     <Compile Include="Skyrim\Records\Major Records\LeveledNpcEntryData_LoquiGenerated.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\AmbientColors_LoquiGenerated.cs">
-      <DependentUpon>AmbientColors.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\LensFlare_LoquiGenerated.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
@@ -1963,9 +2069,6 @@
     <Compile Include="Skyrim\Records\Major Records\RegionLand_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\NavigationMesh_LoquiGenerated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\NavigationMeshInfoMap_LoquiGenerated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
@@ -1989,6 +2092,162 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationTarget_LoquiGenerated.cs">
       <DependentUpon>LocationTarget.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellGrid_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellLighting_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherAmbientColorSet_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LightingTemplate_LoquiGenerated.cs">
+      <DependentUpon>LightingTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Location_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Ownership_LoquiGenerated.cs">
+      <DependentUpon>Ownership.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellWaterVelocity_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EncounterZone_LoquiGenerated.cs">
+      <DependentUpon>EncounterZone.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellBlock_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellSubBlock_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Landscape_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\ListGroup_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\WaterReflection_LoquiGenerated.cs">
+      <DependentUpon>WaterReflection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LinkedReferences_LoquiGenerated.cs">
+      <DependentUpon>LinkedReferences.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ActivateParent_LoquiGenerated.cs">
+      <DependentUpon>ActivateParents.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\EnableParent_LoquiGenerated.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedPrimitive_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Placement_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Portal_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LightData_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Alpha_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TeleportDestination_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Message_LoquiGenerated.cs">
+      <DependentUpon>Message.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WaterVelocity_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ActivateParents_LoquiGenerated.cs">
+      <DependentUpon>ActivateParents.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LockData_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavigationDoorLink_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ATopicReference_LoquiGenerated.cs">
+      <DependentUpon>TopicReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\TopicReference_LoquiGenerated.cs">
+      <DependentUpon>TopicReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\TopicReferenceSubtype_LoquiGenerated.cs">
+      <DependentUpon>TopicReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogTopic_LoquiGenerated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MapMarker_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Patrol_LoquiGenerated.cs">
+      <DependentUpon>Patrol.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LinkedReferenceColor_LoquiGenerated.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMesh_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellNavigationMesh_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NavmeshTriangle_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EdgeLink_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DoorTriangle_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANavigationMesh_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANavigationMeshData_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMeshData_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CellNavigationMeshData_LoquiGenerated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APlacedTrap_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedArrow_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedBeam_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedFlame_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedCone_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedBarrier_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedTrap_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedHazard_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedMissile_LoquiGenerated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

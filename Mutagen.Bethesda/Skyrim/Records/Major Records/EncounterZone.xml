@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EncounterZone" objType="Record" recordType="ECZN" baseClass="SkyrimMajorRecord" GUID="d3b68196-d8aa-4fe4-b9c0-10a7b96c98ea" ID="289">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

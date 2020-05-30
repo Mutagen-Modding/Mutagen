@@ -1,8 +1,57 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
+  <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
     <Interface>ILocationReferencable</Interface>
+    <Interface>IOwner</Interface>
+    <Interface>IPlaced</Interface>
+    <Interface>ILinkedReference</Interface>
+    <Interface>IPositionRotation</Interface>
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <FormLink name="Base" refName="Npc" recordType="NAME" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <ByteArray name="RagdollData" recordType="XRGD" />
+      <ByteArray name="RagdollBipedData" recordType="XRGB" />
+      <RefDirect name="Patrol" refName="Patrol" />
+      <Enum name="LevelModifier" enumName="LevelModifier" byteLength="4" recordType="XLCM" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+      <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
+      <FormLink name="LocationReference" objType="Record" recordType="XLRL">
+        <Interface>ILocationRecord</Interface>
+      </FormLink>
+      <Bool name="IgnoredBySandbox" boolAsMarker="XIS2" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <FormLink name="Horse" recordType="XHOR" refName="PlacedNpc" />
+      <Float name="FavorCost" recordType="XFVC" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Emittance" objType="Record" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiboundReference" refName="PlacedObject" recordType="XMBR" />
+      <Bool name="IgnoredBySandbox2" boolAsMarker="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP" GUID="abfaf9c3-cb9d-4a16-acd7-d31482f5934d" ID="317">
+    <Fields>
+      <Color name="Start" binaryType="Alpha" />
+      <Color name="End" binaryType="Alpha" />
     </Fields>
   </Object>
 </Loqui>

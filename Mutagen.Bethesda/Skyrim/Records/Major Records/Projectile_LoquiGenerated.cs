@@ -1606,6 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim
         IProjectileGetter,
         ISkyrimMajorRecord,
         IObjectBounded,
+        IPlacedTrapTarget,
         ILoquiObjectSetter<IProjectileInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1652,6 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IProjectileGetter :
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
+        IPlacedTrapTargetGetter,
         ILoquiObject<IProjectileGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

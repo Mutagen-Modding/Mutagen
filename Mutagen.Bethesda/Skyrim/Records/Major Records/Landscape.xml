@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="SkyrimMajorRecord" GUID="12cbe5c3-cdb2-4514-8003-c80a6fe6305e" ID="292">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

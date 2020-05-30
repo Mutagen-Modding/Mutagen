@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Message" recordType="MESG" objType="Record" baseClass="SkyrimMajorRecord" GUID="924feeb5-b9e9-4526-9caa-89a233a69240" ID="306">
+  </Object>
+</Loqui>

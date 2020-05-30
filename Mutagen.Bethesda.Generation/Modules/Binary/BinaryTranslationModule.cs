@@ -89,6 +89,7 @@ namespace Mutagen.Bethesda.Generation
             };
             this._typeGenerations[typeof(FormKeyType)] = new FormKeyBinaryTranslationGeneration();
             this._typeGenerations[typeof(ModKeyType)] = new ModKeyBinaryTranslationGeneration();
+            this._typeGenerations[typeof(RecordTypeType)] = new RecordTypeBinaryTranslationGeneration();
             this._typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ArrayType)] = new ArrayBinaryTranslationGeneration();
@@ -434,7 +435,15 @@ namespace Mutagen.Bethesda.Generation
 
             if (await obj.IsMajorRecord())
             {
-                fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => {(obj.Abstract ? "throw new ArgumentException()" : obj.GetTriggeringSource())};");
+                if (data.TriggeringRecordTypes.Count == 1
+                    && !obj.Abstract)
+                {
+                    fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => {obj.GetTriggeringSource()};");
+                }
+                else
+                {
+                    fg.AppendLine($"public{obj.FunctionOverride()}RecordType RecordType => throw new ArgumentException();");
+                }
             }
 
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
@@ -1811,7 +1820,14 @@ namespace Mutagen.Bethesda.Generation
                         if (!data.HasTrigger)
                         {
                             var amount = await typeGen.GetPassedAmount(obj, field);
-                            passedLength += amount.Value;
+                            if (amount == null)
+                            {
+                                passedLength = null;
+                            }
+                            else
+                            {
+                                passedLength += amount.Value;
+                            }
                         }
                     }
                 }

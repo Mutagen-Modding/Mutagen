@@ -9,5 +9,6 @@ namespace Mutagen.Bethesda.Binary
         NoAlpha,
         Alpha,
         NoAlphaFloat,
+        AlphaFloat,
     }
 }

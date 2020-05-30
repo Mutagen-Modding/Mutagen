@@ -256,6 +256,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Bool">
+      <xs:complexContent>
+        <xs:extension base="Bool">
+          <xs:attribute name="boolAsMarker" type="xs:string" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="RangedFloat">
       <xs:complexContent>
         <xs:extension base="RangedFloat">
@@ -373,6 +381,7 @@
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="FormKey" type="NFormKey"/>
         <xs:element name="ModKey" type="NModKey"/>
+        <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
@@ -392,6 +401,7 @@
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="FormKey" type="FormKey"/>
         <xs:element name="ModKey" type="ModKey"/>
+        <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
@@ -424,6 +434,7 @@
       <xs:enumeration value="NoAlpha" />
       <xs:enumeration value="Alpha" />
       <xs:enumeration value="NoAlphaFloat" />
+      <xs:enumeration value="AlphaFloat" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -597,6 +608,20 @@
   <xs:complexType name="NModKey" >
     <xs:complexContent>
       <xs:extension base="ModKey">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RecordType" >
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NRecordType" >
+    <xs:complexContent>
+      <xs:extension base="RecordType">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>

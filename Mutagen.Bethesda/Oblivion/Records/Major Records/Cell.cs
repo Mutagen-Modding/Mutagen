@@ -148,37 +148,17 @@ namespace Mutagen.Bethesda.Oblivion
                             switch (header.TypeInt)
                             {
                                 case 0x45524341: // "ACRE":
-                                    if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
-                                            frame: r,
-                                            item: out var placedCrea))
-                                    {
-                                        placed = placedCrea;
-                                        return true;
-                                    }
-                                    break;
+                                    placed = PlacedCreature.CreateFromBinary(r);
+                                    return true;
                                 case 0x52484341: //"ACHR":
-                                    if (LoquiBinaryTranslation<PlacedNpc>.Instance.Parse(
-                                            frame: r,
-                                            item: out var placedNPC))
-                                    {
-                                        placed = placedNPC;
-                                        return true;
-                                    }
-                                    break;
+                                    placed = PlacedNpc.CreateFromBinary(r);
+                                    return true;
                                 case 0x52464552: // "REFR":
-                                    if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                            frame: r,
-                                            item: out var placedObj))
-                                    {
-                                        placed = placedObj;
-                                        return true;
-                                    }
-                                    break;
+                                    placed = PlacedObject.CreateFromBinary(r);
+                                    return true;
                                 default:
                                     throw new NotImplementedException();
                             }
-                            placed = null!;
-                            return false;
                         }));
             }
 
@@ -219,32 +199,14 @@ namespace Mutagen.Bethesda.Oblivion
                         switch (header.TypeInt)
                         {
                             case 0x45524341: // "ACRE":
-                                if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedCrea))
-                                {
-                                    placed = placedCrea;
-                                    return true;
-                                }
-                                break;
+                                placed = PlacedCreature.CreateFromBinary(r);
+                                return true;
                             case 0x52484341: //"ACHR":
-                                if (LoquiBinaryTranslation<PlacedNpc>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedNPC))
-                                {
-                                    placed = placedNPC;
-                                    return true;
-                                }
-                                break;
+                                placed = PlacedNpc.CreateFromBinary(r);
+                                return true;
                             case 0x52464552: // "REFR":
-                                if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                        frame: r,
-                                        item: out var placedObj))
-                                {
-                                    placed = placedObj;
-                                    return true;
-                                }
-                                break;
+                                placed = PlacedObject.CreateFromBinary(r);
+                                return true;
                             default:
                                 if (ParseTemporaryOutliers(frame, obj))
                                 {

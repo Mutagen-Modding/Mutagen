@@ -74,3 +74,6 @@ dotnet_diagnostic.CS8609.severity = error
 
 # CS8762: Parameter must have a non-null value when exiting in some condition.
 dotnet_diagnostic.CS8762.severity = error
+
+# CS8766: Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+dotnet_diagnostic.CS8766.severity = error

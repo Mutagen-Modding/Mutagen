@@ -1363,6 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IRelatable,
         IObjectId,
+        IOwner,
         ILoquiObjectSetter<IFactionInternal>
     {
         new TranslatedString? Name { get; set; }
@@ -1395,6 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IRelatableGetter,
         IObjectIdGetter,
+        IOwnerGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

@@ -18,4 +18,20 @@
       </Dict>
     </Fields>
   </Object>
+  <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="bf438bf8-1824-4739-b117-5b149190176b" ID="293">
+    <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
+      <Where>CellBlock</Where>
+    </Generic>
+    <Fields>
+      <CustomLogic byteLength="4" name="ContainedRecordType" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <List name="Records" hasBeenSet="False" binaryOverlay="NoGeneration" thread="true">
+        <Ref>
+          <Generic>T</Generic>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
 </Loqui>

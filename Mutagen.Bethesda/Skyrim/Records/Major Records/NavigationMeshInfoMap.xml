@@ -10,15 +10,15 @@
   </Object>
   <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI" GUID="cad666d1-81b5-4a7c-91e7-cecba3dbb3c2" ID="274">
     <Fields>
-      <FormLink name="NavigationMesh" refName="NavigationMesh" />
+      <FormLink name="NavigationMesh" refName="ANavigationMesh" />
       <Int32 name="Unknown" />
       <P3Float name="Point" />
       <UInt32 name="PreferredMergesFlag" />
       <List name="MergedTo" counterLength="4">
-        <FormLink refName="NavigationMesh" />
+        <FormLink refName="ANavigationMesh" />
       </List>
       <List name="PreferredMerges" counterLength="4">
-        <FormLink refName="NavigationMesh" />
+        <FormLink refName="ANavigationMesh" />
       </List>
       <RefList name="LinkedDoors" refName="LinkedDoor" counterLength="4" />
       <RefDirect name="Island" refName="IslandData" hasBeenSet="True" binary="Custom" />
@@ -56,13 +56,13 @@
   <Object name="NavmeshSet" objType="Subrecord" GUID="f1a0d70b-42bc-418c-8a71-248af57c2337" ID="281">
     <Fields>
       <List name="Navmeshes" counterLength="4">
-        <FormLink refName="NavigationMesh" />
+        <FormLink refName="ANavigationMesh" />
       </List>
     </Fields>
   </Object>
   <Object name="NavmeshNode" objType="Subrecord" GUID="96cb92a9-34cc-4155-95b3-10cd0d497b28" ID="282">
     <Fields>
-      <FormLink name="NavMesh" refName="NavigationMesh" />
+      <FormLink name="NavMesh" refName="ANavigationMesh" />
       <UInt32 name="NodeIndex" />
     </Fields>
   </Object>

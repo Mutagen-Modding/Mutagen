@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="SkyrimMajorRecord" GUID="29f5de6a-ecd3-4ce8-8ffb-b443aad13295" ID="314">
+  </Object>
+</Loqui>

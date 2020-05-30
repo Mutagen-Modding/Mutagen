@@ -4,6 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IRelatable</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IOwner</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />

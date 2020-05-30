@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LightingTemplate" objType="Record" recordType="LGTM" baseClass="SkyrimMajorRecord" GUID="e6740b74-8860-4887-854c-5e668986332a" ID="285">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

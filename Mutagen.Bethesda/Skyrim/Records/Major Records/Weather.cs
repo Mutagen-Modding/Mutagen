@@ -185,19 +185,19 @@ namespace Mutagen.Bethesda.Skyrim
                 item.DirectionalAmbientLightingColors = GetBinaryDirectionalAmbientLightingColors(frame);
             }
 
-            public static WeatherAmbientColors GetBinaryDirectionalAmbientLightingColors(MutagenFrame frame)
+            public static WeatherAmbientColorSet GetBinaryDirectionalAmbientLightingColors(MutagenFrame frame)
             {
-                AmbientColors Parse()
+                WeatherAmbientColors Parse()
                 {
                     var subMeta = frame.ReadSubrecord();
                     if (subMeta.RecordType != Weather_Registration.DALC_HEADER)
                     {
                         throw new ArgumentException();
                     }
-                    return AmbientColors.CreateFromBinary(frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false));
+                    return WeatherAmbientColors.CreateFromBinary(frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false));
                 }
 
-                return new WeatherAmbientColors()
+                return new WeatherAmbientColorSet()
                 {
                     Sunrise = Parse(),
                     Day = Parse(),
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
                 _directionalLoc = (ushort)(stream.Position - offset);
             }
 
-            IWeatherAmbientColorsGetter? GetDirectionalAmbientLightingColorsCustom()
+            IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom()
             {
                 if (!_directionalLoc.HasValue) return null;
                 return WeatherBinaryCreateTranslation.GetBinaryDirectionalAmbientLightingColors(

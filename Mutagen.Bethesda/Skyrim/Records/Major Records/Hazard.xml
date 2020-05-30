@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="SkyrimMajorRecord" GUID="bfe597ce-f696-454d-bb7c-bd5de7c9d585" ID="124">
     <Interface>IObjectBounded</Interface>
+    <Interface>IPlacedTrapTarget</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />

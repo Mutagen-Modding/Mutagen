@@ -34,53 +34,25 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class NavigationMesh :
-        SkyrimMajorRecord,
-        INavigationMeshInternal,
-        ILoquiObjectSetter<NavigationMesh>,
-        IEquatable<NavigationMesh>,
+    public partial class WorldspaceNavigationMesh :
+        ANavigationMesh,
+        IWorldspaceNavigationMeshInternal,
+        ILoquiObjectSetter<WorldspaceNavigationMesh>,
+        IEquatable<WorldspaceNavigationMesh>,
         IEqualsMask
     {
         #region Ctor
-        protected NavigationMesh()
+        protected WorldspaceNavigationMesh()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
+        #region Data
+        public WorldspaceNavigationMeshData Data { get; set; } = new WorldspaceNavigationMeshData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
-        {
-            get => this._Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.Unknown => this.Unknown;
-        #endregion
-        #region Unknown2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
-        {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.Unknown2 => this.Unknown2;
-        #endregion
-        #region Unknown3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
-        {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.Unknown3 => this.Unknown3;
+        IWorldspaceNavigationMeshDataGetter IWorldspaceNavigationMeshGetter.Data => Data;
         #endregion
 
         #region To String
@@ -89,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            NavigationMeshMixIn.ToString(
+            WorldspaceNavigationMeshMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -99,29 +71,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMeshGetter rhs)) return false;
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IWorldspaceNavigationMeshGetter rhs)) return false;
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavigationMesh obj)
+        public bool Equals(WorldspaceNavigationMesh obj)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((NavigationMeshCommon)((INavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NavigationMeshXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => WorldspaceNavigationMeshXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((NavigationMeshXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WorldspaceNavigationMeshXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -130,9 +102,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new NavigationMesh CreateFromXml(
+        public static new WorldspaceNavigationMesh CreateFromXml(
             XElement node,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -141,27 +113,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             XElement node,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static NavigationMesh CreateFromXml(
+        public new static WorldspaceNavigationMesh CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new NavigationMesh();
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new WorldspaceNavigationMesh();
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -169,9 +141,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             string path,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +151,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             string path,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,10 +163,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -203,9 +175,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             Stream stream,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             Stream stream,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,10 +197,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static NavigationMesh CreateFromXml(
+        public static WorldspaceNavigationMesh CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -243,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            ANavigationMesh.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -252,9 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.Data = new MaskItem<TItem, WorldspaceNavigationMeshData.Mask<TItem>?>(initialValue, new WorldspaceNavigationMeshData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -264,20 +234,22 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Unknown,
                 TItem Unknown2,
-                TItem Unknown3)
+                TItem Unknown3,
+                TItem Unknown4,
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2)
+                Version2: Version2,
+                Unknown2: Unknown2,
+                Unknown3: Unknown3,
+                Unknown4: Unknown4)
             {
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.Data = new MaskItem<TItem, WorldspaceNavigationMeshData.Mask<TItem>?>(Data, new WorldspaceNavigationMeshData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -289,9 +261,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Unknown;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public MaskItem<TItem, WorldspaceNavigationMeshData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -305,17 +275,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -326,9 +292,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -337,9 +305,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -347,7 +317,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new NavigationMesh.Mask<R>();
+                var ret = new WorldspaceNavigationMesh.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -355,9 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.Data = this.Data == null ? null : new MaskItem<R, WorldspaceNavigationMeshData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -367,30 +335,22 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(NavigationMesh.Mask<bool>? printMask = null)
+            public string ToString(WorldspaceNavigationMesh.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, NavigationMesh.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, WorldspaceNavigationMesh.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(NavigationMesh.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(WorldspaceNavigationMesh.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        fg.AppendItem(Unknown2, "Unknown2");
-                    }
-                    if (printMask?.Unknown3 ?? true)
-                    {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -400,27 +360,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            ANavigationMesh.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public MaskItem<Exception?, WorldspaceNavigationMeshData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+                WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMesh_FieldIndex.Unknown:
-                        return Unknown;
-                    case NavigationMesh_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case NavigationMesh_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case WorldspaceNavigationMesh_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -428,17 +382,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+                WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMesh_FieldIndex.Unknown:
-                        this.Unknown = ex;
-                        break;
-                    case NavigationMesh_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
-                        break;
-                    case NavigationMesh_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case WorldspaceNavigationMesh_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, WorldspaceNavigationMeshData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -448,17 +396,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+                WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMesh_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
-                        break;
-                    case NavigationMesh_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
-                        break;
-                    case NavigationMesh_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case WorldspaceNavigationMesh_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, WorldspaceNavigationMeshData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -469,9 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -507,9 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -518,9 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -539,22 +475,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            ANavigationMesh.TranslationMask,
             ITranslationMask
         {
             #region Members
-            public bool Unknown;
-            public bool Unknown2;
-            public bool Unknown3;
+            public MaskItem<bool, WorldspaceNavigationMeshData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.Data = new MaskItem<bool, WorldspaceNavigationMeshData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -562,66 +494,65 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
-        public NavigationMesh(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = WorldspaceNavigationMesh_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        public WorldspaceNavigationMesh(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public NavigationMesh(IMod mod)
+        public WorldspaceNavigationMesh(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public NavigationMesh(IMod mod, string editorID)
+        public WorldspaceNavigationMesh(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }
 
-        public MajorFlag MajorFlags
-        {
-            get => (MajorFlag)this.MajorRecordFlagsRaw;
-            set => this.MajorRecordFlagsRaw = (int)value;
-        }
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WorldspaceNavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceNavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new NavigationMesh CreateFromBinary(MutagenFrame frame)
+        public static new WorldspaceNavigationMesh CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static NavigationMesh CreateFromBinary(
+        public new static WorldspaceNavigationMesh CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new NavigationMesh();
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WorldspaceNavigationMesh();
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -634,99 +565,88 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavigationMeshGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceNavigationMeshGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new NavigationMesh GetNew()
+        internal static new WorldspaceNavigationMesh GetNew()
         {
-            return new NavigationMesh();
+            return new WorldspaceNavigationMesh();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INavigationMesh :
-        INavigationMeshGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<INavigationMeshInternal>
+    public partial interface IWorldspaceNavigationMesh :
+        IWorldspaceNavigationMeshGetter,
+        IANavigationMesh,
+        ILoquiObjectSetter<IWorldspaceNavigationMeshInternal>
     {
-        new Byte[]? Unknown { get; set; }
-        new Byte[]? Unknown2 { get; set; }
-        new Byte[]? Unknown3 { get; set; }
-        #region Mutagen
-        new NavigationMesh.MajorFlag MajorFlags { get; set; }
-        #endregion
-
+        new WorldspaceNavigationMeshData Data { get; set; }
     }
 
-    public partial interface INavigationMeshInternal :
-        ISkyrimMajorRecordInternal,
-        INavigationMesh,
-        INavigationMeshGetter
+    public partial interface IWorldspaceNavigationMeshInternal :
+        IANavigationMeshInternal,
+        IWorldspaceNavigationMesh,
+        IWorldspaceNavigationMeshGetter
     {
     }
 
-    public partial interface INavigationMeshGetter :
-        ISkyrimMajorRecordGetter,
-        ILoquiObject<INavigationMeshGetter>,
+    public partial interface IWorldspaceNavigationMeshGetter :
+        IANavigationMeshGetter,
+        ILoquiObject<IWorldspaceNavigationMeshGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NavigationMesh_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
-
-        #region Mutagen
-        NavigationMesh.MajorFlag MajorFlags { get; }
-        #endregion
+        static ILoquiRegistration Registration => WorldspaceNavigationMesh_Registration.Instance;
+        IWorldspaceNavigationMeshDataGetter Data { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NavigationMeshMixIn
+    public static partial class WorldspaceNavigationMeshMixIn
     {
-        public static void Clear(this INavigationMeshInternal item)
+        public static void Clear(this IWorldspaceNavigationMeshInternal item)
         {
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NavigationMesh.Mask<bool> GetEqualsMask(
-            this INavigationMeshGetter item,
-            INavigationMeshGetter rhs,
+        public static WorldspaceNavigationMesh.Mask<bool> GetEqualsMask(
+            this IWorldspaceNavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this INavigationMeshGetter item,
+            this IWorldspaceNavigationMeshGetter item,
             string? name = null,
-            NavigationMesh.Mask<bool>? printMask = null)
+            WorldspaceNavigationMesh.Mask<bool>? printMask = null)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this INavigationMeshGetter item,
+            this IWorldspaceNavigationMeshGetter item,
             FileGeneration fg,
             string? name = null,
-            NavigationMesh.Mask<bool>? printMask = null)
+            WorldspaceNavigationMesh.Mask<bool>? printMask = null)
         {
-            ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -734,86 +654,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this INavigationMeshGetter item,
-            NavigationMesh.Mask<bool?> checkMask)
+            this IWorldspaceNavigationMeshGetter item,
+            WorldspaceNavigationMesh.Mask<bool?> checkMask)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).HasBeenSet(
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static NavigationMesh.Mask<bool> GetHasBeenSetMask(this INavigationMeshGetter item)
+        public static WorldspaceNavigationMesh.Mask<bool> GetHasBeenSetMask(this IWorldspaceNavigationMeshGetter item)
         {
-            var ret = new NavigationMesh.Mask<bool>(false);
-            ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new WorldspaceNavigationMesh.Mask<bool>(false);
+            ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this INavigationMeshGetter item,
-            INavigationMeshGetter rhs)
+            this IWorldspaceNavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter rhs)
         {
-            return ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).Equals(
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this INavigationMeshInternal lhs,
-            INavigationMeshGetter rhs,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? copyMask = null)
+            this IWorldspaceNavigationMeshInternal lhs,
+            IWorldspaceNavigationMeshGetter rhs,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceNavigationMeshSetterTranslationCommon)((IWorldspaceNavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INavigationMeshInternal lhs,
-            INavigationMeshGetter rhs,
+            this IWorldspaceNavigationMeshInternal lhs,
+            IWorldspaceNavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WorldspaceNavigationMeshSetterTranslationCommon)((IWorldspaceNavigationMeshGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static NavigationMesh DeepCopy(
-            this INavigationMeshGetter item,
-            NavigationMesh.TranslationMask? copyMask = null)
+        public static WorldspaceNavigationMesh DeepCopy(
+            this IWorldspaceNavigationMeshGetter item,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
         {
-            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavigationMeshSetterTranslationCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static NavigationMesh DeepCopy(
-            this INavigationMeshGetter item,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? copyMask = null)
+        public static WorldspaceNavigationMesh DeepCopy(
+            this IWorldspaceNavigationMeshGetter item,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
         {
-            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavigationMeshSetterTranslationCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static NavigationMesh DeepCopy(
-            this INavigationMeshGetter item,
+        public static WorldspaceNavigationMesh DeepCopy(
+            this IWorldspaceNavigationMeshGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NavigationMeshSetterTranslationCommon)((INavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WorldspaceNavigationMeshSetterTranslationCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -822,9 +742,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             XElement node,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -835,10 +755,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             XElement node,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -846,16 +766,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -863,9 +783,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             string path,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -875,10 +795,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             string path,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -889,10 +809,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -903,9 +823,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             Stream stream,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -915,10 +835,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             Stream stream,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -929,10 +849,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NavigationMesh.TranslationMask? translationMask = null)
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -947,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -957,11 +877,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this INavigationMeshInternal item,
+            this IWorldspaceNavigationMeshInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NavigationMeshSetterCommon)((INavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WorldspaceNavigationMeshSetterCommon)((IWorldspaceNavigationMeshGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -977,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum NavigationMesh_FieldIndex
+    public enum WorldspaceNavigationMesh_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -985,47 +905,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Unknown = 6,
-        Unknown2 = 7,
-        Unknown3 = 8,
+        Unknown2 = 6,
+        Unknown3 = 7,
+        Unknown4 = 8,
+        Data = 9,
     }
     #endregion
 
     #region Registration
-    public partial class NavigationMesh_Registration : ILoquiRegistration
+    public partial class WorldspaceNavigationMesh_Registration : ILoquiRegistration
     {
-        public static readonly NavigationMesh_Registration Instance = new NavigationMesh_Registration();
+        public static readonly WorldspaceNavigationMesh_Registration Instance = new WorldspaceNavigationMesh_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 272,
+            msgID: 318,
             version: 0);
 
-        public const string GUID = "225085bf-6162-4178-8f6a-de8d829916c2";
+        public const string GUID = "61ff6fb6-5bd3-413b-b27c-b9e48cc8a8de";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
-        public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
+        public static readonly Type MaskType = typeof(WorldspaceNavigationMesh.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NavigationMesh.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WorldspaceNavigationMesh.ErrorMask);
 
-        public static readonly Type ClassType = typeof(NavigationMesh);
+        public static readonly Type ClassType = typeof(WorldspaceNavigationMesh);
 
-        public static readonly Type GetterType = typeof(INavigationMeshGetter);
+        public static readonly Type GetterType = typeof(IWorldspaceNavigationMeshGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INavigationMesh);
+        public static readonly Type SetterType = typeof(IWorldspaceNavigationMesh);
 
-        public static readonly Type? InternalSetterType = typeof(INavigationMeshInternal);
+        public static readonly Type? InternalSetterType = typeof(IWorldspaceNavigationMeshInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.NavigationMesh";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.WorldspaceNavigationMesh";
 
-        public const string Name = "NavigationMesh";
+        public const string Name = "WorldspaceNavigationMesh";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1037,12 +958,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "UNKNOWN":
-                    return (ushort)NavigationMesh_FieldIndex.Unknown;
-                case "UNKNOWN2":
-                    return (ushort)NavigationMesh_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)NavigationMesh_FieldIndex.Unknown3;
+                case "DATA":
+                    return (ushort)WorldspaceNavigationMesh_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1050,115 +967,94 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                case NavigationMesh_FieldIndex.Unknown2:
-                case NavigationMesh_FieldIndex.Unknown3:
+                case WorldspaceNavigationMesh_FieldIndex.Data:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ANavigationMesh_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                case NavigationMesh_FieldIndex.Unknown2:
-                case NavigationMesh_FieldIndex.Unknown3:
-                    return false;
+                case WorldspaceNavigationMesh_FieldIndex.Data:
+                    return true;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
+                    return ANavigationMesh_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                case NavigationMesh_FieldIndex.Unknown2:
-                case NavigationMesh_FieldIndex.Unknown3:
+                case WorldspaceNavigationMesh_FieldIndex.Data:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
+                    return ANavigationMesh_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                    return "Unknown";
-                case NavigationMesh_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case NavigationMesh_FieldIndex.Unknown3:
-                    return "Unknown3";
+                case WorldspaceNavigationMesh_FieldIndex.Data:
+                    return "Data";
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
+                    return ANavigationMesh_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                case NavigationMesh_FieldIndex.Unknown2:
-                case NavigationMesh_FieldIndex.Unknown3:
+                case WorldspaceNavigationMesh_FieldIndex.Data:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
+                    return ANavigationMesh_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                case NavigationMesh_FieldIndex.Unknown2:
-                case NavigationMesh_FieldIndex.Unknown3:
+                case WorldspaceNavigationMesh_FieldIndex.Data:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
+                    return ANavigationMesh_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            NavigationMesh_FieldIndex enu = (NavigationMesh_FieldIndex)index;
+            WorldspaceNavigationMesh_FieldIndex enu = (WorldspaceNavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case NavigationMesh_FieldIndex.Unknown:
-                    return typeof(Byte[]);
-                case NavigationMesh_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
-                case NavigationMesh_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                case WorldspaceNavigationMesh_FieldIndex.Data:
+                    return typeof(WorldspaceNavigationMeshData);
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
+                    return ANavigationMesh_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NavigationMeshXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(WorldspaceNavigationMeshXmlWriteTranslation);
         public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
         public static readonly RecordType TriggeringRecordType = NAVM_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
-        public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshBinaryWriteTranslation);
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(WorldspaceNavigationMeshBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1191,34 +1087,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavigationMeshSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class WorldspaceNavigationMeshSetterCommon : ANavigationMeshSetterCommon
     {
-        public new static readonly NavigationMeshSetterCommon Instance = new NavigationMeshSetterCommon();
+        public new static readonly WorldspaceNavigationMeshSetterCommon Instance = new WorldspaceNavigationMeshSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INavigationMeshInternal item)
+        public void Clear(IWorldspaceNavigationMeshInternal item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.Data.Clear();
             base.Clear(item);
+        }
+        
+        public override void Clear(IANavigationMeshInternal item)
+        {
+            Clear(item: (IWorldspaceNavigationMeshInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (INavigationMeshInternal)item);
+            Clear(item: (IWorldspaceNavigationMeshInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (INavigationMeshInternal)item);
+            Clear(item: (IWorldspaceNavigationMeshInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1227,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
+                    ANavigationMeshSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1238,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1253,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    NavigationMeshXmlCreateTranslation.FillPublicElementXml(
+                    WorldspaceNavigationMeshXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1269,13 +1168,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
+            IANavigationMeshInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (WorldspaceNavigationMesh)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (NavigationMesh)item,
+                item: (WorldspaceNavigationMesh)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1288,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (NavigationMesh)item,
+                item: (WorldspaceNavigationMesh)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1297,60 +1209,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => NavigationMesh_Registration.NAVM_HEADER;
+        public override RecordType RecordType => WorldspaceNavigationMesh_Registration.NAVM_HEADER;
         protected static void FillBinaryStructs(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             MutagenFrame frame)
         {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
+            ANavigationMeshSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
         
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INavigationMeshInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E4F: // ONAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown);
-                }
-                case 0x4D414E50: // PNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown2);
-                }
-                case 0x4D414E4E: // NNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown3);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<INavigationMeshInternal>(
+            UtilityTranslation.MajorRecordParse<IWorldspaceNavigationMeshInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1359,12 +1233,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
+            IANavigationMeshInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (WorldspaceNavigationMesh)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (NavigationMesh)item,
+                item: (WorldspaceNavigationMesh)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1375,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (NavigationMesh)item,
+                item: (WorldspaceNavigationMesh)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1383,17 +1268,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMeshCommon : SkyrimMajorRecordCommon
+    public partial class WorldspaceNavigationMeshCommon : ANavigationMeshCommon
     {
-        public new static readonly NavigationMeshCommon Instance = new NavigationMeshCommon();
+        public new static readonly WorldspaceNavigationMeshCommon Instance = new WorldspaceNavigationMeshCommon();
 
-        public NavigationMesh.Mask<bool> GetEqualsMask(
-            INavigationMeshGetter item,
-            INavigationMeshGetter rhs,
+        public WorldspaceNavigationMesh.Mask<bool> GetEqualsMask(
+            IWorldspaceNavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NavigationMesh.Mask<bool>(false);
-            ((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WorldspaceNavigationMesh.Mask<bool>(false);
+            ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1402,22 +1287,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            INavigationMeshGetter item,
-            INavigationMeshGetter rhs,
-            NavigationMesh.Mask<bool> ret,
+            IWorldspaceNavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter rhs,
+            WorldspaceNavigationMesh.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             string? name = null,
-            NavigationMesh.Mask<bool>? printMask = null)
+            WorldspaceNavigationMesh.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1429,18 +1312,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             FileGeneration fg,
             string? name = null,
-            NavigationMesh.Mask<bool>? printMask = null)
+            WorldspaceNavigationMesh.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationMesh =>");
+                fg.AppendLine($"WorldspaceNavigationMesh =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationMesh) =>");
+                fg.AppendLine($"{name} (WorldspaceNavigationMesh) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1454,88 +1337,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             FileGeneration fg,
-            NavigationMesh.Mask<bool>? printMask = null)
+            WorldspaceNavigationMesh.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            ANavigationMeshCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
-            }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
-            {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
-            }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
-            {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                item.Data?.ToString(fg, "Data");
             }
         }
         
         public bool HasBeenSet(
-            INavigationMeshGetter item,
-            NavigationMesh.Mask<bool?> checkMask)
+            IWorldspaceNavigationMeshGetter item,
+            WorldspaceNavigationMesh.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            INavigationMeshGetter item,
-            NavigationMesh.Mask<bool> mask)
+            IWorldspaceNavigationMeshGetter item,
+            WorldspaceNavigationMesh.Mask<bool> mask)
         {
-            mask.Unknown = (item.Unknown != null);
-            mask.Unknown2 = (item.Unknown2 != null);
-            mask.Unknown3 = (item.Unknown3 != null);
+            mask.Data = new MaskItem<bool, WorldspaceNavigationMeshData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static NavigationMesh_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static WorldspaceNavigationMesh_FieldIndex ConvertFieldIndex(ANavigationMesh_FieldIndex index)
         {
             switch (index)
             {
-                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NavigationMesh_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (NavigationMesh_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
-                    return (NavigationMesh_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (NavigationMesh_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (NavigationMesh_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (NavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.MajorRecordFlagsRaw:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.FormKey:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.Version:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.EditorID:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.FormVersion:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.Version2:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.Unknown2:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.Unknown3:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case ANavigationMesh_FieldIndex.Unknown4:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new NavigationMesh_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new WorldspaceNavigationMesh_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormKey:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.EditorID:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new WorldspaceNavigationMesh_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (NavigationMesh_FieldIndex)((int)index);
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (NavigationMesh_FieldIndex)((int)index);
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (NavigationMesh_FieldIndex)((int)index);
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (NavigationMesh_FieldIndex)((int)index);
+                    return (WorldspaceNavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1543,16 +1437,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            INavigationMeshGetter? lhs,
-            INavigationMeshGetter? rhs)
+            IWorldspaceNavigationMeshGetter? lhs,
+            IWorldspaceNavigationMeshGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IANavigationMeshGetter? lhs,
+            IANavigationMeshGetter? rhs)
+        {
+            return Equals(
+                lhs: (IWorldspaceNavigationMeshGetter?)lhs,
+                rhs: rhs as IWorldspaceNavigationMeshGetter);
         }
         
         public override bool Equals(
@@ -1560,8 +1461,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (INavigationMeshGetter?)lhs,
-                rhs: rhs as INavigationMeshGetter);
+                lhs: (IWorldspaceNavigationMeshGetter?)lhs,
+                rhs: rhs as IWorldspaceNavigationMeshGetter);
         }
         
         public override bool Equals(
@@ -1569,37 +1470,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (INavigationMeshGetter?)lhs,
-                rhs: rhs as INavigationMeshGetter);
+                lhs: (IWorldspaceNavigationMeshGetter?)lhs,
+                rhs: rhs as IWorldspaceNavigationMeshGetter);
         }
         
-        public virtual int GetHashCode(INavigationMeshGetter item)
+        public virtual int GetHashCode(IWorldspaceNavigationMeshGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown.TryGet(out var UnknownItem))
-            {
-                hash.Add(UnknownItem);
-            }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
-            {
-                hash.Add(Unknown2Item);
-            }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
-            {
-                hash.Add(Unknown3Item);
-            }
+            hash.Add(item.Data);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IANavigationMeshGetter item)
+        {
+            return GetHashCode(item: (IWorldspaceNavigationMeshGetter)item);
+        }
+        
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (INavigationMeshGetter)item);
+            return GetHashCode(item: (IWorldspaceNavigationMeshGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (INavigationMeshGetter)item);
+            return GetHashCode(item: (IWorldspaceNavigationMeshGetter)item);
         }
         
         #endregion
@@ -1607,42 +1502,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return NavigationMesh.GetNew();
+            return WorldspaceNavigationMesh.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INavigationMeshGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceNavigationMeshGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Data.LinkFormKeys)
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(INavigationMeshGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(NavigationMesh obj, NavigationMesh rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(IWorldspaceNavigationMeshGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(WorldspaceNavigationMesh obj, WorldspaceNavigationMesh rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new NavigationMesh(getNextFormKey());
-            ret.DeepCopyIn((NavigationMesh)item);
+            var ret = new WorldspaceNavigationMesh(getNextFormKey());
+            ret.DeepCopyIn((WorldspaceNavigationMesh)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (NavigationMesh)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (WorldspaceNavigationMesh)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class NavigationMeshSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class WorldspaceNavigationMeshSetterTranslationCommon : ANavigationMeshSetterTranslationCommon
     {
-        public new static readonly NavigationMeshSetterTranslationCommon Instance = new NavigationMeshSetterTranslationCommon();
+        public new static readonly WorldspaceNavigationMeshSetterTranslationCommon Instance = new WorldspaceNavigationMeshSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            INavigationMeshInternal item,
-            INavigationMeshGetter rhs,
+            IWorldspaceNavigationMeshInternal item,
+            IWorldspaceNavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1654,49 +1553,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            INavigationMesh item,
-            INavigationMeshGetter rhs,
+            IWorldspaceNavigationMesh item,
+            IWorldspaceNavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (ISkyrimMajorRecord)item,
-                (ISkyrimMajorRecordGetter)rhs,
+                (IANavigationMesh)item,
+                (IANavigationMeshGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMesh_FieldIndex.Data) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                errorMask?.PushIndex((int)WorldspaceNavigationMesh_FieldIndex.Data);
+                try
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMesh_FieldIndex.Data) ?? true))
+                    {
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WorldspaceNavigationMesh_FieldIndex.Data),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Unknown = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown2) ?? true))
-            {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
-                {
-                    item.Unknown2 = Unknown2rhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown2 = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown3) ?? true))
-            {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
-                {
-                    item.Unknown3 = Unknown3rhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown3 = default;
-                }
-            }
+        }
+        
+        public override void DeepCopyIn(
+            IANavigationMeshInternal item,
+            IANavigationMeshGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IWorldspaceNavigationMeshInternal)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            IANavigationMesh item,
+            IANavigationMeshGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IWorldspaceNavigationMesh)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         public override void DeepCopyIn(
@@ -1706,8 +1620,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INavigationMeshInternal)item,
-                rhs: (INavigationMeshGetter)rhs,
+                item: (IWorldspaceNavigationMeshInternal)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1719,8 +1633,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INavigationMesh)item,
-                rhs: (INavigationMeshGetter)rhs,
+                item: (IWorldspaceNavigationMesh)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1732,8 +1646,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INavigationMeshInternal)item,
-                rhs: (INavigationMeshGetter)rhs,
+                item: (IWorldspaceNavigationMeshInternal)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1745,31 +1659,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (INavigationMesh)item,
-                rhs: (INavigationMeshGetter)rhs,
+                item: (IWorldspaceNavigationMesh)item,
+                rhs: (IWorldspaceNavigationMeshGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public NavigationMesh DeepCopy(
-            INavigationMeshGetter item,
-            NavigationMesh.TranslationMask? copyMask = null)
+        public WorldspaceNavigationMesh DeepCopy(
+            IWorldspaceNavigationMeshGetter item,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
         {
-            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            WorldspaceNavigationMesh ret = (WorldspaceNavigationMesh)((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public NavigationMesh DeepCopy(
-            INavigationMeshGetter item,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? copyMask = null)
+        public WorldspaceNavigationMesh DeepCopy(
+            IWorldspaceNavigationMeshGetter item,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
         {
-            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            WorldspaceNavigationMesh ret = (WorldspaceNavigationMesh)((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1777,12 +1691,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public NavigationMesh DeepCopy(
-            INavigationMeshGetter item,
+        public WorldspaceNavigationMesh DeepCopy(
+            IWorldspaceNavigationMeshGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            NavigationMesh ret = (NavigationMesh)((NavigationMeshCommon)((INavigationMeshGetter)item).CommonInstance()!).GetNew();
+            WorldspaceNavigationMesh ret = (WorldspaceNavigationMesh)((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1797,21 +1711,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationMesh
+    public partial class WorldspaceNavigationMesh
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NavigationMesh_Registration.Instance;
-        public new static NavigationMesh_Registration Registration => NavigationMesh_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMesh_Registration.Instance;
+        public new static WorldspaceNavigationMesh_Registration Registration => WorldspaceNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NavigationMeshCommon.Instance;
+        protected override object CommonInstance() => WorldspaceNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NavigationMeshSetterCommon.Instance;
+            return WorldspaceNavigationMeshSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NavigationMeshSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WorldspaceNavigationMeshSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1822,67 +1736,48 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NavigationMeshXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
+    public partial class WorldspaceNavigationMeshXmlWriteTranslation :
+        ANavigationMeshXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static NavigationMeshXmlWriteTranslation Instance = new NavigationMeshXmlWriteTranslation();
+        public new readonly static WorldspaceNavigationMeshXmlWriteTranslation Instance = new WorldspaceNavigationMeshXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
+            ANavigationMeshXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WorldspaceNavigationMesh_FieldIndex.Data) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                var DataItem = item.Data;
+                ((WorldspaceNavigationMeshDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)NavigationMesh_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown2) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)NavigationMesh_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Unknown3) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)NavigationMesh_FieldIndex.Unknown3,
-                    errorMask: errorMask);
+                    name: nameof(item.Data),
+                    fieldIndex: (int)WorldspaceNavigationMesh_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)WorldspaceNavigationMesh_FieldIndex.Data));
             }
         }
 
         public void Write(
             XElement node,
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NavigationMesh");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WorldspaceNavigationMesh");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NavigationMesh");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WorldspaceNavigationMesh");
             }
             WriteToNodeXml(
                 item: item,
@@ -1899,7 +1794,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IANavigationMeshGetter item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
+        {
+            Write(
+                item: (IWorldspaceNavigationMeshGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1914,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1929,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1938,12 +1848,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavigationMeshXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class WorldspaceNavigationMeshXmlCreateTranslation : ANavigationMeshXmlCreateTranslation
     {
-        public new readonly static NavigationMeshXmlCreateTranslation Instance = new NavigationMeshXmlCreateTranslation();
+        public new readonly static WorldspaceNavigationMeshXmlCreateTranslation Instance = new WorldspaceNavigationMeshXmlCreateTranslation();
 
         public static void FillPublicXml(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1952,7 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    NavigationMeshXmlCreateTranslation.FillPublicElementXml(
+                    WorldspaceNavigationMeshXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1968,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            INavigationMeshInternal item,
+            IWorldspaceNavigationMeshInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1976,49 +1886,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Unknown":
-                    errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Unknown);
+                case "Data":
+                    errorMask?.PushIndex((int)WorldspaceNavigationMesh_FieldIndex.Data);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<WorldspaceNavigationMeshData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Unknown3);
-                    try
-                    {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)WorldspaceNavigationMesh_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2031,7 +1906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ANavigationMeshXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2047,30 +1922,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class NavigationMeshXmlTranslationMixIn
+    public static class WorldspaceNavigationMeshXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this INavigationMeshGetter item,
+            this IWorldspaceNavigationMeshGetter item,
             XElement node,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NavigationMeshXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WorldspaceNavigationMeshXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMesh.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WorldspaceNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this INavigationMeshGetter item,
+            this IWorldspaceNavigationMeshGetter item,
             string path,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2084,10 +1959,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this INavigationMeshGetter item,
+            this IWorldspaceNavigationMeshGetter item,
             Stream stream,
-            out NavigationMesh.ErrorMask errorMask,
-            NavigationMesh.TranslationMask? translationMask = null,
+            out WorldspaceNavigationMesh.ErrorMask errorMask,
+            WorldspaceNavigationMesh.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2110,49 +1985,35 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NavigationMeshBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+    public partial class WorldspaceNavigationMeshBinaryWriteTranslation :
+        ANavigationMeshBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NavigationMeshBinaryWriteTranslation Instance = new NavigationMeshBinaryWriteTranslation();
+        public new readonly static WorldspaceNavigationMeshBinaryWriteTranslation Instance = new WorldspaceNavigationMeshBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            INavigationMeshGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            IWorldspaceNavigationMeshGetter item,
+            MutagenWriter writer)
         {
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown,
-                header: recordTypeConverter.ConvertToCustom(NavigationMesh_Registration.ONAM_HEADER));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown2,
-                header: recordTypeConverter.ConvertToCustom(NavigationMesh_Registration.PNAM_HEADER));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown3,
-                header: recordTypeConverter.ConvertToCustom(NavigationMesh_Registration.NNAM_HEADER));
+                writer: writer);
         }
 
         public void Write(
             MutagenWriter writer,
-            INavigationMeshGetter item,
+            IWorldspaceNavigationMeshGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NavigationMesh_Registration.NAVM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(WorldspaceNavigationMesh_Registration.NAVM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                WriteRecordTypes(
+                ANavigationMeshBinaryWriteTranslation.WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -2165,7 +2026,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IANavigationMeshGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IWorldspaceNavigationMeshGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2176,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2187,16 +2059,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (INavigationMeshGetter)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class NavigationMeshBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class WorldspaceNavigationMeshBinaryCreateTranslation : ANavigationMeshBinaryCreateTranslation
     {
-        public new readonly static NavigationMeshBinaryCreateTranslation Instance = new NavigationMeshBinaryCreateTranslation();
+        public new readonly static WorldspaceNavigationMeshBinaryCreateTranslation Instance = new WorldspaceNavigationMeshBinaryCreateTranslation();
 
     }
 
@@ -2204,7 +2076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class NavigationMeshBinaryTranslationMixIn
+    public static class WorldspaceNavigationMeshBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2213,34 +2085,40 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class NavigationMeshBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
-        INavigationMeshGetter
+    public partial class WorldspaceNavigationMeshBinaryOverlay :
+        ANavigationMeshBinaryOverlay,
+        IWorldspaceNavigationMeshGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NavigationMesh_Registration.Instance;
-        public new static NavigationMesh_Registration Registration => NavigationMesh_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WorldspaceNavigationMesh_Registration.Instance;
+        public new static WorldspaceNavigationMesh_Registration Registration => WorldspaceNavigationMesh_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NavigationMeshCommon.Instance;
+        protected override object CommonInstance() => WorldspaceNavigationMeshCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NavigationMeshSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WorldspaceNavigationMeshSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavigationMeshGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceNavigationMeshGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NavigationMeshXmlWriteTranslation.Instance;
+        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override object XmlWriteTranslator => WorldspaceNavigationMeshXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((NavigationMeshXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WorldspaceNavigationMeshXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2248,36 +2126,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NavigationMeshBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WorldspaceNavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((NavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WorldspaceNavigationMeshBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
-        public NavigationMesh.MajorFlag MajorFlags => (NavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
 
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected NavigationMeshBinaryOverlay(
+        protected WorldspaceNavigationMeshBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2286,13 +2151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static WorldspaceNavigationMeshBinaryOverlay WorldspaceNavigationMeshFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
-            var ret = new NavigationMeshBinaryOverlay(
+            var ret = new WorldspaceNavigationMeshBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2311,60 +2176,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NavigationMeshBinaryOverlay NavigationMeshFactory(
+        public static WorldspaceNavigationMeshBinaryOverlay WorldspaceNavigationMeshFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return NavigationMeshFactory(
+            return WorldspaceNavigationMeshFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x4D414E4F: // ONAM
-                {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown);
-                }
-                case 0x4D414E50: // PNAM
-                {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown2);
-                }
-                case 0x4D414E4E: // NNAM
-                {
-                    _Unknown3Location = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMesh_FieldIndex.Unknown3);
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
         #region To String
 
         public override void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            NavigationMeshMixIn.ToString(
+            WorldspaceNavigationMeshMixIn.ToString(
                 item: this,
                 name: name);
         }

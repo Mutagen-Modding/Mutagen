@@ -1009,6 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegion :
         IRegionGetter,
         ISkyrimMajorRecord,
+        IEmittance,
         ILoquiObjectSetter<IRegionInternal>
     {
         new Color? MapColor { get; set; }
@@ -1035,6 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRegionGetter :
         ISkyrimMajorRecordGetter,
+        IEmittanceGetter,
         ILoquiObject<IRegionGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

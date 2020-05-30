@@ -565,6 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationReferenceType :
         ILocationReferenceTypeGetter,
         ISkyrimMajorRecord,
+        ILocationRecord,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
         new Color? Color { get; set; }
@@ -579,6 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationReferenceTypeGetter :
         ISkyrimMajorRecordGetter,
+        ILocationRecordGetter,
         ILoquiObject<ILocationReferenceTypeGetter>,
         IXmlItem,
         IBinaryItem

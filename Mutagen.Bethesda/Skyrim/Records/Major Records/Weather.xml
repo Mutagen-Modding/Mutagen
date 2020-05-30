@@ -82,7 +82,7 @@
       </List>
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
       <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" isSE="true" />
-      <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColors" binary="Custom" />
+      <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
       <ByteArray name="Unknown8" recordType="NAM2" />
       <ByteArray name="Unknown9" recordType="NAM3" />
       <RefDirect name="Aurora" refName="Model" />
@@ -138,12 +138,26 @@
       <FormLink name="Night" refName="VolumetricLighting" />
     </Fields>
   </Object>
-  <Object name="WeatherAmbientColors" objType="Subrecord" recordType="DALC" GUID="b0ef3c9c-7f5e-4b05-bb7c-c8054c9d255e" ID="255">
+  <Object name="WeatherAmbientColorSet" objType="Subrecord" recordType="DALC" GUID="b0ef3c9c-7f5e-4b05-bb7c-c8054c9d255e" ID="255">
     <Fields>
-      <RefDirect name="Sunrise" refName="AmbientColors" />
-      <RefDirect name="Day" refName="AmbientColors" />
-      <RefDirect name="Sunset" refName="AmbientColors" />
-      <RefDirect name="Night" refName="AmbientColors" />
+      <RefDirect name="Sunrise" refName="WeatherAmbientColors" />
+      <RefDirect name="Day" refName="WeatherAmbientColors" />
+      <RefDirect name="Sunset" refName="WeatherAmbientColors" />
+      <RefDirect name="Night" refName="WeatherAmbientColors" />
+    </Fields>
+  </Object>
+  <Object name="WeatherAmbientColors" objType="Subrecord" GUID="8c4df544-5141-4ea2-8dba-94c10e0d2bf6" ID="243">
+    <Interface>IAmbientColors</Interface>
+    <Fields>
+      <Color name="DirectionalXPlus" binaryType="Alpha" />
+      <Color name="DirectionalXMinus" binaryType="Alpha" />
+      <Color name="DirectionalYPlus" binaryType="Alpha" />
+      <Color name="DirectionalYMinus" binaryType="Alpha" />
+      <Color name="DirectionalZPlus" binaryType="Alpha" />
+      <Color name="DirectionalZMinus" binaryType="Alpha" />
+      <Break />
+      <Color name="Specular" binaryType="Alpha" />
+      <Float name="Scale" />
     </Fields>
   </Object>
 </Loqui>

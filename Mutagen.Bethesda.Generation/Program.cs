@@ -52,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
+            xmlGen.AddTypeAssociation<RecordTypeType>(new PrimitiveXmlTranslationGeneration<RecordType>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<Loqui.Generation.StringType>(new StringXmlTranslationGeneration(), overrideExisting: true);
@@ -64,6 +65,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");
             gen.AddTypeAssociation<ModKeyType>("ModKey");
+            gen.AddTypeAssociation<RecordTypeType>("RecordType");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
@@ -79,6 +81,7 @@ namespace Mutagen.Bethesda.Generation
             gen.ReplaceTypeAssociation<Loqui.Generation.FloatType, Mutagen.Bethesda.Generation.FloatType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.PercentType, Mutagen.Bethesda.Generation.PercentType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.DictType, Mutagen.Bethesda.Generation.DictType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.BoolType, Mutagen.Bethesda.Generation.BoolType>();
 
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(

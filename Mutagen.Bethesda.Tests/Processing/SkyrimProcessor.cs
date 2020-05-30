@@ -24,6 +24,9 @@ namespace Mutagen.Bethesda.Tests
             ProcessFurniture(stream, formID, recType, loc);
             ProcessNpcs(stream, formID, recType, loc);
             ProcessRegions(stream, formID, recType, loc);
+            ProcessCells(stream, formID, recType, loc);
+            ProcessPlaced(stream, formID, recType, loc);
+            ProcessNavmeshes(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -221,6 +224,122 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessCells(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
+            CleanEmptyChildGroups(
+                stream,
+                formID,
+                loc,
+                numSubGroups: 2);
+        }
+
+        private void ProcessPlaced(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!PlacedObject_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedNpc_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedArrow_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedBarrier_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedBeam_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedCone_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedFlame_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedHazard_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedMissile_Registration.TriggeringRecordType.Equals(recType)
+                && !PlacedTrap_Registration.TriggeringRecordType.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var sizeChange = 0;
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.DATA_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+            }
+
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XTEL_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                stream.Position += 4;
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+            }
+
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XPRM_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessColorFloat(stream);
+                ProcessZeroFloat(stream);
+            }
+
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XRMR_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                var val = stream.ReadInt32();
+                if (val == 0)
+                {
+                    _Instructions.SetRemove(
+                        RangeInt64.FactoryFromLength(
+                            loc.Min + majorFrame.Header.HeaderLength + pos.Value,
+                            10));
+                    sizeChange -= 10;
+                }
+            }
+
+            ProcessSubrecordLengths(
+                stream,
+                sizeChange,
+                loc.Min,
+                formID);
+        }
+
+        private void ProcessNavmeshes(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!ANavigationMesh_Registration.NAVM_HEADER.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, ANavigationMesh_Registration.NVNM_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                stream.Position += 16;
+                var count = stream.ReadInt32() * 3;
+                for (int i = 0; i < count; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
+        }
+
         protected override void PreProcessorJobs(IMutagenReadStream stream)
         {
             base.PreProcessorJobs(stream);
@@ -268,7 +387,9 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "TREE", "FULL" },
                     new RecordType[] { "WEAP", "FULL" },
                     new RecordType[] { "FLOR", "FULL" },
-                    new RecordType[] { "KEYM", "FULL" }
+                    new RecordType[] { "KEYM", "FULL" },
+                    new RecordType[] { "CELL", "FULL" },
+                    new RecordType[] { "REFR", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

@@ -355,14 +355,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DirectionalAmbientLightingColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private WeatherAmbientColors? _DirectionalAmbientLightingColors;
-        public WeatherAmbientColors? DirectionalAmbientLightingColors
+        private WeatherAmbientColorSet? _DirectionalAmbientLightingColors;
+        public WeatherAmbientColorSet? DirectionalAmbientLightingColors
         {
             get => _DirectionalAmbientLightingColors;
             set => _DirectionalAmbientLightingColors = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeatherAmbientColorsGetter? IWeatherGetter.DirectionalAmbientLightingColors => this.DirectionalAmbientLightingColors;
+        IWeatherAmbientColorSetGetter? IWeatherGetter.DirectionalAmbientLightingColors => this.DirectionalAmbientLightingColors;
         #endregion
         #region Unknown8
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(initialValue, new WeatherImageSpaces.Mask<TItem>(initialValue));
-                this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(initialValue, new WeatherAmbientColors.Mask<TItem>(initialValue));
+                this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
                 this.Unknown8 = initialValue;
                 this.Unknown9 = initialValue;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(ImageSpaces, new WeatherImageSpaces.Mask<TItem>(ImageSpaces));
-                this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColors.Mask<TItem>(DirectionalAmbientLightingColors));
+                this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
                 this.Unknown8 = Unknown8;
                 this.Unknown9 = Unknown9;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>? Sounds;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SkyStatics;
             public MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>? ImageSpaces { get; set; }
-            public MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
+            public MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
             public TItem Unknown8;
             public TItem Unknown9;
             public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, WeatherImageSpaces.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
-                obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColors.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
+                obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColorSet.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
                 obj.Unknown8 = eval(this.Unknown8);
                 obj.Unknown9 = eval(this.Unknown9);
                 obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>? Sounds;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SkyStatics;
             public MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>? ImageSpaces;
-            public MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>? DirectionalAmbientLightingColors;
+            public MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>? DirectionalAmbientLightingColors;
             public Exception? Unknown8;
             public Exception? Unknown9;
             public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ImageSpaces = new MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                        this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>(ex, null);
+                        this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.Unknown8:
                         this.Unknown8 = ex;
@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ImageSpaces = (MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                        this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>?)obj;
+                        this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.Unknown8:
                         this.Unknown8 = (Exception?)obj;
@@ -2829,7 +2829,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
             public bool SkyStatics;
             public MaskItem<bool, WeatherImageSpaces.TranslationMask?> ImageSpaces;
-            public MaskItem<bool, WeatherAmbientColors.TranslationMask?> DirectionalAmbientLightingColors;
+            public MaskItem<bool, WeatherAmbientColorSet.TranslationMask?> DirectionalAmbientLightingColors;
             public bool Unknown8;
             public bool Unknown9;
             public MaskItem<bool, Model.TranslationMask?> Aurora;
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
                 this.SkyStatics = defaultOn;
                 this.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.TranslationMask?>(defaultOn, null);
-                this.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColors.TranslationMask?>(defaultOn, null);
+                this.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.TranslationMask?>(defaultOn, null);
                 this.Unknown8 = defaultOn;
                 this.Unknown9 = defaultOn;
                 this.Aurora = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
@@ -3130,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<WeatherSound> Sounds { get; }
         new ExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
-        new WeatherAmbientColors? DirectionalAmbientLightingColors { get; set; }
+        new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new Byte[]? Unknown8 { get; set; }
         new Byte[]? Unknown9 { get; set; }
         new Model? Aurora { get; set; }
@@ -3208,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
         IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
-        IWeatherAmbientColorsGetter? DirectionalAmbientLightingColors { get; }
+        IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? Unknown8 { get; }
         ReadOnlyMemorySlice<Byte>? Unknown9 { get; }
         IModelGetter? Aurora { get; }
@@ -4360,7 +4360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.ImageSpaces:
                     return typeof(WeatherImageSpaces);
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                    return typeof(WeatherAmbientColors);
+                    return typeof(WeatherAmbientColorSet);
                 case Weather_FieldIndex.Unknown8:
                     return typeof(Byte[]);
                 case Weather_FieldIndex.Unknown9:
@@ -5476,7 +5476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemImageSpaces = item.ImageSpaces;
             mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
             var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
-            mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColors.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
+            mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
             mask.Unknown8 = (item.Unknown8 != null);
             mask.Unknown9 = (item.Unknown9 != null);
             var itemAurora = item.Aurora;
@@ -7263,7 +7263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsItem))
                 {
-                    ((WeatherAmbientColorsXmlWriteTranslation)((IXmlItem)DirectionalAmbientLightingColorsItem).XmlWriteTranslator).Write(
+                    ((WeatherAmbientColorSetXmlWriteTranslation)((IXmlItem)DirectionalAmbientLightingColorsItem).XmlWriteTranslator).Write(
                         item: DirectionalAmbientLightingColorsItem,
                         node: node,
                         name: nameof(item.DirectionalAmbientLightingColors),
@@ -8476,7 +8476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                     try
                     {
-                        item.DirectionalAmbientLightingColors = LoquiXmlTranslation<WeatherAmbientColors>.Instance.Parse(
+                        item.DirectionalAmbientLightingColors = LoquiXmlTranslation<WeatherAmbientColorSet>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors));
@@ -9605,7 +9605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             long finalPos,
             int offset);
-        public IWeatherAmbientColorsGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
+        public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
         #endregion
         #region Unknown8
         private int? _Unknown8Location;

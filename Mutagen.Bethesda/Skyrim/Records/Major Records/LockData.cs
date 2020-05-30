@@ -4,13 +4,12 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationMesh
+    public partial class LockData
     {
         [Flags]
-        public enum MajorFlag : uint
+        public enum Flag
         {
-            AutoGen = 0x0400_0000,
-            NavmeshGenCell = 0x8000_0000,
+            LeveledLock = 0x1
         }
     }
 }
