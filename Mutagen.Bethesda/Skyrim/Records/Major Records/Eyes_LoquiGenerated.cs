@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Eyes.Flag Flags => _FlagsLocation.HasValue ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Eyes.Flag);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

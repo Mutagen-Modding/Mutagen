@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = ListExt.Empty<WorldspaceSubBlockBinaryOverlay>();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

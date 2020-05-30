@@ -5804,7 +5804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

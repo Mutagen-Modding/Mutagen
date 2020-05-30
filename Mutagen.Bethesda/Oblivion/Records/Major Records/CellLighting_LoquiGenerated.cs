@@ -2500,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single DirectionalFade => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         public Single FogClipDistance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

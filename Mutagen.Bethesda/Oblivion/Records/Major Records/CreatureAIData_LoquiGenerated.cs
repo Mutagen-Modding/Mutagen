@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
         public Byte MaximumTrainingLevel => _data.Span[0x9];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single? Data => _DataLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants)) : default(Single?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

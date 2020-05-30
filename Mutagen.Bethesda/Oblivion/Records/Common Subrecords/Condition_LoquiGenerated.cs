@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

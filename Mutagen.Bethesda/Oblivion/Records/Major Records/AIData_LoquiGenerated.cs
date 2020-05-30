@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte MaximumTrainingLevel => _data.Span[0x9];
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

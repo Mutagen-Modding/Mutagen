@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 Eyes => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 Mouth => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

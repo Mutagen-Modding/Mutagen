@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P2Int Point => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
         public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

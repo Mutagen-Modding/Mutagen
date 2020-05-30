@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Personality => _data.Span[0x6];
         public Byte Luck => _data.Span[0x7];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

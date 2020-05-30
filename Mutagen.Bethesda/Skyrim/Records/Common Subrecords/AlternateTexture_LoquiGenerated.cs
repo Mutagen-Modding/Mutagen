@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
         private int NameEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

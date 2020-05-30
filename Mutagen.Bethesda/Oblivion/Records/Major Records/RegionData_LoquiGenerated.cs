@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2939,7 +2939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

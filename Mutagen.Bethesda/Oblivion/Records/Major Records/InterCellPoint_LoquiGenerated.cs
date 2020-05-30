@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

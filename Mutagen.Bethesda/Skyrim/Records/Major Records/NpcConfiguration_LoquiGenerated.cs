@@ -2752,7 +2752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int16 HealthOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x14, 0x2));
         public Int16 BleedoutOverride => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x16, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

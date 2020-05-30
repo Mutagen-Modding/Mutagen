@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Boolean Data => _data.Slice(0x0, 0x1)[0] == 1;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

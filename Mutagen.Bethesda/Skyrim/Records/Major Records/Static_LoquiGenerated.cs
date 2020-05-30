@@ -2694,7 +2694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Lod_IsSet => _LodLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

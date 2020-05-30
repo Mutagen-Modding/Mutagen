@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 stream.Position = offset;
                 _data = stream.RemainingMemory;
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 stream.Position = offset;
                 _data = stream.RemainingMemory;
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ParameterTwoString_IsSet { get; private set; }
             public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
 
-            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);

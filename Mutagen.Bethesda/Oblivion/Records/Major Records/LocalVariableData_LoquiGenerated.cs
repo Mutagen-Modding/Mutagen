@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Script.LocalVariableFlag Flags => (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2308,7 +2308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RotationQ3 => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         public Single RotationQ4 => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

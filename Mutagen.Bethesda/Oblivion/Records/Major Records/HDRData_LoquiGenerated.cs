@@ -2953,7 +2953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single GrassDimmer => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
         public Single TreeDimmer => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2490,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Climate.MoonPhase Phase => GetPhaseCustom(location: 0x5);
         public Byte PhaseLength => GetPhaseLengthCustom(location: 0x6);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

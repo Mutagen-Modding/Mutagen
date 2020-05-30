@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         private int CoverTrianglesLogicEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -3484,7 +3484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single LeafFrequency => _LeafFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafFrequencyLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2182,7 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IWeatherAmbientColorsGetter Sunset => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x48)), _package, default(RecordTypeConverter));
         public IWeatherAmbientColorsGetter Night => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x6C)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

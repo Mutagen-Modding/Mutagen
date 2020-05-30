@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Start => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color End => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

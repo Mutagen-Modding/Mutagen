@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
         public Single StaminaMult => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

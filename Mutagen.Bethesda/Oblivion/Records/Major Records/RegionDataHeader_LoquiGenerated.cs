@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionData.RegionDataFlag Flags => (RegionData.RegionDataFlag)_data.Span.Slice(0x4, 0x1)[0];
         public Byte Priority => _data.Span[0x5];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

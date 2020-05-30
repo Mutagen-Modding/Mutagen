@@ -2639,7 +2639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         private int ParameterParsingEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

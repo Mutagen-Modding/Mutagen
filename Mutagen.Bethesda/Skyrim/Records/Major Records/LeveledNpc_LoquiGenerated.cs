@@ -2812,7 +2812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IModelGetter? Model { get; private set; }
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

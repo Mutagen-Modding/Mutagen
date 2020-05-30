@@ -2843,7 +2843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; private set; }
         public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = ListExt.Empty<PointToReferenceMappingBinaryOverlay>();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

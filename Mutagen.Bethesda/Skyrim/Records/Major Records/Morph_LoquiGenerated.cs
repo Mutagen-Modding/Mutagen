@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(0x0, 0x20).ToArray();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

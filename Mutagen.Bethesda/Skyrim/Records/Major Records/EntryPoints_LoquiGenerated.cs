@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public Furniture.Entry Points => (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x2, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

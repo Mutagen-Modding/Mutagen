@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Time => _data.Span[0x3];
         public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

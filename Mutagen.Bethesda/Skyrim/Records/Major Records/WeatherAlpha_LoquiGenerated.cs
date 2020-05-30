@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single Sunset => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         public Single Night => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

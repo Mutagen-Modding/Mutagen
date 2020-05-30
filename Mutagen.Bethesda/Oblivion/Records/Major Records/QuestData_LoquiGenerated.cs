@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Quest.Flag Flags => (Quest.Flag)_data.Span.Slice(0x0, 0x1)[0];
         public Byte Priority => _data.Span[0x1];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

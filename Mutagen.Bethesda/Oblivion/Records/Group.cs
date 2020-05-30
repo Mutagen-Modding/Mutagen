@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             public IEnumerable<T> Records => RecordCache.Items;
             public int Count => this.RecordCache.Count;
 
-            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,

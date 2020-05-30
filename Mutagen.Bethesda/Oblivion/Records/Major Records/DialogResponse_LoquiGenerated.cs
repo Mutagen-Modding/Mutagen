@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActorNotesLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 
@@ -2117,10 +2117,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

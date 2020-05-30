@@ -2890,7 +2890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

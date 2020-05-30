@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IPhonemeGetter? W => throw new NotImplementedException();
 
-            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 throw new NotImplementedException();
             }

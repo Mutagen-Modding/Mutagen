@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

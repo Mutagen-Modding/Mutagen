@@ -2529,7 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGrassGetter>> PotentialGrass { get; private set; } = ListExt.Empty<IFormLinkGetter<IGrassGetter>>();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

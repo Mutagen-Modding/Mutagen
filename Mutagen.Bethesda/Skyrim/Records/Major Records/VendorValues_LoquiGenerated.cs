@@ -2309,7 +2309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Boolean NotSellBuy => _data.Slice(0x9, 0x1)[0] == 1;
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

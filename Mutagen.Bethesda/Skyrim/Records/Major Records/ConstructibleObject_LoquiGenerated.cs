@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16? CreatedObjectCount => _CreatedObjectCountLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectCountLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

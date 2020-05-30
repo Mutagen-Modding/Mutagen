@@ -4126,7 +4126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
         public Single Stagger => SpanExt.GetFloat(_data.Slice(0x60, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

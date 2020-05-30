@@ -2562,7 +2562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2012,7 +2012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IIconsGetter? Icons { get; private set; }
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Friction => _data.Span[0x1];
         public Byte Restitution => _data.Span[0x2];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

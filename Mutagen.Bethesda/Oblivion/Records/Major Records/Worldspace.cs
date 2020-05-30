@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._OffsetLengthLocation = stream.Position - offset;
             }
 
-            partial void CustomEnd(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
                 var groupMeta = this._package.MetaData.Constants.GetGroup(stream);

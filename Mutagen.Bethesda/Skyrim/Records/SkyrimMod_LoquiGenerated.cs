@@ -12636,11 +12636,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? ListGroupBinaryOverlay<ICellBlockGetter>.ListGroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max)), _package) : default;
         public IListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new ListGroup<CellBlock>();
         #endregion
-        partial void CustomCtor(
-            IBinaryReadStream stream,
-            long finalPos,
-            int offset);
-
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -12705,10 +12700,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
-            ret.CustomCtor(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: 0);
             BinaryOverlay.FillModTypes(
                 stream: stream,
                 package: ret._package,

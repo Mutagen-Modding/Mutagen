@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<Boolean> Data => BinaryOverlayList<Boolean>.FactoryByStartIndex(_data, _package, 1, (s, p) => s[0] == 1);
         private int DataEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

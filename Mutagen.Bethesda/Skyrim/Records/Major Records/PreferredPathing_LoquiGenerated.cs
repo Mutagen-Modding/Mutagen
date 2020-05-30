@@ -2225,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomNavmeshSetsEndPos();
         private int NavmeshTreeEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

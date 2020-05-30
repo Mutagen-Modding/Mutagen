@@ -3863,7 +3863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single LightFadeEnd => SpanExt.GetFloat(_data.Slice(0x54, 0x4));
         public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

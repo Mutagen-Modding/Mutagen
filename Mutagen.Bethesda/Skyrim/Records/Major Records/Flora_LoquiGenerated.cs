@@ -3658,7 +3658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Production_IsSet => _ProductionLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public LockData.Flag Flags => (LockData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0xB).ToArray();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

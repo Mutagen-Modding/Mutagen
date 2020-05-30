@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float? Point => _PointLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _PointLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -3410,7 +3410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

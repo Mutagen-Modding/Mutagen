@@ -2312,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 CalcMin => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
         public UInt16 CalcMax => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

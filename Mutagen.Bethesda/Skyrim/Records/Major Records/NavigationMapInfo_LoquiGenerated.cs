@@ -3381,7 +3381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomIslandEndPos();
         private int ParentParseLogicEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

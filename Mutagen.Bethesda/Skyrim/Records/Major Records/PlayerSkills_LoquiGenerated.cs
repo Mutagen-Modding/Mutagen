@@ -2826,7 +2826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte GearedUpWeapons => _data.Span[0x30];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x31, 0x3).ToArray();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

@@ -345,8 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            private int? _navigationMeshLocation;
-            public IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes => throw new NotImplementedException();
+            public IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<ICellNavigationMeshGetter>();
 
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
@@ -391,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return ret.ToArray();
             }
 
-            partial void CustomEnd(IBinaryReadStream stream, int finalPos, int _)
+            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int _)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
@@ -476,11 +475,16 @@ namespace Mutagen.Bethesda.Skyrim
                                         switch (recType.TypeInt)
                                         {
                                             case 0x4D56414E: // NAVM
-                                                if (_navigationMeshLocation.HasValue)
-                                                {
-                                                    throw new ArgumentException("Second navmesh parsed.");
-                                                }
-                                                _navigationMeshLocation = checked((int)stream.Position);
+                                                this.NavigationMeshes = BinaryOverlayList<ICellNavigationMeshGetter>.FactoryByArray(
+                                                    mem: stream.RemainingMemory,
+                                                    package: _package,
+                                                    getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
+                                                    locs: ParseRecordLocations(
+                                                        stream: stream,
+                                                        finalPos: finalPos,
+                                                        constants: _package.MetaData.Constants.SubConstants,
+                                                        trigger: recType,
+                                                        skipHeader: false));
                                                 break;
                                             case 0x444e414c: // LAND
                                                 if (_landscapeLocation.HasValue)

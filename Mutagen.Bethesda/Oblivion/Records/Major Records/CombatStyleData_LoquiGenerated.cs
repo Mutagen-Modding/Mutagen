@@ -5111,7 +5111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

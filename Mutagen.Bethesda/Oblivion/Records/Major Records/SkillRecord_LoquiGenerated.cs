@@ -2825,7 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? MasterText => _MasterTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterTextLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

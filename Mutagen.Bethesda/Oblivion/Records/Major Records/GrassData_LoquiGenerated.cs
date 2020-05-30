@@ -2763,7 +2763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single WavePeriod => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

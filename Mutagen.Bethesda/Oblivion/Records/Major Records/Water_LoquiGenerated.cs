@@ -2808,7 +2808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

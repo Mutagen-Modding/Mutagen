@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32? Data => GetDataCustom();
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

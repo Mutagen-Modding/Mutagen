@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public DialogItem.Flag Flags => (DialogItem.Flag)_data.Span.Slice(0x2, 0x1)[0];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

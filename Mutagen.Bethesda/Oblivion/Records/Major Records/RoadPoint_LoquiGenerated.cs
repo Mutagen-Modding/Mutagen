@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<P3Float> Connections => BinaryOverlayList<P3Float>.FactoryByStartIndex(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
         private int ConnectionsEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

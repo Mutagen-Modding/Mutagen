@@ -1947,11 +1947,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int DataEndingPos;
         partial void CustomDataEndPos();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
         partial void CustomEnd(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

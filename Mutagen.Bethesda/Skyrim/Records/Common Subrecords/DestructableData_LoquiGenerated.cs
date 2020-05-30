@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

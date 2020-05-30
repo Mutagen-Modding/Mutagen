@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
         public Single ItemCondition => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

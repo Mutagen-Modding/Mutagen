@@ -1869,7 +1869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Cutoff => _data.Span[0x0];
         public Byte Base => _data.Span[0x1];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

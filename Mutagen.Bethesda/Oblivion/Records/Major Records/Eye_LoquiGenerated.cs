@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Eye.Flag? Flags => _FlagsLocation.HasValue ? (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Eye.Flag?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

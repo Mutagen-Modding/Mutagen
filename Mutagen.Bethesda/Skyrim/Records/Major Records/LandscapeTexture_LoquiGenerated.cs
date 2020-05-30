@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = ListExt.Empty<IFormLinkGetter<IGrassGetter>>();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

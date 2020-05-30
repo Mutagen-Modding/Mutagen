@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; private set; }
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 
@@ -1977,10 +1977,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,

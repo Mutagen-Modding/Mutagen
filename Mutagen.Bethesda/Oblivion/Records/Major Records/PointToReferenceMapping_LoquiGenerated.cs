@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<Int16> Points => BinaryOverlayList<Int16>.FactoryByStartIndex(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         private int PointsEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

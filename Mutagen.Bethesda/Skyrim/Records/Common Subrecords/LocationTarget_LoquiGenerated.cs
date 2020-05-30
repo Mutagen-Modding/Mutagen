@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

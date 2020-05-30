@@ -1929,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackage.Flag Flags => GetFlagsCustom(location: 0x0);
         public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: 0x4);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

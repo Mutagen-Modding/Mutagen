@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single LevelMult => GetLevelMultCustom(location: 0x0);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

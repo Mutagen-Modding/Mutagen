@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

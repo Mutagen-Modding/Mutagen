@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xC, 0x2));
         public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

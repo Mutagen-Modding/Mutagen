@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2C, 0x4));
         public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(0x30)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

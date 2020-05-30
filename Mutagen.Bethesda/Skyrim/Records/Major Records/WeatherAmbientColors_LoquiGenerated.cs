@@ -2504,7 +2504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single Scale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

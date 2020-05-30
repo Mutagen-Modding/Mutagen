@@ -2053,7 +2053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single NightNear => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         public Single NightFar => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

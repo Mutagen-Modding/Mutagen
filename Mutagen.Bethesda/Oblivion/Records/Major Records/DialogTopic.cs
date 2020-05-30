@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = ListExt.Empty<IDialogItemGetter>();
 
-            partial void CustomEnd(IBinaryReadStream stream, int finalPos, int offset)
+            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;

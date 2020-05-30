@@ -1953,24 +1953,27 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
 
-                using (var args = new ArgsWrapper(fg,
-                    $"partial void CustomCtor"))
-                {
-                    args.Add($"{nameof(IBinaryReadStream)} stream");
-                    args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
-                    args.Add($"int offset");
-                }
-                if (objData.CustomBinaryEnd != CustomEnd.Off)
+                if (obj.GetObjectType() != ObjectType.Mod)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"partial void CustomEnd"))
+                        $"partial void CustomCtor"))
                     {
-                        args.Add($"{nameof(IBinaryReadStream)} stream");
-                        args.Add($"int finalPos");
+                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                         args.Add($"int offset");
                     }
+                    if (objData.CustomBinaryEnd != CustomEnd.Off)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"partial void CustomEnd"))
+                        {
+                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"int finalPos");
+                            args.Add($"int offset");
+                        }
+                    }
+                    fg.AppendLine();
                 }
-                fg.AppendLine();
 
                 using (var args = new FunctionWrapper(fg,
                     $"protected {BinaryOverlayClassName(obj)}"))
@@ -2346,16 +2349,6 @@ namespace Mutagen.Bethesda.Generation
                                     args.AddPassArg($"stream");
                                     args.AddPassArg($"finalPos");
                                     args.AddPassArg($"offset");
-                                }
-                            }
-                            else
-                            {
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ret.CustomCtor"))
-                                {
-                                    args.AddPassArg($"stream");
-                                    args.Add($"finalPos: stream.Length");
-                                    args.Add($"offset: 0");
                                 }
                             }
 

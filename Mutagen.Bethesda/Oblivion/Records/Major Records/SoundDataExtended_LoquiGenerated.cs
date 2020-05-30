@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single StopTime => GetStopTimeCustom(location: 0xA);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

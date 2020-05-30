@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
         private int DataEndingPos;
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

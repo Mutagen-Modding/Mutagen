@@ -2970,7 +2970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x22, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

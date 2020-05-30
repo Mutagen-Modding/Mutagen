@@ -2685,7 +2685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
         public UInt16 Werewolf => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

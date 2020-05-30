@@ -2039,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Sunset => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Night => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

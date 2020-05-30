@@ -3514,7 +3514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32? INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INCCLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

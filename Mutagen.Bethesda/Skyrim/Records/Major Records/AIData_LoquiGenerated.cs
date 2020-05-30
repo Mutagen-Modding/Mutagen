@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
         public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

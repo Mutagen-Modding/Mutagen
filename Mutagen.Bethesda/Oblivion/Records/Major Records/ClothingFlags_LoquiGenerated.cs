@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public BipedFlag BipedFlags => (BipedFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public EquipmentFlag GeneralFlags => (EquipmentFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x2, 0x2));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

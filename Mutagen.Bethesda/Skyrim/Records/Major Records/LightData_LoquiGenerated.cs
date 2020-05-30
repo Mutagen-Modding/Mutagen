@@ -2241,7 +2241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single ShadowDepthBias => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

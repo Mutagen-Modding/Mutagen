@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte ResponseNumber => _data.Span[0xC];
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

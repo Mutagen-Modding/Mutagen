@@ -2512,7 +2512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

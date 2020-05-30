@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Fall => _data.Span[0x2];
         public Byte Winter => _data.Span[0x3];
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

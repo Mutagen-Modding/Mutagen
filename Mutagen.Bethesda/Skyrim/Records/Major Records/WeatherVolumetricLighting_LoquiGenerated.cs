@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkGetter<IVolumetricLightingGetter> Sunset => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public IFormLinkGetter<IVolumetricLightingGetter> Night => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

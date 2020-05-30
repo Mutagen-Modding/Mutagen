@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2)) : default(Int16?);
         public Int16? Unknown2 => _data.Length >= 12 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2)) : default(Int16?);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

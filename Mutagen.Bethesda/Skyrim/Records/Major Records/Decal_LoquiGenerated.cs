@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
         public Color Color => _data.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

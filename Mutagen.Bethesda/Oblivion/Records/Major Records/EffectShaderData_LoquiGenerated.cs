@@ -6843,7 +6843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ColorKey2ColorKeyTime => SpanExt.GetFloat(_data.Slice(0xD8, 0x4));
         public Single ColorKey3ColorKeyTime => SpanExt.GetFloat(_data.Slice(0xDC, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

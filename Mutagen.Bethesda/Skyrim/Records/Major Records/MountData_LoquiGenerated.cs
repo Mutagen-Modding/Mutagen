@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float DismountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         public P3Float MountCameraOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x18, 0xC));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 

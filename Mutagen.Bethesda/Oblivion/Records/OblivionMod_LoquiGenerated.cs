@@ -12961,11 +12961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private IGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? GroupBinaryOverlay<IEffectShaderGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
         #endregion
-        partial void CustomCtor(
-            IBinaryReadStream stream,
-            long finalPos,
-            int offset);
-
         protected OblivionModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13018,10 +13013,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
-            ret.CustomCtor(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: 0);
             BinaryOverlay.FillModTypes(
                 stream: stream,
                 package: ret._package,

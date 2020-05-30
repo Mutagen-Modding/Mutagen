@@ -3403,7 +3403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single EyesForwardVsBack => SpanExt.GetFloat(_data.Slice(0x44, 0x4));
         public Single Unknown => SpanExt.GetFloat(_data.Slice(0x48, 0x4));
         partial void CustomCtor(
-            IBinaryReadStream stream,
+            BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
 
