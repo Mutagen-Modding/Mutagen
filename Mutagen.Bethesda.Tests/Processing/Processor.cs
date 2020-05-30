@@ -6,6 +6,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda.Tests
@@ -268,65 +269,62 @@ namespace Mutagen.Bethesda.Tests
                     set.Add(item[i]);
                 }
             }
+
             stream.Position = 0;
             var mod = stream.ReadMod();
             if (!EnumExt.HasFlag(mod.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag)) return ListExt.Empty<KeyValuePair<uint, uint>>();
-            stream.Position += mod.ContentLength;
+
+            stream.Position = 0;
+            var locs = RecordLocator.GetFileLocations(
+                stream,
+                interest: new Mutagen.Bethesda.RecordInterest(
+                    recordTypes.Select(i => i[0])));
 
             uint newIndex = 1;
-            while (!stream.Complete)
+            foreach (var rec in locs.ListedRecords)
             {
-                var grup = stream.ReadGroup();
-                if (!dict.TryGetValue(grup.ContainedRecordType, out var instructions))
+                stream.Position = rec.Key;
+                var major = stream.ReadMajorRecord();
+                var majorCompletePos = stream.Position + major.ContentLength;
+                if (!dict.TryGetValue(major.RecordType, out var instructions))
                 {
-                    stream.Position += grup.ContentLength;
                     continue;
                 }
-                var groupCompletePos = stream.Position + grup.ContentLength;
-                while (stream.Position < groupCompletePos)
+                while (stream.Position < majorCompletePos)
                 {
-                    var major = stream.ReadMajorRecord();
-                    var majorCompletePos = stream.Position + major.ContentLength;
-                    while (stream.Position < majorCompletePos)
+                    var sub = stream.ReadSubrecord();
+                    if (instructions.Contains(sub.RecordType))
                     {
-                        var sub = stream.ReadSubrecord();
-                        if (instructions.Contains(sub.RecordType))
+                        if (sub.ContentLength != 4)
                         {
-                            if (sub.ContentLength != 4)
-                            {
-                                throw new ArgumentException();
-                            }
-                            var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
-                            if (curIndex == 0x11243)
-                            {
-                                int wer = 23;
-                                wer++;
-                            }
-                            if (!overlay.TryLookup(curIndex, out var str)
-                                || string.IsNullOrEmpty(str))
-                            {
-                                _Instructions.SetSubstitution(stream.Position, new byte[4]);
-                            }
-                            else if (curIndex != 0)
-                            {
-                                var assignedIndex = newIndex++;
-                                ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
-                                byte[] b = new byte[4];
-                                BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
-                                _Instructions.SetSubstitution(stream.Position, b);
-                            }
+                            throw new ArgumentException();
                         }
-                        stream.Position += sub.ContentLength;
+                        var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+                        if (!overlay.TryLookup(curIndex, out var str)
+                            || string.IsNullOrEmpty(str))
+                        {
+                            _Instructions.SetSubstitution(stream.Position, new byte[4]);
+                        }
+                        else if (curIndex != 0)
+                        {
+                            var assignedIndex = newIndex++;
+                            ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
+                            byte[] b = new byte[4];
+                            BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
+                            _Instructions.SetSubstitution(stream.Position, b);
+                        }
                     }
+                    stream.Position += sub.ContentLength;
                 }
             }
+
             return ret;
         }
 
         public void ProcessStringsFiles(
             DirectoryInfo stringsFolder,
-            Language language, 
-            StringsSource source, 
+            Language language,
+            StringsSource source,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
