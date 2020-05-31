@@ -50,9 +50,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        public CellNavigationMeshData Data { get; set; } = new CellNavigationMeshData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICellNavigationMeshDataGetter ICellNavigationMeshGetter.Data => Data;
+        private CellNavigationMeshData? _Data;
+        public CellNavigationMeshData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellNavigationMeshDataGetter? ICellNavigationMeshGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -586,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANavigationMesh,
         ILoquiObjectSetter<ICellNavigationMeshInternal>
     {
-        new CellNavigationMeshData Data { get; set; }
+        new CellNavigationMeshData? Data { get; set; }
     }
 
     public partial interface ICellNavigationMeshInternal :
@@ -604,7 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
-        ICellNavigationMeshDataGetter Data { get; }
+        ICellNavigationMeshDataGetter? Data { get; }
 
     }
 
@@ -1096,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICellNavigationMeshInternal item)
         {
             ClearPartial();
-            item.Data.Clear();
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1293,7 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1345,9 +1355,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Data?.Overall ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                item.Data?.ToString(fg, "Data");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -1355,6 +1366,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellNavigationMeshGetter item,
             CellNavigationMesh.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1364,7 +1377,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellNavigationMeshGetter item,
             CellNavigationMesh.Mask<bool> mask)
         {
-            mask.Data = new MaskItem<bool, CellNavigationMeshData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, CellNavigationMeshData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1477,7 +1491,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICellNavigationMeshGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1512,9 +1529,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Data.LinkFormKeys)
+            if (obj.Data.TryGet(out var DataItems))
             {
-                yield return item;
+                foreach (var item in DataItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1568,11 +1588,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)CellNavigationMesh_FieldIndex.Data);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)CellNavigationMesh_FieldIndex.Data) ?? true))
+                    if(rhs.Data.TryGet(out var rhsData))
                     {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)CellNavigationMesh_FieldIndex.Data),
-                            errorMask: errorMask);
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CellNavigationMesh_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
                     }
                 }
                 catch (Exception ex)
@@ -1753,16 +1777,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)CellNavigationMesh_FieldIndex.Data) ?? true))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)CellNavigationMesh_FieldIndex.Data) ?? true))
             {
-                var DataItem = item.Data;
-                ((CellNavigationMeshDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
-                    node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)CellNavigationMesh_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CellNavigationMesh_FieldIndex.Data));
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((CellNavigationMeshDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)CellNavigationMesh_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)CellNavigationMesh_FieldIndex.Data));
+                }
             }
         }
 

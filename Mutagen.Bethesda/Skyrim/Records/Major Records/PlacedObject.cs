@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 Finish:
-                
+
                 // Check error conditions
-                if (roomCount != (item.LinkedRooms?.Count ?? 0))
+                if (roomCount != item.LinkedRooms.Count)
                 {
-                    throw new ArgumentException($"Unexpected room count: {item.LinkedRooms?.Count ?? 0} != {roomCount}");
+                    throw new ArgumentException($"Unexpected room count: {item.LinkedRooms.Count} != {roomCount}");
                 }
                 if (EnumExt.HasFlag(flags, HasImageSpaceFlag) != (item.ImageSpace.FormKey != null))
                 {
@@ -118,17 +118,68 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PlacedObjectBinaryOverlay
         {
-            public short Unknown2 => throw new NotImplementedException();
+            int? _boundDataLoc;
 
-            public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms => throw new NotImplementedException();
+            public short Unknown2 => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_boundDataLoc.Value + 8)) : default(short);
 
-            public IFormLinkNullable<ILightGetter> LightingTemplate => throw new NotImplementedException();
+            public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
 
-            public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => throw new NotImplementedException();
+            int? _lightingTemplateLoc;
+            public IFormLinkNullable<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+
+            int? _imageSpaceLoc;
+            public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
             partial void BoundDataCustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
+                _boundDataLoc = stream.Position - offset;
+                var header = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                if (header.Content.Length != 4)
+                {
+                    throw new ArgumentException($"Unexpected data header length: {header.Content.Length} != 4");
+                }
+                var roomCount = header.Content[0];
+                var flags = header.Content[1];
+                while (_package.MetaData.Constants.TryGetSubrecord(stream, out var subHeader))
+                {
+                    switch (subHeader.RecordTypeInt)
+                    {
+                        case 0x4D414E4C: // LNAM
+                            _lightingTemplateLoc = stream.Position - offset;
+                            if (!EnumExt.HasFlag(flags, PlacedObjectBinaryCreateTranslation.HasLightingTemplateFlag))
+                            {
+                                throw new ArgumentException($"Lighting template presence did not match flag specification");
+                            }
+                            stream.Position += subHeader.TotalLength;
+                            break;
+                        case 0x4D414E49: // INAM
+                            _imageSpaceLoc = stream.Position - offset;
+                            if (!EnumExt.HasFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag))
+                            {
+                                throw new ArgumentException($"Image space presence did not match flag specification");
+                            }
+                            stream.Position += subHeader.TotalLength;
+                            break;
+                        case 0x4D524C58: // XLRM
+                            LinkedRooms = BinaryOverlayList<IFormLink<IPlacedObjectGetter>>.FactoryByArray(
+                                stream.RemainingMemory,
+                                _package,
+                                (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                                locs: ParseRecordLocations(
+                                    stream: stream,
+                                    finalPos: stream.Length,
+                                    constants: _package.MetaData.Constants.SubConstants,
+                                    trigger: subHeader.RecordType,
+                                    skipHeader: true));
+                            if (roomCount != LinkedRooms.Count)
+                            {
+                                throw new ArgumentException($"Unexpected room count: {LinkedRooms.Count} != {roomCount}");
+                            }
+                            break;
+                        default:
+                            return;
+                    }
+                }
             }
         }
     }

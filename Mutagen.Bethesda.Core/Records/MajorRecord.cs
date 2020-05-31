@@ -58,6 +58,7 @@ namespace Mutagen.Bethesda
 
 namespace Mutagen.Bethesda.Internals
 {
+    [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
     public partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
     {
         public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);

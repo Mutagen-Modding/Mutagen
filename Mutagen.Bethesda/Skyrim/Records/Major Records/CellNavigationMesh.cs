@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IANavigationMeshDataGetter IANavigationMeshGetter.Data => this.Data;
+        IANavigationMeshDataGetter? IANavigationMeshGetter.Data => this.Data;
         #endregion
     }
 
@@ -19,10 +20,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IANavigationMeshDataGetter IANavigationMeshGetter.Data => this.Data;
+            IANavigationMeshDataGetter? IANavigationMeshGetter.Data => this.Data;
             #endregion
 
-            public ICellNavigationMeshDataGetter Data => throw new NotImplementedException();
+            public ICellNavigationMeshDataGetter? Data
+            {
+                get
+                {
+                    if (!_dataSpan.HasValue) return null;
+                    return CellNavigationMeshDataBinaryOverlay.CellNavigationMeshDataFactory(
+                        new BinaryMemoryReadStream(_dataSpan.Value),
+                        _package);
+                }
+            }
         }
     }
 }

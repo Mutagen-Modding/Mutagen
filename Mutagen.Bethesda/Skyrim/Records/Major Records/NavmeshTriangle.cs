@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NavmeshTriangleBinaryOverlay
         {
-            public bool IsCover => throw new NotImplementedException();
+            public bool IsCover { get; set; }
         }
     }
 }

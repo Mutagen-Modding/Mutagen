@@ -1810,7 +1810,15 @@ namespace Mutagen.Bethesda.Generation
                         switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.Custom:
-                                passedLength += (await CustomLogic.ExpectedLength(obj, field)).Value;
+                                var len = await CustomLogic.ExpectedLength(obj, field);
+                                if (len == null)
+                                {
+                                    passedLength = null;
+                                }
+                                else
+                                {
+                                    passedLength += len.Value;
+                                }
                                 continue;
                             case BinaryGenerationType.Normal:
                                 break;

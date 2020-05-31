@@ -39,11 +39,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PatrolBinaryOverlay
         {
-            public IReadOnlyList<IATopicReferenceGetter> Topics => throw new NotImplementedException();
+            public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
 
             partial void PatrolScriptMarkerCustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
+                if (_package.MetaData.Constants.ReadSubrecordFrame(stream).Content.Length != 0)
+                {
+                    throw new ArgumentException($"Marker had unexpected length.");
+                }
             }
 
             partial void TopicsCustomParse(
@@ -53,7 +56,10 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordType type,
                 int? lastParsed)
             {
-                throw new NotImplementedException();
+                Topics = new List<IATopicReferenceGetter>(
+                    ATopicReferenceBinaryCreateTranslation.Factory(
+                        new MutagenFrame(
+                            new MutagenInterfaceReadStream(stream, _package.MetaData))));
             }
         }
     }

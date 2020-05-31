@@ -3483,7 +3483,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
-        public IReadOnlyList<INavmeshTriangleGetter> Triangles => BinaryOverlayList<INavmeshTriangleGetter>.FactoryByCountLength(_data.Slice(VerticesEndingPos), _package, 17, countLength: 4, (s, p) => NavmeshTriangleBinaryOverlay.NavmeshTriangleFactory(s, p));
         public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList<IEdgeLinkGetter>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
         public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList<IDoorTriangleGetter>.FactoryByCountLength(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         #region CoverTrianglesLogic
@@ -3493,6 +3492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         private int VerticesEndingPos;
         private int TrianglesEndingPos;
+        partial void CustomTrianglesEndPos();
         private int EdgeLinksEndingPos;
         private int DoorTrianglesEndingPos;
         private int CoverTrianglesLogicEndingPos;

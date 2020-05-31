@@ -3,6 +3,7 @@ using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IANavigationMeshData IANavigationMesh.Data => throw new NotImplementedException();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IANavigationMeshDataGetter IANavigationMeshGetter.Data => throw new NotImplementedException();
+        IANavigationMeshDataGetter? IANavigationMeshGetter.Data => throw new NotImplementedException();
         #endregion
 
         [Flags]
@@ -34,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IANavigationMeshGetter
     {
-        IANavigationMeshDataGetter Data { get; }
+        IANavigationMeshDataGetter? Data { get; }
     }
 
     namespace Internals
@@ -88,12 +89,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryDataLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
             {
+                if (!item.Data.TryGet(out var data)) return;
                 using (var header = HeaderExport.ExportSubrecordHeader(
                     writer, 
                     ANavigationMesh_Registration.NVNM_HEADER,
                     largeLengthRecord: ANavigationMesh_Registration.XXXX_HEADER))
                 {
-                    item.Data.WriteToBinary(header.PrepWriter);
+                    data.WriteToBinary(header.PrepWriter);
                 }
             }
         }
@@ -105,9 +107,27 @@ namespace Mutagen.Bethesda.Skyrim
             IANavigationMeshDataGetter IANavigationMeshGetter.Data => throw new NotImplementedException();
             #endregion
 
+            protected ReadOnlyMemorySlice<byte>? _dataSpan;
+
+            partial void LengthLogicCustomParse(BinaryMemoryReadStream stream, int offset)
+            {
+                var xxxxHeader = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                if (xxxxHeader.Content.Length != 4)
+                {
+                    throw new ArgumentException("Unexpected length");
+                }
+                var len = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(xxxxHeader.Content));
+                _package.MetaData.Constants.ReadSubrecord(stream);
+                _dataSpan = _data.Slice(stream.Position - offset, len);
+                stream.Position += checked((int)len);
+            }
+
             partial void DataLogicCustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
+                var subHeader = _package.MetaData.Constants.ReadSubrecord(stream);
+                var contentLength = subHeader.ContentLength;
+                _dataSpan = _data.Slice(stream.Position - offset, contentLength);
+                stream.Position += contentLength;
             }
         }
     }

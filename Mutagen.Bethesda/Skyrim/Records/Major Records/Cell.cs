@@ -340,12 +340,22 @@ namespace Mutagen.Bethesda.Skyrim
             static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
             {
                 Cell_Registration.ACHR_HEADER,
-                Cell_Registration.REFR_HEADER
+                Cell_Registration.REFR_HEADER,
+                APlacedTrap_Registration.PARW_HEADER,
+                APlacedTrap_Registration.PBAR_HEADER,
+                APlacedTrap_Registration.PBEA_HEADER,
+                APlacedTrap_Registration.PCON_HEADER,
+                APlacedTrap_Registration.PFLA_HEADER,
+                APlacedTrap_Registration.PHZD_HEADER,
+                APlacedTrap_Registration.PMIS_HEADER,
+                APlacedTrap_Registration.PGRE_HEADER,
             };
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             public IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<ICellNavigationMeshGetter>();
+
+            public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
@@ -360,15 +370,9 @@ namespace Mutagen.Bethesda.Skyrim
             public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan) : 0;
             public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
-            private int? _visibleWhenDistantLocation;
-            public int VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan) : 0;
-            public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = ListExt.Empty<IPlacedGetter>();
+            public int PersistentUnknownGroupData => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_persistentLocation.Value + 20)) : 0;
 
-            public int UnknownGroupData => throw new NotImplementedException();
-
-            public int PersistentUnknownGroupData => throw new NotImplementedException();
-
-            public int TemporaryUnknownGroupData => throw new NotImplementedException();
+            public int TemporaryUnknownGroupData => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_temporaryLocation.Value + 20)) : 0;
 
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
@@ -431,6 +435,22 @@ namespace Mutagen.Bethesda.Skyrim
                                 return PlacedNpcBinaryOverlay.PlacedNpcFactory(new BinaryMemoryReadStream(span), package);
                             case 0x52464552: // "REFR":
                                 return PlacedObjectBinaryOverlay.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x57524150: // "PARW":
+                                return PlacedArrowBinaryOverlay.PlacedArrowFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x52414250: // "PBAR":
+                                return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x41454250: // "PBEA":
+                                return PlacedBeamBinaryOverlay.PlacedBeamFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x4E4F4350: // "PCON":
+                                return PlacedConeBinaryOverlay.PlacedConeFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x414C4650: // "PFLA":
+                                return PlacedFlameBinaryOverlay.PlacedFlameFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x445A4850: // "PHZD":
+                                return PlacedHazardBinaryOverlay.PlacedHazardFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x53494D50: // "PMIS":
+                                return PlacedMissileBinaryOverlay.PlacedMissileFactory(new BinaryMemoryReadStream(span), package);
+                            case 0x45524750: // "PGRE":
+                                return PlacedTrapBinaryOverlay.PlacedTrapFactory(new BinaryMemoryReadStream(span), package);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -451,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         stream: new BinaryMemoryReadStream(contentSpan),
                                         finalPos: subGroupLocation + subGroupMeta.TotalLength,
                                         triggers: TypicalPlacedTypes,
-                                        constants: GameConstants.Oblivion.MajorConstants,
+                                        constants: GameConstants.Skyrim.MajorConstants,
                                         skipHeader: false));
                                 break;
                             }
@@ -469,6 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     if (TypicalPlacedTypes.Contains(recType))
                                     {
                                         ret.Add(checked((int)(stream.Position - subStartPos)));
+                                        stream.Position += (int)majorMeta.TotalLength;
                                     }
                                     else
                                     {
@@ -482,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                                                     locs: ParseRecordLocations(
                                                         stream: stream,
                                                         finalPos: finalPos,
-                                                        constants: _package.MetaData.Constants.SubConstants,
+                                                        constants: _package.MetaData.Constants.MajorConstants,
                                                         trigger: recType,
                                                         skipHeader: false));
                                                 break;
@@ -492,12 +513,12 @@ namespace Mutagen.Bethesda.Skyrim
                                                     throw new ArgumentException("Second landscape parsed.");
                                                 }
                                                 _landscapeLocation = checked((int)stream.Position);
+                                                stream.Position += (int)majorMeta.TotalLength;
                                                 break;
                                             default:
-                                                break;
+                                                throw new NotImplementedException();
                                         }
                                     }
-                                    stream.Position += (int)majorMeta.TotalLength;
                                 }
                                 this.Temporary = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,

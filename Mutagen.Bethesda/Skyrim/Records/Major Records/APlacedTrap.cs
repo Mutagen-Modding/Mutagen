@@ -105,7 +105,41 @@ namespace Mutagen.Bethesda.Skyrim
         {
             partial void TrapFormCustomParse(BinaryMemoryReadStream stream, int offset)
             {
-                throw new NotImplementedException();
+                var subRec = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                if (subRec.Content.Length != 4)
+                {
+                    throw new ArgumentException("Unexpected length");
+                }
+                var form = FormKeyBinaryTranslation.Instance.Parse(subRec.Content, _package.MetaData.MasterReferences!);
+                switch (this)
+                {
+                    case PlacedArrowBinaryOverlay arrow:
+                        arrow.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedBeamBinaryOverlay beam:
+                        beam.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedFlameBinaryOverlay flame:
+                        flame.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedConeBinaryOverlay cone:
+                        cone.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedBarrierBinaryOverlay barrier:
+                        barrier.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedTrapBinaryOverlay trap:
+                        trap.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    case PlacedHazardBinaryOverlay hazard:
+                        hazard.Hazard = new FormLink<IHazardGetter>(form);
+                        break;
+                    case PlacedMissileBinaryOverlay missile:
+                        missile.Projectile = new FormLink<IProjectileGetter>(form);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
     }

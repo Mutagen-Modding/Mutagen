@@ -1,6 +1,8 @@
 ﻿using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
+using System.Buffers.Binary;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -80,21 +82,94 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ANavigationMeshDataBinaryOverlay
         {
-            public uint NavmeshGridDivisor => throw new NotImplementedException();
+            public uint NavmeshGridDivisor => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(CoverTrianglesLogicEndingPos));
 
-            public float MaxDistanceX => throw new NotImplementedException();
+            public float MaxDistanceX => SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 4));
 
-            public float MaxDistanceY => throw new NotImplementedException();
+            public float MaxDistanceY => SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 8));
 
-            public P3Float Min => throw new NotImplementedException();
+            public P3Float Min => new P3Float(
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 12)),
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 16)),
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 20)));
 
-            public P3Float Max => throw new NotImplementedException();
+            public P3Float Max => new P3Float(
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 24)),
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 28)),
+                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 32)));
 
-            public ReadOnlyMemorySlice<byte> NavmeshGrid => throw new NotImplementedException();
+            public ReadOnlyMemorySlice<byte> NavmeshGrid { get; private set; }
 
-            partial void CoverTrianglesLogicCustomParse(BinaryMemoryReadStream stream, int offset)
+            public IReadOnlyList<INavmeshTriangleGetter> Triangles => 
+                new TrianglesOverlay(
+                    _data, 
+                    _package,
+                    trianglesStartPos: VerticesEndingPos, 
+                    coverIndicesStartPos: DoorTrianglesEndingPos);
+
+            protected void CustomLogic()
             {
-                throw new NotImplementedException();
+                VerticesEndingPos = checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(16)) * 12) + 20));
+                TrianglesEndingPos = VerticesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(VerticesEndingPos)) * 16) + 4));
+                EdgeLinksEndingPos = TrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(TrianglesEndingPos)) * 10) + 4));
+                DoorTrianglesEndingPos = EdgeLinksEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(EdgeLinksEndingPos)) * 10) + 4));
+                CoverTrianglesLogicEndingPos = DoorTrianglesEndingPos + checked((int)((BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(DoorTrianglesEndingPos)) * 2) + 4));
+                NavmeshGrid = _data.Slice(CoverTrianglesLogicEndingPos + 0x24);
+            }
+
+            class TrianglesOverlay : IReadOnlyList<INavmeshTriangleGetter>
+            {
+                private ReadOnlyMemorySlice<byte> _data;
+                private BinaryOverlayFactoryPackage _package;
+                private int _trianglesStartPos;
+                private int _trianglesCount;
+                private bool[] _isCover;
+
+                public TrianglesOverlay(
+                    ReadOnlyMemorySlice<byte> data,
+                    BinaryOverlayFactoryPackage package,
+                    int trianglesStartPos,
+                    int coverIndicesStartPos)
+                {
+                    this._data = data;
+                    this._package = package;
+                    this._trianglesStartPos = trianglesStartPos;
+                    this._trianglesCount = BinaryPrimitives.ReadInt32LittleEndian(this._data.Slice(this._trianglesStartPos));
+                    this._trianglesStartPos += 4;
+                    this._isCover = new bool[this._trianglesCount];
+                    var coverCount = BinaryPrimitives.ReadInt32LittleEndian(this._data.Slice(coverIndicesStartPos));
+                    coverIndicesStartPos += 4;
+                    var coverIndices = _data.Span.Slice(coverIndicesStartPos, coverCount * 2).AsInt16Span();
+                    foreach (var index in coverIndices)
+                    {
+                        _isCover[index] = true;
+                    }
+                }
+
+                public INavmeshTriangleGetter this[int index]
+                {
+                    get
+                    {
+                        var triangleLoc = _trianglesStartPos + (index * 16);
+                        var triangle = NavmeshTriangleBinaryOverlay.NavmeshTriangleFactory(
+                            _data.Slice(triangleLoc),
+                            _package);
+                        triangle.IsCover = _isCover[index];
+                        return triangle;
+                    }
+                }
+
+                public int Count => _trianglesCount;
+
+                public IEnumerator<INavmeshTriangleGetter> GetEnumerator()
+                {
+                    for (int i = 0; i < _trianglesCount; i++)
+                    {
+                        yield return this[i];
+                    }
+                }
+
+                IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IANavigationMeshDataGetter IANavigationMeshGetter.Data => this.Data;
+        IANavigationMeshDataGetter? IANavigationMeshGetter.Data => this.Data;
         #endregion
     }
 
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IANavigationMeshDataGetter IANavigationMeshGetter.Data => this.Data;
+            IANavigationMeshDataGetter? IANavigationMeshGetter.Data => this.Data;
             #endregion
 
             public IWorldspaceNavigationMeshDataGetter Data => throw new NotImplementedException();

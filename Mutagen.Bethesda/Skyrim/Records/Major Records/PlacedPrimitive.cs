@@ -45,7 +45,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             P3Float GetBoundsCustom(int location)
             {
-                throw new NotImplementedException();
+                return new P3Float(
+                    SpanExt.GetFloat(_data.Slice(location)) * 2,
+                    SpanExt.GetFloat(_data.Slice(location + 4)) * 2,
+                    SpanExt.GetFloat(_data.Slice(location + 8)) * 2);
             }
         }
     }

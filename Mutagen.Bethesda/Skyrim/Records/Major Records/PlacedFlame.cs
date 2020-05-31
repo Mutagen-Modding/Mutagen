@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedFlameBinaryOverlay
         {
-            public IFormLink<IProjectileGetter> Projectile => throw new NotImplementedException();
+            public IFormLink<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
         }
     }
 }
