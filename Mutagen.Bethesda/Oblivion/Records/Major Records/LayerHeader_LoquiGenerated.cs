@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Texture
         public FormLink<LandTexture> Texture { get; set; } = new FormLink<LandTexture>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
+        IFormLink<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
         public AlphaLayer.QuadrantEnum Quadrant { get; set; } = default;
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
-        IFormLinkGetter<ILandTextureGetter> Texture { get; }
+        IFormLink<ILandTextureGetter> Texture { get; }
         AlphaLayer.QuadrantEnum Quadrant { get; }
         UInt16 LayerNumber { get; }
 
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILayerHeaderInternal item)
         {
             ClearPartial();
-            item.Texture = new FormLink<LandTexture>(FormKey.Null);
+            item.Texture = FormLink<LandTexture>.Null;
             item.Quadrant = default;
         }
         
@@ -2021,7 +2021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public AlphaLayer.QuadrantEnum Quadrant => (AlphaLayer.QuadrantEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomCtor(

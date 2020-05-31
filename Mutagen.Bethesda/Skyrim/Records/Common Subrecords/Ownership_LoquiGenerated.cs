@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         public FormLinkNullable<IOwner> Owner { get; set; } = new FormLinkNullable<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
+        IFormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Ownership_Registration.Instance;
-        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        IFormLinkNullable<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
 
     }
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IOwnership item)
         {
             ClearPartial();
-            item.Owner = null;
+            item.Owner = FormLinkNullable<IOwner>.Null;
             item.FactionRank = default;
         }
         
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Owner
         private int? _OwnerLocation;
         public bool Owner_IsSet => _OwnerLocation.HasValue;
-        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public IFormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;

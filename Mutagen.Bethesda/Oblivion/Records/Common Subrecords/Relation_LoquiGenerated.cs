@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Faction
         public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
+        IFormLink<IFactionGetter> IRelationGetter.Faction => this.Faction;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        IFormLinkGetter<IFactionGetter> Faction { get; }
+        IFormLink<IFactionGetter> Faction { get; }
         Int32 Modifier { get; }
 
     }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction = new FormLink<Faction>(FormKey.Null);
+            item.Faction = FormLink<Faction>.Null;
             item.Modifier = default;
         }
         
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

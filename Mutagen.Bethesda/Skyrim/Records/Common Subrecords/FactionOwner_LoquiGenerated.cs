@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Faction
         public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
+        IFormLink<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
         #endregion
         #region RequiredRank
         public Int32 RequiredRank { get; set; } = default;
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => FactionOwner_Registration.Instance;
-        IFormLinkGetter<IFactionGetter> Faction { get; }
+        IFormLink<IFactionGetter> Faction { get; }
         Int32 RequiredRank { get; }
 
     }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFactionOwner item)
         {
             ClearPartial();
-            item.Faction = new FormLink<Faction>(FormKey.Null);
+            item.Faction = FormLink<Faction>.Null;
             item.RequiredRank = default;
             base.Clear(item);
         }
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 RequiredRank => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

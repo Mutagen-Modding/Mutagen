@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
+        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
         #endregion
 
         #endregion
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavmeshSet_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
+        IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
 
     }
 
@@ -1475,14 +1475,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Navmeshes),
                     item: item.Navmeshes,
                     fieldIndex: (int)NavmeshSet_FieldIndex.Navmeshes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)NavmeshSet_FieldIndex.Navmeshes),
-                    transl: (XElement subNode, IFormLinkGetter<IANavigationMeshGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IANavigationMeshGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1800,11 +1800,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshSetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Navmeshes,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList<IFormLinkGetter<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         private int NavmeshesEndingPos;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

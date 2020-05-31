@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Door
         public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;
+        IFormLink<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;
         #endregion
 
         #region To String
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LinkedDoor_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLinkGetter<IPlacedObjectGetter> Door { get; }
+        IFormLink<IPlacedObjectGetter> Door { get; }
 
     }
 
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Door = new FormLink<PlacedObject>(FormKey.Null);
+            item.Door = FormLink<PlacedObject>.Null;
         }
         
         #region Xml Translation
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

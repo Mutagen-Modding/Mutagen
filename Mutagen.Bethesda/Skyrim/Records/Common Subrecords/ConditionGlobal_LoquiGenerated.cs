@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ComparisonValue
         public FormLink<Global> ComparisonValue { get; set; } = new FormLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
+        IFormLink<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
         #endregion
 
         #region To String
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
-        IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
+        IFormLink<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
     }
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IConditionGlobal item)
         {
             ClearPartial();
-            item.ComparisonValue = new FormLink<Global>(FormKey.Null);
+            item.ComparisonValue = FormLink<Global>.Null;
             item.Data.Clear();
             base.Clear(item);
         }
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
         private int DataEndingPos;
         partial void CustomDataEndPos();

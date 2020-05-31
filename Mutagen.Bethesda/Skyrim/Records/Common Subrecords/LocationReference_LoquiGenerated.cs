@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<ILocationReferencable> Link { get; set; } = new FormLink<ILocationReferencable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILocationReferencableGetter> ILocationReferenceGetter.Link => this.Link;
+        IFormLink<ILocationReferencableGetter> ILocationReferenceGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => LocationReference_Registration.Instance;
-        IFormLinkGetter<ILocationReferencableGetter> Link { get; }
+        IFormLink<ILocationReferencableGetter> Link { get; }
 
     }
 
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationReference item)
         {
             ClearPartial();
-            item.Link = new FormLink<ILocationReferencable>(FormKey.Null);
+            item.Link = FormLink<ILocationReferencable>.Null;
             base.Clear(item);
         }
         
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ILocationReferencableGetter> Link => new FormLink<ILocationReferencableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ILocationReferencableGetter> Link => new FormLink<ILocationReferencableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region PresetDefault
         public FormLinkNullable<ColorRecord> PresetDefault { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;
+        IFormLinkNullable<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? Index { get; }
         String? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }
-        IFormLinkNullableGetter<IColorRecordGetter> PresetDefault { get; }
+        IFormLinkNullable<IColorRecordGetter> PresetDefault { get; }
         IReadOnlyList<ITintPresetGetter> Presets { get; }
 
     }
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
             item.FileName = default;
             item.MaskType = default;
-            item.PresetDefault = null;
+            item.PresetDefault = FormLinkNullable<ColorRecord>.Null;
             item.Presets.Clear();
         }
         
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PresetDefault
         private int? _PresetDefaultLocation;
         public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
-        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomCtor(

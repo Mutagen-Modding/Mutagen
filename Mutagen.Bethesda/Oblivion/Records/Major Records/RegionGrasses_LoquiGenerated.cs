@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? IRegionGrassesGetter.Grasses => _Grasses;
+        IReadOnlyList<IFormLink<IGrassGetter>>? IRegionGrassesGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         static ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; }
+        IReadOnlyList<IFormLink<IGrassGetter>>? Grasses { get; }
 
     }
 
@@ -1583,14 +1583,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Grasses != null)
                 && (translationMask?.GetShouldTranslate((int)RegionGrasses_FieldIndex.Grasses) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IGrassGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Grasses),
                     item: item.Grasses,
                     fieldIndex: (int)RegionGrasses_FieldIndex.Grasses,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RegionGrasses_FieldIndex.Grasses),
-                    transl: (XElement subNode, IFormLinkGetter<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1814,11 +1814,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
                 recordType: recordTypeConverter.ConvertToCustom(RegionGrasses_Registration.RDGS_HEADER),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; private set; }
+        public IReadOnlyList<IFormLink<IGrassGetter>>? Grasses { get; private set; }
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Grasses = BinaryOverlayList<IFormLinkGetter<IGrassGetter>>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlayList<IFormLink<IGrassGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

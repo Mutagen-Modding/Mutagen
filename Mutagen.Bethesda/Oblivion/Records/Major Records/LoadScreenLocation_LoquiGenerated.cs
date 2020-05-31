@@ -49,12 +49,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Direct
         public FormLink<Place> Direct { get; set; } = new FormLink<Place>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
+        IFormLink<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
         #endregion
         #region Indirect
         public FormLink<Worldspace> Indirect { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
+        IFormLink<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
         #endregion
         #region GridPoint
         public P2Int16 GridPoint { get; set; } = default;
@@ -634,8 +634,8 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LoadScreenLocation_Registration.Instance;
-        IFormLinkGetter<IPlaceGetter> Direct { get; }
-        IFormLinkGetter<IWorldspaceGetter> Indirect { get; }
+        IFormLink<IPlaceGetter> Direct { get; }
+        IFormLink<IWorldspaceGetter> Indirect { get; }
         P2Int16 GridPoint { get; }
 
     }
@@ -1166,8 +1166,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct = new FormLink<Place>(FormKey.Null);
-            item.Indirect = new FormLink<Worldspace>(FormKey.Null);
+            item.Direct = FormLink<Place>.Null;
+            item.Indirect = FormLink<Worldspace>.Null;
             item.GridPoint = default;
         }
         
@@ -1982,8 +1982,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

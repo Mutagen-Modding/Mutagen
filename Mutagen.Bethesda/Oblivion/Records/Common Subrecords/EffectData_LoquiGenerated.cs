@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region MagicEffect
         public EDIDLink<MagicEffect> MagicEffect { get; set; } = new EDIDLink<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEDIDLinkGetter<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;
+        IEDIDLink<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;
         #endregion
         #region Magnitude
         public UInt32 Magnitude { get; set; } = default;
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EffectData_Registration.Instance;
-        IEDIDLinkGetter<IMagicEffectGetter> MagicEffect { get; }
+        IEDIDLink<IMagicEffectGetter> MagicEffect { get; }
         UInt32 Magnitude { get; }
         UInt32 Area { get; }
         UInt32 Duration { get; }
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.MagicEffect = new EDIDLink<MagicEffect>(RecordType.Null);
+            item.MagicEffect = EDIDLink<MagicEffect>.Null;
             item.Magnitude = default;
             item.Area = default;
             item.Duration = default;
@@ -2239,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IEDIDLinkGetter<IMagicEffectGetter> MagicEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IEDIDLink<IMagicEffectGetter> MagicEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 Magnitude => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public UInt32 Area => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 Duration => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));

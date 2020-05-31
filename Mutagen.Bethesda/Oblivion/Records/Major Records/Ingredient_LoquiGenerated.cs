@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> IIngredientGetter.Script => this.Script;
+        IFormLinkNullable<IScriptGetter> IIngredientGetter.Script => this.Script;
         #endregion
         #region Weight
         public Single? Weight { get; set; }
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        IFormLinkNullable<IScriptGetter> Script { get; }
         Single? Weight { get; }
         IIngredientDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = null;
+            item.Script = FormLinkNullable<Script>.Null;
             item.Weight = default;
             item.Data = null;
             item.Effects.Clear();
@@ -3034,7 +3034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Weight
         private int? _WeightLocation;

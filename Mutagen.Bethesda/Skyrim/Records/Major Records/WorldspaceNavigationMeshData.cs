@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceNavigationMeshDataBinaryOverlay
         {
-            public IFormLinkGetter<IWorldspaceGetter> Parent => throw new NotImplementedException();
+            public IFormLink<IWorldspaceGetter> Parent => throw new NotImplementedException();
 
             public P2Int16 Coordinates => throw new NotImplementedException();
         }

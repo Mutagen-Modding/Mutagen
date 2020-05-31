@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Projectile
         public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IProjectileGetter> IPlacedBeamGetter.Projectile => this.Projectile;
+        IFormLink<IProjectileGetter> IPlacedBeamGetter.Projectile => this.Projectile;
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => PlacedBeam_Registration.Instance;
-        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        IFormLink<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedBeamInternal item)
         {
             ClearPartial();
-            item.Projectile = new FormLink<Projectile>(FormKey.Null);
+            item.Projectile = FormLink<Projectile>.Null;
             base.Clear(item);
         }
         

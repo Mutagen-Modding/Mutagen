@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         public FormLink<IRelatable> Target { get; set; } = new FormLink<IRelatable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
+        IFormLink<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        IFormLinkGetter<IRelatableGetter> Target { get; }
+        IFormLink<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
         CombatReaction Reaction { get; }
 
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Target = new FormLink<IRelatable>(FormKey.Null);
+            item.Target = FormLink<IRelatable>.Null;
             item.Modifier = default;
             item.Reaction = default;
         }
@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public CombatReaction Reaction => (CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomCtor(

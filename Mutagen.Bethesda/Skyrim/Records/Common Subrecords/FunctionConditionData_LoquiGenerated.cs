@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ParameterOneRecord
         public FormLink<SkyrimMajorRecord> ParameterOneRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
+        IFormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ParameterTwoRecord
         public FormLink<SkyrimMajorRecord> ParameterTwoRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
+        IFormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -881,10 +881,10 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
         UInt16 Function { get; }
         UInt16 Unknown2 { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
         Int32 Unknown3 { get; }
@@ -1492,10 +1492,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = new FormLink<SkyrimMajorRecord>(FormKey.Null);
+            item.ParameterOneRecord = FormLink<SkyrimMajorRecord>.Null;
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = new FormLink<SkyrimMajorRecord>(FormKey.Null);
+            item.ParameterTwoRecord = FormLink<SkyrimMajorRecord>.Null;
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
             item.Unknown3 = default;

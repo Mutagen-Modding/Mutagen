@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<IPlaced> Reference { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
+        IFormLink<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PointToReferenceMapping_Registration.Instance;
-        IFormLinkGetter<IPlacedGetter> Reference { get; }
+        IFormLink<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 
     }
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
-            item.Reference = new FormLink<IPlaced>(FormKey.Null);
+            item.Reference = FormLink<IPlaced>.Null;
             item.Points.Clear();
         }
         
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public IReadOnlyList<Int16> Points => BinaryOverlayList<Int16>.FactoryByStartIndex(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         private int PointsEndingPos;
         partial void CustomCtor(

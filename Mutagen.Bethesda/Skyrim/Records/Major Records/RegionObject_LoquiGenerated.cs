@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Object
         public FormLink<IRegionTarget> Object { get; set; } = new FormLink<IRegionTarget>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
+        IFormLink<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionObject_Registration.Instance;
-        IFormLinkGetter<IRegionTargetGetter> Object { get; }
+        IFormLink<IRegionTargetGetter> Object { get; }
         UInt16 ParentIndex { get; }
         UInt16 Unknown { get; }
         Single Density { get; }
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionObject item)
         {
             ClearPartial();
-            item.Object = new FormLink<IRegionTarget>(FormKey.Null);
+            item.Object = FormLink<IRegionTarget>.Null;
             item.ParentIndex = default;
             item.Unknown = default;
             item.Density = default;
@@ -3207,7 +3207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Single Density => SpanExt.GetFloat(_data.Slice(0x8, 0x4));

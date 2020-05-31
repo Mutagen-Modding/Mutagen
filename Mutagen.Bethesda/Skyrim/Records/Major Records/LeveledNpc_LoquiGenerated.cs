@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
+        IFormLinkNullable<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         Byte ChanceNone { get; }
         LeveledNpc.Flag Flags { get; }
-        IFormLinkNullableGetter<IGlobalGetter> Global { get; }
+        IFormLinkNullable<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; }
         IModelGetter? Model { get; }
 
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Global = null;
+            item.Global = FormLinkNullable<Global>.Null;
             item.Entries = null;
             item.Model = null;
             base.Clear(item);
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Global
         private int? _GlobalLocation;
         public bool Global_IsSet => _GlobalLocation.HasValue;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IModelGetter? Model { get; private set; }

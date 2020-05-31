@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NavMesh
         public FormLink<ANavigationMesh> NavMesh { get; set; } = new FormLink<ANavigationMesh>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
+        IFormLink<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
         #endregion
         #region NodeIndex
         public UInt32 NodeIndex { get; set; } = default;
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavmeshNode_Registration.Instance;
-        IFormLinkGetter<IANavigationMeshGetter> NavMesh { get; }
+        IFormLink<IANavigationMeshGetter> NavMesh { get; }
         UInt32 NodeIndex { get; }
 
     }
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavmeshNode item)
         {
             ClearPartial();
-            item.NavMesh = new FormLink<ANavigationMesh>(FormKey.Null);
+            item.NavMesh = FormLink<ANavigationMesh>.Null;
             item.NodeIndex = default;
         }
         
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 NodeIndex => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for an object that is able to resolve against a LinkCache
     /// </summary>
-    public interface ILinkGetter
+    public interface ILink
     {
         /// <summary>
         /// The MajorRecord Type that the link is associated with
@@ -39,14 +39,14 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        bool TryResolveCommon(ILinkCache package, out IMajorRecordCommonGetter majorRecord);
+        bool TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRecord);
     }
 
     /// <summary>
     /// An interface for an object that is able to resolve against a LinkCache
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface ILinkGetter<out TMajor> : ILinkGetter
+    public interface ILink<out TMajor> : ILink
         where TMajor : IMajorRecordCommonGetter
     {
         /// <summary>
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda
         /// <param name="majorRecord">Major Record if located</param>
         /// <returns>True if successful in linking to record</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this ILinkGetter<TMajor> link, ILinkCache package, [MaybeNullWhen(false)] out TMajor majorRecord)
+        public static bool TryResolve<TMajor>(this ILink<TMajor> link, ILinkCache package, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : IMajorRecordCommonGetter
         {
             var ret = link.TryResolve(package);
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda
         /// <returns>Located Major Record</returns>
         /// <exception cref="NullReferenceException">If link was not succesful</exception>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static TMajor Resolve<TMajor>(this ILinkGetter<TMajor> link, ILinkCache package)
+        public static TMajor Resolve<TMajor>(this ILink<TMajor> link, ILinkCache package)
             where TMajor : IMajorRecordCommonGetter
         {
             return link.TryResolve(package).Value;

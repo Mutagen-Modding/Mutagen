@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InheritsSoundsFrom
         public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
+        IFormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
         #endregion
 
         #region To String
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
-        IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom { get; }
+        IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
 
     }
 
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcInheritSound item)
         {
             ClearPartial();
-            item.InheritsSoundsFrom = null;
+            item.InheritsSoundsFrom = FormLinkNullable<Npc>.Null;
             base.Clear(item);
         }
         
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
         public bool InheritsSoundsFrom_IsSet => _InheritsSoundsFromLocation.HasValue;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

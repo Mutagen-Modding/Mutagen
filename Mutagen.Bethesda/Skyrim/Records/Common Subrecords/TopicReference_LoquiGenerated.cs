@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<DialogTopic> Reference { get; set; } = new FormLink<DialogTopic>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;
+        IFormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => TopicReference_Registration.Instance;
-        IFormLinkGetter<IDialogTopicGetter> Reference { get; }
+        IFormLink<IDialogTopicGetter> Reference { get; }
 
     }
 
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITopicReference item)
         {
             ClearPartial();
-            item.Reference = new FormLink<DialogTopic>(FormKey.Null);
+            item.Reference = FormLink<DialogTopic>.Null;
             base.Clear(item);
         }
         
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

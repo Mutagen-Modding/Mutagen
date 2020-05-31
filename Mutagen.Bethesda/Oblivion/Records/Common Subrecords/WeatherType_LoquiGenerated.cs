@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Weather
         public FormLink<Weather> Weather { get; set; } = new FormLink<Weather>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
+        IFormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherType_Registration.Instance;
-        IFormLinkGetter<IWeatherGetter> Weather { get; }
+        IFormLink<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
 
     }
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherType item)
         {
             ClearPartial();
-            item.Weather = new FormLink<Weather>(FormKey.Null);
+            item.Weather = FormLink<Weather>.Null;
             item.Chance = default;
         }
         
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

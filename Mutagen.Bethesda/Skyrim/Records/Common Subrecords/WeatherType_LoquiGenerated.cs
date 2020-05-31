@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Weather
         public FormLink<Weather> Weather { get; set; } = new FormLink<Weather>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
+        IFormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLink<Global> Global { get; set; } = new FormLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGlobalGetter> IWeatherTypeGetter.Global => this.Global;
+        IFormLink<IGlobalGetter> IWeatherTypeGetter.Global => this.Global;
         #endregion
 
         #region To String
@@ -633,9 +633,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherType_Registration.Instance;
-        IFormLinkGetter<IWeatherGetter> Weather { get; }
+        IFormLink<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
-        IFormLinkGetter<IGlobalGetter> Global { get; }
+        IFormLink<IGlobalGetter> Global { get; }
 
     }
 
@@ -1163,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherType item)
         {
             ClearPartial();
-            item.Weather = new FormLink<Weather>(FormKey.Null);
+            item.Weather = FormLink<Weather>.Null;
             item.Chance = default;
-            item.Global = new FormLink<Global>(FormKey.Null);
+            item.Global = FormLink<Global>.Null;
         }
         
         #region Xml Translation
@@ -1968,9 +1968,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public IFormLinkGetter<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Target
         public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;
+        IFormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;
         #endregion
         #region Flags
         public QuestTarget.Flag Flags { get; set; } = default;
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTargetData_Registration.Instance;
-        IFormLinkGetter<IPlacedGetter> Target { get; }
+        IFormLink<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
 
     }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestTargetData item)
         {
             ClearPartial();
-            item.Target = new FormLink<IPlaced>(FormKey.Null);
+            item.Target = FormLink<IPlaced>.Null;
             item.Flags = default;
         }
         
@@ -1889,7 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public QuestTarget.Flag Flags => (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

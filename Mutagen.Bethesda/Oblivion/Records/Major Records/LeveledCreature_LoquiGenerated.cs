@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
+        IFormLinkNullable<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
         #endregion
         #region Template
         public FormLinkNullable<ANpc> Template { get; set; } = new FormLinkNullable<ANpc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IANpcGetter> ILeveledCreatureGetter.Template => this.Template;
+        IFormLinkNullable<IANpcGetter> ILeveledCreatureGetter.Template => this.Template;
         #endregion
 
         #region To String
@@ -812,8 +812,8 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> Entries { get; }
-        IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        IFormLinkNullableGetter<IANpcGetter> Template { get; }
+        IFormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullable<IANpcGetter> Template { get; }
 
     }
 
@@ -1359,8 +1359,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone = default;
             item.Flags = default;
             item.Entries.Clear();
-            item.Script = null;
-            item.Template = null;
+            item.Script = FormLinkNullable<Script>.Null;
+            item.Template = FormLinkNullable<ANpc>.Null;
             base.Clear(item);
         }
         
@@ -2723,12 +2723,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullableGetter<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IANpcGetter>.Null;
+        public IFormLinkNullable<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IANpcGetter>.Null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

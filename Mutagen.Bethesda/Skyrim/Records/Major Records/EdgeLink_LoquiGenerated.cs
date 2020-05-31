@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mesh
         public FormLink<ANavigationMesh> Mesh { get; set; } = new FormLink<ANavigationMesh>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
+        IFormLink<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EdgeLink_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLinkGetter<IANavigationMeshGetter> Mesh { get; }
+        IFormLink<IANavigationMeshGetter> Mesh { get; }
         Int16 TriangleIndex { get; }
 
     }
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Mesh = new FormLink<ANavigationMesh>(FormKey.Null);
+            item.Mesh = FormLink<ANavigationMesh>.Null;
             item.TriangleIndex = default;
         }
         
@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

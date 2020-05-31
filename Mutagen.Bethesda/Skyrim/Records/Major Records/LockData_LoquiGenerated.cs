@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Key
         public FormLink<Key> Key { get; set; } = new FormLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;
+        IFormLink<IKeyGetter> ILockDataGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockData.Flag Flags { get; set; } = default;
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LockData_Registration.Instance;
         LockLevel Level { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IFormLinkGetter<IKeyGetter> Key { get; }
+        IFormLink<IKeyGetter> Key { get; }
         LockData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused2 { get; }
 
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unused = new byte[3];
-            item.Key = new FormLink<Key>(FormKey.Null);
+            item.Key = FormLink<Key>.Null;
             item.Flags = default;
             item.Unused2 = new byte[11];
         }
@@ -2177,7 +2177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public LockLevel Level => (LockLevel)_data.Span.Slice(0x0, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockData.Flag Flags => (LockData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0xB).ToArray();
         partial void CustomCtor(

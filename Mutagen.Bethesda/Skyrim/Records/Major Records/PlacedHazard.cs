@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedHazardBinaryOverlay
         {
-            public IFormLinkGetter<IHazardGetter> Hazard => throw new NotImplementedException();
+            public IFormLink<IHazardGetter> Hazard => throw new NotImplementedException();
         }
     }
 }

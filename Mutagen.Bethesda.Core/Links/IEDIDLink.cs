@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// An interface for a read-only EDID Link
+    /// An interface for a EDID Link
     /// </summary>
-    public interface IEDIDLinkGetter : ILinkGetter
+    public interface IEDIDLink : ILink
     {
         /// <summary>
         /// Record type representing the target EditorID to link against
@@ -18,25 +18,12 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// An interface for a read-only EDID Link, with a Major Record type constraint
-    /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IEDIDLinkGetter<out TMajor> : ILinkGetter<TMajor>, IEDIDLinkGetter
-       where TMajor : IMajorRecordCommonGetter
-    {
-    }
-
-    /// <summary>
     /// An interface for a EDID Link, with a Major Record type constraint
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLinkGetter
+    public interface IEDIDLink<out TMajor> : ILink<TMajor>, IEDIDLink
        where TMajor : IMajorRecordCommonGetter
     {
-        /// <summary>
-        /// Record type representing the target EditorID to link against
-        /// </summary>
-        new RecordType EDID { get; set; }
     }
 
     /// <summary>
@@ -52,7 +39,7 @@ namespace Mutagen.Bethesda
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache package, out TMajor major)
+        public static bool TryResolve<TMajor>(this IEDIDLink<TMajor> edidLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
         {
             major = edidLink.Resolve(package);

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<T> Reference { get; set; } = new FormLink<T>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
+        IFormLink<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
         public Int16? Count { get; set; }
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LeveledEntry_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        IFormLinkGetter<T> Reference { get; }
+        IFormLink<T> Reference { get; }
         Int16? Count { get; }
         Int16? Unknown2 { get; }
 
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = new FormLink<T>(FormKey.Null);
+            item.Reference = FormLink<T>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLinkGetter<T> Reference => new FormLink<T>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<T> Reference => new FormLink<T>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2)) : default(Int16?);
         public Int16? Unknown2 => _data.Length >= 12 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2)) : default(Int16?);
         partial void CustomCtor(

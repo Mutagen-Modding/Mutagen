@@ -49,17 +49,17 @@ namespace Mutagen.Bethesda.Oblivion
         #region RelatedWaterDaytime
         public FormLink<Water> RelatedWaterDaytime { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
+        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
         #endregion
         #region RelatedWaterNighttime
         public FormLink<Water> RelatedWaterNighttime { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
+        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
         #endregion
         #region RelatedWaterUnderwater
         public FormLink<Water> RelatedWaterUnderwater { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
+        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
         #endregion
 
         #region To String
@@ -636,9 +636,9 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RelatedWaters_Registration.Instance;
-        IFormLinkGetter<IWaterGetter> RelatedWaterDaytime { get; }
-        IFormLinkGetter<IWaterGetter> RelatedWaterNighttime { get; }
-        IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater { get; }
+        IFormLink<IWaterGetter> RelatedWaterDaytime { get; }
+        IFormLink<IWaterGetter> RelatedWaterNighttime { get; }
+        IFormLink<IWaterGetter> RelatedWaterUnderwater { get; }
 
     }
 
@@ -1168,9 +1168,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelatedWaters item)
         {
             ClearPartial();
-            item.RelatedWaterDaytime = new FormLink<Water>(FormKey.Null);
-            item.RelatedWaterNighttime = new FormLink<Water>(FormKey.Null);
-            item.RelatedWaterUnderwater = new FormLink<Water>(FormKey.Null);
+            item.RelatedWaterDaytime = FormLink<Water>.Null;
+            item.RelatedWaterNighttime = FormLink<Water>.Null;
+            item.RelatedWaterUnderwater = FormLink<Water>.Null;
         }
         
         #region Xml Translation
@@ -1987,9 +1987,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLink<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
+        IFormLinkNullable<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
         #endregion
         #region SoundChance
         public Byte? SoundChance { get; set; }
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NpcSound_Registration.Instance;
-        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
         Byte? SoundChance { get; }
 
     }
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcSound item)
         {
             ClearPartial();
-            item.Sound = null;
+            item.Sound = FormLinkNullable<SoundDescriptor>.Null;
             item.SoundChance = default;
         }
         
@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region SoundChance
         private int? _SoundChanceLocation;

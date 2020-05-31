@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
+        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
         #endregion
 
         #endregion
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; }
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }
+        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }
 
     }
 
@@ -2214,14 +2214,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.RelatedIdleAnimations != null)
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedIdleAnimations),
                     item: item.RelatedIdleAnimations,
                     fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations),
-                    transl: (XElement subNode, IFormLinkGetter<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2548,11 +2548,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.AnimationGroupSection,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdleAnimations,
                 recordType: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DATA_HEADER),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2692,7 +2692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _AnimationGroupSectionLocation;
         public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
+        public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdleAnimations = BinaryOverlayList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
+                    this.RelatedIdleAnimations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

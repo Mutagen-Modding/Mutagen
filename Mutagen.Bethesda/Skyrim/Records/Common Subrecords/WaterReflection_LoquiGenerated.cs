@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Water
         public FormLink<PlacedObject> Water { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
+        IFormLink<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
         #endregion
         #region Type
         public WaterReflection.Flag Type { get; set; } = default;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WaterReflection_Registration.Instance;
         WaterReflection.VersioningBreaks Versioning { get; }
-        IFormLinkGetter<IPlacedObjectGetter> Water { get; }
+        IFormLink<IPlacedObjectGetter> Water { get; }
         WaterReflection.Flag Type { get; }
 
     }
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Water = new FormLink<PlacedObject>(FormKey.Null);
+            item.Water = FormLink<PlacedObject>.Null;
             item.Type = default;
         }
         
@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WaterReflection.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WaterReflection.Flag Type => (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

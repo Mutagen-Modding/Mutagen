@@ -64,12 +64,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Explosion
         public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
+        IFormLink<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
         #endregion
         #region Debris
         public FormLink<Debris> Debris { get; set; } = new FormLink<Debris>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
+        IFormLink<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
         public Int32 DebrisCount { get; set; } = default;
@@ -799,8 +799,8 @@ namespace Mutagen.Bethesda.Skyrim
         Byte ModelDamageStage { get; }
         DestructionStageData.Flag Flags { get; }
         Int32 SelfDamagePerSecond { get; }
-        IFormLinkGetter<IExplosionGetter> Explosion { get; }
-        IFormLinkGetter<IDebrisGetter> Debris { get; }
+        IFormLink<IExplosionGetter> Explosion { get; }
+        IFormLink<IDebrisGetter> Debris { get; }
         Int32 DebrisCount { get; }
 
     }
@@ -1396,8 +1396,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = default;
             item.Flags = default;
             item.SelfDamagePerSecond = default;
-            item.Explosion = new FormLink<Explosion>(FormKey.Null);
-            item.Debris = new FormLink<Debris>(FormKey.Null);
+            item.Explosion = FormLink<Explosion>.Null;
+            item.Debris = FormLink<Debris>.Null;
             item.DebrisCount = default;
         }
         
@@ -2423,8 +2423,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte ModelDamageStage => _data.Span[0x2];
         public DestructionStageData.Flag Flags => (DestructionStageData.Flag)_data.Span.Slice(0x3, 0x1)[0];
         public Int32 SelfDamagePerSecond => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLink<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLink<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         public Int32 DebrisCount => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

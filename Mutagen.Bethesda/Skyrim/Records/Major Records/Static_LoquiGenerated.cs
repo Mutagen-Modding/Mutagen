@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Material
         public FormLink<MaterialObject> Material { get; set; } = new FormLink<MaterialObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
+        IFormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
         #region Lod
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
-        IFormLinkGetter<IMaterialObjectGetter> Material { get; }
+        IFormLink<IMaterialObjectGetter> Material { get; }
         ILodGetter? Lod { get; }
         Static.DNAMDataType DNAMDataTypeState { get; }
 
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
-            item.Material = new FormLink<MaterialObject>(FormKey.Null);
+            item.Material = FormLink<MaterialObject>.Null;
             item.Lod = null;
             item.DNAMDataTypeState = default;
             base.Clear(item);
@@ -2686,7 +2686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;

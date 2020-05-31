@@ -122,12 +122,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Precipitation
         public FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; } = new FormLinkNullable<ShaderParticleGeometry>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
+        IFormLinkNullable<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
         #endregion
         #region VisualEffect
         public FormLink<VisualEffect> VisualEffect { get; set; } = new FormLink<VisualEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
+        IFormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region Unknown6
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
+        IReadOnlyList<IFormLink<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
         #endregion
 
         #endregion
@@ -3160,8 +3160,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
         ReadOnlyMemorySlice<Byte>? Unknown4 { get; }
         ReadOnlyMemorySlice<Byte>? Unknown5 { get; }
-        IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
-        IFormLinkGetter<IVisualEffectGetter> VisualEffect { get; }
+        IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
+        IFormLink<IVisualEffectGetter> VisualEffect { get; }
         ReadOnlyMemorySlice<Byte>? Unknown6 { get; }
         ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single WindDirection { get; }
         Single WindDirectionRange { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
-        IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
+        IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? Unknown8 { get; }
@@ -4454,8 +4454,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown3 = default;
             item.Unknown4 = default;
             item.Unknown5 = default;
-            item.Precipitation = null;
-            item.VisualEffect = new FormLink<VisualEffect>(FormKey.Null);
+            item.Precipitation = FormLinkNullable<ShaderParticleGeometry>.Null;
+            item.VisualEffect = FormLink<VisualEffect>.Null;
             item.Unknown6 = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
@@ -7228,14 +7228,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IStaticGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.SkyStatics),
                     item: item.SkyStatics,
                     fieldIndex: (int)Weather_FieldIndex.SkyStatics,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyStatics),
-                    transl: (XElement subNode, IFormLinkGetter<IStaticGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IStaticGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -9044,10 +9044,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SkyStatics,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IStaticGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<IStaticGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -9326,12 +9326,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Precipitation
         private int? _PrecipitationLocation;
         public bool Precipitation_IsSet => _PrecipitationLocation.HasValue;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
         public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
-        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region Unknown6
         private int? _Unknown6Location;
@@ -9594,7 +9594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
+        public IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLink<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new BinaryMemoryReadStream(_data.Slice(_ImageSpacesLocation!.Value.Min)), _package) : default;
@@ -9796,7 +9796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    this.SkyStatics = BinaryOverlayList<IFormLinkGetter<IStaticGetter>>.FactoryByArray(
+                    this.SkyStatics = BinaryOverlayList<IFormLink<IStaticGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IFormLinkGetter<T> item,
+            IFormLink<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IEDIDLinkGetter<T> item,
+            IEDIDLink<T> item,
             MasterReferenceReader masterReferences,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IFormLinkGetter<T> item,
+            IFormLink<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable<T>(
             MutagenWriter writer,
-            IFormLinkNullableGetter<T> item,
+            IFormLinkNullable<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable<T>(
             MutagenWriter writer,
-            IFormLinkNullableGetter<T> item)
+            IFormLinkNullable<T> item)
             where T : class, IMajorRecordCommonGetter
         {
             if (item.FormKey == null) return;

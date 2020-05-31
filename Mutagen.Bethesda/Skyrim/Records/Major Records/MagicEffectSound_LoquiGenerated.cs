@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound;
+        IFormLink<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound;
         #endregion
 
         #region To String
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MagicEffectSound_Registration.Instance;
         MagicEffect.SoundType Type { get; }
-        IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLink<ISoundDescriptorGetter> Sound { get; }
 
     }
 
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.Sound = new FormLink<SoundDescriptor>(FormKey.Null);
+            item.Sound = FormLink<SoundDescriptor>.Null;
         }
         
         #region Xml Translation
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public MagicEffect.SoundType Type => (MagicEffect.SoundType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

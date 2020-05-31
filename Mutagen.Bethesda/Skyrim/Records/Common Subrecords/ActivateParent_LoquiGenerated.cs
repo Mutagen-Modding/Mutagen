@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
+        IFormLink<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
         #endregion
         #region Delay
         public Single Delay { get; set; } = default;
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ActivateParent_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLink<ILinkedReferenceGetter> Reference { get; }
         Single Delay { get; }
 
     }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActivateParent item)
         {
             ClearPartial();
-            item.Reference = new FormLink<ILinkedReference>(FormKey.Null);
+            item.Reference = FormLink<ILinkedReference>.Null;
             item.Delay = default;
         }
         
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Single Delay => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -45,9 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IHarvestTargetGetter> IHarvestableGetter.Ingredient => this.Ingredient;
+        IFormLinkNullable<IHarvestTargetGetter> IHarvestableGetter.Ingredient => this.Ingredient;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> IHarvestableGetter.HarvestSound => this.HarvestSound;
+        IFormLinkNullable<ISoundDescriptorGetter> IHarvestableGetter.HarvestSound => this.HarvestSound;
         #endregion
 
         [Flags]

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
+        IFormLink<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionSound_Registration.Instance;
-        IFormLinkGetter<ISoundGetter> Sound { get; }
+        IFormLink<ISoundGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
 
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound = new FormLink<Sound>(FormKey.Null);
+            item.Sound = FormLink<Sound>.Null;
             item.Flags = default;
             item.Chance = default;
         }
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Single Chance => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         partial void CustomCtor(

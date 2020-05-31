@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Key
         public FormLink<Key> Key { get; set; } = new FormLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
+        IFormLink<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IFormLinkGetter<IKeyGetter> Key { get; }
+        IFormLink<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.LockLevel = default;
             item.Unused = new byte[3];
-            item.Key = new FormLink<Key>(FormKey.Null);
+            item.Key = FormLink<Key>.Null;
             item.Flags = default;
         }
         
@@ -2076,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0x0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

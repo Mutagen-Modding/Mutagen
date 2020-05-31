@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<Cell> Link { get; set; } = new FormLink<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ICellGetter> ILocationCellGetter.Link => this.Link;
+        IFormLink<ICellGetter> ILocationCellGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => LocationCell_Registration.Instance;
-        IFormLinkGetter<ICellGetter> Link { get; }
+        IFormLink<ICellGetter> Link { get; }
 
     }
 
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCell item)
         {
             ClearPartial();
-            item.Link = new FormLink<Cell>(FormKey.Null);
+            item.Link = FormLink<Cell>.Null;
             base.Clear(item);
         }
         
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ICellGetter> Link => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ICellGetter> Link => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -49,12 +49,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Origin
         public FormLink<PlacedObject> Origin { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
+        IFormLink<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
         #endregion
         #region Destination
         public FormLink<PlacedObject> Destination { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;
+        IFormLink<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;
         #endregion
 
         #region To String
@@ -601,8 +601,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Portal_Registration.Instance;
-        IFormLinkGetter<IPlacedObjectGetter> Origin { get; }
-        IFormLinkGetter<IPlacedObjectGetter> Destination { get; }
+        IFormLink<IPlacedObjectGetter> Origin { get; }
+        IFormLink<IPlacedObjectGetter> Destination { get; }
 
     }
 
@@ -1118,8 +1118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPortal item)
         {
             ClearPartial();
-            item.Origin = new FormLink<PlacedObject>(FormKey.Null);
-            item.Destination = new FormLink<PlacedObject>(FormKey.Null);
+            item.Origin = FormLink<PlacedObject>.Null;
+            item.Destination = FormLink<PlacedObject>.Null;
         }
         
         #region Xml Translation
@@ -1881,8 +1881,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Idle
         public FormLink<IdleAnimation> Idle { get; set; } = new FormLink<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
+        IFormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Patrol_Registration.Instance;
         Single IdleTime { get; }
-        IFormLinkGetter<IIdleAnimationGetter> Idle { get; }
+        IFormLink<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
         ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.IdleTime = default;
-            item.Idle = new FormLink<IdleAnimation>(FormKey.Null);
+            item.Idle = FormLink<IdleAnimation>.Null;
             item.Unknown = default;
             item.Unknown2 = default;
             item.Topics.Clear();
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Idle
         private int? _IdleLocation;
         public bool Idle_IsSet => _IdleLocation.HasValue;
-        public IFormLinkGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
+        public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region Unknown
         private int? _UnknownLocation;

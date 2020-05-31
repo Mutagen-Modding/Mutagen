@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Faction
         public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
+        IFormLink<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RankPlacement_Registration.Instance;
-        IFormLinkGetter<IFactionGetter> Faction { get; }
+        IFormLink<IFactionGetter> Faction { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
 
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction = new FormLink<Faction>(FormKey.Null);
+            item.Faction = FormLink<Faction>.Null;
             item.Rank = default;
             item.Unused = new byte[3];
         }
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomCtor(

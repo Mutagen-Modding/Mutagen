@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// An interface for a read-only FormLink
+    /// An interface for a FormLink
     /// </summary>
-    public interface IFormLinkGetter : ILinkGetter
+    public interface IFormLink : ILink
     {
         /// <summary>
         /// FormKey to link against
@@ -23,52 +23,10 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// An interface for a read-only FormLink, with a Major Record type constraint
-    /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkGetter<out TMajor> : ILinkGetter<TMajor>, IFormLinkGetter
-       where TMajor : IMajorRecordCommonGetter
-    {
-    }
-
-    /// <summary>
-    /// An interface for a FormLink
-    /// </summary>
-    public interface IFormLink : IFormLinkGetter
-    {
-        /// <summary>
-        /// FormKey to link against
-        /// </summary>
-        new FormKey FormKey { get; set; }
-    }
-
-    /// <summary>
     /// An interface for a FormLink, with a Major Record type constraint
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLink<out TMajor> : IFormLinkGetter<TMajor>, IFormLink
-       where TMajor : IMajorRecordCommonGetter
-    {
-    }
-
-    /// <summary>
-    /// An interface for a read-only FormLink.
-    /// FormKey is allowed to be null to communicate absence of a record.
-    /// </summary>
-    public interface IFormLinkNullableGetter : ILinkGetter
-    {
-        /// <summary>
-        /// FormKey to link against
-        /// </summary>
-        FormKey? FormKey { get; }
-    }
-
-    /// <summary>
-    /// An interface for a read-only FormLink, with a Major Record type constraint 
-    /// FormKey is allowed to be null to communicate absence of a record.
-    /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkNullableGetter<out TMajor> : ILinkGetter<TMajor>, IFormLinkNullableGetter
+    public interface IFormLink<out TMajor> : ILink<TMajor>, IFormLink
        where TMajor : IMajorRecordCommonGetter
     {
     }
@@ -77,9 +35,12 @@ namespace Mutagen.Bethesda
     /// An interface for a FormLink.
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
-    public interface IFormLinkNullable : IFormLinkNullableGetter
+    public interface IFormLinkNullable : ILink
     {
-        new FormKey? FormKey { get; set; }
+        /// <summary>
+        /// FormKey to link against
+        /// </summary>
+        FormKey? FormKey { get; }
     }
 
     /// <summary>
@@ -87,7 +48,7 @@ namespace Mutagen.Bethesda
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>, IFormLinkNullable
+    public interface IFormLinkNullable<out TMajor> : ILink<TMajor>, IFormLinkNullable
        where TMajor : IMajorRecordCommonGetter
     {
     }
@@ -105,7 +66,7 @@ namespace Mutagen.Bethesda
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IFormLinkGetter<TMajor> formLink, ILinkCache package, out TMajor major)
+        public static bool TryResolve<TMajor>(this IFormLink<TMajor> formLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
         {
             major = formLink.Resolve(package);
@@ -121,7 +82,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IFormLinkNullableGetter<TMajor> formLink, ILinkCache package, out TMajor major)
+        public static bool TryResolve<TMajor>(this IFormLinkNullable<TMajor> formLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
         {
             major = formLink.Resolve(package);

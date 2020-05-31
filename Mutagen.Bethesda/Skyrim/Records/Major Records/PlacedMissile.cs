@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedMissileBinaryOverlay
         {
-            public IFormLinkGetter<IProjectileGetter> Projectile => throw new NotImplementedException();
+            public IFormLink<IProjectileGetter> Projectile => throw new NotImplementedException();
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<INpcSpawn> Reference { get; set; } = new FormLink<INpcSpawn>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
+        IFormLink<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LeveledNpcEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        IFormLinkGetter<INpcSpawnGetter> Reference { get; }
+        IFormLink<INpcSpawnGetter> Reference { get; }
         Int16 Count { get; }
         Int16 Unknown2 { get; }
 
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = new FormLink<INpcSpawn>(FormKey.Null);
+            item.Reference = FormLink<INpcSpawn>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLinkGetter<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomCtor(

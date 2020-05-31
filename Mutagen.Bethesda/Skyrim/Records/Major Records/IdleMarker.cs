@@ -101,12 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
                 _package.MetaData.Constants.ReadSubrecordFrame(stream);
             }
 
-            public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
+            public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? Animations { get; private set; }
 
             partial void AnimationsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 var subHeader = _package.MetaData.Constants.ReadSubrecord(stream);
-                Animations = BinaryOverlayList<IFormLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
+                Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
                     mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
                     package: _package,
                     itemLength: 4,

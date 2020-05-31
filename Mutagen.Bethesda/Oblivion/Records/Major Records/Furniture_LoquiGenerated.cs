@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> IFurnitureGetter.Script => this.Script;
+        IFormLinkNullable<IScriptGetter> IFurnitureGetter.Script => this.Script;
         #endregion
         #region MarkerFlags
         public Int32? MarkerFlags { get; set; }
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => Furniture_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
-        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        IFormLinkNullable<IScriptGetter> Script { get; }
         Int32? MarkerFlags { get; }
 
     }
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = null;
+            item.Script = FormLinkNullable<Script>.Null;
             item.MarkerFlags = default;
             base.Clear(item);
         }
@@ -2390,7 +2390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;

@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? ILandscapeGetter.Textures => _Textures;
+        IReadOnlyList<IFormLink<ILandTextureGetter>>? ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
         ReadOnlyMemorySlice<Byte>? VertexColors { get; }
         IReadOnlyList<IBaseLayerGetter> Layers { get; }
-        IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; }
+        IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; }
 
     }
 
@@ -2400,14 +2400,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Textures != null)
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<ILandTextureGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Textures),
                     item: item.Textures,
                     fieldIndex: (int)Landscape_FieldIndex.Textures,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
-                    transl: (XElement subNode, IFormLinkGetter<ILandTextureGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<ILandTextureGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2773,11 +2773,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: recordTypeConverter.ConvertToCustom(Landscape_Registration.VTEX_HEADER),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2928,7 +2928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexColorsLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; private set; }
+        public IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; private set; }
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Textures = BinaryOverlayList<IFormLinkGetter<ILandTextureGetter>>.FactoryByStartIndex(
+                    this.Textures = BinaryOverlayList<IFormLink<ILandTextureGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

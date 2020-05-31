@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Npc
         public FormLink<Npc> Npc { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
+        IFormLink<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
         #endregion
         #region RawVariableData
         public UInt32 RawVariableData { get; set; } = default;
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => NpcOwner_Registration.Instance;
-        IFormLinkGetter<INpcGetter> Npc { get; }
+        IFormLink<INpcGetter> Npc { get; }
         UInt32 RawVariableData { get; }
 
     }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcOwner item)
         {
             ClearPartial();
-            item.Npc = new FormLink<Npc>(FormKey.Null);
+            item.Npc = FormLink<Npc>.Null;
             item.RawVariableData = default;
             base.Clear(item);
         }
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 RawVariableData => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

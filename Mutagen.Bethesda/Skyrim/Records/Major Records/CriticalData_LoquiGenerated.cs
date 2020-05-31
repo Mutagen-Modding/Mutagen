@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Effect
         public FormLink<Spell> Effect { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
+        IFormLink<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
         #endregion
 
         #region To String
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single PercentMult { get; }
         CriticalData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused3 { get; }
-        IFormLinkGetter<ISpellGetter> Effect { get; }
+        IFormLink<ISpellGetter> Effect { get; }
 
     }
 
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PercentMult = default;
             item.Flags = default;
             item.Unused3 = new byte[3];
-            item.Effect = new FormLink<Spell>(FormKey.Null);
+            item.Effect = FormLink<Spell>.Null;
         }
         
         #region Xml Translation
@@ -2255,7 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single PercentMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public CriticalData.Flag Flags => (CriticalData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused3 => _data.Span.Slice(0x9, 0x3).ToArray();
-        public IFormLinkGetter<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NewTexture
         public FormLink<TextureSet> NewTexture { get; set; } = new FormLink<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
+        IFormLink<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AlternateTexture_Registration.Instance;
         String Name { get; }
-        IFormLinkGetter<ITextureSetGetter> NewTexture { get; }
+        IFormLink<ITextureSetGetter> NewTexture { get; }
         Int32 Index { get; }
 
     }
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NewTexture = new FormLink<TextureSet>(FormKey.Null);
+            item.NewTexture = FormLink<TextureSet>.Null;
             item.Index = default;
         }
         
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 4);
-        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
+        public IFormLink<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
         private int NameEndingPos;
         partial void CustomCtor(

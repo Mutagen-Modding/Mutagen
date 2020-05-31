@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Color
         public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
+        IFormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TintPreset_Registration.Instance;
-        IFormLinkNullableGetter<IColorRecordGetter> Color { get; }
+        IFormLinkNullable<IColorRecordGetter> Color { get; }
         Single? DefaultValue { get; }
         UInt16? Index { get; }
 
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITintPreset item)
         {
             ClearPartial();
-            item.Color = null;
+            item.Color = FormLinkNullable<ColorRecord>.Null;
             item.DefaultValue = default;
             item.Index = default;
         }
@@ -2049,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Color
         private int? _ColorLocation;
         public bool Color_IsSet => _ColorLocation.HasValue;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

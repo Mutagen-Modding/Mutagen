@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
+        IFormLinkNullable<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
+        IFormLinkNullable<ISoundGetter> ILightGetter.Sound => this.Sound;
         #endregion
 
         #region To String
@@ -823,12 +823,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static ILoquiRegistration Registration => Light_Registration.Instance;
         IModelGetter? Model { get; }
-        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        IFormLinkNullable<IScriptGetter> Script { get; }
         String? Name { get; }
         String? Icon { get; }
         ILightDataGetter? Data { get; }
         Single? Fade { get; }
-        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
+        IFormLinkNullable<ISoundGetter> Sound { get; }
 
     }
 
@@ -1397,12 +1397,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.Script = null;
+            item.Script = FormLinkNullable<Script>.Null;
             item.Name = default;
             item.Icon = default;
             item.Data = null;
             item.Fade = default;
-            item.Sound = null;
+            item.Sound = FormLinkNullable<Sound>.Null;
             base.Clear(item);
         }
         
@@ -2870,7 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2892,7 +2892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

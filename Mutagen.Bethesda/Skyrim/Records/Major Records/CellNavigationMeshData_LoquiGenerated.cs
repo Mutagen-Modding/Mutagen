@@ -51,12 +51,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnusedWorldspaceParent
         public FormLink<Worldspace> UnusedWorldspaceParent { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
+        IFormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
         #endregion
         #region Parent
         public FormLink<Cell> Parent { get; set; } = new FormLink<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
+        IFormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
         #endregion
 
         #region To String
@@ -610,8 +610,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
-        IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        IFormLinkGetter<ICellGetter> Parent { get; }
+        IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
+        IFormLink<ICellGetter> Parent { get; }
 
     }
 
@@ -1116,8 +1116,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICellNavigationMeshData item)
         {
             ClearPartial();
-            item.UnusedWorldspaceParent = new FormLink<Worldspace>(FormKey.Null);
-            item.Parent = new FormLink<Cell>(FormKey.Null);
+            item.UnusedWorldspaceParent = FormLink<Worldspace>.Null;
+            item.Parent = FormLink<Cell>.Null;
             base.Clear(item);
         }
         

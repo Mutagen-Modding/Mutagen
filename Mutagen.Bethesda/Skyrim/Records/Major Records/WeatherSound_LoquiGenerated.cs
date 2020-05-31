@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<ISound> Sound { get; set; } = new FormLink<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
+        IFormLink<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
         public WeatherSound.TypeEnum Type { get; set; } = default;
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
-        IFormLinkGetter<ISoundGetter> Sound { get; }
+        IFormLink<ISoundGetter> Sound { get; }
         WeatherSound.TypeEnum Type { get; }
 
     }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherSound item)
         {
             ClearPartial();
-            item.Sound = new FormLink<ISound>(FormKey.Null);
+            item.Sound = FormLink<ISound>.Null;
             item.Type = default;
         }
         
@@ -1889,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WeatherSound.TypeEnum Type => (WeatherSound.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

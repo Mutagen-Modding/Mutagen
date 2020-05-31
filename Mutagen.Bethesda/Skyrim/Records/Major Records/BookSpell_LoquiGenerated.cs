@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
+        IFormLink<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
         #endregion
 
         #region To String
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => BookSpell_Registration.Instance;
-        IFormLinkGetter<ISpellGetter> Spell { get; }
+        IFormLink<ISpellGetter> Spell { get; }
 
     }
 
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSpell item)
         {
             ClearPartial();
-            item.Spell = new FormLink<Spell>(FormKey.Null);
+            item.Spell = FormLink<Spell>.Null;
             base.Clear(item);
         }
         
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MarkerKeyword
         public FormLinkNullable<Keyword> MarkerKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;
+        IFormLinkNullable<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;
         #endregion
         #region EntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => FurnitureMarker_Registration.Instance;
         Boolean Enabled { get; }
         IEntryPointsGetter? DisabledEntryPoints { get; }
-        IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword { get; }
+        IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
         IEntryPointsGetter? EntryPoints { get; }
 
     }
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Enabled = default;
             item.DisabledEntryPoints = null;
-            item.MarkerKeyword = null;
+            item.MarkerKeyword = FormLinkNullable<Keyword>.Null;
             item.EntryPoints = null;
         }
         
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Boolean Enabled => _data.Slice(0x0, 0x1)[0] == 1;
         public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new BinaryMemoryReadStream(_data.Slice(0x1)), _package, default(RecordTypeConverter));
-        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
+        public IFormLinkNullable<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
         public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new BinaryMemoryReadStream(_data.Slice(0x9)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Hazard
         public FormLink<Hazard> Hazard { get; set; } = new FormLink<Hazard>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
+        IFormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
         #endregion
 
         #region To String
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
-        IFormLinkGetter<IHazardGetter> Hazard { get; }
+        IFormLink<IHazardGetter> Hazard { get; }
 
     }
 
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedHazardInternal item)
         {
             ClearPartial();
-            item.Hazard = new FormLink<Hazard>(FormKey.Null);
+            item.Hazard = FormLink<Hazard>.Null;
             base.Clear(item);
         }
         

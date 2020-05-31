@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Item
         public FormLink<AItem> Item { get; set; } = new FormLink<AItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAItemGetter> IContainerItemGetter.Item => this.Item;
+        IFormLink<IAItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
         public UInt32 Count { get; set; } = default;
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
-        IFormLinkGetter<IAItemGetter> Item { get; }
+        IFormLink<IAItemGetter> Item { get; }
         UInt32 Count { get; }
 
     }
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = new FormLink<AItem>(FormKey.Null);
+            item.Item = FormLink<AItem>.Null;
             item.Count = default;
         }
         
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

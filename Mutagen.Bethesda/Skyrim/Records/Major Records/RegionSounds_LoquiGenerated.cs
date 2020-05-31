@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Music
         public FormLinkNullable<Music> Music { get; set; } = new FormLinkNullable<Music>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMusicGetter> IRegionSoundsGetter.Music => this.Music;
+        IFormLinkNullable<IMusicGetter> IRegionSoundsGetter.Music => this.Music;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => RegionSounds_Registration.Instance;
-        IFormLinkNullableGetter<IMusicGetter> Music { get; }
+        IFormLinkNullable<IMusicGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 
     }
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionSounds item)
         {
             ClearPartial();
-            item.Music = null;
+            item.Music = FormLinkNullable<Music>.Null;
             item.Sounds = null;
             base.Clear(item);
         }
@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullableGetter<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        public IFormLinkNullable<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomCtor(

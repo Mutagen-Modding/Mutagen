@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MovementType
         public FormLinkNullable<MovementType> MovementType { get; set; } = new FormLinkNullable<MovementType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;
+        IFormLinkNullable<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;
         #endregion
         #region Overrides
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceMovementType_Registration.Instance;
-        IFormLinkNullableGetter<IMovementTypeGetter> MovementType { get; }
+        IFormLinkNullable<IMovementTypeGetter> MovementType { get; }
         ISpeedOverridesGetter? Overrides { get; }
 
     }
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRaceMovementType item)
         {
             ClearPartial();
-            item.MovementType = null;
+            item.MovementType = FormLinkNullable<MovementType>.Null;
             item.Overrides = null;
         }
         
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MovementType
         private int? _MovementTypeLocation;
         public bool MovementType_IsSet => _MovementTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;

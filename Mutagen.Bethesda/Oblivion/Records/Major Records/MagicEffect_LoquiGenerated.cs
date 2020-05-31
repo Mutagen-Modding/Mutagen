@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         IModelGetter? Model { get; }
         IMagicEffectDataGetter? Data { get; }
-        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
+        IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; }
 
     }
 
@@ -2291,14 +2291,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.CounterEffects != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
-                ListXmlTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
+                ListXmlTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.CounterEffects),
                     item: item.CounterEffects,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
-                    transl: (XElement subNode, IEDIDLinkGetter<IMagicEffectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IEDIDLink<IMagicEffectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         RecordTypeXmlTranslation.Instance.Write(
                             node: subNode,
@@ -2658,11 +2658,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
                 recordType: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.ESCE_HEADER),
-                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IEDIDLink<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2814,7 +2814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
-        public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
+        public IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.CounterEffects = BinaryOverlayList<IEDIDLinkGetter<IMagicEffectGetter>>.FactoryByStartIndex(
+                    this.CounterEffects = BinaryOverlayList<IEDIDLink<IMagicEffectGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

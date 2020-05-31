@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool HasProperty => false;
         public override bool IsEnumerable => false;
 
-        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}{(getter ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
+        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string ClassTypeString
         {
@@ -171,24 +171,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
-            if (this.HasBeenSet)
-            {
-                fg.AppendLine($"{identifier.PropertyOrDirectAccess} = null;");
-            }
-            else
-            {
-                switch (this.FormIDType)
-                {
-                    case FormIDTypeEnum.Normal:
-                        fg.AppendLine($"{identifier.PropertyOrDirectAccess} = new {DirectTypeName(getter: false)}(FormKey.Null);");
-                        break;
-                    case FormIDTypeEnum.EDIDChars:
-                        fg.AppendLine($"{identifier.PropertyOrDirectAccess} = new {DirectTypeName(getter: false)}(RecordType.Null);");
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
+            fg.AppendLine($"{identifier.PropertyOrDirectAccess} = {DirectTypeName(getter: false)}.Null;");
         }
 
         public override void GenerateCopySetToConverter(FileGeneration fg)

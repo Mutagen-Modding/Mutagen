@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LightingTemplate
         public FormLink<LightingTemplate> LightingTemplate { get; set; } = new FormLink<LightingTemplate>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
+        IFormLink<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -137,14 +137,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? ICellGetter.Regions => _Regions;
+        IReadOnlyList<IFormLink<IRegionGetter>>? ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
         #region Location
         public FormLinkNullable<Location> Location { get; set; } = new FormLinkNullable<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationGetter> ICellGetter.Location => this.Location;
+        IFormLinkNullable<ILocationGetter> ICellGetter.Location => this.Location;
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Water
         public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
+        IFormLinkNullable<IWaterGetter> ICellGetter.Water => this.Water;
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LockList
         public FormLinkNullable<ILockList> LockList { get; set; } = new FormLinkNullable<ILockList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILockListGetter> ICellGetter.LockList => this.LockList;
+        IFormLinkNullable<ILockListGetter> ICellGetter.LockList => this.LockList;
         #endregion
         #region WaterEnvironmentMap
         public String? WaterEnvironmentMap { get; set; }
@@ -208,27 +208,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region SkyAndWeatherFromRegion
         public FormLinkNullable<Region> SkyAndWeatherFromRegion { get; set; } = new FormLinkNullable<Region>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion;
+        IFormLinkNullable<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion;
         #endregion
         #region AcousticSpace
         public FormLinkNullable<AcousticSpace> AcousticSpace { get; set; } = new FormLinkNullable<AcousticSpace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace;
+        IFormLinkNullable<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace;
         #endregion
         #region EncounterZone
         public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
+        IFormLinkNullable<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
         #endregion
         #region MusicType
         public FormLinkNullable<Music> MusicType { get; set; } = new FormLinkNullable<Music>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMusicGetter> ICellGetter.MusicType => this.MusicType;
+        IFormLinkNullable<IMusicGetter> ICellGetter.MusicType => this.MusicType;
         #endregion
         #region ImageSpace
         public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace;
+        IFormLinkNullable<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region Landscape
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2164,24 +2164,24 @@ namespace Mutagen.Bethesda.Skyrim
         ICellLightingGetter? Lighting { get; }
         ReadOnlyMemorySlice<Byte>? OcclusionData { get; }
         ReadOnlyMemorySlice<Byte>? MaxHeightData { get; }
-        IFormLinkGetter<ILightingTemplateGetter> LightingTemplate { get; }
+        IFormLink<ILightingTemplateGetter> LightingTemplate { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
         Single? WaterHeight { get; }
         String? WaterNoiseTexture { get; }
-        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; }
-        IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; }
+        IFormLinkNullable<ILocationGetter> Location { get; }
         ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
         ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
         ICellWaterVelocityGetter? WaterVelocity { get; }
-        IFormLinkNullableGetter<IWaterGetter> Water { get; }
+        IFormLinkNullable<IWaterGetter> Water { get; }
         IOwnershipGetter? Ownership { get; }
-        IFormLinkNullableGetter<ILockListGetter> LockList { get; }
+        IFormLinkNullable<ILockListGetter> LockList { get; }
         String? WaterEnvironmentMap { get; }
-        IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion { get; }
-        IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace { get; }
-        IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
-        IFormLinkNullableGetter<IMusicGetter> MusicType { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; }
+        IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; }
+        IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        IFormLinkNullable<IMusicGetter> MusicType { get; }
+        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
         ILandscapeGetter? Landscape { get; }
         IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
@@ -3161,24 +3161,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Lighting = null;
             item.OcclusionData = default;
             item.MaxHeightData = default;
-            item.LightingTemplate = new FormLink<LightingTemplate>(FormKey.Null);
+            item.LightingTemplate = FormLink<LightingTemplate>.Null;
             item.Unknown = default;
             item.WaterHeight = default;
             item.WaterNoiseTexture = default;
             item.Regions = null;
-            item.Location = null;
+            item.Location = FormLinkNullable<Location>.Null;
             item.Unknown2 = default;
             item.Unknown3 = default;
             item.WaterVelocity = null;
-            item.Water = null;
+            item.Water = FormLinkNullable<Water>.Null;
             item.Ownership = null;
-            item.LockList = null;
+            item.LockList = FormLinkNullable<ILockList>.Null;
             item.WaterEnvironmentMap = default;
-            item.SkyAndWeatherFromRegion = null;
-            item.AcousticSpace = null;
-            item.EncounterZone = null;
-            item.MusicType = null;
-            item.ImageSpace = null;
+            item.SkyAndWeatherFromRegion = FormLinkNullable<Region>.Null;
+            item.AcousticSpace = FormLinkNullable<AcousticSpace>.Null;
+            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
+            item.MusicType = FormLinkNullable<Music>.Null;
+            item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
             item.Landscape = null;
             item.NavigationMeshes.Clear();
             item.Timestamp = default;
@@ -5056,14 +5056,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Regions != null)
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IRegionGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Regions),
                     item: item.Regions,
                     fieldIndex: (int)Cell_FieldIndex.Regions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
-                    transl: (XElement subNode, IFormLinkGetter<IRegionGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IRegionGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -6267,11 +6267,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.WaterNoiseTexture,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XNAM_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Regions,
                 recordType: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLR_HEADER),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLink<IRegionGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -6512,7 +6512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LightingTemplate
         private int? _LightingTemplateLocation;
         public bool LightingTemplate_IsSet => _LightingTemplateLocation.HasValue;
-        public IFormLinkGetter<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
+        public IFormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
         #endregion
         #region Unknown
         private int? _UnknownLocation;
@@ -6526,11 +6526,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _WaterNoiseTextureLocation;
         public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
+        public IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; private set; }
         #region Location
         private int? _LocationLocation;
         public bool Location_IsSet => _LocationLocation.HasValue;
-        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
@@ -6548,13 +6548,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Water
         private int? _WaterLocation;
         public bool Water_IsSet => _WaterLocation.HasValue;
-        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region LockList
         private int? _LockListLocation;
         public bool LockList_IsSet => _LockListLocation.HasValue;
-        public IFormLinkNullableGetter<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
+        public IFormLinkNullable<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
@@ -6563,27 +6563,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;
         public bool SkyAndWeatherFromRegion_IsSet => _SkyAndWeatherFromRegionLocation.HasValue;
-        public IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region AcousticSpace
         private int? _AcousticSpaceLocation;
         public bool AcousticSpace_IsSet => _AcousticSpaceLocation.HasValue;
-        public IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
+        public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
         public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region MusicType
         private int? _MusicTypeLocation;
         public bool MusicType_IsSet => _MusicTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IMusicGetter> MusicType => _MusicTypeLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        public IFormLinkNullable<IMusicGetter> MusicType => _MusicTypeLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
         public bool ImageSpace_IsSet => _ImageSpaceLocation.HasValue;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -6708,7 +6708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlayList<IFormLinkGetter<IRegionGetter>>.FactoryByStartIndex(
+                    this.Regions = BinaryOverlayList<IFormLink<IRegionGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

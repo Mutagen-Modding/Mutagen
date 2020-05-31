@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IIdleMarkerGetter.Animations => _Animations;
+        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? IIdleMarkerGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IdleMarker.Flag? Flags { get; }
         Single? IdleTimer { get; }
-        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
+        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? Animations { get; }
         IModelGetter? Model { get; }
 
         #region Mutagen
@@ -2196,14 +2196,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Animations != null)
                 && (translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Animations),
                     item: item.Animations,
                     fieldIndex: (int)IdleMarker_FieldIndex.Animations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Animations),
-                    transl: (XElement subNode, IFormLinkGetter<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLink<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,

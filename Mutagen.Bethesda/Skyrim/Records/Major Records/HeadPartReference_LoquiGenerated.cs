@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Head
         public FormLinkNullable<HeadPart> Head { get; set; } = new FormLinkNullable<HeadPart>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
+        IFormLinkNullable<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
         #endregion
 
         #region To String
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => HeadPartReference_Registration.Instance;
         Int32? Number { get; }
-        IFormLinkNullableGetter<IHeadPartGetter> Head { get; }
+        IFormLinkNullable<IHeadPartGetter> Head { get; }
 
     }
 
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Number = default;
-            item.Head = null;
+            item.Head = FormLinkNullable<HeadPart>.Null;
         }
         
         #region Xml Translation
@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Head
         private int? _HeadLocation;
         public bool Head_IsSet => _HeadLocation.HasValue;
-        public IFormLinkNullableGetter<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
+        public IFormLinkNullable<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
+        IFormLinkNullable<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }
         String? MaterialID { get; }
-        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
+        IFormLinkNullable<ISoundGetter> Sound { get; }
         IWaterDataGetter? Data { get; }
         IRelatedWatersGetter? RelatedWaters { get; }
 
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity = default;
             item.Flags = default;
             item.MaterialID = default;
-            item.Sound = null;
+            item.Sound = FormLinkNullable<Sound>.Null;
             item.Data = null;
             item.RelatedWaters = null;
             base.Clear(item);
@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Data
         partial void DataCustomParse(

@@ -120,11 +120,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public short Unknown2 => throw new NotImplementedException();
 
-            public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms => throw new NotImplementedException();
+            public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms => throw new NotImplementedException();
 
-            public IFormLinkNullableGetter<ILightGetter> LightingTemplate => throw new NotImplementedException();
+            public IFormLinkNullable<ILightGetter> LightingTemplate => throw new NotImplementedException();
 
-            public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => throw new NotImplementedException();
+            public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => throw new NotImplementedException();
 
             partial void BoundDataCustomParse(BinaryMemoryReadStream stream, int offset)
             {

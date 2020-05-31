@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public IFormLinkGetter<ICellGetter> ParentCell
+            public IFormLink<ICellGetter> ParentCell
             {
                 get
                 {

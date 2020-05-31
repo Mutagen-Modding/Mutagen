@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region LocationReference
         public FormLink<IPlaced> LocationReference { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
+        IFormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
-        IFormLinkGetter<IPlacedGetter> LocationReference { get; }
+        IFormLink<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.LocationReference = new FormLink<IPlaced>(FormKey.Null);
+            item.LocationReference = FormLink<IPlaced>.Null;
             item.Radius = default;
         }
         
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single Radius => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

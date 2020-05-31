@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
+        IFormLink<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionSound_Registration.Instance;
-        IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLink<ISoundDescriptorGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
 
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound = new FormLink<SoundDescriptor>(FormKey.Null);
+            item.Sound = FormLink<SoundDescriptor>.Null;
             item.Flags = default;
             item.Chance = default;
         }
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Single Chance => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         partial void CustomCtor(

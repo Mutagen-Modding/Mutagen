@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
+        IFormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AttackType
         public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
+        IFormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -892,12 +892,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
-        IFormLinkGetter<IASpellGetter> Spell { get; }
+        IFormLink<IASpellGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
         Single Stagger { get; }
-        IFormLinkGetter<IKeywordGetter> AttackType { get; }
+        IFormLink<IKeywordGetter> AttackType { get; }
         Single Knockdown { get; }
         Single RecoveryTime { get; }
         Single StaminaMult { get; }
@@ -1528,12 +1528,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.DamageMult = default;
             item.Chance = default;
-            item.Spell = new FormLink<ASpell>(FormKey.Null);
+            item.Spell = FormLink<ASpell>.Null;
             item.Flags = default;
             item.AttackAngle = default;
             item.StrikeAngle = default;
             item.Stagger = default;
-            item.AttackType = new FormLink<Keyword>(FormKey.Null);
+            item.AttackType = FormLink<Keyword>.Null;
             item.Knockdown = default;
             item.RecoveryTime = default;
             item.StaminaMult = default;
@@ -2697,12 +2697,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
         public Single Chance => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public IFormLinkGetter<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single AttackAngle => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
         public Single StrikeAngle => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public Single Stagger => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public IFormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
         public Single Knockdown => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
         public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
         public Single StaminaMult => SpanExt.GetFloat(_data.Slice(0x28, 0x4));

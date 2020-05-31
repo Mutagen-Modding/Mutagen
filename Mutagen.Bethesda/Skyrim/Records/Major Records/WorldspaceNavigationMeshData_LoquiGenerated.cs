@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLink<Worldspace> Parent { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
+        IFormLink<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        IFormLinkGetter<IWorldspaceGetter> Parent { get; }
+        IFormLink<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
     }
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceNavigationMeshData item)
         {
             ClearPartial();
-            item.Parent = new FormLink<Worldspace>(FormKey.Null);
+            item.Parent = FormLink<Worldspace>.Null;
             item.Coordinates = default;
             base.Clear(item);
         }

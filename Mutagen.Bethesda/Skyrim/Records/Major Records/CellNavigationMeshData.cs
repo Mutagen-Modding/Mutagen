@@ -8,9 +8,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class CellNavigationMeshDataBinaryOverlay
         {
-            public IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent => throw new NotImplementedException();
+            public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent => throw new NotImplementedException();
 
-            public IFormLinkGetter<ICellGetter> Parent => throw new NotImplementedException();
+            public IFormLink<ICellGetter> Parent => throw new NotImplementedException();
         }
     }
 }
