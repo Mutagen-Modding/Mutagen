@@ -155,10 +155,8 @@ namespace Mutagen.Bethesda
             GameConstants constants,
             RecordInterest? interest = null)
         {
-            using (var stream = new MutagenBinaryReadStream(filePath, new ParsingBundle(constants)))
-            {
-                return GetFileLocations(stream, interest);
-            }
+            using var stream = new MutagenBinaryReadStream(filePath, new ParsingBundle(constants));
+            return GetFileLocations(stream, interest);
         }
 
         private static void SkipHeader(IMutagenReadStream reader)
@@ -361,17 +359,13 @@ namespace Mutagen.Bethesda
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
-                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Mutagen.Bethesda.Internals.Constants.Group))
+                var groupMeta = frame.GetGroup();
+                if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
                 }
                 fileLocs.GrupLocations.Add(grupLoc);
-                var recLength = frame.Reader.ReadUInt32();
-                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
-                frame.Reader.Position -= 16;
-                switch (grupType)
+                switch ((GroupTypeEnum)groupMeta.GroupType)
                 {
                     case GroupTypeEnum.InteriorCellSubBlock:
                     case GroupTypeEnum.ExteriorCellSubBlock:
@@ -399,17 +393,13 @@ namespace Mutagen.Bethesda
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
-                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Mutagen.Bethesda.Internals.Constants.Group))
+                var groupMeta = frame.GetGroup();
+                if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
                 }
                 fileLocs.GrupLocations.Add(grupLoc);
-                var recLength = frame.Reader.ReadUInt32();
-                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
-                frame.Reader.Position -= 16;
-                switch (grupType)
+                switch ((GroupTypeEnum)groupMeta.GroupType)
                 {
                     case GroupTypeEnum.CellPersistentChildren:
                     case GroupTypeEnum.CellTemporaryChildren:
