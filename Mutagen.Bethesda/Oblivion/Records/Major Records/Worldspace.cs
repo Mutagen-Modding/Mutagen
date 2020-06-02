@@ -164,19 +164,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
-                if (frame.Reader.Complete) return;
-                var next = HeaderTranslation.GetNextType(
-                    reader: frame.Reader,
-                    contentLength: out var len,
-                    finalPos: out var _,
-                    hopGroup: false);
-                if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-                frame.Reader.Position += 8;
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, frame.Reader.ReadUInt32());
-                var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
-                if (grupType == GroupTypeEnum.WorldChildren)
+                if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
+                if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
                 {
-                    obj.SubCellsTimestamp = frame.Reader.ReadInt32();
+                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedSpan);
+                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeSpan, frame.MetaData.MasterReferences!);
                     if (formKey != obj.FormKey)
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
@@ -187,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Reader.Position -= 16;
                     return;
                 }
-                var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20);
+                var subFrame = MutagenFrame.ByLength(frame.Reader, groupHeader.ContentLength);
                 for (int i = 0; i < 3; i++)
                 {
                     if (subFrame.Complete) return;

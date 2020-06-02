@@ -141,26 +141,66 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public GroupHeader Group(ReadOnlySpan<byte> span) => new GroupHeader(this, span);
-        public GroupFrame GroupRecordFrame(ReadOnlySpan<byte> span) => new GroupFrame(this, span);
-        public GroupMemoryFrame GroupRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new GroupMemoryFrame(this, span);
+        public GroupFrame GroupFrame(ReadOnlySpan<byte> span) => new GroupFrame(this, span);
+        public GroupMemoryFrame GroupMemoryFrame(ReadOnlyMemorySlice<byte> span) => new GroupMemoryFrame(this, span);
         public GroupHeader GetGroup(IBinaryReadStream stream, int offset = 0) => new GroupHeader(this, stream.GetSpan(this.GroupConstants.HeaderLength, offset));
-        public GroupFrame GetGroupRecordFrame(IBinaryReadStream stream, int offset = 0)
+        public bool TryGetGroup(IBinaryReadStream stream, out GroupHeader meta, int offset = 0, bool checkIsGroup = true)
+        {
+            if (stream.Remaining < GroupConstants.HeaderLength + offset)
+            {
+                meta = default;
+                return false;
+            }
+            meta = GetGroup(stream, offset);
+            return !checkIsGroup || meta.IsGroup;
+        }
+        public GroupFrame GetGroupFrame(IBinaryReadStream stream, int offset = 0)
         {
             var meta = GetGroup(stream, offset);
             return new GroupFrame(meta, stream.GetSpan(checked((int)meta.TotalLength), offset: offset));
         }
-        public GroupMemoryFrame GetGroupRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        public bool TryGetGroupFrame(IBinaryReadStream stream, out GroupFrame frame, int offset = 0, bool checkIsGroup = true)
+        {
+            if (!TryGetGroup(stream, out var meta, offset: offset, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupFrame(meta, stream.GetSpan(checked((int)meta.TotalLength)));
+            return true;
+        }
+        public GroupMemoryFrame GetGroupMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
         {
             var meta = GetGroup(stream, offset);
             return new GroupMemoryFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset));
         }
         public GroupHeader ReadGroup(IBinaryReadStream stream, int offset = 0) => new GroupHeader(this, stream.ReadSpan(this.GroupConstants.HeaderLength, offset));
-        public GroupFrame ReadGroupRecordFrame(IBinaryReadStream stream)
+        public bool TryReadGroup(IBinaryReadStream stream, out GroupHeader header, bool checkIsGroup = true)
+        {
+            if (stream.Remaining < GroupConstants.HeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            header = ReadGroup(stream);
+            return !checkIsGroup || header.IsGroup;
+        }
+        public GroupFrame ReadGroupFrame(IBinaryReadStream stream)
         {
             var meta = GetGroup(stream);
             return new GroupFrame(meta, stream.ReadSpan(checked((int)meta.TotalLength)));
         }
-        public GroupMemoryFrame ReadGroupRecordMemoryFrame(BinaryMemoryReadStream stream)
+        public bool TryReadGroupFrame(IBinaryReadStream stream, out GroupFrame frame, bool checkIsGroup = true)
+        {
+            if (!TryGetGroup(stream, out var meta, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupFrame(meta, stream.ReadSpan(checked((int)meta.TotalLength)));
+            return true;
+        }
+        public GroupMemoryFrame ReadGroupMemoryFrame(BinaryMemoryReadStream stream)
         {
             var meta = GetGroup(stream);
             return new GroupMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength)));
@@ -460,9 +500,13 @@ namespace Mutagen.Bethesda.Binary
         public static bool TryReadMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.Constants.TryReadMod(stream, out header);
 
         public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetGroup(stream, offset);
-        public static GroupFrame GetGroupRecordFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetGroupRecordFrame(stream, offset);
+        public static bool TryGetGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool checkIsGroup = true) => stream.MetaData.Constants.TryGetGroup(stream, out header, offset, checkIsGroup);
+        public static GroupFrame GetGroupFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetGroupFrame(stream, offset);
+        public static bool TryGetGroupFrame(this IMutagenReadStream stream, out GroupFrame header, int offset = 0, bool checkIsGroup = true) => stream.MetaData.Constants.TryGetGroupFrame(stream, out header, offset, checkIsGroup);
         public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.ReadGroup(stream, offset);
-        public static GroupFrame ReadGroupRecordFrame(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadGroupRecordFrame(stream);
+        public static bool TryReadGroup(this IMutagenReadStream stream, out GroupHeader header, bool checkIsGroup = true) => stream.MetaData.Constants.TryReadGroup(stream, out header, checkIsGroup);
+        public static GroupFrame ReadGroupFrame(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadGroupFrame(stream);
+        public static bool TryReadGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, bool checkIsGroup = true) => stream.MetaData.Constants.TryReadGroupFrame(stream, out frame, checkIsGroup);
 
         public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetMajorRecord(stream, offset);
         public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetMajorRecordFrame(stream, offset);
