@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private int? _DataLocation;
-        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Generation
             if (data.RecordType.HasValue)
             {
                 if (dataType != null) throw new ArgumentException();
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}).ToArray() : {(typeGen.HasBeenSet ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.HasBeenSet ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
             }
             else
             {

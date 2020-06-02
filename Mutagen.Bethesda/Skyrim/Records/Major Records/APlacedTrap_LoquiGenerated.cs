@@ -4852,7 +4852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region IgnoredBySandbox
         private int? _IgnoredBySandboxLocation;
-        public ReadOnlyMemorySlice<Byte>? IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _IgnoredBySandboxLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IgnoredBySandboxLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference

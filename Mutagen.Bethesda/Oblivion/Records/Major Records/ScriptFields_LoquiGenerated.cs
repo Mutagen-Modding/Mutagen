@@ -2679,7 +2679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region CompiledScript
         private int? _CompiledScriptLocation;
-        public ReadOnlyMemorySlice<Byte>? CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _CompiledScriptLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CompiledScriptLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SourceCode
         private int? _SourceCodeLocation;

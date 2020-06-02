@@ -2391,11 +2391,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FNAMLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SNDD
         private int? _SNDDLocation;
-        public ReadOnlyMemorySlice<Byte>? SNDD => _SNDDLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SNDDLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SNDD => _SNDDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SNDDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;

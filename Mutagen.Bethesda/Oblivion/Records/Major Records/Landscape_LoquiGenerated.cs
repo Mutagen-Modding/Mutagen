@@ -2913,19 +2913,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region VertexNormals
         private int? _VertexNormalsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexNormals => _VertexNormalsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexNormalsLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? VertexNormals => _VertexNormalsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexNormalsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region VertexHeightMap
         private int? _VertexHeightMapLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexHeightMap => _VertexHeightMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexHeightMapLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? VertexHeightMap => _VertexHeightMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexHeightMapLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region VertexColors
         private int? _VertexColorsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexColorsLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
         public IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; private set; }

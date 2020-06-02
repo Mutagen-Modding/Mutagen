@@ -3168,11 +3168,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
-        public ReadOnlyMemorySlice<Byte>? XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _XPCIFluffLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XPCIFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region FULLFluff
         private int? _FULLFluffLocation;
-        public ReadOnlyMemorySlice<Byte>? FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FULLFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
@@ -3196,7 +3196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Scale
         private int? _ScaleLocation;

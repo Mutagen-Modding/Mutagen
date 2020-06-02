@@ -2320,15 +2320,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown3
         private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown4
         private int? _Unknown4Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown4Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

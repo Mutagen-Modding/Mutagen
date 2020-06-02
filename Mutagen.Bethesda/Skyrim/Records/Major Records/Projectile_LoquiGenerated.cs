@@ -5251,7 +5251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureFilesHashesLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;

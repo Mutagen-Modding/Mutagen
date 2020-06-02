@@ -5840,7 +5840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
-        public ReadOnlyMemorySlice<Byte>? NIFT => _NIFTLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _NIFTLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NIFT => _NIFTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NIFTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;

@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Hashes
         private int? _HashesLocation;
-        public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

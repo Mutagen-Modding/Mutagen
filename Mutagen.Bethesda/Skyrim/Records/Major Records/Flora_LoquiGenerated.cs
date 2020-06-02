@@ -3632,7 +3632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
@@ -3640,7 +3640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Ingredient
         private int? _IngredientLocation;

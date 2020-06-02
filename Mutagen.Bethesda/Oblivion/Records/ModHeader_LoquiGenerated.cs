@@ -2936,11 +2936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
-        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TypeOffsetsLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TypeOffsetsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Deleted
         private int? _DeletedLocation;
-        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _DeletedLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DeletedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Author
         private int? _AuthorLocation;

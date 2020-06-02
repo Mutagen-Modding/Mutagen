@@ -5972,7 +5972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? ScopeModel { get; private set; }
         #region Unused
         private int? _UnusedLocation;
-        public ReadOnlyMemorySlice<Byte>? Unused => _UnusedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnusedLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unused => _UnusedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnusedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;

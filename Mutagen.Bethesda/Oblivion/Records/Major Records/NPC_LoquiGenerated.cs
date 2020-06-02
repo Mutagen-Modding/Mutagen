@@ -5789,19 +5789,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region FaceGenGeometrySymmetric
         private int? _FaceGenGeometrySymmetricLocation;
-        public ReadOnlyMemorySlice<Byte>? FaceGenGeometrySymmetric => _FaceGenGeometrySymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenGeometrySymmetricLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FaceGenGeometrySymmetric => _FaceGenGeometrySymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenGeometrySymmetricLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region FaceGenGeometryAsymmetric
         private int? _FaceGenGeometryAsymmetricLocation;
-        public ReadOnlyMemorySlice<Byte>? FaceGenGeometryAsymmetric => _FaceGenGeometryAsymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenGeometryAsymmetricLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FaceGenGeometryAsymmetric => _FaceGenGeometryAsymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenGeometryAsymmetricLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region FaceGenTextureSymmetric
         private int? _FaceGenTextureSymmetricLocation;
-        public ReadOnlyMemorySlice<Byte>? FaceGenTextureSymmetric => _FaceGenTextureSymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenTextureSymmetricLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FaceGenTextureSymmetric => _FaceGenTextureSymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenTextureSymmetricLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region AlphaLayerData
         private int? _AlphaLayerDataLocation;
-        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _AlphaLayerDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AlphaLayerDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

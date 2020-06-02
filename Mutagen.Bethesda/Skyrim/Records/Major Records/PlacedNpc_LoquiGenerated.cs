@@ -5754,11 +5754,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region RagdollBipedData
         private int? _RagdollBipedDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RagdollBipedDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollBipedDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IPatrolGetter? Patrol { get; private set; }
         #region LevelModifier

@@ -6503,11 +6503,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region OcclusionData
         private int? _OcclusionDataLocation;
-        public ReadOnlyMemorySlice<Byte>? OcclusionData => _OcclusionDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OcclusionDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? OcclusionData => _OcclusionDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OcclusionDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region MaxHeightData
         private int? _MaxHeightDataLocation;
-        public ReadOnlyMemorySlice<Byte>? MaxHeightData => _MaxHeightDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MaxHeightDataLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? MaxHeightData => _MaxHeightDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MaxHeightDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region LightingTemplate
         private int? _LightingTemplateLocation;
@@ -6516,7 +6516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
@@ -6534,11 +6534,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Unknown3
         private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown3Location.Value, _package.MetaData.Constants).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
