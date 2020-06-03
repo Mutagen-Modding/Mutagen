@@ -3253,42 +3253,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x30305854: // TX00
                 {
-                    _DiffuseLocation = (ushort)(stream.Position - offset);
+                    _DiffuseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
                 }
                 case 0x31305854: // TX01
                 {
-                    _NormalOrGlossLocation = (ushort)(stream.Position - offset);
+                    _NormalOrGlossLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
                 }
                 case 0x32305854: // TX02
                 {
-                    _EnvironmentMaskOrSubsurfaceTintLocation = (ushort)(stream.Position - offset);
+                    _EnvironmentMaskOrSubsurfaceTintLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 }
                 case 0x33305854: // TX03
                 {
-                    _GlowOrDetailMapLocation = (ushort)(stream.Position - offset);
+                    _GlowOrDetailMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
                 }
                 case 0x34305854: // TX04
                 {
-                    _HeightLocation = (ushort)(stream.Position - offset);
+                    _HeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
                 }
                 case 0x35305854: // TX05
                 {
-                    _EnvironmentLocation = (ushort)(stream.Position - offset);
+                    _EnvironmentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
                 }
                 case 0x36305854: // TX06
                 {
-                    _MultilayerLocation = (ushort)(stream.Position - offset);
+                    _MultilayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
                 }
                 case 0x37305854: // TX07
                 {
-                    _BacklightMaskOrSpecularLocation = (ushort)(stream.Position - offset);
+                    _BacklightMaskOrSpecularLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
                 }
                 case 0x54444F44: // DODT
@@ -3298,7 +3298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
                 }
                 default:

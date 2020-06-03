@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F524353: // SCRO
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
-                    _ReferenceLocation = (ushort)(stream.Position - offset);
+                    _ReferenceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 }
                 default:

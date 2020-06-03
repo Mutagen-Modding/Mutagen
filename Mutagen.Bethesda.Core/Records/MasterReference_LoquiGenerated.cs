@@ -1966,12 +1966,12 @@ namespace Mutagen.Bethesda.Internals
                 case 0x5453414D: // MAST
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    _MasterLocation = (ushort)(stream.Position - offset);
+                    _MasterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 }
                 case 0x41544144: // DATA
                 {
-                    _FileSizeLocation = (ushort)(stream.Position - offset);
+                    _FileSizeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }
                 default:

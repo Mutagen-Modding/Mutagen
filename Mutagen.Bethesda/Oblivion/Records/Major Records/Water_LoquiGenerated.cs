@@ -2870,27 +2870,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E54: // TNAM
                 {
-                    _TextureLocation = (ushort)(stream.Position - offset);
+                    _TextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _OpacityLocation = (ushort)(stream.Position - offset);
+                    _OpacityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _MaterialIDLocation = (ushort)(stream.Position - offset);
+                    _MaterialIDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _SoundLocation = (ushort)(stream.Position - offset);
+                    _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
                 case 0x41544144: // DATA

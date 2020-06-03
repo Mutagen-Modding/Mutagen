@@ -2887,17 +2887,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x58444E49: // INDX
                 {
-                    _SkillLocation = (ushort)(stream.Position - offset);
+                    _SkillLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
@@ -2907,22 +2907,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _ApprenticeTextLocation = (ushort)(stream.Position - offset);
+                    _ApprenticeTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
                 }
                 case 0x4D414E4A: // JNAM
                 {
-                    _JourneymanTextLocation = (ushort)(stream.Position - offset);
+                    _JourneymanTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    _ExpertTextLocation = (ushort)(stream.Position - offset);
+                    _ExpertTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _MasterTextLocation = (ushort)(stream.Position - offset);
+                    _MasterTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
                 }
                 default:

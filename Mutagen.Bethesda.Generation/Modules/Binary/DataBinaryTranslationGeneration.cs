@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     break;
             }
-            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+            fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = {locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
             if (dataType.HasBeenSet)
             {
                 fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");

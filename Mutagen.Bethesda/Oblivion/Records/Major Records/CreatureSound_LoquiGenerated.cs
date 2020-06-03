@@ -2162,7 +2162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445343: // CSDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
-                    _SoundTypeLocation = (ushort)(stream.Position - offset);
+                    _SoundTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
                 }
                 case 0x49445343: // CSDI

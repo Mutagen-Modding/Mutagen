@@ -1987,13 +1987,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x304D414E: // NAM0
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
-                    _PartTypeLocation = (ushort)(stream.Position - offset);
+                    _PartTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
                 }
                 case 0x314D414E: // NAM1
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
-                    _FileNameLocation = (ushort)(stream.Position - offset);
+                    _FileNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Part_FieldIndex.FileName);
                 }
                 default:

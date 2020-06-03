@@ -3346,12 +3346,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x524C4352: // RCLR
                 {
-                    _MapColorLocation = (ushort)(stream.Position - offset);
+                    _MapColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _WorldspaceLocation = (ushort)(stream.Position - offset);
+                    _WorldspaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
                 case 0x494C5052: // RPLI

@@ -3330,7 +3330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3343,12 +3343,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _TypeLocation = (ushort)(stream.Position - offset);
+                    _TypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
                 }
                 case 0x4D414E48: // HNAM
@@ -3378,17 +3378,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TextureSetLocation = (ushort)(stream.Position - offset);
+                    _TextureSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _ColorLocation = (ushort)(stream.Position - offset);
+                    _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _ValidRacesLocation = (ushort)(stream.Position - offset);
+                    _ValidRacesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);
                 }
                 default:

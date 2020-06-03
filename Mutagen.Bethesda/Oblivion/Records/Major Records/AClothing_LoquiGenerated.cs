@@ -3508,22 +3508,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    _EnchantmentLocation = (ushort)(stream.Position - offset);
+                    _EnchantmentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _EnchantmentPointsLocation = (ushort)(stream.Position - offset);
+                    _EnchantmentPointsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.EnchantmentPoints);
                 }
                 case 0x54444D42: // BMDT
@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _MaleIconLocation = (ushort)(stream.Position - offset);
+                    _MaleIconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
                 }
                 case 0x33444F4D: // MOD3
@@ -3570,7 +3570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x324F4349: // ICO2
                 {
-                    _FemaleIconLocation = (ushort)(stream.Position - offset);
+                    _FemaleIconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleIcon);
                 }
                 default:

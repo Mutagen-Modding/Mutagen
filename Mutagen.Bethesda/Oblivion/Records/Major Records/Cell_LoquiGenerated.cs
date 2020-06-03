@@ -5174,17 +5174,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
                 }
                 case 0x434C4358: // XCLC
                 {
-                    _GridLocation = (ushort)(stream.Position - offset);
+                    _GridLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
                 }
                 case 0x4C4C4358: // XCLL
@@ -5206,37 +5206,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x544D4358: // XCMT
                 {
-                    _MusicTypeLocation = (ushort)(stream.Position - offset);
+                    _MusicTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
                 }
                 case 0x574C4358: // XCLW
                 {
-                    _WaterHeightLocation = (ushort)(stream.Position - offset);
+                    _WaterHeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
                 }
                 case 0x4D434358: // XCCM
                 {
-                    _ClimateLocation = (ushort)(stream.Position - offset);
+                    _ClimateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 }
                 case 0x54574358: // XCWT
                 {
-                    _WaterLocation = (ushort)(stream.Position - offset);
+                    _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 }
                 case 0x4E574F58: // XOWN
                 {
-                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
                 {
-                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    _FactionRankLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB
                 {
-                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    _GlobalVariableLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
                 }
                 default:

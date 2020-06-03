@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -2479,12 +2479,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Script);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _SoundLocation = (ushort)(stream.Position - offset);
+                    _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Sound);
                 }
                 default:

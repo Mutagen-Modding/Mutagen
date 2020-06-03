@@ -4904,12 +4904,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
                 case 0x4F4C5053: // SPLO
@@ -4949,32 +4949,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _VoicesLocation = (ushort)(stream.Position - offset);
+                    _VoicesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DefaultHairLocation = (ushort)(stream.Position - offset);
+                    _DefaultHairLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _DefaultHairColorLocation = (ushort)(stream.Position - offset);
+                    _DefaultHairColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _FaceGenMainClampLocation = (ushort)(stream.Position - offset);
+                    _FaceGenMainClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 }
                 case 0x4D414E55: // UNAM
                 {
-                    _FaceGenFaceClampLocation = (ushort)(stream.Position - offset);
+                    _FaceGenFaceClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
                 }
                 case 0x52545441: // ATTR
                 {
-                    _RaceStatsLocation = (ushort)(stream.Position - offset);
+                    _RaceStatsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case 0x304D414E: // NAM0
@@ -5035,7 +5035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
                 }
                 default:

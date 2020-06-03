@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x504D4452: // RDMP
                 {
-                    _MapLocation = (ushort)(stream.Position - offset);
+                    _MapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Map);
                 }
                 default:

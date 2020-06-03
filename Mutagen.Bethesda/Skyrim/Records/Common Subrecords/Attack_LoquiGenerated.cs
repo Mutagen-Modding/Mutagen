@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x454B5441: // ATKE
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return TryGet<int?>.Failure;
-                    _AttackEventLocation = (ushort)(stream.Position - offset);
+                    _AttackEventLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackEvent);
                 }
                 default:

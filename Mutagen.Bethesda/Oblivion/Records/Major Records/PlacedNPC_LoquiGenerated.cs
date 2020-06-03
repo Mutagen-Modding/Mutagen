@@ -3266,17 +3266,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x454D414E: // NAME
                 {
-                    _BaseLocation = (ushort)(stream.Position - offset);
+                    _BaseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
                 {
-                    _XPCIFluffLocation = (ushort)(stream.Position - offset);
+                    _XPCIFluffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.XPCIFluff);
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _FULLFluffLocation = (ushort)(stream.Position - offset);
+                    _FULLFluffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.FULLFluff);
                 }
                 case 0x444F4C58: // XLOD
@@ -3291,22 +3291,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x43524D58: // XMRC
                 {
-                    _MerchantContainerLocation = (ushort)(stream.Position - offset);
+                    _MerchantContainerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.MerchantContainer);
                 }
                 case 0x53524858: // XHRS
                 {
-                    _HorseLocation = (ushort)(stream.Position - offset);
+                    _HorseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Horse);
                 }
                 case 0x44475258: // XRGD
                 {
-                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    _RagdollDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.RagdollData);
                 }
                 case 0x4C435358: // XSCL
                 {
-                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Scale);
                 }
                 case 0x41544144: // DATA

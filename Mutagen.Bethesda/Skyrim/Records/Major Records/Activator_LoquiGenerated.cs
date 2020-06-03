@@ -3800,7 +3800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3837,37 +3837,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _MarkerColorLocation = (ushort)(stream.Position - offset);
+                    _MarkerColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.MarkerColor);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _LoopingSoundLocation = (ushort)(stream.Position - offset);
+                    _LoopingSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.LoopingSound);
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _ActivationSoundLocation = (ushort)(stream.Position - offset);
+                    _ActivationSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivationSound);
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _WaterTypeLocation = (ushort)(stream.Position - offset);
+                    _WaterTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.WaterType);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _ActivateTextOverrideLocation = (ushort)(stream.Position - offset);
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivateTextOverride);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Flags);
                 }
                 case 0x4D414E4B: // KNAM
                 {
-                    _InteractionKeywordLocation = (ushort)(stream.Position - offset);
+                    _InteractionKeywordLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.InteractionKeyword);
                 }
                 default:

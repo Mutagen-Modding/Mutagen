@@ -2833,7 +2833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x464C4449: // IDLF
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Flags);
                 }
                 case 0x434C4449: // IDLC
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x544C4449: // IDLT
                 {
-                    _IdleTimerLocation = (ushort)(stream.Position - offset);
+                    _IdleTimerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.IdleTimer);
                 }
                 case 0x414C4449: // IDLA

@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x56544C46: // FLTV
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
                 }
                 default:

@@ -2505,7 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 }
                 case 0x54494E45: // ENIT

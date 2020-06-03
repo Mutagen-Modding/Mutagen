@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)VisualEffect_FieldIndex.Flags);
                 }
                 default:

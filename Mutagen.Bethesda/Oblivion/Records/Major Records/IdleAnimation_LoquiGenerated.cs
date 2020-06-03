@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _AnimationGroupSectionLocation = (ushort)(stream.Position - offset);
+                    _AnimationGroupSectionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 }
                 case 0x41544144: // DATA

@@ -2212,25 +2212,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E52: // RNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    _RankNumberLocation = (ushort)(stream.Position - offset);
+                    _RankNumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
-                    _MaleRankTitleLocation = (ushort)(stream.Position - offset);
+                    _MaleRankTitleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
                 }
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
-                    _FemaleRankTitleLocation = (ushort)(stream.Position - offset);
+                    _FemaleRankTitleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
                 }
                 case 0x4D414E49: // INAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    _InsigniaLocation = (ushort)(stream.Position - offset);
+                    _InsigniaLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 }
                 default:

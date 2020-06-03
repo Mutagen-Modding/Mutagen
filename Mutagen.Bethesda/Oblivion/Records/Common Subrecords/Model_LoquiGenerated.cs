@@ -2083,17 +2083,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
-                    _FileLocation = (ushort)(stream.Position - offset);
+                    _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 }
                 case 0x42444F4D: // MODB
                 {
-                    _BoundRadiusLocation = (ushort)(stream.Position - offset);
+                    _BoundRadiusLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 }
                 case 0x54444F4D: // MODT
                 {
-                    _HashesLocation = (ushort)(stream.Position - offset);
+                    _HashesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
                 }
                 default:

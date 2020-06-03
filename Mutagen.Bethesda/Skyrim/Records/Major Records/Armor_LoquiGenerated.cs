@@ -5110,17 +5110,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Name);
                 }
                 case 0x4D544945: // EITM
                 {
-                    _ObjectEffectLocation = (ushort)(stream.Position - offset);
+                    _ObjectEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.ObjectEffect);
                 }
                 case 0x544D4145: // EAMT
                 {
-                    _EnchantmentAmountLocation = (ushort)(stream.Position - offset);
+                    _EnchantmentAmountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.EnchantmentAmount);
                 }
                 case 0x32444F4D: // MOD2
@@ -5153,37 +5153,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E59: // YNAM
                 {
-                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    _PickUpSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.PickUpSound);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    _PutDownSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.PutDownSound);
                 }
                 case 0x54434D42: // BMCT
                 {
-                    _RagdollConstraintTemplateLocation = (ushort)(stream.Position - offset);
+                    _RagdollConstraintTemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.RagdollConstraintTemplate);
                 }
                 case 0x50595445: // ETYP
                 {
-                    _EquipmentTypeLocation = (ushort)(stream.Position - offset);
+                    _EquipmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.EquipmentType);
                 }
                 case 0x53444942: // BIDS
                 {
-                    _BashImpactDataSetLocation = (ushort)(stream.Position - offset);
+                    _BashImpactDataSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.BashImpactDataSet);
                 }
                 case 0x544D4142: // BAMT
                 {
-                    _AlternateBlockMaterialLocation = (ushort)(stream.Position - offset);
+                    _AlternateBlockMaterialLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.AlternateBlockMaterial);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _RaceLocation = (ushort)(stream.Position - offset);
+                    _RaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Race);
                 }
                 case 0x5A49534B: // KSIZ
@@ -5202,7 +5202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Description);
                 }
                 case 0x4C444F4D: // MODL
@@ -5222,17 +5222,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _ArmorRatingLocation = (ushort)(stream.Position - offset);
+                    _ArmorRatingLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.ArmorRating);
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TemplateArmorLocation = (ushort)(stream.Position - offset);
+                    _TemplateArmorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.TemplateArmor);
                 }
                 default:

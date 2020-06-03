@@ -2905,17 +2905,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _CreatedObjectLocation = (ushort)(stream.Position - offset);
+                    _CreatedObjectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObject);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _WorkbenchKeywordLocation = (ushort)(stream.Position - offset);
+                    _WorkbenchKeywordLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.WorkbenchKeyword);
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _CreatedObjectCountLocation = (ushort)(stream.Position - offset);
+                    _CreatedObjectCountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObjectCount);
                 }
                 default:

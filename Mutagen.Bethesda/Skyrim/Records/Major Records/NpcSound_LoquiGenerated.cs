@@ -2006,13 +2006,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x49445343: // CSDI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
-                    _SoundLocation = (ushort)(stream.Position - offset);
+                    _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
                 }
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
-                    _SoundChanceLocation = (ushort)(stream.Position - offset);
+                    _SoundChanceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.SoundChance);
                 }
                 default:

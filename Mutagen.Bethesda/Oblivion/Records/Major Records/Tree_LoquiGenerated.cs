@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
                 }
                 case 0x4D414E53: // SNAM

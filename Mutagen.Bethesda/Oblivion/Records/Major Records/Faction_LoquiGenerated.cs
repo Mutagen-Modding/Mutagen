@@ -2830,7 +2830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
                 case 0x4D414E58: // XNAM
@@ -2850,12 +2850,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _CrimeGoldMultiplierLocation = (ushort)(stream.Position - offset);
+                    _CrimeGoldMultiplierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 }
                 case 0x4D414E52: // RNAM

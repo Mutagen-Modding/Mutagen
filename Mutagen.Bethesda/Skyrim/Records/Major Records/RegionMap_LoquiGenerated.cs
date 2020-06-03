@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x504D4452: // RDMP
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Name);
                 }
                 default:

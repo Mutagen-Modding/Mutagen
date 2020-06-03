@@ -2006,13 +2006,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49445343: // CSDI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
-                    _SoundLocation = (ushort)(stream.Position - offset);
+                    _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 }
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
-                    _ChanceLocation = (ushort)(stream.Position - offset);
+                    _ChanceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
                 }
                 default:

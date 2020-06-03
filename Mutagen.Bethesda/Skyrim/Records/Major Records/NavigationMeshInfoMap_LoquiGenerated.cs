@@ -2631,7 +2631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x5245564E: // NVER
                 {
-                    _NavMeshVersionLocation = (ushort)(stream.Position - offset);
+                    _NavMeshVersionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
                 }
                 case 0x494D564E: // NVMI
@@ -2656,7 +2656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4953564E: // NVSI
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.Unknown);
                 }
                 default:

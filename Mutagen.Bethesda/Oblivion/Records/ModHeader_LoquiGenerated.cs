@@ -3022,22 +3022,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x5453464F: // OFST
                 {
-                    _TypeOffsetsLocation = (ushort)(stream.Position - offset);
+                    _TypeOffsetsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
                 case 0x454C4544: // DELE
                 {
-                    _DeletedLocation = (ushort)(stream.Position - offset);
+                    _DeletedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _AuthorLocation = (ushort)(stream.Position - offset);
+                    _AuthorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
                 case 0x5453414D: // MAST
@@ -3051,7 +3051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _VestigialDataLocation = (ushort)(stream.Position - offset);
+                    _VestigialDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
                 }
                 default:

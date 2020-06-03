@@ -4375,7 +4375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Name);
                 }
                 case 0x4E4F4349: // ICON
@@ -4388,17 +4388,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FadeValueLocation = (ushort)(stream.Position - offset);
+                    _FadeValueLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.FadeValue);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _SoundLocation = (ushort)(stream.Position - offset);
+                    _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Light_FieldIndex.Sound);
                 }
                 default:

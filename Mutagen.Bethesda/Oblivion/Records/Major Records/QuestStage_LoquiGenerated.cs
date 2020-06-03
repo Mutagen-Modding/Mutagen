@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    _StageLocation = (ushort)(stream.Position - offset);
+                    _StageLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
                 case 0x54445351: // QSDT

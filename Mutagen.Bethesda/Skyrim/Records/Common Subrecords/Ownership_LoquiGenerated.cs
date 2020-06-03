@@ -2006,13 +2006,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E574F58: // XOWN
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.Owner) return TryGet<int?>.Failure;
-                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ownership_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.FactionRank) return TryGet<int?>.Failure;
-                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    _FactionRankLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ownership_FieldIndex.FactionRank);
                 }
                 default:

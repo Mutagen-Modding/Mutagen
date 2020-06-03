@@ -2456,17 +2456,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _AmbientSoundLocation = (ushort)(stream.Position - offset);
+                    _AmbientSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.AmbientSound);
                 }
                 case 0x54414452: // RDAT
                 {
-                    _UseSoundFromRegionLocation = (ushort)(stream.Position - offset);
+                    _UseSoundFromRegionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.UseSoundFromRegion);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _EnvironmentTypeLocation = (ushort)(stream.Position - offset);
+                    _EnvironmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.EnvironmentType);
                 }
                 default:

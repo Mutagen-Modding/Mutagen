@@ -3730,7 +3730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3767,27 +3767,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Unknown);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _ActivateTextOverrideLocation = (ushort)(stream.Position - offset);
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateTextOverride);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Unknown2);
                 }
                 case 0x47494650: // PFIG
                 {
-                    _IngredientLocation = (ushort)(stream.Position - offset);
+                    _IngredientLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _HarvestSoundLocation = (ushort)(stream.Position - offset);
+                    _HarvestSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.HarvestSound);
                 }
                 case 0x43504650: // PFPC

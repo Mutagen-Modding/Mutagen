@@ -2470,17 +2470,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FNAMLocation = (ushort)(stream.Position - offset);
+                    _FNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.FNAM);
                 }
                 case 0x44444E53: // SNDD
                 {
-                    _SNDDLocation = (ushort)(stream.Position - offset);
+                    _SNDDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SNDD);
                 }
                 case 0x43534453: // SDSC
                 {
-                    _SoundDescriptorLocation = (ushort)(stream.Position - offset);
+                    _SoundDescriptorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SoundDescriptor);
                 }
                 default:

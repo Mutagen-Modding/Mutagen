@@ -2162,7 +2162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54445343: // CSDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
-                    _TypeLocation = (ushort)(stream.Position - offset);
+                    _TypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
                 }
                 case 0x49445343: // CSDI

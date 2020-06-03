@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4F4D4452: // RDMO
                 {
-                    _MusicLocation = (ushort)(stream.Position - offset);
+                    _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Music);
                 }
                 case 0x41534452: // RDSA

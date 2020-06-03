@@ -6256,27 +6256,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
                 case 0x52544357: // WCTR
                 {
-                    _FixedDimensionsCenterCellLocation = (ushort)(stream.Position - offset);
+                    _FixedDimensionsCenterCellLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.FixedDimensionsCenterCell);
                 }
                 case 0x504D544C: // LTMP
                 {
-                    _InteriorLightingLocation = (ushort)(stream.Position - offset);
+                    _InteriorLightingLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.InteriorLighting);
                 }
                 case 0x4E5A4558: // XEZN
                 {
-                    _EncounterZoneLocation = (ushort)(stream.Position - offset);
+                    _EncounterZoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.EncounterZone);
                 }
                 case 0x4E434C58: // XLCN
                 {
-                    _LocationLocation = (ushort)(stream.Position - offset);
+                    _LocationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Location);
                 }
                 case 0x4D414E57: // WNAM
@@ -6289,22 +6289,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _ClimateLocation = (ushort)(stream.Position - offset);
+                    _ClimateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
                 case 0x324D414E: // NAM2
                 {
-                    _WaterLocation = (ushort)(stream.Position - offset);
+                    _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
                 case 0x334D414E: // NAM3
                 {
-                    _LodWaterLocation = (ushort)(stream.Position - offset);
+                    _LodWaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWater);
                 }
                 case 0x344D414E: // NAM4
                 {
-                    _LodWaterHeightLocation = (ushort)(stream.Position - offset);
+                    _LodWaterHeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWaterHeight);
                 }
                 case 0x4D414E44: // DNAM
@@ -6314,7 +6314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _MapImageLocation = (ushort)(stream.Position - offset);
+                    _MapImageLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapImage);
                 }
                 case 0x4C444F4D: // MODL
@@ -6337,12 +6337,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x414D414E: // NAMA
                 {
-                    _DistantLodMultiplierLocation = (ushort)(stream.Position - offset);
+                    _DistantLodMultiplierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.DistantLodMultiplier);
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
                 case 0x304D414E: // NAM0
@@ -6356,32 +6356,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _MusicLocation = (ushort)(stream.Position - offset);
+                    _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    _CanopyShadowLocation = (ushort)(stream.Position - offset);
+                    _CanopyShadowLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CanopyShadow);
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    _WaterNoiseTextureLocation = (ushort)(stream.Position - offset);
+                    _WaterNoiseTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterNoiseTexture);
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _HdLodDiffuseTextureLocation = (ushort)(stream.Position - offset);
+                    _HdLodDiffuseTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodDiffuseTexture);
                 }
                 case 0x4D414E55: // UNAM
                 {
-                    _HdLodNormalTextureLocation = (ushort)(stream.Position - offset);
+                    _HdLodNormalTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodNormalTexture);
                 }
                 case 0x4D455758: // XWEM
                 {
-                    _WaterEnvironmentMapLocation = (ushort)(stream.Position - offset);
+                    _WaterEnvironmentMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterEnvironmentMap);
                 }
                 case 0x5453464F: // OFST

@@ -6658,12 +6658,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
                 }
                 case 0x434C4358: // XCLC
@@ -6678,32 +6678,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54445654: // TVDT
                 {
-                    _OcclusionDataLocation = (ushort)(stream.Position - offset);
+                    _OcclusionDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.OcclusionData);
                 }
                 case 0x5444484D: // MHDT
                 {
-                    _MaxHeightDataLocation = (ushort)(stream.Position - offset);
+                    _MaxHeightDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.MaxHeightData);
                 }
                 case 0x504D544C: // LTMP
                 {
-                    _LightingTemplateLocation = (ushort)(stream.Position - offset);
+                    _LightingTemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.LightingTemplate);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown);
                 }
                 case 0x574C4358: // XCLW
                 {
-                    _WaterHeightLocation = (ushort)(stream.Position - offset);
+                    _WaterHeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    _WaterNoiseTextureLocation = (ushort)(stream.Position - offset);
+                    _WaterNoiseTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterNoiseTexture);
                 }
                 case 0x524C4358: // XCLR
@@ -6720,17 +6720,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E434C58: // XLCN
                 {
-                    _LocationLocation = (ushort)(stream.Position - offset);
+                    _LocationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Location);
                 }
                 case 0x4E435758: // XWCN
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown2);
                 }
                 case 0x53435758: // XWCS
                 {
-                    _Unknown3Location = (ushort)(stream.Position - offset);
+                    _Unknown3Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown3);
                 }
                 case 0x55435758: // XWCU
@@ -6740,7 +6740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54574358: // XCWT
                 {
-                    _WaterLocation = (ushort)(stream.Position - offset);
+                    _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 }
                 case 0x4E574F58: // XOWN
@@ -6754,37 +6754,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C4958: // XILL
                 {
-                    _LockListLocation = (ushort)(stream.Position - offset);
+                    _LockListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.LockList);
                 }
                 case 0x4D455758: // XWEM
                 {
-                    _WaterEnvironmentMapLocation = (ushort)(stream.Position - offset);
+                    _WaterEnvironmentMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterEnvironmentMap);
                 }
                 case 0x4D434358: // XCCM
                 {
-                    _SkyAndWeatherFromRegionLocation = (ushort)(stream.Position - offset);
+                    _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
                 }
                 case 0x53414358: // XCAS
                 {
-                    _AcousticSpaceLocation = (ushort)(stream.Position - offset);
+                    _AcousticSpaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.AcousticSpace);
                 }
                 case 0x4E5A4558: // XEZN
                 {
-                    _EncounterZoneLocation = (ushort)(stream.Position - offset);
+                    _EncounterZoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.EncounterZone);
                 }
                 case 0x4F4D4358: // XCMO
                 {
-                    _MusicTypeLocation = (ushort)(stream.Position - offset);
+                    _MusicTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
                 }
                 case 0x4D494358: // XCIM
                 {
-                    _ImageSpaceLocation = (ushort)(stream.Position - offset);
+                    _ImageSpaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.ImageSpace);
                 }
                 default:

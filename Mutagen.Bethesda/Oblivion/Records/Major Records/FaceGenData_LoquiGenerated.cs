@@ -2132,19 +2132,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x53474746: // FGGS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
-                    _SymmetricGeometryLocation = (ushort)(stream.Position - offset);
+                    _SymmetricGeometryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 }
                 case 0x41474746: // FGGA
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
-                    _AsymmetricGeometryLocation = (ushort)(stream.Position - offset);
+                    _AsymmetricGeometryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 }
                 case 0x53544746: // FGTS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
-                    _SymmetricTextureLocation = (ushort)(stream.Position - offset);
+                    _SymmetricTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
                 }
                 default:

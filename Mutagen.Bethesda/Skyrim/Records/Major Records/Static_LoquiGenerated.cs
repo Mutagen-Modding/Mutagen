@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
                 }
                 case 0x4D414E4D: // MNAM

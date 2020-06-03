@@ -3455,7 +3455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3492,22 +3492,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown);
                 }
                 case 0x52444E53: // SNDR
                 {
-                    _LoopingSoundLocation = (ushort)(stream.Position - offset);
+                    _LoopingSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.LoopingSound);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown2);
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _VoiceTypeLocation = (ushort)(stream.Position - offset);
+                    _VoiceTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.VoiceType);
                 }
                 default:

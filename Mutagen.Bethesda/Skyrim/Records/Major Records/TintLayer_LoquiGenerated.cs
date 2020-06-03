@@ -2209,25 +2209,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x494E4954: // TINI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
-                    _IndexLocation = (ushort)(stream.Position - offset);
+                    _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
                 }
                 case 0x434E4954: // TINC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
-                    _ColorLocation = (ushort)(stream.Position - offset);
+                    _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
                 }
                 case 0x564E4954: // TINV
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
-                    _InterpolationValueLocation = (ushort)(stream.Position - offset);
+                    _InterpolationValueLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
                 }
                 case 0x53414954: // TIAS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
-                    _PresetLocation = (ushort)(stream.Position - offset);
+                    _PresetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Preset);
                 }
                 default:

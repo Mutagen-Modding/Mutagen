@@ -5325,7 +5325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -5348,7 +5348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x54)
                     {
@@ -5362,17 +5362,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _MuzzleFlashModelLocation = (ushort)(stream.Position - offset);
+                    _MuzzleFlashModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
                 }
                 case 0x324D414E: // NAM2
                 {
-                    _TextureFilesHashesLocation = (ushort)(stream.Position - offset);
+                    _TextureFilesHashesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _SoundLevelLocation = (ushort)(stream.Position - offset);
+                    _SoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);
                 }
                 default:

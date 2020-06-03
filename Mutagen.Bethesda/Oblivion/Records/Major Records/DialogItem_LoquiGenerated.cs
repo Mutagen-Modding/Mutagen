@@ -3769,12 +3769,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49545351: // QSTI
                 {
-                    _QuestLocation = (ushort)(stream.Position - offset);
+                    _QuestLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _PreviousTopicLocation = (ushort)(stream.Position - offset);
+                    _PreviousTopicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
                 case 0x454D414E: // NAME

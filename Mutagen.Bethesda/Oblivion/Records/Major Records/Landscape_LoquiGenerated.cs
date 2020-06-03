@@ -2992,22 +2992,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
                 }
                 case 0x4C4D4E56: // VNML
                 {
-                    _VertexNormalsLocation = (ushort)(stream.Position - offset);
+                    _VertexNormalsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
                 }
                 case 0x54474856: // VHGT
                 {
-                    _VertexHeightMapLocation = (ushort)(stream.Position - offset);
+                    _VertexHeightMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
                 }
                 case 0x524C4356: // VCLR
                 {
-                    _VertexColorsLocation = (ushort)(stream.Position - offset);
+                    _VertexColorsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
                 }
                 case 0x54585442: // BTXT

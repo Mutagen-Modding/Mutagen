@@ -5968,7 +5968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -6022,7 +6022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x5446494E: // NIFT
                 {
-                    _NIFTLocation = (ushort)(stream.Position - offset);
+                    _NIFTLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
                 }
                 case 0x53424341: // ACBS
@@ -6047,12 +6047,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E49: // INAM
                 {
-                    _DeathItemLocation = (ushort)(stream.Position - offset);
+                    _DeathItemLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
                 }
                 case 0x54444941: // AIDT
@@ -6093,42 +6093,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _AttackReachLocation = (ushort)(stream.Position - offset);
+                    _AttackReachLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _CombatStyleLocation = (ushort)(stream.Position - offset);
+                    _CombatStyleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TurningSpeedLocation = (ushort)(stream.Position - offset);
+                    _TurningSpeedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _BaseScaleLocation = (ushort)(stream.Position - offset);
+                    _BaseScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _FootWeightLocation = (ushort)(stream.Position - offset);
+                    _FootWeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
                 }
                 case 0x304D414E: // NAM0
                 {
-                    _BloodSprayLocation = (ushort)(stream.Position - offset);
+                    _BloodSprayLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _BloodDecalLocation = (ushort)(stream.Position - offset);
+                    _BloodDecalLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
                 }
                 case 0x52435343: // CSCR
                 {
-                    _InheritsSoundFromLocation = (ushort)(stream.Position - offset);
+                    _InheritsSoundFromLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
                 }
                 case 0x54445343: // CSDT

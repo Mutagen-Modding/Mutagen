@@ -2334,12 +2334,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4E4F4349: // ICON
                 {
-                    _FillTextureLocation = (ushort)(stream.Position - offset);
+                    _FillTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
                 }
                 case 0x324F4349: // ICO2
                 {
-                    _ParticleShaderTextureLocation = (ushort)(stream.Position - offset);
+                    _ParticleShaderTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 }
                 case 0x41544144: // DATA

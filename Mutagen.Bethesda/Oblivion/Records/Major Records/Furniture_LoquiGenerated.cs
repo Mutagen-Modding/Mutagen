@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -2472,12 +2472,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Script);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _MarkerFlagsLocation = (ushort)(stream.Position - offset);
+                    _MarkerFlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.MarkerFlags);
                 }
                 default:

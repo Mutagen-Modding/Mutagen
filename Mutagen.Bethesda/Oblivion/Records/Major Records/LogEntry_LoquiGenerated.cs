@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445351: // QSDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
                 }
                 case 0x41445443: // CTDA
@@ -2462,7 +2462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E43: // CNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
-                    _EntryLocation = (ushort)(stream.Position - offset);
+                    _EntryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
                 }
                 case 0x44484353: // SCHD

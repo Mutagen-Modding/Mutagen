@@ -2006,13 +2006,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Number) return TryGet<int?>.Failure;
-                    _NumberLocation = (ushort)(stream.Position - offset);
+                    _NumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Number);
                 }
                 case 0x44414548: // HEAD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
-                    _HeadLocation = (ushort)(stream.Position - offset);
+                    _HeadLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Head);
                 }
                 default:

@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52564353: // SCVR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
                 }
                 default:

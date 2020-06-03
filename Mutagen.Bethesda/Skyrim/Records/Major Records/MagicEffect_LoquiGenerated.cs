@@ -7314,12 +7314,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
                 }
                 case 0x424F444D: // MDOB
                 {
-                    _MenuDisplayObjectLocation = (ushort)(stream.Position - offset);
+                    _MenuDisplayObjectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
                 }
                 case 0x5A49534B: // KSIZ
@@ -7338,7 +7338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
                 }
                 case 0x45435345: // ESCE
@@ -7370,7 +7370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
                 }
                 case 0x41445443: // CTDA

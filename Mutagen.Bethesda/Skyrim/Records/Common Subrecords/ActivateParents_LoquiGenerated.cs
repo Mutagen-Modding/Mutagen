@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44504158: // XAPD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
                 }
                 case 0x52504158: // XAPR

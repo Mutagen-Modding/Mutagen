@@ -4414,7 +4414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Name);
                 }
                 case 0x5A49534B: // KSIZ
@@ -4433,7 +4433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Description);
                 }
                 case 0x4C444F4D: // MODL
@@ -4464,27 +4464,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E59: // YNAM
                 {
-                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    _PickUpSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PickUpSound);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    _PutDownSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PutDownSound);
                 }
                 case 0x50595445: // ETYP
                 {
-                    _EquipmentTypeLocation = (ushort)(stream.Position - offset);
+                    _EquipmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.EquipmentType);
                 }
                 case 0x41544144: // DATA
                 {
-                    _WeightLocation = (ushort)(stream.Position - offset);
+                    _WeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Weight);
                 }
                 case 0x54494E45: // ENIT
                 {
-                    _ENITLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _ENITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.ConsumeSound);
                 }
                 case 0x44494645: // EFID

@@ -3573,7 +3573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3586,12 +3586,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _ImageSpaceModifierLocation = (ushort)(stream.Position - offset);
+                    _ImageSpaceModifierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ImageSpaceModifier);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Sound);
                 }
                 default:

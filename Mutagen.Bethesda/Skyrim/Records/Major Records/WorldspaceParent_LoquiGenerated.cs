@@ -1979,12 +1979,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E57: // WNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return TryGet<int?>.Failure;
-                    _WorldspaceLocation = (ushort)(stream.Position - offset);
+                    _WorldspaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)WorldspaceParent_FieldIndex.Worldspace);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)WorldspaceParent_FieldIndex.Flags);
                 }
                 default:

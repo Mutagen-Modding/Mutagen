@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _IdleAnimationLocation = (ushort)(stream.Position - offset);
+                    _IdleAnimationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
                 }
                 default:

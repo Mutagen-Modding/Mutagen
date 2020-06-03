@@ -3564,12 +3564,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x47494650: // PFIG
                 {
-                    _IngredientLocation = (ushort)(stream.Position - offset);
+                    _IngredientLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _HarvestSoundLocation = (ushort)(stream.Position - offset);
+                    _HarvestSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
                 }
                 case 0x43504650: // PFPC
@@ -3579,12 +3579,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _CNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
                 }
                 default:

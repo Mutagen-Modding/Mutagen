@@ -5921,22 +5921,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x454D414E: // NAME
                 {
-                    _BaseLocation = (ushort)(stream.Position - offset);
+                    _BaseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Base);
                 }
                 case 0x4E5A4558: // XEZN
                 {
-                    _EncounterZoneLocation = (ushort)(stream.Position - offset);
+                    _EncounterZoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.EncounterZone);
                 }
                 case 0x44475258: // XRGD
                 {
-                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    _RagdollDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.RagdollData);
                 }
                 case 0x42475258: // XRGB
                 {
-                    _RagdollBipedDataLocation = (ushort)(stream.Position - offset);
+                    _RagdollBipedDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.RagdollBipedData);
                 }
                 case 0x44525058: // XPRD
@@ -5949,27 +5949,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D434C58: // XLCM
                 {
-                    _LevelModifierLocation = (ushort)(stream.Position - offset);
+                    _LevelModifierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.LevelModifier);
                 }
                 case 0x43524D58: // XMRC
                 {
-                    _MerchantContainerLocation = (ushort)(stream.Position - offset);
+                    _MerchantContainerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.MerchantContainer);
                 }
                 case 0x544E4358: // XCNT
                 {
-                    _CountLocation = (ushort)(stream.Position - offset);
+                    _CountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Count);
                 }
                 case 0x53445258: // XRDS
                 {
-                    _RadiusLocation = (ushort)(stream.Position - offset);
+                    _RadiusLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Radius);
                 }
                 case 0x504C4858: // XHLP
                 {
-                    _HealthLocation = (ushort)(stream.Position - offset);
+                    _HealthLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Health);
                 }
                 case 0x524B4C58: // XLKR
@@ -6002,17 +6002,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E434C58: // XLCN
                 {
-                    _PersistentLocationLocation = (ushort)(stream.Position - offset);
+                    _PersistentLocationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.PersistentLocation);
                 }
                 case 0x4C524C58: // XLRL
                 {
-                    _LocationReferenceLocation = (ushort)(stream.Position - offset);
+                    _LocationReferenceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.LocationReference);
                 }
                 case 0x32534958: // XIS2
                 {
-                    _IgnoredBySandboxLocation = (ushort)(stream.Position - offset);
+                    _IgnoredBySandboxLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.IgnoredBySandbox);
                 }
                 case 0x54524C58: // XLRT
@@ -6029,17 +6029,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x57544858: // XHTW
                 {
-                    _HeadTrackingWeightLocation = (ushort)(stream.Position - offset);
+                    _HeadTrackingWeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.HeadTrackingWeight);
                 }
                 case 0x524F4858: // XHOR
                 {
-                    _HorseLocation = (ushort)(stream.Position - offset);
+                    _HorseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Horse);
                 }
                 case 0x43564658: // XFVC
                 {
-                    _FavorCostLocation = (ushort)(stream.Position - offset);
+                    _FavorCostLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.FavorCost);
                 }
                 case 0x50534558: // XESP
@@ -6058,27 +6058,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x494D4558: // XEMI
                 {
-                    _EmittanceLocation = (ushort)(stream.Position - offset);
+                    _EmittanceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Emittance);
                 }
                 case 0x52424D58: // XMBR
                 {
-                    _MultiboundReferenceLocation = (ushort)(stream.Position - offset);
+                    _MultiboundReferenceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.MultiboundReference);
                 }
                 case 0x53424958: // XIBS
                 {
-                    _IgnoredBySandbox2Location = (ushort)(stream.Position - offset);
+                    _IgnoredBySandbox2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.IgnoredBySandbox2);
                 }
                 case 0x4C435358: // XSCL
                 {
-                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Scale);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Rotation);
                 }
                 default:

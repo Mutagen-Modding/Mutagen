@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x52435343: // CSCR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
-                    _InheritsSoundsFromLocation = (ushort)(stream.Position - offset);
+                    _InheritsSoundsFromLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom);
                 }
                 default:

@@ -2447,17 +2447,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA

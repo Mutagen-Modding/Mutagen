@@ -1996,12 +1996,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SimpleModel_FieldIndex.File) return TryGet<int?>.Failure;
-                    _FileLocation = (ushort)(stream.Position - offset);
+                    _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SimpleModel_FieldIndex.File);
                 }
                 case 0x54444F4D: // MODT
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SimpleModel_FieldIndex.Data);
                 }
                 default:

@@ -4188,27 +4188,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _ParentLocation = (ushort)(stream.Position - offset);
+                    _ParentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _ClimateLocation = (ushort)(stream.Position - offset);
+                    _ClimateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
                 case 0x324D414E: // NAM2
                 {
-                    _WaterLocation = (ushort)(stream.Position - offset);
+                    _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
                 }
                 case 0x4D414E4D: // MNAM
@@ -4218,22 +4218,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
                 case 0x304D414E: // NAM0
                 {
-                    _ObjectBoundsMinLocation = (ushort)(stream.Position - offset);
+                    _ObjectBoundsMinLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 }
                 case 0x394D414E: // NAM9
                 {
-                    _ObjectBoundsMaxLocation = (ushort)(stream.Position - offset);
+                    _ObjectBoundsMaxLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _MusicLocation = (ushort)(stream.Position - offset);
+                    _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
                 case 0x5453464F: // OFST

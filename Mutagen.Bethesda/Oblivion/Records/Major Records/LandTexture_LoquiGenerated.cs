@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 }
                 case 0x4D414E48: // HNAM
@@ -2601,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _TextureSpecularExponentLocation = (ushort)(stream.Position - offset);
+                    _TextureSpecularExponentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
                 case 0x4D414E47: // GNAM

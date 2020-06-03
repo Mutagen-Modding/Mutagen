@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E46: // FNAM
                 {
-                    _FileLocation = (ushort)(stream.Position - offset);
+                    _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 }
                 case 0x44444E53: // SNDD

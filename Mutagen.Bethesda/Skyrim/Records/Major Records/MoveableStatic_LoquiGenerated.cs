@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MoveableStatic_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -2815,12 +2815,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MoveableStatic_FieldIndex.Flags);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _LoopingSoundLocation = (ushort)(stream.Position - offset);
+                    _LoopingSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MoveableStatic_FieldIndex.LoopingSound);
                 }
                 default:

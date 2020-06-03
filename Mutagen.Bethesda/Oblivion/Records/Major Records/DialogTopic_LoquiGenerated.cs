@@ -2926,12 +2926,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DialogTypeLocation = (ushort)(stream.Position - offset);
+                    _DialogTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
                 }
                 default:

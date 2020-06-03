@@ -2454,12 +2454,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4E4F4349: // ICON
                 {
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
                 case 0x4D414E4C: // LNAM

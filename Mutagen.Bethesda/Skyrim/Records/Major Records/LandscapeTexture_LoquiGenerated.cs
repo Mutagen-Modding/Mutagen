@@ -2835,22 +2835,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E54: // TNAM
                 {
-                    _TextureSetLocation = (ushort)(stream.Position - offset);
+                    _TextureSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _MaterialTypeLocation = (ushort)(stream.Position - offset);
+                    _MaterialTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    _HNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _HNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _TextureSpecularExponentLocation = (ushort)(stream.Position - offset);
+                    _TextureSpecularExponentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
                 }
                 case 0x4D414E47: // GNAM

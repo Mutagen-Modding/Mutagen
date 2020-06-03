@@ -3340,7 +3340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {
@@ -3350,7 +3350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _ParticleTextureLocation = (ushort)(stream.Position - offset);
+                    _ParticleTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
                 }
                 default:

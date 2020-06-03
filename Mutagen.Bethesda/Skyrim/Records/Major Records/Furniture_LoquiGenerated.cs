@@ -4148,7 +4148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -4185,7 +4185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Unknown);
                 }
                 case 0x4D414E46: // FNAM
@@ -4198,7 +4198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4B: // KNAM
                 {
-                    _InteractionKeywordLocation = (ushort)(stream.Position - offset);
+                    _InteractionKeywordLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.InteractionKeyword);
                 }
                 case 0x4D414E4D: // MNAM
@@ -4215,7 +4215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    _AssociatedSpellLocation = (ushort)(stream.Position - offset);
+                    _AssociatedSpellLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.AssociatedSpell);
                 }
                 case 0x4D414E45: // ENAM
@@ -4237,7 +4237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4B524D58: // XMRK
                 {
-                    _ModelFilenameLocation = (ushort)(stream.Position - offset);
+                    _ModelFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.ModelFilename);
                 }
                 default:

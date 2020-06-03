@@ -3357,12 +3357,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E43: // CNAM
                 {
-                    _TextureLowerLayerLocation = (ushort)(stream.Position - offset);
+                    _TextureLowerLayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _TextureUpperLayerLocation = (ushort)(stream.Position - offset);
+                    _TextureUpperLayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 }
                 case 0x4C444F4D: // MODL

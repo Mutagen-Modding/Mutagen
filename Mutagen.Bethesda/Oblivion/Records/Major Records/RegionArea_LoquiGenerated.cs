@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x494C5052: // RPLI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
-                    _EdgeFallOffLocation = (ushort)(stream.Position - offset);
+                    _EdgeFallOffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
                 case 0x444C5052: // RPLD

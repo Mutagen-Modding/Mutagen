@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E43: // CNAM
                 {
-                    _ColorLocation = (ushort)(stream.Position - offset);
+                    _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ActionRecord_FieldIndex.Color);
                 }
                 default:

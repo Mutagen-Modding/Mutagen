@@ -2116,19 +2116,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x434E4954: // TINC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
-                    _ColorLocation = (ushort)(stream.Position - offset);
+                    _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
                 }
                 case 0x564E4954: // TINV
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.DefaultValue) return TryGet<int?>.Failure;
-                    _DefaultValueLocation = (ushort)(stream.Position - offset);
+                    _DefaultValueLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.DefaultValue);
                 }
                 case 0x53524954: // TIRS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Index) return TryGet<int?>.Failure;
-                    _IndexLocation = (ushort)(stream.Position - offset);
+                    _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Index);
                 }
                 default:

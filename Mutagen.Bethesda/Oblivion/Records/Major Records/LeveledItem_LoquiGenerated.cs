@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x444C564C: // LVLD
                 {
-                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    _ChanceNoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF

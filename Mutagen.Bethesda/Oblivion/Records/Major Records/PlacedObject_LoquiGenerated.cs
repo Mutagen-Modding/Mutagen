@@ -4985,17 +4985,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x454D414E: // NAME
                 {
-                    _BaseLocation = (ushort)(stream.Position - offset);
+                    _BaseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
                 {
-                    _XPCIFluffLocation = (ushort)(stream.Position - offset);
+                    _XPCIFluffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XPCIFluff);
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _FULLFluffLocation = (ushort)(stream.Position - offset);
+                    _FULLFluffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FULLFluff);
                 }
                 case 0x4C455458: // XTEL
@@ -5010,17 +5010,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4E574F58: // XOWN
                 {
-                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
                 {
-                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    _FactionRankLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB
                 {
-                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    _GlobalVariableLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -5030,12 +5030,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x47525458: // XTRG
                 {
-                    _TargetLocation = (ushort)(stream.Position - offset);
+                    _TargetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 }
                 case 0x44455358: // XSED
                 {
-                    _SpeedTreeSeedLocation = (ushort)(stream.Position - offset);
+                    _SpeedTreeSeedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 }
                 case 0x444F4C58: // XLOD
@@ -5045,32 +5045,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x47484358: // XCHG
                 {
-                    _ChargeLocation = (ushort)(stream.Position - offset);
+                    _ChargeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
                 }
                 case 0x544C4858: // XHLT
                 {
-                    _HealthLocation = (ushort)(stream.Position - offset);
+                    _HealthLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
                 }
                 case 0x4D434C58: // XLCM
                 {
-                    _LevelModifierLocation = (ushort)(stream.Position - offset);
+                    _LevelModifierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 }
                 case 0x4D545258: // XRTM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 }
                 case 0x54434158: // XACT
                 {
-                    _ActionFlagsLocation = (ushort)(stream.Position - offset);
+                    _ActionFlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActionFlags);
                 }
                 case 0x544E4358: // XCNT
                 {
-                    _CountLocation = (ushort)(stream.Position - offset);
+                    _CountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
                 }
                 case 0x4B524D58: // XMRK
@@ -5092,17 +5092,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44475258: // XRGD
                 {
-                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    _RagdollDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
                 }
                 case 0x4C435358: // XSCL
                 {
-                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
                 }
                 case 0x4C4F5358: // XSOL
                 {
-                    _ContainedSoulLocation = (ushort)(stream.Position - offset);
+                    _ContainedSoulLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 }
                 case 0x41544144: // DATA

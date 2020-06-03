@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
                 }
                 default:

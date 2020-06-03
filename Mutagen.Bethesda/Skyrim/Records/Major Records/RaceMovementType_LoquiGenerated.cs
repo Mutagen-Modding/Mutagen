@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x5059544D: // MTYP
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return TryGet<int?>.Failure;
-                    _MovementTypeLocation = (ushort)(stream.Position - offset);
+                    _MovementTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
                 }
                 case 0x44455053: // SPED

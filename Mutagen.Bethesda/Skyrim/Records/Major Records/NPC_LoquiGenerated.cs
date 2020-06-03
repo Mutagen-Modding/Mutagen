@@ -8858,22 +8858,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E49: // INAM
                 {
-                    _DeathItemLocation = (ushort)(stream.Position - offset);
+                    _DeathItemLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
                 }
                 case 0x4B435456: // VTCK
                 {
-                    _VoiceLocation = (ushort)(stream.Position - offset);
+                    _VoiceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Voice);
                 }
                 case 0x544C5054: // TPLT
                 {
-                    _TemplateLocation = (ushort)(stream.Position - offset);
+                    _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Template);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _RaceLocation = (ushort)(stream.Position - offset);
+                    _RaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
                 case 0x54435053: // SPCT
@@ -8902,17 +8902,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _WornArmorLocation = (ushort)(stream.Position - offset);
+                    _WornArmorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.WornArmor);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _FarAwayModelLocation = (ushort)(stream.Position - offset);
+                    _FarAwayModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FarAwayModel);
                 }
                 case 0x524B5441: // ATKR
                 {
-                    _AttackRaceLocation = (ushort)(stream.Position - offset);
+                    _AttackRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AttackRace);
                 }
                 case 0x444B5441: // ATKD
@@ -8927,22 +8927,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x524F5053: // SPOR
                 {
-                    _SpectatorOverridePackageListLocation = (ushort)(stream.Position - offset);
+                    _SpectatorOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SpectatorOverridePackageList);
                 }
                 case 0x524F434F: // OCOR
                 {
-                    _ObserveDeadBodyOverridePackageListLocation = (ushort)(stream.Position - offset);
+                    _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
                 }
                 case 0x524F5747: // GWOR
                 {
-                    _GuardWarnOverridePackageListLocation = (ushort)(stream.Position - offset);
+                    _GuardWarnOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GuardWarnOverridePackageList);
                 }
                 case 0x524F4345: // ECOR
                 {
-                    _CombatOverridePackageListLocation = (ushort)(stream.Position - offset);
+                    _CombatOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
                 }
                 case 0x5A4B5250: // PRKZ
@@ -9012,17 +9012,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _ClassLocation = (ushort)(stream.Position - offset);
+                    _ClassLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
                 }
                 case 0x54524853: // SHRT
                 {
-                    _ShortNameLocation = (ushort)(stream.Position - offset);
+                    _ShortNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ShortName);
                 }
                 case 0x41544144: // DATA
@@ -9054,37 +9054,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x464C4348: // HCLF
                 {
-                    _HairColorLocation = (ushort)(stream.Position - offset);
+                    _HairColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _CombatStyleLocation = (ushort)(stream.Position - offset);
+                    _CombatStyleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    _GiftFilterLocation = (ushort)(stream.Position - offset);
+                    _GiftFilterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GiftFilter);
                 }
                 case 0x354D414E: // NAM5
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
                 }
                 case 0x364D414E: // NAM6
                 {
-                    _HeightLocation = (ushort)(stream.Position - offset);
+                    _HeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Height);
                 }
                 case 0x374D414E: // NAM7
                 {
-                    _WeightLocation = (ushort)(stream.Position - offset);
+                    _WeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Weight);
                 }
                 case 0x384D414E: // NAM8
                 {
-                    _SoundLevelLocation = (ushort)(stream.Position - offset);
+                    _SoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SoundLevel);
                 }
                 case 0x52435343: // CSCR
@@ -9107,32 +9107,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54464F44: // DOFT
                 {
-                    _DefaultOutfitLocation = (ushort)(stream.Position - offset);
+                    _DefaultOutfitLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultOutfit);
                 }
                 case 0x54464F53: // SOFT
                 {
-                    _SleepingOutfitLocation = (ushort)(stream.Position - offset);
+                    _SleepingOutfitLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SleepingOutfit);
                 }
                 case 0x544C5044: // DPLT
                 {
-                    _DefaultPackageListLocation = (ushort)(stream.Position - offset);
+                    _DefaultPackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultPackageList);
                 }
                 case 0x46495243: // CRIF
                 {
-                    _CrimeFactionLocation = (ushort)(stream.Position - offset);
+                    _CrimeFactionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CrimeFaction);
                 }
                 case 0x54535446: // FTST
                 {
-                    _HeadTextureLocation = (ushort)(stream.Position - offset);
+                    _HeadTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadTexture);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    _TextureLightingLocation = (ushort)(stream.Position - offset);
+                    _TextureLightingLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.TextureLighting);
                 }
                 case 0x394D414E: // NAM9

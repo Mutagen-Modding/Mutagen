@@ -4917,7 +4917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E5A4558: // XEZN
                 {
-                    _EncounterZoneLocation = (ushort)(stream.Position - offset);
+                    _EncounterZoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.EncounterZone);
                 }
                 case 0x4E574F58: // XOWN
@@ -4931,12 +4931,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x57544858: // XHTW
                 {
-                    _HeadTrackingWeightLocation = (ushort)(stream.Position - offset);
+                    _HeadTrackingWeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.HeadTrackingWeight);
                 }
                 case 0x43564658: // XFVC
                 {
-                    _FavorCostLocation = (ushort)(stream.Position - offset);
+                    _FavorCostLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.FavorCost);
                 }
                 case 0x52575058: // XPWR
@@ -4984,17 +4984,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x494D4558: // XEMI
                 {
-                    _EmittanceLocation = (ushort)(stream.Position - offset);
+                    _EmittanceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.Emittance);
                 }
                 case 0x52424D58: // XMBR
                 {
-                    _MultiBoundReferenceLocation = (ushort)(stream.Position - offset);
+                    _MultiBoundReferenceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.MultiBoundReference);
                 }
                 case 0x32534958: // XIS2
                 {
-                    _IgnoredBySandboxLocation = (ushort)(stream.Position - offset);
+                    _IgnoredBySandboxLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.IgnoredBySandbox);
                 }
                 case 0x54524C58: // XLRT
@@ -5011,7 +5011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C524C58: // XLRL
                 {
-                    _LocationReferenceLocation = (ushort)(stream.Position - offset);
+                    _LocationReferenceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.LocationReference);
                 }
                 case 0x444F4C58: // XLOD
@@ -5028,12 +5028,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C435358: // XSCL
                 {
-                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.Scale);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.Rotation);
                 }
                 default:

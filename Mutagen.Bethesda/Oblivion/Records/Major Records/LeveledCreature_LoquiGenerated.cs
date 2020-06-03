@@ -2793,12 +2793,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x444C564C: // LVLD
                 {
-                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    _ChanceNoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 }
                 case 0x4F4C564C: // LVLO
@@ -2818,12 +2818,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TemplateLocation = (ushort)(stream.Position - offset);
+                    _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
                 default:

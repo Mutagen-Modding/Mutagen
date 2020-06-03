@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
-                    fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+                    fg.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
                     break;
                 case BinaryGenerationType.Custom:
                     using (var args = new ArgsWrapper(fg,

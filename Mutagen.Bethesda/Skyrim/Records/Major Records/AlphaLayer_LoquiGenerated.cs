@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x54585456: // VTXT
                 {
-                    _AlphaLayerDataLocation = (ushort)(stream.Position - offset);
+                    _AlphaLayerDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 }
                 default:

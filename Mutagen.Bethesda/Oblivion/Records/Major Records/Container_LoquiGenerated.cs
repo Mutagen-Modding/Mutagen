@@ -3004,7 +3004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
                 }
                 case 0x4F544E43: // CNTO
@@ -3042,12 +3042,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _OpenSoundLocation = (ushort)(stream.Position - offset);
+                    _OpenSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    _CloseSoundLocation = (ushort)(stream.Position - offset);
+                    _CloseSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 }
                 default:

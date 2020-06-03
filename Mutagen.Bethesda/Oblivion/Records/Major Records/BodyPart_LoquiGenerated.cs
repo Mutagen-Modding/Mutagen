@@ -1987,13 +1987,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return TryGet<int?>.Failure;
-                    _IndexLocation = (ushort)(stream.Position - offset);
+                    _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Index);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return TryGet<int?>.Failure;
-                    _IconLocation = (ushort)(stream.Position - offset);
+                    _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Icon);
                 }
                 default:

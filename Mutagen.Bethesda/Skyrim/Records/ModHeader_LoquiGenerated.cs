@@ -3580,22 +3580,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5453464F: // OFST
                 {
-                    _TypeOffsetsLocation = (ushort)(stream.Position - offset);
+                    _TypeOffsetsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
                 case 0x454C4544: // DELE
                 {
-                    _DeletedLocation = (ushort)(stream.Position - offset);
+                    _DeletedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _AuthorLocation = (ushort)(stream.Position - offset);
+                    _AuthorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
                 case 0x5453414D: // MAST
@@ -3621,12 +3621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x56544E49: // INTV
                 {
-                    _INTVLocation = (ushort)(stream.Position - offset);
+                    _INTVLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
                 }
                 case 0x43434E49: // INCC
                 {
-                    _INCCLocation = (ushort)(stream.Position - offset);
+                    _INCCLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
                 }
                 default:

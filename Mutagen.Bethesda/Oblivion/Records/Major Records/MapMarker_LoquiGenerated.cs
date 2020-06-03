@@ -2250,13 +2250,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
                 case 0x4D414E54: // TNAM

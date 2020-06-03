@@ -2757,12 +2757,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41444353: // SCDA
                 {
-                    _CompiledScriptLocation = (ushort)(stream.Position - offset);
+                    _CompiledScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
-                    _SourceCodeLocation = (ushort)(stream.Position - offset);
+                    _SourceCodeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
                 case 0x44534C53: // SLSD

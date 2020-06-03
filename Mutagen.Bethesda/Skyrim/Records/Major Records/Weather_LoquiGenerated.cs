@@ -9679,42 +9679,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E44: // DNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown2);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _Unknown3Location = (ushort)(stream.Position - offset);
+                    _Unknown3Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown3);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _Unknown4Location = (ushort)(stream.Position - offset);
+                    _Unknown4Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown4);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _Unknown5Location = (ushort)(stream.Position - offset);
+                    _Unknown5Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown5);
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    _PrecipitationLocation = (ushort)(stream.Position - offset);
+                    _PrecipitationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Precipitation);
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    _VisualEffectLocation = (ushort)(stream.Position - offset);
+                    _VisualEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.VisualEffect);
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _Unknown6Location = (ushort)(stream.Position - offset);
+                    _Unknown6Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown6);
                 }
                 case 0x4D414E52: // RNAM
@@ -9750,7 +9750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x304D414E: // NAM0
                 {
-                    _NAM0Location = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _NAM0Location = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xD0)
                     {
@@ -9764,12 +9764,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
                 }
                 case 0x314D414E: // NAM1
@@ -9824,12 +9824,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x324D414E: // NAM2
                 {
-                    _Unknown8Location = (ushort)(stream.Position - offset);
+                    _Unknown8Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown8);
                 }
                 case 0x334D414E: // NAM3
                 {
-                    _Unknown9Location = (ushort)(stream.Position - offset);
+                    _Unknown9Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown9);
                 }
                 case 0x4C444F4D: // MODL

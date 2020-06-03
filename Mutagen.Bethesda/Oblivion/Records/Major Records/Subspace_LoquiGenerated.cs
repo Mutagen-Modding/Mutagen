@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4D414E44: // DNAM
                 {
-                    _PointLocation = (ushort)(stream.Position - offset);
+                    _PointLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Point);
                 }
                 default:

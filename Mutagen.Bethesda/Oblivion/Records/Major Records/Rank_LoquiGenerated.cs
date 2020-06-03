@@ -2136,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E52: // RNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    _RankNumberLocation = (ushort)(stream.Position - offset);
+                    _RankNumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    _InsigniaLocation = (ushort)(stream.Position - offset);
+                    _InsigniaLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 }
                 default:

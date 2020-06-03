@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case 0x44494445: // EDID
                 {
-                    _EditorIDLocation = (ushort)(stream.Position - offset);
+                    _EditorIDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 }
                 default:

@@ -6116,7 +6116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -6137,12 +6137,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D544945: // EITM
                 {
-                    _ObjectEffectLocation = (ushort)(stream.Position - offset);
+                    _ObjectEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
                 }
                 case 0x544D4145: // EAMT
                 {
-                    _EnchantmentAmountLocation = (ushort)(stream.Position - offset);
+                    _EnchantmentAmountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
                 }
                 case 0x54534544: // DEST
@@ -6157,27 +6157,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x50595445: // ETYP
                 {
-                    _EquipmentTypeLocation = (ushort)(stream.Position - offset);
+                    _EquipmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
                 }
                 case 0x53444942: // BIDS
                 {
-                    _BlockBashImpactLocation = (ushort)(stream.Position - offset);
+                    _BlockBashImpactLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
                 }
                 case 0x544D4142: // BAMT
                 {
-                    _AlternateBlockMaterialLocation = (ushort)(stream.Position - offset);
+                    _AlternateBlockMaterialLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
                 }
                 case 0x4D414E59: // YNAM
                 {
-                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    _PickUpSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    _PutDownSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
                 }
                 case 0x5A49534B: // KSIZ
@@ -6196,7 +6196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
                 }
                 case 0x33444F4D: // MOD3
@@ -6209,52 +6209,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    _UnusedLocation = (ushort)(stream.Position - offset);
+                    _UnusedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
                 }
                 case 0x4D414E49: // INAM
                 {
-                    _ImpactDataSetLocation = (ushort)(stream.Position - offset);
+                    _ImpactDataSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _FirstPersonModelLocation = (ushort)(stream.Position - offset);
+                    _FirstPersonModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _AttackSoundLocation = (ushort)(stream.Position - offset);
+                    _AttackSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    _AttackSound2DLocation = (ushort)(stream.Position - offset);
+                    _AttackSound2DLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
                 }
                 case 0x374D414E: // NAM7
                 {
-                    _AttackLoopSoundLocation = (ushort)(stream.Position - offset);
+                    _AttackLoopSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _AttackFailSoundLocation = (ushort)(stream.Position - offset);
+                    _AttackFailSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
                 }
                 case 0x4D414E55: // UNAM
                 {
-                    _IdleSoundLocation = (ushort)(stream.Position - offset);
+                    _IdleSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
                 }
                 case 0x394D414E: // NAM9
                 {
-                    _EquipSoundLocation = (ushort)(stream.Position - offset);
+                    _EquipSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
                 }
                 case 0x384D414E: // NAM8
                 {
-                    _UnequipSoundLocation = (ushort)(stream.Position - offset);
+                    _UnequipSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
                 }
                 case 0x41544144: // DATA
@@ -6274,12 +6274,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _DetectionSoundLevelLocation = (ushort)(stream.Position - offset);
+                    _DetectionSoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _TemplateLocation = (ushort)(stream.Position - offset);
+                    _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
                 }
                 default:

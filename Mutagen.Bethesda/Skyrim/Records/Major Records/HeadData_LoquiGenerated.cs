@@ -3821,7 +3821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D544644: // DFTM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return TryGet<int?>.Failure;
-                    _DefaultFaceTextureLocation = (ushort)(stream.Position - offset);
+                    _DefaultFaceTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.DefaultFaceTexture);
                 }
                 case 0x494E4954: // TINI
@@ -3852,13 +3852,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x384D414E: // NAM8
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return TryGet<int?>.Failure;
-                    _MorphRaceLocation = (ushort)(stream.Position - offset);
+                    _MorphRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.MorphRace);
                 }
                 case 0x4D414E52: // RNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return TryGet<int?>.Failure;
-                    _ArmorRaceLocation = (ushort)(stream.Position - offset);
+                    _ArmorRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.ArmorRace);
                 }
                 default:

@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
-                    _VariableIndexLocation = (ushort)(stream.Position - offset);
+                    _VariableIndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 }
                 default:

@@ -2505,25 +2505,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x494E4954: // TINI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
-                    _IndexLocation = (ushort)(stream.Position - offset);
+                    _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
                 }
                 case 0x544E4954: // TINT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
-                    _FileNameLocation = (ushort)(stream.Position - offset);
+                    _FileNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
                 }
                 case 0x504E4954: // TINP
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
-                    _MaskTypeLocation = (ushort)(stream.Position - offset);
+                    _MaskTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
                 }
                 case 0x444E4954: // TIND
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
-                    _PresetDefaultLocation = (ushort)(stream.Position - offset);
+                    _PresetDefaultLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
                 }
                 case 0x434E4954: // TINC

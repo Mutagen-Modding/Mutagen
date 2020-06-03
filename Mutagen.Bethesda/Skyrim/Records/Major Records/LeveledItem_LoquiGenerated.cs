@@ -2720,17 +2720,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x444C564C: // LVLD
                 {
-                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    _ChanceNoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
                 }
                 case 0x474C564C: // LVLG
                 {
-                    _GlobalLocation = (ushort)(stream.Position - offset);
+                    _GlobalLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
                 }
                 case 0x54434C4C: // LLCT

@@ -2974,22 +2974,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x454D414E: // NAME
                 {
-                    _BaseLocation = (ushort)(stream.Position - offset);
+                    _BaseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 }
                 case 0x4E574F58: // XOWN
                 {
-                    _OwnerLocation = (ushort)(stream.Position - offset);
+                    _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
                 {
-                    _FactionRankLocation = (ushort)(stream.Position - offset);
+                    _FactionRankLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB
                 {
-                    _GlobalVariableLocation = (ushort)(stream.Position - offset);
+                    _GlobalVariableLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -2999,12 +2999,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44475258: // XRGD
                 {
-                    _RagdollDataLocation = (ushort)(stream.Position - offset);
+                    _RagdollDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
                 }
                 case 0x4C435358: // XSCL
                 {
-                    _ScaleLocation = (ushort)(stream.Position - offset);
+                    _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 }
                 case 0x41544144: // DATA

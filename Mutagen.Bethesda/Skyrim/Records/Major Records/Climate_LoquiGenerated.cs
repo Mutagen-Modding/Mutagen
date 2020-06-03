@@ -3430,12 +3430,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _SunTextureLocation = (ushort)(stream.Position - offset);
+                    _SunTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    _SunGlareTextureLocation = (ushort)(stream.Position - offset);
+                    _SunGlareTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
                 }
                 case 0x4C444F4D: // MODL
@@ -3448,7 +3448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E54: // TNAM
                 {
-                    _TNAMLocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
                 }
                 default:

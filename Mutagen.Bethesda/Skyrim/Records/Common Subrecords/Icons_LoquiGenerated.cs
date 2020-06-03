@@ -1973,12 +1973,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Icons_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
-                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
+                    _LargeIconFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Icons_FieldIndex.LargeIconFilename);
                 }
                 case 0x4F43494D: // MICO
                 {
-                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
+                    _SmallIconFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Icons_FieldIndex.SmallIconFilename);
                 }
                 default:

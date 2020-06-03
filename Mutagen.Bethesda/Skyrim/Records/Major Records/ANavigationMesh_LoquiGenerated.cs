@@ -2372,17 +2372,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown2);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _Unknown3Location = (ushort)(stream.Position - offset);
+                    _Unknown3Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown3);
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    _Unknown4Location = (ushort)(stream.Position - offset);
+                    _Unknown4Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown4);
                 }
                 default:

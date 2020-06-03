@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44525058: // XPRD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
-                    _IdleTimeLocation = (ushort)(stream.Position - offset);
+                    _IdleTimeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
                 }
                 case 0x41505058: // XPPA
@@ -2558,17 +2558,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E49: // INAM
                 {
-                    _IdleLocation = (ushort)(stream.Position - offset);
+                    _IdleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
                 }
                 case 0x52484353: // SCHR
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown);
                 }
                 case 0x58544353: // SCTX
                 {
-                    _Unknown2Location = (ushort)(stream.Position - offset);
+                    _Unknown2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown2);
                 }
                 case 0x4F544450: // PDTO

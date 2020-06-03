@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x444D4452: // RDMD
                 {
-                    _MusicTypeLocation = (ushort)(stream.Position - offset);
+                    _MusicTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
                 }
                 case 0x44534452: // RDSD

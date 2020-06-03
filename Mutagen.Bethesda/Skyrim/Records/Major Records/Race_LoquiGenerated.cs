@@ -11884,12 +11884,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
-                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
                 case 0x54435053: // SPCT
@@ -11908,7 +11908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E57: // WNAM
                 {
-                    _SkinLocation = (ushort)(stream.Position - offset);
+                    _SkinLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Skin);
                 }
                 case 0x54444F42: // BODT
@@ -11932,7 +11932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x80)
                     {
@@ -11969,37 +11969,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4B435456: // VTCK
                 {
-                    _VoicesLocation = (ushort)(stream.Position - offset);
+                    _VoicesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DecapitateArmorsLocation = (ushort)(stream.Position - offset);
+                    _DecapitateArmorsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitateArmors);
                 }
                 case 0x464C4348: // HCLF
                 {
-                    _DefaultHairColorsLocation = (ushort)(stream.Position - offset);
+                    _DefaultHairColorsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColors);
                 }
                 case 0x4C4E4954: // TINL
                 {
-                    _NumberOfTintsInListLocation = (ushort)(stream.Position - offset);
+                    _NumberOfTintsInListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.NumberOfTintsInList);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _FacegenMainClampLocation = (ushort)(stream.Position - offset);
+                    _FacegenMainClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenMainClamp);
                 }
                 case 0x4D414E55: // UNAM
                 {
-                    _FacegenFaceClampLocation = (ushort)(stream.Position - offset);
+                    _FacegenFaceClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenFaceClamp);
                 }
                 case 0x524B5441: // ATKR
                 {
-                    _AttackRaceLocation = (ushort)(stream.Position - offset);
+                    _AttackRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.AttackRace);
                 }
                 case 0x444B5441: // ATKD
@@ -12050,7 +12050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    _BodyPartDataLocation = (ushort)(stream.Position - offset);
+                    _BodyPartDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyPartData);
                 }
                 case 0x334D414E: // NAM3
@@ -12067,27 +12067,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x344D414E: // NAM4
                 {
-                    _MaterialTypeLocation = (ushort)(stream.Position - offset);
+                    _MaterialTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MaterialType);
                 }
                 case 0x354D414E: // NAM5
                 {
-                    _ImpactDataSetLocation = (ushort)(stream.Position - offset);
+                    _ImpactDataSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ImpactDataSet);
                 }
                 case 0x374D414E: // NAM7
                 {
-                    _DecapitationFXLocation = (ushort)(stream.Position - offset);
+                    _DecapitationFXLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitationFX);
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _OpenLootSoundLocation = (ushort)(stream.Position - offset);
+                    _OpenLootSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.OpenLootSound);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _CloseLootSoundLocation = (ushort)(stream.Position - offset);
+                    _CloseLootSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.CloseLootSound);
                 }
                 case 0x454D414E: // NAME
@@ -12110,7 +12110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    _EquipmentFlagsLocation = (ushort)(stream.Position - offset);
+                    _EquipmentFlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentFlags);
                 }
                 case 0x4D414E51: // QNAM
@@ -12130,7 +12130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x53454E55: // UNES
                 {
-                    _UnarmedEquipSlotLocation = (ushort)(stream.Position - offset);
+                    _UnarmedEquipSlotLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.UnarmedEquipSlot);
                 }
                 case 0x4E544850: // PHTN
@@ -12149,32 +12149,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x564D4B57: // WKMV
                 {
-                    _BaseMovementDefaultWalkLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultWalkLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultWalk);
                 }
                 case 0x564D4E52: // RNMV
                 {
-                    _BaseMovementDefaultRunLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultRunLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultRun);
                 }
                 case 0x564D5753: // SWMV
                 {
-                    _BaseMovementDefaultSwimLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultSwimLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSwim);
                 }
                 case 0x564D4C46: // FLMV
                 {
-                    _BaseMovementDefaultFlyLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultFlyLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultFly);
                 }
                 case 0x564D4E53: // SNMV
                 {
-                    _BaseMovementDefaultSneakLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultSneakLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSneak);
                 }
                 case 0x564D5053: // SPMV
                 {
-                    _BaseMovementDefaultSprintLocation = (ushort)(stream.Position - offset);
+                    _BaseMovementDefaultSprintLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSprint);
                 }
                 case 0x304D414E: // NAM0

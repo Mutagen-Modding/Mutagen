@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44494645: // EFID
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
-                    _BaseEffectLocation = (ushort)(stream.Position - offset);
+                    _BaseEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
                 }
                 case 0x54494645: // EFIT

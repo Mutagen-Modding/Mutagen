@@ -2157,13 +2157,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x314D414E: // NAM1
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
-                    _ResponseTextLocation = (ushort)(stream.Position - offset);
+                    _ResponseTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 }
                 case 0x324D414E: // NAM2
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
-                    _ActorNotesLocation = (ushort)(stream.Position - offset);
+                    _ActorNotesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
                 }
                 default:

@@ -5866,7 +5866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -5899,12 +5899,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E49: // INAM
                 {
-                    _DeathItemLocation = (ushort)(stream.Position - offset);
+                    _DeathItemLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _RaceLocation = (ushort)(stream.Position - offset);
+                    _RaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
                 case 0x4F4C5053: // SPLO
@@ -5924,7 +5924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Script);
                 }
                 case 0x4F544E43: // CNTO
@@ -5975,7 +5975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _ClassLocation = (ushort)(stream.Position - offset);
+                    _ClassLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
                 }
                 case 0x41544144: // DATA
@@ -5985,12 +5985,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    _HairLocation = (ushort)(stream.Position - offset);
+                    _HairLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Hair);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _HairLengthLocation = (ushort)(stream.Position - offset);
+                    _HairLengthLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairLength);
                 }
                 case 0x4D414E45: // ENAM
@@ -6007,32 +6007,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x524C4348: // HCLR
                 {
-                    _HairColorLocation = (ushort)(stream.Position - offset);
+                    _HairColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _CombatStyleLocation = (ushort)(stream.Position - offset);
+                    _CombatStyleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
                 }
                 case 0x53474746: // FGGS
                 {
-                    _FaceGenGeometrySymmetricLocation = (ushort)(stream.Position - offset);
+                    _FaceGenGeometrySymmetricLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometrySymmetric);
                 }
                 case 0x41474746: // FGGA
                 {
-                    _FaceGenGeometryAsymmetricLocation = (ushort)(stream.Position - offset);
+                    _FaceGenGeometryAsymmetricLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometryAsymmetric);
                 }
                 case 0x53544746: // FGTS
                 {
-                    _FaceGenTextureSymmetricLocation = (ushort)(stream.Position - offset);
+                    _FaceGenTextureSymmetricLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenTextureSymmetric);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _UnknownLocation = (ushort)(stream.Position - offset);
+                    _UnknownLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
                 }
                 default:

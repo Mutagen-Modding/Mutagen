@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x58444E49: // INDX
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
-                    _IndexLocation = (ushort)(stream.Position - offset);
+                    _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
                 }
                 case 0x4C444F4D: // MODL

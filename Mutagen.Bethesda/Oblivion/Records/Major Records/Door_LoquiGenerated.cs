@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -3065,27 +3065,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x49524353: // SCRI
                 {
-                    _ScriptLocation = (ushort)(stream.Position - offset);
+                    _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _OpenSoundLocation = (ushort)(stream.Position - offset);
+                    _OpenSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _CloseSoundLocation = (ushort)(stream.Position - offset);
+                    _CloseSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _LoopSoundLocation = (ushort)(stream.Position - offset);
+                    _LoopSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
                 }
                 case 0x4D414E54: // TNAM

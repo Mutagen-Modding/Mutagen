@@ -4424,7 +4424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4C4C5546: // FULL
                 {
-                    _NameLocation = (ushort)(stream.Position - offset);
+                    _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
                 case 0x4D414E58: // XNAM
@@ -4444,37 +4444,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
                 case 0x4C49414A: // JAIL
                 {
-                    _ExteriorJailMarkerLocation = (ushort)(stream.Position - offset);
+                    _ExteriorJailMarkerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
                 }
                 case 0x54494157: // WAIT
                 {
-                    _FollowerWaitMarkerLocation = (ushort)(stream.Position - offset);
+                    _FollowerWaitMarkerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
                 }
                 case 0x4C4F5453: // STOL
                 {
-                    _StolenGoodsContainerLocation = (ushort)(stream.Position - offset);
+                    _StolenGoodsContainerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
                 }
                 case 0x4E434C50: // PLCN
                 {
-                    _PlayerInventoryContainerLocation = (ushort)(stream.Position - offset);
+                    _PlayerInventoryContainerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
                 }
                 case 0x52475243: // CRGR
                 {
-                    _SharedCrimeFactionListLocation = (ushort)(stream.Position - offset);
+                    _SharedCrimeFactionListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
                 }
                 case 0x54554F4A: // JOUT
                 {
-                    _JailOutfitLocation = (ushort)(stream.Position - offset);
+                    _JailOutfitLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
                 }
                 case 0x41565243: // CRVA
@@ -4496,12 +4496,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x444E4556: // VEND
                 {
-                    _VendorBuySellListLocation = (ushort)(stream.Position - offset);
+                    _VendorBuySellListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
                 }
                 case 0x434E4556: // VENC
                 {
-                    _MerchantContainerLocation = (ushort)(stream.Position - offset);
+                    _MerchantContainerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
                 }
                 case 0x564E4556: // VENV

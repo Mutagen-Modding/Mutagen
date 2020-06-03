@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = (ushort)(stream.Position - offset);
+                    _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
                 }
                 default:
