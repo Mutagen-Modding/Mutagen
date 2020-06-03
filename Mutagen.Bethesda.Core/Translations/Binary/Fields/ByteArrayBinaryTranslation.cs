@@ -43,9 +43,36 @@ namespace Mutagen.Bethesda.Binary
             RecordType header)
         {
             if (!item.HasValue) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.ExportSubrecordHeader(writer, header))
             {
                 Write(writer, item.Value.Span);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            ReadOnlyMemorySlice<byte>? item,
+            RecordType header,
+            RecordType overflowRecord)
+        {
+            if (!item.HasValue) return;
+            if (item.Value.Length > ushort.MaxValue)
+            {
+                using (HeaderExport.ExportSubrecordHeader(writer, overflowRecord))
+                {
+                    writer.Write(item.Value.Length);
+                }
+                using (HeaderExport.ExportSubrecordHeader(writer, header))
+                {
+                }
+                Write(writer, item.Value.Span);
+            }
+            else
+            {
+                using (HeaderExport.ExportSubrecordHeader(writer, header))
+                {
+                    Write(writer, item.Value.Span);
+                }
             }
         }
     }

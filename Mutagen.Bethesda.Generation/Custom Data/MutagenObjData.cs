@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public ObjectGeneration ObjGen { get; private set; }
         public RecordType? RecordType;
+        public RecordType? OverflowRecordType;
         public bool FailOnUnknown;
         public ObjectType? ObjectType;
         public RecordType? MarkerType;

@@ -81,29 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryOffsetLengthCustom(MutagenWriter writer, IWorldspaceGetter item)
-            {
-                if (!item.OffsetData.TryGet(out var offset)) return;
-                if (!item.UsingOffsetLength) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
-                {
-                    writer.Write(offset.Length);
-                }
-                writer.Write(Worldspace_Registration.OFST_HEADER.Type);
-                writer.WriteZeros(2);
-                writer.Write(offset);
-            }
-
-            static partial void WriteBinaryOffsetDataCustom(MutagenWriter writer, IWorldspaceGetter item)
-            {
-                if (item.UsingOffsetLength) return;
-                if (!item.OffsetData.TryGet(out var offset)) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, Worldspace_Registration.OFST_HEADER))
-                {
-                    ByteArrayBinaryTranslation.Instance.Write(writer, offset);
-                }
-            }
-
             static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
             {
                 var road = obj.Road;
@@ -135,33 +112,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void FillBinaryOffsetLengthCustom(MutagenFrame frame, IWorldspaceInternal item)
-            {
-                item.UsingOffsetLength = true;
-                if (!frame.TryReadSubrecord(Worldspace_Registration.XXXX_HEADER, out var xxxxMeta)
-                    || xxxxMeta.ContentLength != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var contentLen = frame.Reader.ReadInt32();
-                if (!frame.Reader.TryReadSubrecord(Worldspace_Registration.OFST_HEADER, out var ofstMeta)
-                    || ofstMeta.ContentLength != 0)
-                {
-                    throw new ArgumentException();
-                }
-                item.OffsetData = frame.Reader.ReadBytes(contentLen);
-            }
-
-            static partial void FillBinaryOffsetDataCustom(MutagenFrame frame, IWorldspaceInternal item)
-            {
-                if (item.UsingOffsetLength) return;
-                if (!HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
-                {
-                    throw new ArgumentException();
-                }
-                item.OffsetData = frame.Reader.ReadBytes(len);
-            }
-
             static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
                 if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
@@ -238,43 +188,6 @@ namespace Mutagen.Bethesda.Oblivion
             public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
-
-            private int? _OffsetLengthLocation;
-            public bool UsingOffsetLength => this._OffsetLengthLocation.HasValue;
-
-            private int? _OffsetDataLocation;
-            bool GetOffsetDataIsSetCustom() => this._OffsetDataLocation.HasValue;
-
-            partial void OffsetDataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
-            {
-                _OffsetDataLocation = (ushort)(stream.Position - offset);
-                if (this.UsingOffsetLength)
-                {
-                    var offsetLenFrame = _package.MetaData.Constants.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
-                    stream.Position += checked((int)(_package.MetaData.Constants.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.Content)));
-                }
-            }
-
-            ReadOnlyMemorySlice<byte>? GetOffsetDataCustom()
-            {
-                if (!_OffsetDataLocation.HasValue) return null;
-                if (this.UsingOffsetLength)
-                {
-                    var lenFrame = this._package.MetaData.Constants.SubrecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
-                    var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.Content);
-                    return _data.Slice(_OffsetDataLocation.Value + this._package.MetaData.Constants.SubConstants.HeaderLength, len);
-                }
-                else
-                {
-                    var spanFrame = this._package.MetaData.Constants.SubrecordFrame(this._data.Slice(_OffsetDataLocation.Value));
-                    return spanFrame.Content.ToArray();
-                }
-            }
-
-            partial void OffsetLengthCustomParse(BinaryMemoryReadStream stream, int offset)
-            {
-                this._OffsetLengthLocation = stream.Position - offset;
-            }
 
             partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {

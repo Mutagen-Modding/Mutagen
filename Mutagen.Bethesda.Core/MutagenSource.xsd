@@ -103,6 +103,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="overflowRecordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Record type to use if there is a length overflow
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="binary" type="MutagenBinaryType" use="optional" >
             <xs:annotation>
               <xs:documentation>

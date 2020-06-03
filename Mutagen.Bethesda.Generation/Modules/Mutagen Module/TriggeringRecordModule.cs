@@ -22,6 +22,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.RecordType = new RecordType(recordAttr);
             }
+            if (node.TryGetAttribute("overflowRecordType", out var overflow))
+            {
+                data.OverflowRecordType = new RecordType(overflow.Value);
+            }
             var markerAttr = node.GetAttribute("markerType");
             if (markerAttr != null)
             {
@@ -586,6 +590,11 @@ namespace Mutagen.Bethesda.Generation
                 {
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(data.RecordType.Value));
                     data.TriggeringRecordTypes.Add(data.RecordType.Value);
+                    if (data.OverflowRecordType.HasValue)
+                    {
+                        data.TriggeringRecordTypes.Add(data.OverflowRecordType.Value);
+                        data.TriggeringRecordSetAccessor = $"{obj.RegistrationName}.{field.Name}_TriggeringRecordTypes";
+                    }
                 }
                 else if (data.TriggeringRecordTypes.Count > 0)
                 {
@@ -606,7 +615,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             if (data.RecordType.HasValue
-                && data.TriggeringRecordTypes.Count < 1)
+                && data.TriggeringRecordTypes.Count == 0)
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
                 data.TriggeringRecordTypes.Add(data.RecordType.Value);

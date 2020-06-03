@@ -1017,6 +1017,16 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
             }
 
+            if (data.OverflowRecordType.HasValue)
+            {
+                fg.AppendLine($"if (nextRecordType == {obj.RecordTypeHeaderName(data.OverflowRecordType.Value)})");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("var overflowHeader = frame.ReadSubrecordFrame();");
+                    fg.AppendLine("contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));");
+                }
+            }
+
             await generator.GenerateCopyIn(
                 fg: fg,
                 objGen: obj,

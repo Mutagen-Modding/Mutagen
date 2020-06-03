@@ -13,13 +13,11 @@
       <P2Float name="ObjectBoundsMin" recordType="NAM0" />
       <P2Float name="ObjectBoundsMax" recordType="NAM9" />
       <Enum name="Music" recordType="SNAM" enumName="MusicType" />
-      <CustomLogic name="OffsetLength" recordType="XXXX" />
-      <ByteArray name="OffsetData" recordType="OFST" binary="Custom" binaryOverlay="Custom" />
+      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
       <RefDirect name="Road" refName="Road" binary="NoGeneration" />
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
-      <Bool name="UsingOffsetLength" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">

@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda
         /// <returns>Array of found record locations</returns>
         public static int?[] FindNextSubrecords(
             ReadOnlySpan<byte> data,
-            GameConstants meta, 
+            GameConstants meta,
             out int lenParsed,
             bool stopOnAlreadyEncounteredRecord,
             params RecordType[] recordTypes)
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda
             ReadOnlySpan<byte> data,
             GameConstants meta,
             RecordType recordType,
-            bool navigateToContent = false, 
+            bool navigateToContent = false,
             int? offset = null)
         {
             int loc = offset ?? 0;
@@ -655,6 +655,47 @@ namespace Mutagen.Bethesda
         public static RecordType GetRecordType<T>()
         {
             return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
+        }
+
+        public static ReadOnlyMemorySlice<byte>? ReadByteArrayWithOverflow(
+            ReadOnlyMemorySlice<byte> bytes,
+            GameConstants constants,
+            int? loc,
+            RecordType overflowType)
+        {
+            if (!loc.HasValue) return null;
+            var header = constants.SubrecordMemoryFrame(bytes[loc.Value..]);
+            if (header.Header.RecordType == overflowType)
+            {
+                return bytes.Slice(
+                    loc.Value + header.Header.TotalLength + header.Header.HeaderLength,
+                    checked((int)BinaryPrimitives.ReadUInt32LittleEndian(header.Content)));
+            }
+            else
+            {
+                return header.Content;
+            }
+        }
+
+        public static int HandleOverlayRecordOverflow(
+            int? existingLoc,
+            BinaryMemoryReadStream stream,
+            int offset,
+            ReadOnlySpan<byte> data,
+            GameConstants constants)
+        {
+            if (existingLoc.HasValue)
+            {
+                var overflowHeader = constants.SubrecordFrame(data.Slice(existingLoc.Value));
+                var len = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                // Need to skip the data record, which doesn't have a proper length
+                stream.Position += constants.SubConstants.HeaderLength + len;
+                return existingLoc.Value;
+            }
+            else
+            {
+                return stream.Position - offset;
+            }
         }
     }
 }
