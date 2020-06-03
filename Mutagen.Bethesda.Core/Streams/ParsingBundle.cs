@@ -35,6 +35,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public bool Parallel { get; set; }
 
+        /// <summary>
+        /// Tracker of whether within worldspace data section
+        /// </summary>
+        public bool InWorldspace { get; set; }
+
         public ParsingBundle(GameConstants constants)
         {
             this.Constants = constants;
@@ -47,6 +52,8 @@ namespace Mutagen.Bethesda.Binary
                 MasterReferences = this.MasterReferences,
                 RecordInfoCache = this.RecordInfoCache,
                 StringsLookup = this.StringsLookup,
+                Parallel = this.Parallel,
+                InWorldspace = this.InWorldspace,
             };
         }
     }

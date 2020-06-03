@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public ObjectType Type { get; set; } = default;
+        public TargetObjectType Type { get; set; } = default;
         #endregion
 
         #region To String
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         IALocationTarget,
         ILoquiObjectSetter<ILocationObjectType>
     {
-        new ObjectType Type { get; set; }
+        new TargetObjectType Type { get; set; }
     }
 
     public partial interface ILocationObjectTypeGetter :
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => LocationObjectType_Registration.Instance;
-        ObjectType Type { get; }
+        TargetObjectType Type { get; }
 
     }
 
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case LocationObjectType_FieldIndex.Type:
-                    return typeof(ObjectType);
+                    return typeof(TargetObjectType);
                 default:
                     return ALocationTarget_Registration.GetNthType(index);
             }
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)LocationObjectType_FieldIndex.Type) ?? true))
             {
-                EnumXmlTranslation<ObjectType>.Instance.Write(
+                EnumXmlTranslation<TargetObjectType>.Instance.Write(
                     node: node,
                     name: nameof(item.Type),
                     item: item.Type,
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)LocationObjectType_FieldIndex.Type);
                     try
                     {
-                        item.Type = EnumXmlTranslation<ObjectType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<TargetObjectType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationObjectTypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetObjectType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationObjectType item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<ObjectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
     }
@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ObjectType Type => (ObjectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public TargetObjectType Type => (TargetObjectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                     case LocationTarget.LocationType.ObjectType:
                         return new LocationObjectType()
                         {
-                            Type = (ObjectType)frame.ReadInt32()
+                            Type = (TargetObjectType)frame.ReadInt32()
                         };
                     case LocationTarget.LocationType.LinkedReference:
                         return new LocationKeyword()

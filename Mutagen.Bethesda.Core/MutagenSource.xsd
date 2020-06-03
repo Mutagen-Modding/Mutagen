@@ -96,6 +96,9 @@
     <xs:complexType name="Field">
       <xs:complexContent>
         <xs:extension base="Field">
+          <xs:sequence>
+            <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>

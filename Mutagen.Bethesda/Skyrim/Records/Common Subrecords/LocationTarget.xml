@@ -28,7 +28,7 @@
   </Object>
   <Object name="LocationObjectType" baseClass="ALocationTarget" objType="Subrecord" GUID="b0933e27-071b-4751-8a06-52e3703c2e5c" ID="231">
     <Fields>
-      <Enum name="Type" enumName="ObjectType" />
+      <Enum name="Type" enumName="TargetObjectType" />
     </Fields>
   </Object>
   <Object name="LocationKeyword" baseClass="ALocationTarget" objType="Subrecord" GUID="a7c4d6c2-ebb4-4f93-a1e2-c5a9c33bae67" ID="232">

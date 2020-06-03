@@ -231,11 +231,38 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
-            CleanEmptyChildGroups(
+            CleanEmptyCellGroups(
                 stream,
                 formID,
                 loc,
                 numSubGroups: 2);
+
+            // Process odd length changing flags
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var sizeChange = 0;
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.DATA_HEADER);
+            if (pos != null)
+            {
+                var subHeader = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(pos.Value));
+                if (subHeader.ContentLength == 1)
+                {
+                    _Instructions.SetSubstitution(
+                        loc.Min + majorFrame.Header.HeaderLength + pos.Value + 4,
+                        2);
+                    _Instructions.SetAddition(
+                        loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                        new byte[] { 0 });
+                    sizeChange++;
+                }
+            }
+
+            ProcessSubrecordLengths(
+                stream,
+                sizeChange,
+                loc.Min,
+                formID);
         }
 
         private void ProcessPlaced(
@@ -389,7 +416,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "FLOR", "FULL" },
                     new RecordType[] { "KEYM", "FULL" },
                     new RecordType[] { "CELL", "FULL" },
-                    new RecordType[] { "REFR", "FULL" }
+                    new RecordType[] { "REFR", "FULL" },
+                    new RecordType[] { "WRLD", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

@@ -67,12 +67,22 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (item)
                 {
                     case IWorldspaceNavigationMesh worldspace:
-                        throw new NotImplementedException();
+                        {
+                            var ret = WorldspaceNavigationMeshData.CreateFromBinary(frame);
+                            ret.Parent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
+                            ret.Coordinates = new P2Int16(
+                                BinaryPrimitives.ReadInt16LittleEndian(parentBytes.Slice(4)),
+                                BinaryPrimitives.ReadInt16LittleEndian(parentBytes.Slice(6)));
+                            worldspace.Data = ret;
+                        }
+                        break;
                     case ICellNavigationMesh cell:
-                        var ret = CellNavigationMeshData.CreateFromBinary(frame);
-                        ret.UnusedWorldspaceParent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
-                        ret.Parent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(4, 4), frame.MetaData.MasterReferences!);
-                        cell.Data = ret;
+                        {
+                            var ret = CellNavigationMeshData.CreateFromBinary(frame);
+                            ret.UnusedWorldspaceParent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
+                            ret.Parent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(4, 4), frame.MetaData.MasterReferences!);
+                            cell.Data = ret;
+                        }
                         break;
                     default:
                         throw new NotImplementedException();

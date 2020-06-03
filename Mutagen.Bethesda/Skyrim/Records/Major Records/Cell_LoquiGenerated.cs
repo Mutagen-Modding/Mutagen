@@ -243,15 +243,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<CellNavigationMesh> _NavigationMeshes = new ExtendedList<CellNavigationMesh>();
-        public ExtendedList<CellNavigationMesh> NavigationMeshes
+        private ExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
+        public ExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
             protected set => this._NavigationMeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ICellNavigationMeshGetter> ICellGetter.NavigationMeshes => _NavigationMeshes;
+        IReadOnlyList<IANavigationMeshGetter> ICellGetter.NavigationMeshes => _NavigationMeshes;
         #endregion
 
         #endregion
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicType = initialValue;
                 this.ImageSpace = initialValue;
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
-                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellNavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellNavigationMesh.Mask<TItem>?>>());
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
                 this.PersistentTimestamp = initialValue;
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicType = MusicType;
                 this.ImageSpace = ImageSpace;
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
-                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellNavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, CellNavigationMesh.Mask<TItem>?>>());
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>());
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
                 this.PersistentTimestamp = PersistentTimestamp;
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem MusicType;
             public TItem ImageSpace;
             public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellNavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
             public TItem Timestamp;
             public TItem UnknownGroupData;
             public TItem PersistentTimestamp;
@@ -988,14 +988,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
                 if (NavigationMeshes != null)
                 {
-                    obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellNavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, CellNavigationMesh.Mask<R>?>>());
+                    obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ANavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, ANavigationMesh.Mask<R>?>>());
                     if (NavigationMeshes.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, CellNavigationMesh.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, ANavigationMesh.Mask<R>?>>();
                         obj.NavigationMeshes.Specific = l;
                         foreach (var item in NavigationMeshes.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, CellNavigationMesh.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CellNavigationMesh.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ANavigationMesh.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ANavigationMesh.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MusicType;
             public Exception? ImageSpace;
             public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellNavigationMesh.ErrorMask?>>?>? NavigationMeshes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>? NavigationMeshes;
             public Exception? Timestamp;
             public Exception? UnknownGroupData;
             public Exception? PersistentTimestamp;
@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
-                        this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellNavigationMesh.ErrorMask?>>?>(ex, null);
+                        this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>(ex, null);
                         break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = ex;
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Landscape = (MaskItem<Exception?, Landscape.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.NavigationMeshes:
-                        this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellNavigationMesh.ErrorMask?>>?>)obj;
+                        this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>)obj;
                         break;
                     case Cell_FieldIndex.Timestamp:
                         this.Timestamp = (Exception?)obj;
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
-                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellNavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
                 ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MusicType;
             public bool ImageSpace;
             public MaskItem<bool, Landscape.TranslationMask?> Landscape;
-            public MaskItem<bool, CellNavigationMesh.TranslationMask?> NavigationMeshes;
+            public MaskItem<bool, ANavigationMesh.TranslationMask?> NavigationMeshes;
             public bool Timestamp;
             public bool UnknownGroupData;
             public bool PersistentTimestamp;
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicType = defaultOn;
                 this.ImageSpace = defaultOn;
                 this.Landscape = new MaskItem<bool, Landscape.TranslationMask?>(defaultOn, null);
-                this.NavigationMeshes = new MaskItem<bool, CellNavigationMesh.TranslationMask?>(defaultOn, null);
+                this.NavigationMeshes = new MaskItem<bool, ANavigationMesh.TranslationMask?>(defaultOn, null);
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
                 this.PersistentTimestamp = defaultOn;
@@ -2126,7 +2126,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<Music> MusicType { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
-        new ExtendedList<CellNavigationMesh> NavigationMeshes { get; }
+        new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
@@ -2183,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IMusicGetter> MusicType { get; }
         IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
         ILandscapeGetter? Landscape { get; }
-        IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes { get; }
+        IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
         Int32 UnknownGroupData { get; }
         Int32 PersistentTimestamp { get; }
@@ -3042,7 +3042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.Landscape:
                     return typeof(Landscape);
                 case Cell_FieldIndex.NavigationMeshes:
-                    return typeof(ExtendedList<CellNavigationMesh>);
+                    return typeof(ExtendedList<ANavigationMesh>);
                 case Cell_FieldIndex.Timestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.UnknownGroupData:
@@ -3775,7 +3775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemLandscape = item.Landscape;
             mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
             var NavigationMeshesItem = item.NavigationMeshes;
-            mask.NavigationMeshes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CellNavigationMesh.Mask<bool>?>>?>(true, NavigationMeshesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CellNavigationMesh.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.NavigationMeshes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ANavigationMesh.Mask<bool>?>>?>(true, NavigationMeshesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ANavigationMesh.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Timestamp = true;
             mask.UnknownGroupData = true;
             mask.PersistentTimestamp = true;
@@ -4071,7 +4071,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return ImageSpaceKey;
             }
-            foreach (var item in obj.NavigationMeshes.SelectMany(f => f.LinkFormKeys))
+            if (obj.Landscape.TryGet(out var LandscapeItems))
+            {
+                foreach (var item in LandscapeItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -4175,10 +4183,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "CellNavigationMesh":
-                case "ICellNavigationMeshGetter":
-                case "ICellNavigationMesh":
-                case "ICellNavigationMeshInternal":
+                case "ANavigationMesh":
+                case "IANavigationMeshGetter":
+                case "IANavigationMesh":
+                case "IANavigationMeshInternal":
                     foreach (var subItem in obj.NavigationMeshes)
                     {
                         yield return (subItem as TMajor)!;
@@ -4485,12 +4493,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if(rhs.Landscape.TryGet(out var rhsLandscape))
                     {
-                        var copyRet = new Landscape(rhsLandscape.FormKey);
-                        copyRet.DeepCopyIn(
-                            rhs: rhsLandscape,
+                        item.Landscape = (Landscape)rhsLandscape.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),
                             errorMask: errorMask);
-                        item.Landscape = copyRet;
                     }
                     else
                     {
@@ -4516,12 +4521,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         rhs.NavigationMeshes
                         .Select(r =>
                         {
-                            var copyRet = new CellNavigationMesh(r.FormKey);
-                            copyRet.DeepCopyIn(
-                                rhs: r,
+                            return (ANavigationMesh)r.DeepCopy(
                                 copyMask: default(TranslationCrystal),
                                 errorMask: errorMask);
-                            return copyRet;
                         }));
                 }
                 catch (Exception ex)
@@ -5023,17 +5025,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {
-                ListXmlTranslation<ICellNavigationMeshGetter>.Instance.Write(
+                ListXmlTranslation<IANavigationMeshGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.NavigationMeshes),
                     item: item.NavigationMeshes,
                     fieldIndex: (int)Cell_FieldIndex.NavigationMeshes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes),
-                    transl: (XElement subNode, ICellNavigationMeshGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IANavigationMeshGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
-                        ((CellNavigationMeshXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        ((ANavigationMeshXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
                             item: Item,
                             node: subNode,
                             name: null,
@@ -5711,10 +5713,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Cell_FieldIndex.NavigationMeshes);
                     try
                     {
-                        if (ListXmlTranslation<CellNavigationMesh>.Instance.Parse(
+                        if (ListXmlTranslation<ANavigationMesh>.Instance.Parse(
                             node: node,
                             enumer: out var NavigationMeshesItem,
-                            transl: LoquiXmlTranslation<CellNavigationMesh>.Instance.Parse,
+                            transl: LoquiXmlTranslation<ANavigationMesh>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {

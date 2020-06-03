@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    frame.Reader.Position -= 16;
+                    frame.Reader.Position -= groupHeader.HeaderLength;
                     return;
                 }
                 var subFrame = MutagenFrame.ByLength(frame.Reader, groupHeader.ContentLength);
@@ -137,26 +137,10 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (subType.TypeInt)
                     {
                         case 0x44414F52: // "ROAD":
-                            if (LoquiBinaryTranslation<Road>.Instance.Parse(
-                                frame: subFrame,
-                                item: out var road))
-                            {
-                                obj.Road = road;
-                            }
-                            else
-                            {
-                                obj.Road = default;
-                            }
+                            obj.Road = Road.CreateFromBinary(subFrame);
                             break;
                         case 0x4C4C4543: // "CELL":
-                            if (LoquiBinaryTranslation<Cell>.Instance.Parse(subFrame, out var topCell))
-                            {
-                                obj.TopCell = topCell;
-                            }
-                            else
-                            {
-                                obj.TopCell = default;
-                            }
+                            obj.TopCell = Cell.CreateFromBinary(subFrame);
                             break;
                         case 0x50555247: // "GRUP":
                             obj.SubCells.SetTo(

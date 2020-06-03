@@ -28,12 +28,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => (OblivionMajorRecordFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+
+        protected override int? VersionAbstract => null;
     }
 
     namespace Internals
     {
         public partial class OblivionMajorRecordBinaryOverlay
         {
+            protected override int? VersionAbstract => null;
+
             public OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags
             {
                 get => (OblivionMajorRecord.OblivionMajorRecordFlag)this.MajorRecordFlagsRaw;

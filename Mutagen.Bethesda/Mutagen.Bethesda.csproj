@@ -66,7 +66,8 @@
     <Compile Include="Skyrim\Enums\LevelModifier.cs" />
     <Compile Include="Skyrim\Enums\LockLevel.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
-    <Compile Include="Skyrim\Enums\ObjectType.cs" />
+    <Compile Include="Common\Enums\Quadrant.cs" />
+    <Compile Include="Skyrim\Enums\TargetObjectType.cs" />
     <Compile Include="Skyrim\Enums\Responsibility.cs" />
     <Compile Include="Skyrim\Enums\Size.cs" />
     <Compile Include="Skyrim\Enums\SpellDataFlag.cs" />
@@ -139,6 +140,9 @@
     <Compile Include="Skyrim\Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AlphaLayer.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
@@ -183,6 +187,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Worldspace.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
@@ -382,6 +389,18 @@
     <Compile Include="Skyrim\Records\Major Records\WorldspaceNavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceObjectBounds.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceParent.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceSubBlock.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\SkyrimMajorRecord.cs">
+      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
     <Compile Include="Oblivion\Interfaces\IOwner.cs" />
@@ -484,9 +503,6 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\AlphaLayer.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\AlphaLayer_LoquiGenerated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
@@ -2248,6 +2264,45 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedMissile_LoquiGenerated.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceBlock_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceSubBlock_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceGridReference_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceReference_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceMaxHeight_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceParent_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceLandDefaults_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceMap_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceMapOffset_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorldspaceObjectBounds_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BaseLayer_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AlphaLayer_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LayerHeader_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

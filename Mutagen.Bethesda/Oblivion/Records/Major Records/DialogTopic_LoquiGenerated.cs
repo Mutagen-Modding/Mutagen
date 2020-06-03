@@ -2055,12 +2055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Items
                         .Select(r =>
                         {
-                            var copyRet = new DialogItem(r.FormKey);
-                            copyRet.DeepCopyIn(
-                                rhs: r,
+                            return (DialogItem)r.DeepCopy(
                                 copyMask: default(TranslationCrystal),
                                 errorMask: errorMask);
-                            return copyRet;
                         }));
                 }
                 catch (Exception ex)

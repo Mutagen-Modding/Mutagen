@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public void CleanEmptyChildGroups(
+        public void CleanEmptyCellGroups(
             IMutagenReadStream stream,
             FormID formID,
             RangeInt64 loc,
@@ -384,20 +384,29 @@ namespace Mutagen.Bethesda.Tests
             var blockGroupPos = stream.Position;
             var blockGroup = stream.ReadGroup();
             if (!blockGroup.IsGroup) return;
+            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
+            if (blockGrupType != GroupTypeEnum.CellChildren) return;
             if (blockGroup.ContentLength == 0)
             {
                 removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
             }
             else if (numSubGroups > 0)
             {
-                var grupType = (GroupTypeEnum)blockGroup.GroupType;
-                if (grupType != GroupTypeEnum.CellChildren) return;
                 var amountRemoved = 0;
                 for (int i = 0; i < numSubGroups; i++)
                 {
                     var subBlockGroupPos = stream.Position;
                     var subBlockGroup = stream.ReadGroup();
                     if (!subBlockGroup.IsGroup) break;
+                    switch ((GroupTypeEnum)subBlockGroup.GroupType)
+                    {
+                        case GroupTypeEnum.CellPersistentChildren:
+                        case GroupTypeEnum.CellTemporaryChildren:
+                        case GroupTypeEnum.CellVisibleDistantChildren:
+                            break;
+                        default:
+                            goto Break;
+                    }
                     if (subBlockGroup.ContentLength == 0)
                     { // Empty group
                         this._LengthTracker[blockGroupPos] = checked((uint)(this._LengthTracker[blockGroupPos] - subBlockGroup.HeaderLength));
@@ -406,6 +415,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
                 }
+                Break:
 
                 // Check to see if removed subgroups left parent empty
                 if (amountRemoved > 0

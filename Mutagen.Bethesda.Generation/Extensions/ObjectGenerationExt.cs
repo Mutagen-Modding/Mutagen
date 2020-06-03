@@ -213,5 +213,11 @@ namespace Mutagen.Bethesda.Generation
             }
             return false;
         }
+
+        public static bool HasVersionedFields(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Record) return false;
+            return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
+        }
     }
 }

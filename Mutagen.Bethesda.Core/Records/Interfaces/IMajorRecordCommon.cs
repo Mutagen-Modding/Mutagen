@@ -13,6 +13,7 @@ namespace Mutagen.Bethesda
         /// Marker of whether the content is compressed
         /// </summary>
         new bool IsCompressed { get; set; }
+
         /// <summary>
         /// Raw integer flag data
         /// </summary>
@@ -28,17 +29,25 @@ namespace Mutagen.Bethesda
         /// The usually unique string identifier assigned to the Major Record
         /// </summary>
         string? EditorID { get; }
+
         /// <summary>
         /// Marker of whether the content is compressed
         /// </summary>
         bool IsCompressed { get; }
+
         /// <summary>
         /// Raw integer flag data
         /// </summary>
         int MajorRecordFlagsRaw { get; }
+
         /// <summary>
         /// The unique identifier assigned to the Major Record
         /// </summary>
         FormKey FormKey { get; }
+
+        /// <summary>
+        /// Form Version of the record
+        /// </summary>
+        int? Version { get; }
     }
 }

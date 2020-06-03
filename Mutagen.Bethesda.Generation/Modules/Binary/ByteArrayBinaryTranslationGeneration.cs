@@ -67,6 +67,20 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
+            string framePass;
+            if (data.HasTrigger)
+            {
+                framePass = $"{frameAccessor}.SpawnWithLength(contentLength)";
+            }
+            else if (data.Length.HasValue)
+            {
+                framePass = $"{frameAccessor}.SpawnWithLength({data.Length.Value})";
+            }
+            else
+            {
+                framePass = frameAccessor.ToString();
+            }
+
             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
                 {
@@ -76,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}".Single(),
+                    ExtraArgs = $"frame: {framePass}".Single(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -180,9 +194,13 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
                     }
-                    else
+                    else if (data.Length.HasValue)
                     {
                         fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice(0x{currentPosition:X}, 0x{data.Length.Value:X}).ToArray();");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice(0x{currentPosition:X}).ToArray();");
                     }
                 }
                 else
@@ -198,7 +216,11 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (!data.RecordType.HasValue)
             {
-                return checked((int)data.Length.Value);
+                if (data.Length.HasValue)
+                {
+                    return checked((int)data.Length.Value);
+                }
+                return null;
             }
             else
             {

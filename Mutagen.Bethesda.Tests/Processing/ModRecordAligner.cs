@@ -199,6 +199,9 @@ namespace Mutagen.Bethesda.Tests
             {
                 EmptyMeansInterested = false
             };
+            // Always interested in parent record types
+            interest.InterestingTypes.Add("CELL");
+            interest.InterestingTypes.Add("WRLD");
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp ??= new TempFolder();
             using (temp)
@@ -319,12 +322,13 @@ namespace Mutagen.Bethesda.Tests
                 {
                     stopMarkers = null;
                 }
-                if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments))
-                {
-                    throw new ArgumentException($"Encountered an unknown record: {recType}");
-                }
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
+                if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments))
+                {
+                    inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength + len);
+                    continue;
+                }
                 inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength);
                 var writerEndPos = writer.Position + len;
                 var endPos = inputStream.Position + len;

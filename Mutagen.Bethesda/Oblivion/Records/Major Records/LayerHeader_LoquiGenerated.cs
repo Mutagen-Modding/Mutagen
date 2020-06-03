@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLink<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
-        public AlphaLayer.QuadrantEnum Quadrant { get; set; } = default;
+        public Quadrant Quadrant { get; set; } = default;
         #endregion
         #region LayerNumber
         public UInt16 LayerNumber { get; protected set; } = default;
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILayerHeaderInternal>
     {
         new FormLink<LandTexture> Texture { get; set; }
-        new AlphaLayer.QuadrantEnum Quadrant { get; set; }
+        new Quadrant Quadrant { get; set; }
     }
 
     public partial interface ILayerHeaderInternal :
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
         IFormLink<ILandTextureGetter> Texture { get; }
-        AlphaLayer.QuadrantEnum Quadrant { get; }
+        Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
 
     }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LayerHeader_FieldIndex.Texture:
                     return typeof(FormLink<LandTexture>);
                 case LayerHeader_FieldIndex.Quadrant:
-                    return typeof(AlphaLayer.QuadrantEnum);
+                    return typeof(Quadrant);
                 case LayerHeader_FieldIndex.LayerNumber:
                     return typeof(UInt16);
                 default:
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
-                EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                EnumXmlTranslation<Quadrant>.Instance.Write(
                     node: node,
                     name: nameof(item.Quadrant),
                     item: item.Quadrant,
@@ -1691,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LayerHeader_FieldIndex.Quadrant);
                     try
                     {
-                        item.Quadrant = EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        item.Quadrant = EnumXmlTranslation<Quadrant>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Texture);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quadrant>.Instance.Write(
                 writer,
                 item.Quadrant,
                 length: 2);
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.LayerNumber = frame.ReadUInt16();
         }
 
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormLink<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public AlphaLayer.QuadrantEnum Quadrant => (AlphaLayer.QuadrantEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
+        public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

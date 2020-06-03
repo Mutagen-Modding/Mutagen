@@ -56,7 +56,15 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Float Angle { get; set; } = default;
         #endregion
         #region Unknown2
-        public Int32 Unknown2 { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte[] _Unknown2 = new byte[0];
+        public Byte[] Unknown2
+        {
+            get => _Unknown2;
+            set => this._Unknown2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> ICellWaterVelocityGetter.Unknown2 => this.Unknown2;
         #endregion
 
         #region To String
@@ -639,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         new P3Float Offset { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Angle { get; set; }
-        new Int32 Unknown2 { get; set; }
+        new Byte[] Unknown2 { get; set; }
     }
 
     public partial interface ICellWaterVelocityGetter :
@@ -658,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         P3Float Offset { get; }
         Int32 Unknown { get; }
         P3Float Angle { get; }
-        Int32 Unknown2 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown2 { get; }
 
     }
 
@@ -1147,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CellWaterVelocity_FieldIndex.Angle:
                     return typeof(P3Float);
                 case CellWaterVelocity_FieldIndex.Unknown2:
-                    return typeof(Int32);
+                    return typeof(Byte[]);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1203,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Offset = default;
             item.Unknown = default;
             item.Angle = default;
-            item.Unknown2 = default;
+            item.Unknown2 = new byte[0];
         }
         
         #region Xml Translation
@@ -1281,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Offset = item.Offset.Equals(rhs.Offset);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Angle = item.Angle.Equals(rhs.Angle);
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
         }
         
         public string ToString(
@@ -1342,7 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
         }
         
@@ -1373,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Offset.Equals(rhs.Offset)) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.Angle.Equals(rhs.Angle)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             return true;
         }
         
@@ -1430,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.Unknown2 = rhs.Unknown2.ToArray();
             }
         }
         
@@ -1550,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown2) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
+                ByteArrayXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown2),
                     item: item.Unknown2,
@@ -1721,8 +1729,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)CellWaterVelocity_FieldIndex.Unknown2);
                     try
                     {
-                        item.Unknown2 = Int32XmlTranslation.Instance.Parse(
+                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
+                            fallbackLength: 0,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1917,7 +1926,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Angle);
-            writer.Write(item.Unknown2);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown2);
         }
 
         public void Write(
@@ -1960,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Offset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Unknown = frame.ReadInt32();
             item.Angle = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown2 = frame.ReadInt32();
+            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }
@@ -2047,7 +2058,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Offset => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         public P3Float Angle => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x1C, 0x4));
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x1C).ToArray();
+        private int Unknown2EndingPos;
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2072,7 +2084,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

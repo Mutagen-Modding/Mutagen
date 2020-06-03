@@ -223,6 +223,12 @@ namespace Mutagen.Bethesda
                 return null;
             }
 
+            if (grupRec.Type == "WRLD")
+            {
+                int wer = 23;
+                wer++;
+            }
+
             reader.Position += groupMeta.HeaderLength;
 
             using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
@@ -231,6 +237,12 @@ namespace Mutagen.Bethesda
                 {
                     MajorRecordHeader majorRecordMeta = frame.GetMajorRecord();
                     var targetRec = majorRecordMeta.RecordType;
+                    if (majorRecordMeta.FormID.ID == 0xB414D
+                        || majorRecordMeta.FormID.ID == 0xD74)
+                    {
+                        int wer = 23;
+                        wer++;
+                    }
                     if (targetRec != grupRec)
                     {
                         if (IsSubLevelGRUP(frame.GetGroup()))

@@ -146,28 +146,38 @@ namespace Mutagen.Bethesda.Skyrim
                             switch (header.TypeInt)
                             {
                                 case 0x52484341: //"ACHR":
-                                    if (LoquiBinaryTranslation<PlacedNpc>.Instance.Parse(
-                                            frame: r,
-                                            item: out var placedNPC))
-                                    {
-                                        placed = placedNPC;
-                                        return true;
-                                    }
-                                    break;
+                                    placed = PlacedNpc.CreateFromBinary(r);
+                                    return true;
                                 case 0x52464552: // "REFR":
-                                    if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
-                                            frame: r,
-                                            item: out var placedObj))
-                                    {
-                                        placed = placedObj;
-                                        return true;
-                                    }
-                                    break;
+                                    placed = PlacedObject.CreateFromBinary(r);
+                                    return true;
+                                case 0x57524150: // "PARW":
+                                    placed = PlacedArrow.CreateFromBinary(r);
+                                    return true;
+                                case 0x52414250: // "PBAR":
+                                    placed = PlacedBarrier.CreateFromBinary(r);
+                                    return true;
+                                case 0x41454250: // "PBEA":
+                                    placed = PlacedBeam.CreateFromBinary(r);
+                                    return true;
+                                case 0x4E4F4350: // "PCON":
+                                    placed = PlacedCone.CreateFromBinary(r);
+                                    return true;
+                                case 0x414C4650: // "PFLA":
+                                    placed = PlacedFlame.CreateFromBinary(r);
+                                    return true;
+                                case 0x445A4850: // "PHZD":
+                                    placed = PlacedHazard.CreateFromBinary(r);
+                                    return true;
+                                case 0x53494D50: // "PMIS":
+                                    placed = PlacedMissile.CreateFromBinary(r);
+                                    return true;
+                                case 0x45524750: // "PGRE":
+                                    placed = PlacedTrap.CreateFromBinary(r);
+                                    return true;
                                 default:
                                     throw new NotImplementedException();
                             }
-                            placed = null!;
-                            return false;
                         }));
             }
 
@@ -177,10 +187,20 @@ namespace Mutagen.Bethesda.Skyrim
                 var nextHeader = majorMeta.RecordType;
                 if (nextHeader.Equals(ANavigationMesh_Registration.NAVM_HEADER))
                 {
-                    obj.NavigationMeshes.Add(
-                        CellNavigationMesh.CreateFromBinary(
-                            frame.SpawnWithLength(majorMeta.TotalLength),
-                            recordTypeConverter: null));
+                    if (frame.MetaData.InWorldspace)
+                    {
+                        obj.NavigationMeshes.Add(
+                            WorldspaceNavigationMesh.CreateFromBinary(
+                                frame.SpawnWithLength(majorMeta.TotalLength),
+                                recordTypeConverter: null));
+                    }
+                    else
+                    {
+                        obj.NavigationMeshes.Add(
+                            CellNavigationMesh.CreateFromBinary(
+                                frame.SpawnWithLength(majorMeta.TotalLength),
+                                recordTypeConverter: null));
+                    }
                     return true;
                 }
                 else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
@@ -353,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            public IReadOnlyList<ICellNavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<ICellNavigationMeshGetter>();
+            public IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<IANavigationMeshGetter>();
 
             public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 

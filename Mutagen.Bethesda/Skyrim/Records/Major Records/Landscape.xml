@@ -2,6 +2,34 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Landscape" recordType="LAND" objType="Record" baseClass="SkyrimMajorRecord" GUID="12cbe5c3-cdb2-4514-8003-c80a6fe6305e" ID="292">
     <Fields>
+      <ByteArray name="Unknown" recordType="DATA" />
+      <ByteArray name="VertexNormals" recordType="VNML" />
+      <ByteArray name="VertexHeightMap" recordType="VHGT" />
+      <ByteArray name="VertexColors" recordType="VCLR" />
+      <RefList name="Layers" refName="BaseLayer" />
+      <List name="Textures" recordType="VTEX">
+        <FormLink refName="LandscapeTexture" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="BaseLayer" objType="Subrecord" GUID="689f0717-0560-4275-a721-cc7c612062ae" ID="346">
+    <Fields>
+      <RefDirect name="Header" refName="LayerHeader" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer" GUID="5a9a0528-b3b8-4e01-85cb-f0f41578f8cb" ID="347">
+    <Fields>
+      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+    </Fields>
+    <BaseRecordTypeOverrides>
+      <Mapping From="BTXT" To="ATXT" />
+    </BaseRecordTypeOverrides>
+  </Object>
+  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord" GUID="6d96352d-8353-4eb9-b1dd-658a76b55abf" ID="348">
+    <Fields>
+      <FormLink name="Texture" refName="LandscapeTexture" />
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="2" />
+      <UInt16 name="LayerNumber" />
     </Fields>
   </Object>
 </Loqui>

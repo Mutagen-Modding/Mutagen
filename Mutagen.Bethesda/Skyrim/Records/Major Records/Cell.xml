@@ -50,7 +50,7 @@
       <FormLink name="MusicType" refName="Music" recordType="XCMO" />
       <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="XCIM" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
-      <RefList name="NavigationMeshes" binary="NoGeneration" refName="CellNavigationMesh" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="ANavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />
@@ -105,7 +105,7 @@
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
-      <Int32 name="Unknown2" />
+      <ByteArray name="Unknown2" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
-            CleanEmptyChildGroups(
+            CleanEmptyCellGroups(
                 stream, 
                 formID, 
                 loc,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
-            CleanEmptyChildGroups(
+            CleanEmptyCellGroups(
                 stream,
                 formID,
                 loc,

@@ -44,11 +44,9 @@ namespace Mutagen.Bethesda.Generation
             switch (this.RefType)
             {
                 case LoquiRefType.Direct:
-                    fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
                     using (var args = new ArgsWrapper(fg,
-                        $"copyRet.{(deepCopy ? "Deep" : null)}CopyIn"))
+                        $"{retAccessor}({this.TargetObjectGeneration.ObjectName}){rhsAccessor}.{(deepCopy ? "Deep" : null)}Copy"))
                     {
-                        args.Add($"rhs: {rhsAccessor}");
                         if (this.RefType == LoquiRefType.Direct)
                         {
                             if (!doTranslationMask)
@@ -66,7 +64,6 @@ namespace Mutagen.Bethesda.Generation
                         }
                         args.AddPassArg($"errorMask");
                     }
-                    fg.AppendLine($"{retAccessor}copyRet;");
                     break;
                 case LoquiRefType.Generic:
                     if (deepCopy)

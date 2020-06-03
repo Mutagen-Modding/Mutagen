@@ -2813,12 +2813,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if(rhs.Road.TryGet(out var rhsRoad))
                     {
-                        var copyRet = new Road(rhsRoad.FormKey);
-                        copyRet.DeepCopyIn(
-                            rhs: rhsRoad,
+                        item.Road = (Road)rhsRoad.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road),
                             errorMask: errorMask);
-                        item.Road = copyRet;
                     }
                     else
                     {
@@ -2842,12 +2839,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if(rhs.TopCell.TryGet(out var rhsTopCell))
                     {
-                        var copyRet = new Cell(rhsTopCell.FormKey);
-                        copyRet.DeepCopyIn(
-                            rhs: rhsTopCell,
+                        item.TopCell = (Cell)rhsTopCell.DeepCopy(
                             copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),
                             errorMask: errorMask);
-                        item.TopCell = copyRet;
                     }
                     else
                     {
