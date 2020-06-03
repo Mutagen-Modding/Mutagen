@@ -1523,95 +1523,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => SkillRecord_Registration.SKIL_HEADER;
-        protected static void FillBinaryStructs(
-            ISkillRecordInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISkillRecordInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
-                }
-                case 0x43534544: // DESC
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
-                }
-                case 0x41544144: // DATA
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.SkillData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
-                }
-                case 0x4D414E41: // ANAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ApprenticeText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
-                }
-                case 0x4D414E4A: // JNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JourneymanText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
-                }
-                case 0x4D414E45: // ENAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExpertText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MasterText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ISkillRecordInternal item,
             MutagenFrame frame,
@@ -1621,8 +1532,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SkillRecordBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SkillRecordBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2729,6 +2640,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SkillRecordBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SkillRecordBinaryCreateTranslation Instance = new SkillRecordBinaryCreateTranslation();
+
+        public override RecordType RecordType => SkillRecord_Registration.SKIL_HEADER;
+        public static void FillBinaryStructs(
+            ISkillRecordInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ISkillRecordInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                }
+                case 0x43534544: // DESC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.SkillData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ApprenticeText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                }
+                case 0x4D414E4A: // JNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.JourneymanText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ExpertText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MasterText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

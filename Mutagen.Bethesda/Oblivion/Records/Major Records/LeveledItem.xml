@@ -7,7 +7,7 @@
       <RefList name="Entries" refName="LeveledEntry">
         <GenericSpecification TypeToSpecify="T" Definition="AItem" />
       </RefList>
-      <SpecialParse name="Vestigial" recordType="DATA" />
+      <CustomLogic name="Vestigial" recordType="DATA" />
     </Fields>
   </Object>
   </Loqui>

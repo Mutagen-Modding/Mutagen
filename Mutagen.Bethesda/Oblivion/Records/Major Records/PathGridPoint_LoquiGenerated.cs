@@ -1322,15 +1322,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPathGridPoint item,
-            MutagenFrame frame)
-        {
-            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NumConnections = frame.ReadUInt8();
-            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-        }
-        
         public virtual void CopyInFromBinary(
             IPathGridPoint item,
             MutagenFrame frame,
@@ -1340,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PathGridPointBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2088,6 +2079,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class PathGridPointBinaryCreateTranslation
     {
         public readonly static PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPathGridPoint item,
+            MutagenFrame frame)
+        {
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NumConnections = frame.ReadUInt8();
+            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+        }
 
     }
 

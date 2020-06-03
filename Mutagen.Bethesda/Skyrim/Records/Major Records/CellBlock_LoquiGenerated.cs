@@ -1437,49 +1437,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICellBlock item,
-            MutagenFrame frame)
-        {
-            item.BlockNumber = frame.ReadInt32();
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LastModified = frame.ReadInt32();
-            item.Unknown = frame.ReadInt32();
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ICellBlock item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x50555247: // GRUP
-                {
-                    item.SubBlocks.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: CellBlock_Registration.GRUP_HEADER,
-                            thread: frame.MetaData.Parallel,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<CellSubBlock>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)CellBlock_FieldIndex.SubBlocks);
-                }
-                default:
-                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ICellBlock item,
             MutagenFrame frame,
@@ -1489,8 +1446,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: CellBlockBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CellBlockBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2361,6 +2318,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CellBlockBinaryCreateTranslation
     {
         public readonly static CellBlockBinaryCreateTranslation Instance = new CellBlockBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICellBlock item,
+            MutagenFrame frame)
+        {
+            item.BlockNumber = frame.ReadInt32();
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = frame.ReadInt32();
+            item.Unknown = frame.ReadInt32();
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ICellBlock item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x50555247: // GRUP
+                {
+                    item.SubBlocks.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: CellBlock_Registration.GRUP_HEADER,
+                            thread: frame.MetaData.Parallel,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<CellSubBlock>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)CellBlock_FieldIndex.SubBlocks);
+                }
+                default:
+                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
     }
 

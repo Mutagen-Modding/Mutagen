@@ -1613,99 +1613,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Landscape_Registration.LAND_HEADER;
-        protected static void FillBinaryStructs(
-            ILandscapeInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILandscapeInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
-                }
-                case 0x4C4D4E56: // VNML
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
-                }
-                case 0x54474856: // VHGT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
-                }
-                case 0x524C4356: // VCLR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
-                }
-                case 0x54585442: // BTXT
-                case 0x54585441: // ATXT
-                {
-                    item.Layers.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                switch (header.TypeInt)
-                                {
-                                    case 0x54585442: // BTXT
-                                        return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
-                                    case 0x54585441: // ATXT
-                                        return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
-                }
-                case 0x58455456: // VTEX
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LandTexture>>();
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILandscapeInternal item,
             MutagenFrame frame,
@@ -1715,8 +1622,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LandscapeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LandscapeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2843,6 +2750,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LandscapeBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
+
+        public override RecordType RecordType => Landscape_Registration.LAND_HEADER;
+        public static void FillBinaryStructs(
+            ILandscapeInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILandscapeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                }
+                case 0x4C4D4E56: // VNML
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                }
+                case 0x54474856: // VHGT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                }
+                case 0x524C4356: // VCLR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                }
+                case 0x54585442: // BTXT
+                case 0x54585441: // ATXT
+                {
+                    item.Layers.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                switch (header.TypeInt)
+                                {
+                                    case 0x54585442: // BTXT
+                                        return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
+                                            frame: r,
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
+                                    case 0x54585441: // ATXT
+                                        return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
+                                            frame: r,
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                            }));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                }
+                case 0x58455456: // VTEX
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Textures = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<LandTexture>>();
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

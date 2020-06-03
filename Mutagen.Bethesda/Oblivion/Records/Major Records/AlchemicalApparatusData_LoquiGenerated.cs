@@ -1236,16 +1236,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAlchemicalApparatusData item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Quality = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusData item,
             MutagenFrame frame,
@@ -1258,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AlchemicalApparatusDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1966,6 +1956,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AlchemicalApparatusDataBinaryCreateTranslation
     {
         public readonly static AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAlchemicalApparatusData item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Quality = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

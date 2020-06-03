@@ -1417,72 +1417,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => AlchemicalApparatus_Registration.APPA_HEADER;
-        protected static void FillBinaryStructs(
-            IAlchemicalApparatusInternal item,
-            MutagenFrame frame)
-        {
-            AItemSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IAlchemicalApparatusInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icon);
-                }
-                case 0x49524353: // SCRI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Script);
-                }
-                case 0x41544144: // DATA
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.AlchemicalApparatusData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Data);
-                }
-                default:
-                    return AItemSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame,
@@ -1492,8 +1426,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: AlchemicalApparatusBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AlchemicalApparatusBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2584,6 +2518,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AlchemicalApparatusBinaryCreateTranslation : AItemBinaryCreateTranslation
     {
         public new readonly static AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
+
+        public override RecordType RecordType => AlchemicalApparatus_Registration.APPA_HEADER;
+        public static void FillBinaryStructs(
+            IAlchemicalApparatusInternal item,
+            MutagenFrame frame)
+        {
+            AItemBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IAlchemicalApparatusInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icon);
+                }
+                case 0x49524353: // SCRI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Script);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.AlchemicalApparatusData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Data);
+                }
+                default:
+                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

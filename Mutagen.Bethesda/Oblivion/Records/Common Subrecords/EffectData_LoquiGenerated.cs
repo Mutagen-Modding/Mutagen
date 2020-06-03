@@ -1336,20 +1336,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEffectData item,
-            MutagenFrame frame)
-        {
-            item.MagicEffect = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: RecordType.Null);
-            item.Magnitude = frame.ReadUInt32();
-            item.Area = frame.ReadUInt32();
-            item.Duration = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IEffectData item,
             MutagenFrame frame,
@@ -1362,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EffectDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2151,6 +2137,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EffectDataBinaryCreateTranslation
     {
         public readonly static EffectDataBinaryCreateTranslation Instance = new EffectDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEffectData item,
+            MutagenFrame frame)
+        {
+            item.MagicEffect = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: RecordType.Null);
+            item.Magnitude = frame.ReadUInt32();
+            item.Area = frame.ReadUInt32();
+            item.Duration = frame.ReadUInt32();
+            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

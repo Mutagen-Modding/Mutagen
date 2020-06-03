@@ -1154,17 +1154,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IItemEntry item,
-            MutagenFrame frame)
-        {
-            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete) return;
-            item.Count = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IItemEntry item,
             MutagenFrame frame,
@@ -1177,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ItemEntryBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1807,6 +1796,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ItemEntryBinaryCreateTranslation
     {
         public readonly static ItemEntryBinaryCreateTranslation Instance = new ItemEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IItemEntry item,
+            MutagenFrame frame)
+        {
+            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete) return;
+            item.Count = frame.ReadInt32();
+        }
 
     }
 

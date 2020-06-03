@@ -1146,19 +1146,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IConditionFloat item,
-            MutagenFrame frame)
-        {
-            ConditionSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IConditionFloat item,
             MutagenFrame frame,
@@ -1171,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ConditionFloatBinaryCreateTranslation.FillBinaryStructs);
             ConditionFloatBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
@@ -1845,6 +1832,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
         public new readonly static ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IConditionFloat item,
+            MutagenFrame frame)
+        {
+            ConditionBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,

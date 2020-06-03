@@ -1198,17 +1198,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRelation item,
-            MutagenFrame frame)
-        {
-            item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Modifier = frame.ReadInt32();
-            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IRelation item,
             MutagenFrame frame,
@@ -1221,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RelationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1888,6 +1877,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RelationBinaryCreateTranslation
     {
         public readonly static RelationBinaryCreateTranslation Instance = new RelationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRelation item,
+            MutagenFrame frame)
+        {
+            item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Modifier = frame.ReadInt32();
+            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

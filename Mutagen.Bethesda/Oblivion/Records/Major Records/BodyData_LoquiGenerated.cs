@@ -1258,54 +1258,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBodyData item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBodyData item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
-                }
-                case 0x58444E49: // INDX
-                case 0x4E4F4349: // ICON
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    item.BodyParts.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IBodyData item,
             MutagenFrame frame,
@@ -1315,8 +1267,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: BodyDataBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: BodyDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2047,6 +1999,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BodyDataBinaryCreateTranslation
     {
         public readonly static BodyDataBinaryCreateTranslation Instance = new BodyDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBodyData item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IBodyData item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                }
+                case 0x58444E49: // INDX
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
+                    item.BodyParts.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

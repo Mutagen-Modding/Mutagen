@@ -1344,20 +1344,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICriticalData item,
-            MutagenFrame frame)
-        {
-            item.Damage = frame.ReadUInt16();
-            item.Unused = frame.ReadInt16();
-            item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             ICriticalData item,
             MutagenFrame frame,
@@ -1370,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CriticalDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2162,6 +2148,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CriticalDataBinaryCreateTranslation
     {
         public readonly static CriticalDataBinaryCreateTranslation Instance = new CriticalDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICriticalData item,
+            MutagenFrame frame)
+        {
+            item.Damage = frame.ReadUInt16();
+            item.Unused = frame.ReadInt16();
+            item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Unused3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

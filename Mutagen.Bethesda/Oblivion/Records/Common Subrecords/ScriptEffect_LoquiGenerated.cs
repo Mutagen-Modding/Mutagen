@@ -1183,43 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptEffect item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IScriptEffect item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54494353: // SCIT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.ScriptEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Data);
-                }
-                case 0x4C4C5546: // FULL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptEffect item,
             MutagenFrame frame,
@@ -1229,8 +1192,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ScriptEffectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ScriptEffectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1909,6 +1872,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ScriptEffectBinaryCreateTranslation
     {
         public readonly static ScriptEffectBinaryCreateTranslation Instance = new ScriptEffectBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptEffect item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IScriptEffect item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54494353: // SCIT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Oblivion.ScriptEffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Data);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Name) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

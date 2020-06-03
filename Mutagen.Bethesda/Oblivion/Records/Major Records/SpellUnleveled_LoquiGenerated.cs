@@ -1361,58 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => SpellUnleveled_Registration.SPEL_HEADER;
-        protected static void FillBinaryStructs(
-            ISpellUnleveledInternal item,
-            MutagenFrame frame)
-        {
-            SpellSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISpellUnleveledInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54495053: // SPIT
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.SpellData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Data);
-                }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                {
-                    item.Effects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
-                }
-                default:
-                    return SpellSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ISpellUnleveledInternal item,
             MutagenFrame frame,
@@ -1422,8 +1370,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SpellUnleveledBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SpellUnleveledBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2487,6 +2435,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SpellUnleveledBinaryCreateTranslation : SpellBinaryCreateTranslation
     {
         public new readonly static SpellUnleveledBinaryCreateTranslation Instance = new SpellUnleveledBinaryCreateTranslation();
+
+        public override RecordType RecordType => SpellUnleveled_Registration.SPEL_HEADER;
+        public static void FillBinaryStructs(
+            ISpellUnleveledInternal item,
+            MutagenFrame frame)
+        {
+            SpellBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ISpellUnleveledInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54495053: // SPIT
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.SpellData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Data);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                {
+                    item.Effects.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
+                }
+                default:
+                    return SpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

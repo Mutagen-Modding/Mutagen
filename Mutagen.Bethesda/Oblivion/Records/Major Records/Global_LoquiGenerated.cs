@@ -1079,34 +1079,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGlobalInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E46: // FNAM
-                {
-                    GlobalBinaryCreateTranslation.FillBinaryTypeCharCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(null);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGlobalInternal item,
             MutagenFrame frame,
@@ -1795,6 +1767,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class GlobalBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+
+        public override RecordType RecordType => throw new ArgumentException();
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGlobalInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    GlobalBinaryCreateTranslation.FillBinaryTypeCharCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,

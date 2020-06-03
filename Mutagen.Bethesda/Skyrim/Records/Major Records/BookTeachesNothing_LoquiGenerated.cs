@@ -1065,13 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBookTeachesNothing item,
-            MutagenFrame frame)
-        {
-            item.RawContent = frame.ReadUInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IBookTeachesNothing item,
             MutagenFrame frame,
@@ -1081,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: BookTeachesNothingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1638,6 +1631,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBookTeachesNothing item,
+            MutagenFrame frame)
+        {
+            item.RawContent = frame.ReadUInt32();
+        }
 
     }
 

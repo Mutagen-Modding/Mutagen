@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISeasonalIngredientProduction item,
-            MutagenFrame frame)
-        {
-            item.Spring = frame.ReadUInt8();
-            item.Summer = frame.ReadUInt8();
-            item.Fall = frame.ReadUInt8();
-            item.Winter = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             ISeasonalIngredientProduction item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SeasonalIngredientProductionBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1958,6 +1948,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SeasonalIngredientProductionBinaryCreateTranslation
     {
         public readonly static SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISeasonalIngredientProduction item,
+            MutagenFrame frame)
+        {
+            item.Spring = frame.ReadUInt8();
+            item.Summer = frame.ReadUInt8();
+            item.Fall = frame.ReadUInt8();
+            item.Winter = frame.ReadUInt8();
+        }
 
     }
 

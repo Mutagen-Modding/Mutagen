@@ -2431,42 +2431,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcData item,
-            MutagenFrame frame)
-        {
-            item.Armorer = frame.ReadUInt8();
-            item.Athletics = frame.ReadUInt8();
-            item.Blade = frame.ReadUInt8();
-            item.Block = frame.ReadUInt8();
-            item.Blunt = frame.ReadUInt8();
-            item.HandToHand = frame.ReadUInt8();
-            item.HeavyArmor = frame.ReadUInt8();
-            item.Alchemy = frame.ReadUInt8();
-            item.Alteration = frame.ReadUInt8();
-            item.Conjuration = frame.ReadUInt8();
-            item.Destruction = frame.ReadUInt8();
-            item.Illusion = frame.ReadUInt8();
-            item.Mysticism = frame.ReadUInt8();
-            item.Restoration = frame.ReadUInt8();
-            item.Acrobatics = frame.ReadUInt8();
-            item.LightArmor = frame.ReadUInt8();
-            item.Marksman = frame.ReadUInt8();
-            item.Mercantile = frame.ReadUInt8();
-            item.Security = frame.ReadUInt8();
-            item.Sneak = frame.ReadUInt8();
-            item.Speechcraft = frame.ReadUInt8();
-            item.Health = frame.ReadUInt32();
-            item.Strength = frame.ReadUInt8();
-            item.Intelligence = frame.ReadUInt8();
-            item.Willpower = frame.ReadUInt8();
-            item.Agility = frame.ReadUInt8();
-            item.Speed = frame.ReadUInt8();
-            item.Endurance = frame.ReadUInt8();
-            item.Personality = frame.ReadUInt8();
-            item.Luck = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             INpcData item,
             MutagenFrame frame,
@@ -2479,7 +2443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NpcDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -4220,6 +4184,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class NpcDataBinaryCreateTranslation
     {
         public readonly static NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcData item,
+            MutagenFrame frame)
+        {
+            item.Armorer = frame.ReadUInt8();
+            item.Athletics = frame.ReadUInt8();
+            item.Blade = frame.ReadUInt8();
+            item.Block = frame.ReadUInt8();
+            item.Blunt = frame.ReadUInt8();
+            item.HandToHand = frame.ReadUInt8();
+            item.HeavyArmor = frame.ReadUInt8();
+            item.Alchemy = frame.ReadUInt8();
+            item.Alteration = frame.ReadUInt8();
+            item.Conjuration = frame.ReadUInt8();
+            item.Destruction = frame.ReadUInt8();
+            item.Illusion = frame.ReadUInt8();
+            item.Mysticism = frame.ReadUInt8();
+            item.Restoration = frame.ReadUInt8();
+            item.Acrobatics = frame.ReadUInt8();
+            item.LightArmor = frame.ReadUInt8();
+            item.Marksman = frame.ReadUInt8();
+            item.Mercantile = frame.ReadUInt8();
+            item.Security = frame.ReadUInt8();
+            item.Sneak = frame.ReadUInt8();
+            item.Speechcraft = frame.ReadUInt8();
+            item.Health = frame.ReadUInt32();
+            item.Strength = frame.ReadUInt8();
+            item.Intelligence = frame.ReadUInt8();
+            item.Willpower = frame.ReadUInt8();
+            item.Agility = frame.ReadUInt8();
+            item.Speed = frame.ReadUInt8();
+            item.Endurance = frame.ReadUInt8();
+            item.Personality = frame.ReadUInt8();
+            item.Luck = frame.ReadUInt8();
+        }
 
     }
 

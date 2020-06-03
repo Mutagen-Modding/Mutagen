@@ -1413,20 +1413,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRaceStats item,
-            MutagenFrame frame)
-        {
-            item.Strength = frame.ReadUInt8();
-            item.Intelligence = frame.ReadUInt8();
-            item.Willpower = frame.ReadUInt8();
-            item.Agility = frame.ReadUInt8();
-            item.Speed = frame.ReadUInt8();
-            item.Endurance = frame.ReadUInt8();
-            item.Personality = frame.ReadUInt8();
-            item.Luck = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             IRaceStats item,
             MutagenFrame frame,
@@ -1436,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RaceStatsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2291,6 +2277,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RaceStatsBinaryCreateTranslation
     {
         public readonly static RaceStatsBinaryCreateTranslation Instance = new RaceStatsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRaceStats item,
+            MutagenFrame frame)
+        {
+            item.Strength = frame.ReadUInt8();
+            item.Intelligence = frame.ReadUInt8();
+            item.Willpower = frame.ReadUInt8();
+            item.Agility = frame.ReadUInt8();
+            item.Speed = frame.ReadUInt8();
+            item.Endurance = frame.ReadUInt8();
+            item.Personality = frame.ReadUInt8();
+            item.Luck = frame.ReadUInt8();
+        }
 
     }
 

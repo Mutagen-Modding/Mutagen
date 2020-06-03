@@ -1243,16 +1243,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILocalVariableData item,
-            MutagenFrame frame)
-        {
-            item.Index = frame.ReadInt32();
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
-            item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Unknown2 = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             ILocalVariableData item,
             MutagenFrame frame,
@@ -1265,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LocalVariableDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1972,6 +1962,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LocalVariableDataBinaryCreateTranslation
     {
         public readonly static LocalVariableDataBinaryCreateTranslation Instance = new LocalVariableDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILocalVariableData item,
+            MutagenFrame frame)
+        {
+            item.Index = frame.ReadInt32();
+            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
+            item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown2 = frame.ReadInt32();
+        }
 
     }
 

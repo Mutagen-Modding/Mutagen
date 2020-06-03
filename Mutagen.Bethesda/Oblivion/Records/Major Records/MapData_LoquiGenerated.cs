@@ -1189,15 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMapData item,
-            MutagenFrame frame)
-        {
-            item.UsableDimensions = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesNWCell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesSECell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IMapData item,
             MutagenFrame frame,
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: MapDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1877,6 +1868,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class MapDataBinaryCreateTranslation
     {
         public readonly static MapDataBinaryCreateTranslation Instance = new MapDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMapData item,
+            MutagenFrame frame)
+        {
+            item.UsableDimensions = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
+            item.CellCoordinatesNWCell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.CellCoordinatesSECell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

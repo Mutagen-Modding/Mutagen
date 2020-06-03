@@ -1151,18 +1151,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPortal item,
-            MutagenFrame frame)
-        {
-            item.Origin = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Destination = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IPortal item,
             MutagenFrame frame,
@@ -1172,7 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PortalBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1793,6 +1781,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PortalBinaryCreateTranslation
     {
         public readonly static PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPortal item,
+            MutagenFrame frame)
+        {
+            item.Origin = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Destination = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

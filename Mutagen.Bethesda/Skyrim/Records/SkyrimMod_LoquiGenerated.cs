@@ -5467,793 +5467,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISkyrimMod item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISkyrimMod item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x34534554: // TES4
-                {
-                    item.ModHeader.CopyInFromBinary(
-                        frame: frame,
-                        recordTypeConverter: null);
-                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
-                }
-                case 0x54534D47: // GMST
-                {
-                    if (importMask?.GameSettings ?? true)
-                    {
-                        item.GameSettings.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
-                }
-                case 0x4457594B: // KYWD
-                {
-                    if (importMask?.Keywords ?? true)
-                    {
-                        item.Keywords.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
-                }
-                case 0x5452434C: // LCRT
-                {
-                    if (importMask?.LocationReferenceTypes ?? true)
-                    {
-                        item.LocationReferenceTypes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                }
-                case 0x54434141: // AACT
-                {
-                    if (importMask?.Actions ?? true)
-                    {
-                        item.Actions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
-                }
-                case 0x54535854: // TXST
-                {
-                    if (importMask?.TextureSets ?? true)
-                    {
-                        item.TextureSets.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
-                }
-                case 0x424F4C47: // GLOB
-                {
-                    if (importMask?.Globals ?? true)
-                    {
-                        item.Globals.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
-                }
-                case 0x53414C43: // CLAS
-                {
-                    if (importMask?.Classes ?? true)
-                    {
-                        item.Classes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
-                }
-                case 0x54434146: // FACT
-                {
-                    if (importMask?.Factions ?? true)
-                    {
-                        item.Factions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
-                }
-                case 0x54504448: // HDPT
-                {
-                    if (importMask?.HeadParts ?? true)
-                    {
-                        item.HeadParts.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
-                }
-                case 0x52494148: // HAIR
-                {
-                    if (importMask?.Hairs ?? true)
-                    {
-                        item.Hairs.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
-                }
-                case 0x53455945: // EYES
-                {
-                    if (importMask?.Eyes ?? true)
-                    {
-                        item.Eyes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
-                }
-                case 0x45434152: // RACE
-                {
-                    if (importMask?.Races ?? true)
-                    {
-                        item.Races.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
-                }
-                case 0x4E554F53: // SOUN
-                {
-                    if (importMask?.SoundMarkers ?? true)
-                    {
-                        item.SoundMarkers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
-                }
-                case 0x43505341: // ASPC
-                {
-                    if (importMask?.AcousticSpaces ?? true)
-                    {
-                        item.AcousticSpaces.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
-                }
-                case 0x4645474D: // MGEF
-                {
-                    if (importMask?.MagicEffects ?? true)
-                    {
-                        item.MagicEffects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
-                }
-                case 0x5845544C: // LTEX
-                {
-                    if (importMask?.LandscapeTextures ?? true)
-                    {
-                        item.LandscapeTextures.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
-                }
-                case 0x48434E45: // ENCH
-                {
-                    if (importMask?.ObjectEffects ?? true)
-                    {
-                        item.ObjectEffects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
-                }
-                case 0x4C455053: // SPEL
-                {
-                    if (importMask?.Spells ?? true)
-                    {
-                        item.Spells.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
-                }
-                case 0x4C524353: // SCRL
-                {
-                    if (importMask?.Scrolls ?? true)
-                    {
-                        item.Scrolls.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
-                }
-                case 0x49544341: // ACTI
-                {
-                    if (importMask?.Activators ?? true)
-                    {
-                        item.Activators.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
-                }
-                case 0x54434154: // TACT
-                {
-                    if (importMask?.TalkingActivators ?? true)
-                    {
-                        item.TalkingActivators.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
-                }
-                case 0x4F4D5241: // ARMO
-                {
-                    if (importMask?.Armors ?? true)
-                    {
-                        item.Armors.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
-                }
-                case 0x4B4F4F42: // BOOK
-                {
-                    if (importMask?.Books ?? true)
-                    {
-                        item.Books.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
-                }
-                case 0x544E4F43: // CONT
-                {
-                    if (importMask?.Containers ?? true)
-                    {
-                        item.Containers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
-                }
-                case 0x524F4F44: // DOOR
-                {
-                    if (importMask?.Doors ?? true)
-                    {
-                        item.Doors.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
-                }
-                case 0x52474E49: // INGR
-                {
-                    if (importMask?.Ingredients ?? true)
-                    {
-                        item.Ingredients.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
-                }
-                case 0x4847494C: // LIGH
-                {
-                    if (importMask?.Lights ?? true)
-                    {
-                        item.Lights.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
-                }
-                case 0x4353494D: // MISC
-                {
-                    if (importMask?.MiscItems ?? true)
-                    {
-                        item.MiscItems.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
-                }
-                case 0x41505041: // APPA
-                {
-                    if (importMask?.AlchemicalApparatuses ?? true)
-                    {
-                        item.AlchemicalApparatuses.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
-                }
-                case 0x54415453: // STAT
-                {
-                    if (importMask?.Statics ?? true)
-                    {
-                        item.Statics.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
-                }
-                case 0x5454534D: // MSTT
-                {
-                    if (importMask?.MoveableStatics ?? true)
-                    {
-                        item.MoveableStatics.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
-                }
-                case 0x53415247: // GRAS
-                {
-                    if (importMask?.Grasses ?? true)
-                    {
-                        item.Grasses.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
-                }
-                case 0x45455254: // TREE
-                {
-                    if (importMask?.Trees ?? true)
-                    {
-                        item.Trees.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
-                }
-                case 0x524F4C46: // FLOR
-                {
-                    if (importMask?.Florae ?? true)
-                    {
-                        item.Florae.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
-                }
-                case 0x4E525546: // FURN
-                {
-                    if (importMask?.Furniture ?? true)
-                    {
-                        item.Furniture.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
-                }
-                case 0x50414557: // WEAP
-                {
-                    if (importMask?.Weapons ?? true)
-                    {
-                        item.Weapons.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
-                }
-                case 0x4F4D4D41: // AMMO
-                {
-                    if (importMask?.Ammunitions ?? true)
-                    {
-                        item.Ammunitions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
-                }
-                case 0x5F43504E: // NPC_
-                {
-                    if (importMask?.Npcs ?? true)
-                    {
-                        item.Npcs.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
-                }
-                case 0x4E4C564C: // LVLN
-                {
-                    if (importMask?.LeveledNpcs ?? true)
-                    {
-                        item.LeveledNpcs.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
-                }
-                case 0x4D59454B: // KEYM
-                {
-                    if (importMask?.Keys ?? true)
-                    {
-                        item.Keys.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
-                }
-                case 0x48434C41: // ALCH
-                {
-                    if (importMask?.Ingestibles ?? true)
-                    {
-                        item.Ingestibles.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
-                }
-                case 0x4D4C4449: // IDLM
-                {
-                    if (importMask?.IdleMarkers ?? true)
-                    {
-                        item.IdleMarkers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
-                }
-                case 0x4A424F43: // COBJ
-                {
-                    if (importMask?.ConstructibleObjects ?? true)
-                    {
-                        item.ConstructibleObjects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
-                }
-                case 0x4A4F5250: // PROJ
-                {
-                    if (importMask?.Projectiles ?? true)
-                    {
-                        item.Projectiles.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
-                }
-                case 0x445A4148: // HAZD
-                {
-                    if (importMask?.Hazards ?? true)
-                    {
-                        item.Hazards.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
-                }
-                case 0x4D474C53: // SLGM
-                {
-                    if (importMask?.SoulGems ?? true)
-                    {
-                        item.SoulGems.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
-                }
-                case 0x494C564C: // LVLI
-                {
-                    if (importMask?.LeveledItems ?? true)
-                    {
-                        item.LeveledItems.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
-                }
-                case 0x52485457: // WTHR
-                {
-                    if (importMask?.Weathers ?? true)
-                    {
-                        item.Weathers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
-                }
-                case 0x544D4C43: // CLMT
-                {
-                    if (importMask?.Climates ?? true)
-                    {
-                        item.Climates.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
-                }
-                case 0x44475053: // SPGD
-                {
-                    if (importMask?.ShaderParticleGeometries ?? true)
-                    {
-                        item.ShaderParticleGeometries.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
-                }
-                case 0x54434652: // RFCT
-                {
-                    if (importMask?.VisualEffects ?? true)
-                    {
-                        item.VisualEffects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
-                }
-                case 0x4E474552: // REGN
-                {
-                    if (importMask?.Regions ?? true)
-                    {
-                        item.Regions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
-                }
-                case 0x4956414E: // NAVI
-                {
-                    if (importMask?.NavigationMeshInfoMaps ?? true)
-                    {
-                        item.NavigationMeshInfoMaps.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
-                }
-                case 0x4C4C4543: // CELL
-                {
-                    if (importMask?.Cells ?? true)
-                    {
-                        item.Cells.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
-                }
-                default:
-                    frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ISkyrimMod item,
             MutagenFrame frame,
@@ -6267,8 +5480,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 importMask: importMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SkyrimModBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SkyrimModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -12200,6 +11413,793 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class SkyrimModBinaryCreateTranslation
     {
         public readonly static SkyrimModBinaryCreateTranslation Instance = new SkyrimModBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISkyrimMod item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ISkyrimMod item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            GroupMask? importMask,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    item.ModHeader.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null);
+                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        item.GameSettings.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                }
+                case 0x4457594B: // KYWD
+                {
+                    if (importMask?.Keywords ?? true)
+                    {
+                        item.Keywords.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                }
+                case 0x5452434C: // LCRT
+                {
+                    if (importMask?.LocationReferenceTypes ?? true)
+                    {
+                        item.LocationReferenceTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                }
+                case 0x54434141: // AACT
+                {
+                    if (importMask?.Actions ?? true)
+                    {
+                        item.Actions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                }
+                case 0x54535854: // TXST
+                {
+                    if (importMask?.TextureSets ?? true)
+                    {
+                        item.TextureSets.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    if (importMask?.Globals ?? true)
+                    {
+                        item.Globals.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                }
+                case 0x53414C43: // CLAS
+                {
+                    if (importMask?.Classes ?? true)
+                    {
+                        item.Classes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                }
+                case 0x54434146: // FACT
+                {
+                    if (importMask?.Factions ?? true)
+                    {
+                        item.Factions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                }
+                case 0x54504448: // HDPT
+                {
+                    if (importMask?.HeadParts ?? true)
+                    {
+                        item.HeadParts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                }
+                case 0x52494148: // HAIR
+                {
+                    if (importMask?.Hairs ?? true)
+                    {
+                        item.Hairs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                }
+                case 0x53455945: // EYES
+                {
+                    if (importMask?.Eyes ?? true)
+                    {
+                        item.Eyes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                }
+                case 0x45434152: // RACE
+                {
+                    if (importMask?.Races ?? true)
+                    {
+                        item.Races.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                }
+                case 0x4E554F53: // SOUN
+                {
+                    if (importMask?.SoundMarkers ?? true)
+                    {
+                        item.SoundMarkers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                }
+                case 0x43505341: // ASPC
+                {
+                    if (importMask?.AcousticSpaces ?? true)
+                    {
+                        item.AcousticSpaces.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
+                }
+                case 0x4645474D: // MGEF
+                {
+                    if (importMask?.MagicEffects ?? true)
+                    {
+                        item.MagicEffects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
+                }
+                case 0x5845544C: // LTEX
+                {
+                    if (importMask?.LandscapeTextures ?? true)
+                    {
+                        item.LandscapeTextures.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
+                }
+                case 0x48434E45: // ENCH
+                {
+                    if (importMask?.ObjectEffects ?? true)
+                    {
+                        item.ObjectEffects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                }
+                case 0x4C455053: // SPEL
+                {
+                    if (importMask?.Spells ?? true)
+                    {
+                        item.Spells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                }
+                case 0x4C524353: // SCRL
+                {
+                    if (importMask?.Scrolls ?? true)
+                    {
+                        item.Scrolls.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                }
+                case 0x49544341: // ACTI
+                {
+                    if (importMask?.Activators ?? true)
+                    {
+                        item.Activators.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                }
+                case 0x54434154: // TACT
+                {
+                    if (importMask?.TalkingActivators ?? true)
+                    {
+                        item.TalkingActivators.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                }
+                case 0x4F4D5241: // ARMO
+                {
+                    if (importMask?.Armors ?? true)
+                    {
+                        item.Armors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                }
+                case 0x4B4F4F42: // BOOK
+                {
+                    if (importMask?.Books ?? true)
+                    {
+                        item.Books.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                }
+                case 0x544E4F43: // CONT
+                {
+                    if (importMask?.Containers ?? true)
+                    {
+                        item.Containers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
+                }
+                case 0x524F4F44: // DOOR
+                {
+                    if (importMask?.Doors ?? true)
+                    {
+                        item.Doors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                }
+                case 0x52474E49: // INGR
+                {
+                    if (importMask?.Ingredients ?? true)
+                    {
+                        item.Ingredients.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                }
+                case 0x4847494C: // LIGH
+                {
+                    if (importMask?.Lights ?? true)
+                    {
+                        item.Lights.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                }
+                case 0x4353494D: // MISC
+                {
+                    if (importMask?.MiscItems ?? true)
+                    {
+                        item.MiscItems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                }
+                case 0x41505041: // APPA
+                {
+                    if (importMask?.AlchemicalApparatuses ?? true)
+                    {
+                        item.AlchemicalApparatuses.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                }
+                case 0x54415453: // STAT
+                {
+                    if (importMask?.Statics ?? true)
+                    {
+                        item.Statics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                }
+                case 0x5454534D: // MSTT
+                {
+                    if (importMask?.MoveableStatics ?? true)
+                    {
+                        item.MoveableStatics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                }
+                case 0x53415247: // GRAS
+                {
+                    if (importMask?.Grasses ?? true)
+                    {
+                        item.Grasses.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                }
+                case 0x45455254: // TREE
+                {
+                    if (importMask?.Trees ?? true)
+                    {
+                        item.Trees.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                }
+                case 0x524F4C46: // FLOR
+                {
+                    if (importMask?.Florae ?? true)
+                    {
+                        item.Florae.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                }
+                case 0x4E525546: // FURN
+                {
+                    if (importMask?.Furniture ?? true)
+                    {
+                        item.Furniture.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                }
+                case 0x50414557: // WEAP
+                {
+                    if (importMask?.Weapons ?? true)
+                    {
+                        item.Weapons.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                }
+                case 0x4F4D4D41: // AMMO
+                {
+                    if (importMask?.Ammunitions ?? true)
+                    {
+                        item.Ammunitions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                }
+                case 0x5F43504E: // NPC_
+                {
+                    if (importMask?.Npcs ?? true)
+                    {
+                        item.Npcs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                }
+                case 0x4E4C564C: // LVLN
+                {
+                    if (importMask?.LeveledNpcs ?? true)
+                    {
+                        item.LeveledNpcs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                }
+                case 0x4D59454B: // KEYM
+                {
+                    if (importMask?.Keys ?? true)
+                    {
+                        item.Keys.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                }
+                case 0x48434C41: // ALCH
+                {
+                    if (importMask?.Ingestibles ?? true)
+                    {
+                        item.Ingestibles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                }
+                case 0x4D4C4449: // IDLM
+                {
+                    if (importMask?.IdleMarkers ?? true)
+                    {
+                        item.IdleMarkers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                }
+                case 0x4A424F43: // COBJ
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                }
+                case 0x4A4F5250: // PROJ
+                {
+                    if (importMask?.Projectiles ?? true)
+                    {
+                        item.Projectiles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                }
+                case 0x445A4148: // HAZD
+                {
+                    if (importMask?.Hazards ?? true)
+                    {
+                        item.Hazards.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                }
+                case 0x4D474C53: // SLGM
+                {
+                    if (importMask?.SoulGems ?? true)
+                    {
+                        item.SoulGems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                }
+                case 0x494C564C: // LVLI
+                {
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        item.LeveledItems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                }
+                case 0x52485457: // WTHR
+                {
+                    if (importMask?.Weathers ?? true)
+                    {
+                        item.Weathers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                }
+                case 0x544D4C43: // CLMT
+                {
+                    if (importMask?.Climates ?? true)
+                    {
+                        item.Climates.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                }
+                case 0x44475053: // SPGD
+                {
+                    if (importMask?.ShaderParticleGeometries ?? true)
+                    {
+                        item.ShaderParticleGeometries.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                }
+                case 0x54434652: // RFCT
+                {
+                    if (importMask?.VisualEffects ?? true)
+                    {
+                        item.VisualEffects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                }
+                case 0x4E474552: // REGN
+                {
+                    if (importMask?.Regions ?? true)
+                    {
+                        item.Regions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                }
+                case 0x4956414E: // NAVI
+                {
+                    if (importMask?.NavigationMeshInfoMaps ?? true)
+                    {
+                        item.NavigationMeshInfoMaps.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                }
+                case 0x4C4C4543: // CELL
+                {
+                    if (importMask?.Cells ?? true)
+                    {
+                        item.Cells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
+                }
+                default:
+                    frame.Position += contentLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
     }
 

@@ -1451,15 +1451,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILod item,
-            MutagenFrame frame)
-        {
-            LodBinaryCreateTranslation.FillBinaryLevel0CustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             ILod item,
             MutagenFrame frame,
@@ -1472,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LodBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2393,6 +2384,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LodBinaryCreateTranslation
     {
         public readonly static LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILod item,
+            MutagenFrame frame)
+        {
+            LodBinaryCreateTranslation.FillBinaryLevel0CustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryLevel0Custom(
             MutagenFrame frame,

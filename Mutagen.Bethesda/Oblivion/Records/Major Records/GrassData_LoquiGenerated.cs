@@ -1603,24 +1603,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IGrassData item,
-            MutagenFrame frame)
-        {
-            item.Density = frame.ReadUInt8();
-            item.MinSlope = frame.ReadUInt8();
-            item.MaxSlope = frame.ReadUInt8();
-            item.Fluff1 = frame.ReadUInt8();
-            item.UnitFromWaterAmount = frame.ReadUInt16();
-            item.Fluff2 = frame.ReadUInt16();
-            item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.PositionRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HeightRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ColorRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IGrassData item,
             MutagenFrame frame,
@@ -1633,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: GrassDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2668,6 +2650,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class GrassDataBinaryCreateTranslation
     {
         public readonly static GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IGrassData item,
+            MutagenFrame frame)
+        {
+            item.Density = frame.ReadUInt8();
+            item.MinSlope = frame.ReadUInt8();
+            item.MaxSlope = frame.ReadUInt8();
+            item.Fluff1 = frame.ReadUInt8();
+            item.UnitFromWaterAmount = frame.ReadUInt16();
+            item.Fluff2 = frame.ReadUInt16();
+            item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.PositionRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HeightRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ColorRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

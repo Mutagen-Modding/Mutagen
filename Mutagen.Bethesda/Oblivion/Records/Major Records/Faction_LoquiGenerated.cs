@@ -1547,91 +1547,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Faction_Registration.FACT_HEADER;
-        protected static void FillBinaryStructs(
-            IFactionInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IFactionInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
-                }
-                case 0x4D414E58: // XNAM
-                {
-                    item.Relations.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Faction_Registration.XNAM_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
-                }
-                case 0x4D414E52: // RNAM
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
-                case 0x4D414E49: // INAM
-                {
-                    item.Ranks.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IFactionInternal item,
             MutagenFrame frame,
@@ -1641,8 +1556,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FactionBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: FactionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2685,6 +2600,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FactionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
+
+        public override RecordType RecordType => Faction_Registration.FACT_HEADER;
+        public static void FillBinaryStructs(
+            IFactionInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IFactionInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    item.Relations.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                }
+                case 0x4D414E52: // RNAM
+                case 0x4D414E4D: // MNAM
+                case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
+                {
+                    item.Ranks.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

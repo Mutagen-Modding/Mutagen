@@ -1276,16 +1276,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherAmbientColorSet item,
-            MutagenFrame frame)
-        {
-            item.Sunrise = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Day = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Sunset = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Night = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherAmbientColorSet item,
             MutagenFrame frame,
@@ -1298,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherAmbientColorSetBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2095,6 +2085,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherAmbientColorSetBinaryCreateTranslation
     {
         public readonly static WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherAmbientColorSet item,
+            MutagenFrame frame)
+        {
+            item.Sunrise = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
+            item.Day = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
+            item.Sunset = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
+            item.Night = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
+        }
 
     }
 

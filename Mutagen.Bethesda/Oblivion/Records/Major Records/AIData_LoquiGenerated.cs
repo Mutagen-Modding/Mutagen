@@ -1419,20 +1419,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAIData item,
-            MutagenFrame frame)
-        {
-            item.Aggression = frame.ReadUInt8();
-            item.Confidence = frame.ReadUInt8();
-            item.EnergyLevel = frame.ReadUInt8();
-            item.Responsibility = frame.ReadUInt8();
-            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.MaximumTrainingLevel = frame.ReadUInt8();
-            item.Unused = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IAIData item,
             MutagenFrame frame,
@@ -1445,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AIDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2312,6 +2298,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIDataBinaryCreateTranslation
     {
         public readonly static AIDataBinaryCreateTranslation Instance = new AIDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAIData item,
+            MutagenFrame frame)
+        {
+            item.Aggression = frame.ReadUInt8();
+            item.Confidence = frame.ReadUInt8();
+            item.EnergyLevel = frame.ReadUInt8();
+            item.Responsibility = frame.ReadUInt8();
+            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.MaximumTrainingLevel = frame.ReadUInt8();
+            item.Unused = frame.ReadInt16();
+        }
 
     }
 

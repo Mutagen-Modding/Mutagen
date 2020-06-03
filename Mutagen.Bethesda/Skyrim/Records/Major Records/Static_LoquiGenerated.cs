@@ -1478,63 +1478,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Static_Registration.STAT_HEADER;
-        protected static void FillBinaryStructs(
-            IStaticInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IStaticInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444E424F: // OBND
-                {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
-                }
-                case 0x4D414E44: // DNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IStaticInternal item,
             MutagenFrame frame,
@@ -1544,8 +1487,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: StaticBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: StaticBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2601,6 +2544,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class StaticBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
+
+        public override RecordType RecordType => Static_Registration.STAT_HEADER;
+        public static void FillBinaryStructs(
+            IStaticInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IStaticInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

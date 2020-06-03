@@ -1183,15 +1183,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMountData item,
-            MutagenFrame frame)
-        {
-            item.MountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DismountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MountCameraOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IMountData item,
             MutagenFrame frame,
@@ -1201,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: MountDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1862,6 +1853,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class MountDataBinaryCreateTranslation
     {
         public readonly static MountDataBinaryCreateTranslation Instance = new MountDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMountData item,
+            MutagenFrame frame)
+        {
+            item.MountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DismountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MountCameraOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

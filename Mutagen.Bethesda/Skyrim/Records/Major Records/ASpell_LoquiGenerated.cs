@@ -1101,7 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
         public virtual void CopyInFromBinary(
             IASpellInternal item,
             MutagenFrame frame,
@@ -1760,6 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ASpellBinaryCreateTranslation Instance = new ASpellBinaryCreateTranslation();
 
+        public override RecordType RecordType => throw new ArgumentException();
     }
 
 }

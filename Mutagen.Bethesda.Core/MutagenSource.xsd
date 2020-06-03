@@ -391,7 +391,6 @@
         <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
-        <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
         <xs:element name="CustomLogic" type="CustomLogic" />
@@ -410,7 +409,6 @@
         <xs:element name="ModKey" type="ModKey"/>
         <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
-        <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Gendered" type="GenderedItem" />
@@ -520,18 +518,6 @@
 
   <xs:complexType name="TransferType">
     <xs:attribute name="byteLength" type="xs:byte" use="required" />
-  </xs:complexType>
-
-  <xs:complexType name="SpecialParse" >
-    <xs:attribute name="recordType" type="xs:string" use="required" />
-  </xs:complexType>
-
-  <xs:complexType name="NSpecialParse" >
-    <xs:complexContent>
-      <xs:extension base="SpecialParse">
-        <xs:attribute name="name" type="xs:string" use="required" />
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:simpleType name="FormIDType" final="restriction" >

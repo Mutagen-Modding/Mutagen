@@ -1363,23 +1363,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IGetEventData item,
-            MutagenFrame frame)
-        {
-            item.Unknown2 = frame.ReadUInt16();
-            item.EventFunction = frame.ReadUInt16();
-            item.EventMember = frame.ReadUInt16();
-            item.Parameter3 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Unknown3 = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IGetEventData item,
             MutagenFrame frame,
@@ -1389,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: GetEventDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -2195,6 +2178,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new readonly static GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IGetEventData item,
+            MutagenFrame frame)
+        {
+            item.Unknown2 = frame.ReadUInt16();
+            item.EventFunction = frame.ReadUInt16();
+            item.EventMember = frame.ReadUInt16();
+            item.Parameter3 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Unknown3 = frame.ReadInt32();
+        }
 
     }
 

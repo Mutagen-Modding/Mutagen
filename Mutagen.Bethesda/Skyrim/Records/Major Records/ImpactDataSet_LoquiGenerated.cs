@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => ImpactDataSet_Registration.IPDS_HEADER;
-        protected static void FillBinaryStructs(
-            IImpactDataSetInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IImpactDataSetInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ImpactDataSetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ImpactDataSetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ImpactDataSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
+
+        public override RecordType RecordType => ImpactDataSet_Registration.IPDS_HEADER;
+        public static void FillBinaryStructs(
+            IImpactDataSetInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

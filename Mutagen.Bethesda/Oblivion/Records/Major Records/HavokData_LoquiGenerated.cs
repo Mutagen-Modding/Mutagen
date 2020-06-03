@@ -1189,15 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IHavokData item,
-            MutagenFrame frame)
-        {
-            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Friction = frame.ReadUInt8();
-            item.Restitution = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             IHavokData item,
             MutagenFrame frame,
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: HavokDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1874,6 +1865,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class HavokDataBinaryCreateTranslation
     {
         public readonly static HavokDataBinaryCreateTranslation Instance = new HavokDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IHavokData item,
+            MutagenFrame frame)
+        {
+            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Friction = frame.ReadUInt8();
+            item.Restitution = frame.ReadUInt8();
+        }
 
     }
 

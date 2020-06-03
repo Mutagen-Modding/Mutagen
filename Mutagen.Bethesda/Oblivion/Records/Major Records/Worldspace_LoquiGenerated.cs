@@ -2070,117 +2070,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Worldspace_Registration.WRLD_HEADER;
-        protected static void FillBinaryStructs(
-            IWorldspaceInternal item,
-            MutagenFrame frame)
-        {
-            PlaceSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IWorldspaceInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
-                }
-                case 0x4D414E57: // WNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
-                }
-                case 0x324D414E: // NAM2
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
-                }
-                case 0x304D414E: // NAM0
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectBoundsMin = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
-                }
-                case 0x394D414E: // NAM9
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectBoundsMax = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
-                }
-                case 0x5453464F: // OFST
-                case 0x58585858: // XXXX
-                {
-                    if (nextRecordType == Worldspace_Registration.XXXX_HEADER)
-                    {
-                        var overflowHeader = frame.ReadSubrecordFrame();
-                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
-                    }
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OffsetData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
-                }
-                default:
-                    return PlaceSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IWorldspaceInternal item,
             MutagenFrame frame,
@@ -2190,8 +2079,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: WorldspaceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WorldspaceBinaryCreateTranslation.FillBinaryRecordTypes);
             WorldspaceBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
@@ -3988,6 +3877,117 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
     {
         public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
+
+        public override RecordType RecordType => Worldspace_Registration.WRLD_HEADER;
+        public static void FillBinaryStructs(
+            IWorldspaceInternal item,
+            MutagenFrame frame)
+        {
+            PlaceBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IWorldspaceInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Climate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectBoundsMin = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
+                }
+                case 0x394D414E: // NAM9
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectBoundsMax = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Music = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
+                }
+                case 0x5453464F: // OFST
+                case 0x58585858: // XXXX
+                {
+                    if (nextRecordType == Worldspace_Registration.XXXX_HEADER)
+                    {
+                        var overflowHeader = frame.ReadSubrecordFrame();
+                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    }
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OffsetData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
+                }
+                default:
+                    return PlaceBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,

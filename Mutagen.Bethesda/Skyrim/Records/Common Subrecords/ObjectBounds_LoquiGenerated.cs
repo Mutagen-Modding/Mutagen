@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IObjectBounds item,
-            MutagenFrame frame)
-        {
-            item.First = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Second = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IObjectBounds item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ObjectBoundsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1788,6 +1780,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ObjectBoundsBinaryCreateTranslation
     {
         public readonly static ObjectBoundsBinaryCreateTranslation Instance = new ObjectBoundsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IObjectBounds item,
+            MutagenFrame frame)
+        {
+            item.First = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Second = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

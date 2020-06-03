@@ -1290,60 +1290,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMapMarker item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMapMarker item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E46: // FNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
-                }
-                case 0x4C4C5546: // FULL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
-                }
-                case 0x4D414E54: // TNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Types = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
-                            {
-                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                                    frame: r.SpawnWithLength(2),
-                                    item: out listSubItem);
-                            })
-                        .ToExtendedList<MapMarker.Type>();
-                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Types);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IMapMarker item,
             MutagenFrame frame,
@@ -1353,8 +1299,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: MapMarkerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MapMarkerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2102,6 +2048,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class MapMarkerBinaryCreateTranslation
     {
         public readonly static MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMapMarker item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMapMarker item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Types = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
+                                    frame: r.SpawnWithLength(2),
+                                    item: out listSubItem);
+                            })
+                        .ToExtendedList<MapMarker.Type>();
+                    return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Types);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

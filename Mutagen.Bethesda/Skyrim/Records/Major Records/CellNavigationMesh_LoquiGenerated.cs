@@ -1215,16 +1215,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => CellNavigationMesh_Registration.NAVM_HEADER;
-        protected static void FillBinaryStructs(
-            ICellNavigationMeshInternal item,
-            MutagenFrame frame)
-        {
-            ANavigationMeshSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ICellNavigationMeshInternal item,
             MutagenFrame frame,
@@ -1234,8 +1224,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: CellNavigationMeshBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CellNavigationMeshBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2096,6 +2086,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CellNavigationMeshBinaryCreateTranslation : ANavigationMeshBinaryCreateTranslation
     {
         public new readonly static CellNavigationMeshBinaryCreateTranslation Instance = new CellNavigationMeshBinaryCreateTranslation();
+
+        public override RecordType RecordType => CellNavigationMesh_Registration.NAVM_HEADER;
+        public static void FillBinaryStructs(
+            ICellNavigationMeshInternal item,
+            MutagenFrame frame)
+        {
+            ANavigationMeshBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

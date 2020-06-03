@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IQuestData item,
-            MutagenFrame frame)
-        {
-            item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Priority = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             IQuestData item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: QuestDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1787,6 +1779,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class QuestDataBinaryCreateTranslation
     {
         public readonly static QuestDataBinaryCreateTranslation Instance = new QuestDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IQuestData item,
+            MutagenFrame frame)
+        {
+            item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Priority = frame.ReadUInt8();
+        }
 
     }
 

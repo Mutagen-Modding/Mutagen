@@ -12,9 +12,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     namespace Internals
     {
-        public partial class LeveledItemSetterCommon
+        public partial class LeveledItemBinaryCreateTranslation
         {
-            static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame)
+            static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
             {
                 var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
                 if (length != 1)
@@ -62,11 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
                 _FlagsLocation = (ushort)(stream.Position - offset);
             }
 
-            public void VestigialSpecialParse(
-                BinaryMemoryReadStream stream,
-                int offset,
-                RecordType type,
-                int? lastParsed)
+            partial void VestigialCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                 if (subMeta.ContentLength != 1)

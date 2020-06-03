@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Landscape_Registration.LAND_HEADER;
-        protected static void FillBinaryStructs(
-            ILandscapeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILandscapeInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LandscapeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LandscapeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LandscapeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
+
+        public override RecordType RecordType => Landscape_Registration.LAND_HEADER;
+        public static void FillBinaryStructs(
+            ILandscapeInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

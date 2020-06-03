@@ -1145,15 +1145,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWorkbenchData item,
-            MutagenFrame frame)
-        {
-            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            if (frame.Complete) return;
-            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
-        }
-        
         public virtual void CopyInFromBinary(
             IWorkbenchData item,
             MutagenFrame frame,
@@ -1166,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WorkbenchDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1799,6 +1790,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WorkbenchDataBinaryCreateTranslation
     {
         public readonly static WorkbenchDataBinaryCreateTranslation Instance = new WorkbenchDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWorkbenchData item,
+            MutagenFrame frame)
+        {
+            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            if (frame.Complete) return;
+            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+        }
 
     }
 

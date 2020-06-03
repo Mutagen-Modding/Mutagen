@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "item.TeleportMessageBox = null";
+            string testString = "SpecialParse_Vestigial";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -72,7 +72,6 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<CustomLogic>("CustomLogic");
             gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
-            gen.AddTypeAssociation<SpecialParseType>("SpecialParse");
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();

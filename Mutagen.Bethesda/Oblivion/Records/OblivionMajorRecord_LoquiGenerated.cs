@@ -1338,16 +1338,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
-        protected static void FillBinaryStructs(
-            IOblivionMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            MajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
@@ -1981,6 +1971,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class OblivionMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
         public new readonly static OblivionMajorRecordBinaryCreateTranslation Instance = new OblivionMajorRecordBinaryCreateTranslation();
+
+        public override RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            IOblivionMajorRecordInternal item,
+            MutagenFrame frame)
+        {
+            MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

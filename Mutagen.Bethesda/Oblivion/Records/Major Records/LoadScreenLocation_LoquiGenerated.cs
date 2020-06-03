@@ -1200,19 +1200,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILoadScreenLocation item,
-            MutagenFrame frame)
-        {
-            item.Direct = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Indirect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.GridPoint = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILoadScreenLocation item,
             MutagenFrame frame,
@@ -1225,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LoadScreenLocationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1894,6 +1881,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LoadScreenLocationBinaryCreateTranslation
     {
         public readonly static LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILoadScreenLocation item,
+            MutagenFrame frame)
+        {
+            item.Direct = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Indirect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.GridPoint = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

@@ -5573,821 +5573,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IOblivionMod item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IOblivionMod item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x34534554: // TES4
-                {
-                    item.ModHeader.CopyInFromBinary(
-                        frame: frame,
-                        recordTypeConverter: null);
-                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
-                }
-                case 0x54534D47: // GMST
-                {
-                    if (importMask?.GameSettings ?? true)
-                    {
-                        item.GameSettings.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
-                }
-                case 0x424F4C47: // GLOB
-                {
-                    if (importMask?.Globals ?? true)
-                    {
-                        item.Globals.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
-                }
-                case 0x53414C43: // CLAS
-                {
-                    if (importMask?.Classes ?? true)
-                    {
-                        item.Classes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
-                }
-                case 0x54434146: // FACT
-                {
-                    if (importMask?.Factions ?? true)
-                    {
-                        item.Factions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
-                }
-                case 0x52494148: // HAIR
-                {
-                    if (importMask?.Hairs ?? true)
-                    {
-                        item.Hairs.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
-                }
-                case 0x53455945: // EYES
-                {
-                    if (importMask?.Eyes ?? true)
-                    {
-                        item.Eyes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
-                }
-                case 0x45434152: // RACE
-                {
-                    if (importMask?.Races ?? true)
-                    {
-                        item.Races.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
-                }
-                case 0x4E554F53: // SOUN
-                {
-                    if (importMask?.Sounds ?? true)
-                    {
-                        item.Sounds.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
-                }
-                case 0x4C494B53: // SKIL
-                {
-                    if (importMask?.Skills ?? true)
-                    {
-                        item.Skills.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
-                }
-                case 0x4645474D: // MGEF
-                {
-                    if (importMask?.MagicEffects ?? true)
-                    {
-                        item.MagicEffects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
-                }
-                case 0x54504353: // SCPT
-                {
-                    if (importMask?.Scripts ?? true)
-                    {
-                        item.Scripts.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
-                }
-                case 0x5845544C: // LTEX
-                {
-                    if (importMask?.LandTextures ?? true)
-                    {
-                        item.LandTextures.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
-                }
-                case 0x48434E45: // ENCH
-                {
-                    if (importMask?.Enchantments ?? true)
-                    {
-                        item.Enchantments.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
-                }
-                case 0x4C455053: // SPEL
-                {
-                    if (importMask?.Spells ?? true)
-                    {
-                        item.Spells.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
-                }
-                case 0x4E475342: // BSGN
-                {
-                    if (importMask?.Birthsigns ?? true)
-                    {
-                        item.Birthsigns.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
-                }
-                case 0x49544341: // ACTI
-                {
-                    if (importMask?.Activators ?? true)
-                    {
-                        item.Activators.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
-                }
-                case 0x41505041: // APPA
-                {
-                    if (importMask?.AlchemicalApparatus ?? true)
-                    {
-                        item.AlchemicalApparatus.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
-                }
-                case 0x4F4D5241: // ARMO
-                {
-                    if (importMask?.Armors ?? true)
-                    {
-                        item.Armors.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
-                }
-                case 0x4B4F4F42: // BOOK
-                {
-                    if (importMask?.Books ?? true)
-                    {
-                        item.Books.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
-                }
-                case 0x544F4C43: // CLOT
-                {
-                    if (importMask?.Clothes ?? true)
-                    {
-                        item.Clothes.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
-                }
-                case 0x544E4F43: // CONT
-                {
-                    if (importMask?.Containers ?? true)
-                    {
-                        item.Containers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
-                }
-                case 0x524F4F44: // DOOR
-                {
-                    if (importMask?.Doors ?? true)
-                    {
-                        item.Doors.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
-                }
-                case 0x52474E49: // INGR
-                {
-                    if (importMask?.Ingredients ?? true)
-                    {
-                        item.Ingredients.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
-                }
-                case 0x4847494C: // LIGH
-                {
-                    if (importMask?.Lights ?? true)
-                    {
-                        item.Lights.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
-                }
-                case 0x4353494D: // MISC
-                {
-                    if (importMask?.Miscellaneous ?? true)
-                    {
-                        item.Miscellaneous.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
-                }
-                case 0x54415453: // STAT
-                {
-                    if (importMask?.Statics ?? true)
-                    {
-                        item.Statics.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
-                }
-                case 0x53415247: // GRAS
-                {
-                    if (importMask?.Grasses ?? true)
-                    {
-                        item.Grasses.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
-                }
-                case 0x45455254: // TREE
-                {
-                    if (importMask?.Trees ?? true)
-                    {
-                        item.Trees.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
-                }
-                case 0x524F4C46: // FLOR
-                {
-                    if (importMask?.Flora ?? true)
-                    {
-                        item.Flora.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
-                }
-                case 0x4E525546: // FURN
-                {
-                    if (importMask?.Furniture ?? true)
-                    {
-                        item.Furniture.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furniture);
-                }
-                case 0x50414557: // WEAP
-                {
-                    if (importMask?.Weapons ?? true)
-                    {
-                        item.Weapons.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
-                }
-                case 0x4F4D4D41: // AMMO
-                {
-                    if (importMask?.Ammunitions ?? true)
-                    {
-                        item.Ammunitions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
-                }
-                case 0x5F43504E: // NPC_
-                {
-                    if (importMask?.Npcs ?? true)
-                    {
-                        item.Npcs.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Npcs);
-                }
-                case 0x41455243: // CREA
-                {
-                    if (importMask?.Creatures ?? true)
-                    {
-                        item.Creatures.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
-                }
-                case 0x434C564C: // LVLC
-                {
-                    if (importMask?.LeveledCreatures ?? true)
-                    {
-                        item.LeveledCreatures.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
-                }
-                case 0x4D474C53: // SLGM
-                {
-                    if (importMask?.SoulGems ?? true)
-                    {
-                        item.SoulGems.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
-                }
-                case 0x4D59454B: // KEYM
-                {
-                    if (importMask?.Keys ?? true)
-                    {
-                        item.Keys.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
-                }
-                case 0x48434C41: // ALCH
-                {
-                    if (importMask?.Potions ?? true)
-                    {
-                        item.Potions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
-                }
-                case 0x50534253: // SBSP
-                {
-                    if (importMask?.Subspaces ?? true)
-                    {
-                        item.Subspaces.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
-                }
-                case 0x54534753: // SGST
-                {
-                    if (importMask?.SigilStones ?? true)
-                    {
-                        item.SigilStones.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
-                }
-                case 0x494C564C: // LVLI
-                {
-                    if (importMask?.LeveledItems ?? true)
-                    {
-                        item.LeveledItems.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
-                }
-                case 0x52485457: // WTHR
-                {
-                    if (importMask?.Weathers ?? true)
-                    {
-                        item.Weathers.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
-                }
-                case 0x544D4C43: // CLMT
-                {
-                    if (importMask?.Climates ?? true)
-                    {
-                        item.Climates.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
-                }
-                case 0x4E474552: // REGN
-                {
-                    if (importMask?.Regions ?? true)
-                    {
-                        item.Regions.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
-                }
-                case 0x4C4C4543: // CELL
-                {
-                    if (importMask?.Cells ?? true)
-                    {
-                        item.Cells.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
-                }
-                case 0x444C5257: // WRLD
-                {
-                    if (importMask?.Worldspaces ?? true)
-                    {
-                        item.Worldspaces.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
-                }
-                case 0x4C414944: // DIAL
-                {
-                    if (importMask?.DialogTopics ?? true)
-                    {
-                        item.DialogTopics.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
-                }
-                case 0x54535551: // QUST
-                {
-                    if (importMask?.Quests ?? true)
-                    {
-                        item.Quests.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
-                }
-                case 0x454C4449: // IDLE
-                {
-                    if (importMask?.IdleAnimations ?? true)
-                    {
-                        item.IdleAnimations.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
-                }
-                case 0x4B434150: // PACK
-                {
-                    if (importMask?.AIPackages ?? true)
-                    {
-                        item.AIPackages.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
-                }
-                case 0x59545343: // CSTY
-                {
-                    if (importMask?.CombatStyles ?? true)
-                    {
-                        item.CombatStyles.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
-                }
-                case 0x5243534C: // LSCR
-                {
-                    if (importMask?.LoadScreens ?? true)
-                    {
-                        item.LoadScreens.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
-                }
-                case 0x5053564C: // LVSP
-                {
-                    if (importMask?.LeveledSpells ?? true)
-                    {
-                        item.LeveledSpells.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
-                }
-                case 0x4F494E41: // ANIO
-                {
-                    if (importMask?.AnimatedObjects ?? true)
-                    {
-                        item.AnimatedObjects.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
-                }
-                case 0x52544157: // WATR
-                {
-                    if (importMask?.Waters ?? true)
-                    {
-                        item.Waters.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
-                }
-                case 0x48534645: // EFSH
-                {
-                    if (importMask?.EffectShaders ?? true)
-                    {
-                        item.EffectShaders.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
-                }
-                default:
-                    frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IOblivionMod item,
             MutagenFrame frame,
@@ -6401,8 +5586,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 importMask: importMask,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: OblivionModBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: OblivionModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -12522,6 +11707,821 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class OblivionModBinaryCreateTranslation
     {
         public readonly static OblivionModBinaryCreateTranslation Instance = new OblivionModBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IOblivionMod item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IOblivionMod item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            GroupMask? importMask,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x34534554: // TES4
+                {
+                    item.ModHeader.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null);
+                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
+                }
+                case 0x54534D47: // GMST
+                {
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        item.GameSettings.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
+                }
+                case 0x424F4C47: // GLOB
+                {
+                    if (importMask?.Globals ?? true)
+                    {
+                        item.Globals.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                }
+                case 0x53414C43: // CLAS
+                {
+                    if (importMask?.Classes ?? true)
+                    {
+                        item.Classes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
+                }
+                case 0x54434146: // FACT
+                {
+                    if (importMask?.Factions ?? true)
+                    {
+                        item.Factions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
+                }
+                case 0x52494148: // HAIR
+                {
+                    if (importMask?.Hairs ?? true)
+                    {
+                        item.Hairs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
+                }
+                case 0x53455945: // EYES
+                {
+                    if (importMask?.Eyes ?? true)
+                    {
+                        item.Eyes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
+                }
+                case 0x45434152: // RACE
+                {
+                    if (importMask?.Races ?? true)
+                    {
+                        item.Races.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
+                }
+                case 0x4E554F53: // SOUN
+                {
+                    if (importMask?.Sounds ?? true)
+                    {
+                        item.Sounds.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                }
+                case 0x4C494B53: // SKIL
+                {
+                    if (importMask?.Skills ?? true)
+                    {
+                        item.Skills.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
+                }
+                case 0x4645474D: // MGEF
+                {
+                    if (importMask?.MagicEffects ?? true)
+                    {
+                        item.MagicEffects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
+                }
+                case 0x54504353: // SCPT
+                {
+                    if (importMask?.Scripts ?? true)
+                    {
+                        item.Scripts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
+                }
+                case 0x5845544C: // LTEX
+                {
+                    if (importMask?.LandTextures ?? true)
+                    {
+                        item.LandTextures.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
+                }
+                case 0x48434E45: // ENCH
+                {
+                    if (importMask?.Enchantments ?? true)
+                    {
+                        item.Enchantments.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
+                }
+                case 0x4C455053: // SPEL
+                {
+                    if (importMask?.Spells ?? true)
+                    {
+                        item.Spells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
+                }
+                case 0x4E475342: // BSGN
+                {
+                    if (importMask?.Birthsigns ?? true)
+                    {
+                        item.Birthsigns.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
+                }
+                case 0x49544341: // ACTI
+                {
+                    if (importMask?.Activators ?? true)
+                    {
+                        item.Activators.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
+                }
+                case 0x41505041: // APPA
+                {
+                    if (importMask?.AlchemicalApparatus ?? true)
+                    {
+                        item.AlchemicalApparatus.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                }
+                case 0x4F4D5241: // ARMO
+                {
+                    if (importMask?.Armors ?? true)
+                    {
+                        item.Armors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
+                }
+                case 0x4B4F4F42: // BOOK
+                {
+                    if (importMask?.Books ?? true)
+                    {
+                        item.Books.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
+                }
+                case 0x544F4C43: // CLOT
+                {
+                    if (importMask?.Clothes ?? true)
+                    {
+                        item.Clothes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
+                }
+                case 0x544E4F43: // CONT
+                {
+                    if (importMask?.Containers ?? true)
+                    {
+                        item.Containers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
+                }
+                case 0x524F4F44: // DOOR
+                {
+                    if (importMask?.Doors ?? true)
+                    {
+                        item.Doors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
+                }
+                case 0x52474E49: // INGR
+                {
+                    if (importMask?.Ingredients ?? true)
+                    {
+                        item.Ingredients.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
+                }
+                case 0x4847494C: // LIGH
+                {
+                    if (importMask?.Lights ?? true)
+                    {
+                        item.Lights.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
+                }
+                case 0x4353494D: // MISC
+                {
+                    if (importMask?.Miscellaneous ?? true)
+                    {
+                        item.Miscellaneous.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
+                }
+                case 0x54415453: // STAT
+                {
+                    if (importMask?.Statics ?? true)
+                    {
+                        item.Statics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
+                }
+                case 0x53415247: // GRAS
+                {
+                    if (importMask?.Grasses ?? true)
+                    {
+                        item.Grasses.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
+                }
+                case 0x45455254: // TREE
+                {
+                    if (importMask?.Trees ?? true)
+                    {
+                        item.Trees.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
+                }
+                case 0x524F4C46: // FLOR
+                {
+                    if (importMask?.Flora ?? true)
+                    {
+                        item.Flora.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
+                }
+                case 0x4E525546: // FURN
+                {
+                    if (importMask?.Furniture ?? true)
+                    {
+                        item.Furniture.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furniture);
+                }
+                case 0x50414557: // WEAP
+                {
+                    if (importMask?.Weapons ?? true)
+                    {
+                        item.Weapons.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
+                }
+                case 0x4F4D4D41: // AMMO
+                {
+                    if (importMask?.Ammunitions ?? true)
+                    {
+                        item.Ammunitions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
+                }
+                case 0x5F43504E: // NPC_
+                {
+                    if (importMask?.Npcs ?? true)
+                    {
+                        item.Npcs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Npcs);
+                }
+                case 0x41455243: // CREA
+                {
+                    if (importMask?.Creatures ?? true)
+                    {
+                        item.Creatures.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
+                }
+                case 0x434C564C: // LVLC
+                {
+                    if (importMask?.LeveledCreatures ?? true)
+                    {
+                        item.LeveledCreatures.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
+                }
+                case 0x4D474C53: // SLGM
+                {
+                    if (importMask?.SoulGems ?? true)
+                    {
+                        item.SoulGems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
+                }
+                case 0x4D59454B: // KEYM
+                {
+                    if (importMask?.Keys ?? true)
+                    {
+                        item.Keys.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
+                }
+                case 0x48434C41: // ALCH
+                {
+                    if (importMask?.Potions ?? true)
+                    {
+                        item.Potions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
+                }
+                case 0x50534253: // SBSP
+                {
+                    if (importMask?.Subspaces ?? true)
+                    {
+                        item.Subspaces.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
+                }
+                case 0x54534753: // SGST
+                {
+                    if (importMask?.SigilStones ?? true)
+                    {
+                        item.SigilStones.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
+                }
+                case 0x494C564C: // LVLI
+                {
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        item.LeveledItems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
+                }
+                case 0x52485457: // WTHR
+                {
+                    if (importMask?.Weathers ?? true)
+                    {
+                        item.Weathers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
+                }
+                case 0x544D4C43: // CLMT
+                {
+                    if (importMask?.Climates ?? true)
+                    {
+                        item.Climates.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
+                }
+                case 0x4E474552: // REGN
+                {
+                    if (importMask?.Regions ?? true)
+                    {
+                        item.Regions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
+                }
+                case 0x4C4C4543: // CELL
+                {
+                    if (importMask?.Cells ?? true)
+                    {
+                        item.Cells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
+                }
+                case 0x444C5257: // WRLD
+                {
+                    if (importMask?.Worldspaces ?? true)
+                    {
+                        item.Worldspaces.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
+                }
+                case 0x4C414944: // DIAL
+                {
+                    if (importMask?.DialogTopics ?? true)
+                    {
+                        item.DialogTopics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
+                }
+                case 0x54535551: // QUST
+                {
+                    if (importMask?.Quests ?? true)
+                    {
+                        item.Quests.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
+                }
+                case 0x454C4449: // IDLE
+                {
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        item.IdleAnimations.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
+                }
+                case 0x4B434150: // PACK
+                {
+                    if (importMask?.AIPackages ?? true)
+                    {
+                        item.AIPackages.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
+                }
+                case 0x59545343: // CSTY
+                {
+                    if (importMask?.CombatStyles ?? true)
+                    {
+                        item.CombatStyles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
+                }
+                case 0x5243534C: // LSCR
+                {
+                    if (importMask?.LoadScreens ?? true)
+                    {
+                        item.LoadScreens.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
+                }
+                case 0x5053564C: // LVSP
+                {
+                    if (importMask?.LeveledSpells ?? true)
+                    {
+                        item.LeveledSpells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
+                }
+                case 0x4F494E41: // ANIO
+                {
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        item.AnimatedObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
+                }
+                case 0x52544157: // WATR
+                {
+                    if (importMask?.Waters ?? true)
+                    {
+                        item.Waters.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
+                }
+                case 0x48534645: // EFSH
+                {
+                    if (importMask?.EffectShaders ?? true)
+                    {
+                        item.EffectShaders.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
+                }
+                default:
+                    frame.Position += contentLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
     }
 

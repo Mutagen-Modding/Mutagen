@@ -1317,51 +1317,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEffect item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IEffect item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44494645: // EFID
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
-                }
-                case 0x54494645: // EFIT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Skyrim.EffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
-                }
-                case 0x41445443: // CTDA
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    EffectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Conditions);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IEffect item,
             MutagenFrame frame,
@@ -1371,8 +1326,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: EffectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: EffectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2166,6 +2121,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EffectBinaryCreateTranslation
     {
         public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEffect item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IEffect item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44494645: // EFID
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
+                }
+                case 0x54494645: // EFIT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Skyrim.EffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                }
+                case 0x41445443: // CTDA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    EffectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Conditions);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,

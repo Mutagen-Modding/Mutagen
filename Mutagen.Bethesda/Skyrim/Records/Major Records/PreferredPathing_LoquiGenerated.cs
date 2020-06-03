@@ -1325,32 +1325,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPreferredPathing item,
-            MutagenFrame frame)
-        {
-            item.NavmeshSets.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out NavmeshSet listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshSet>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-            item.NavmeshTree.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out NavmeshNode listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshNode>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-        }
-        
         public virtual void CopyInFromBinary(
             IPreferredPathing item,
             MutagenFrame frame,
@@ -1363,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PreferredPathingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2132,6 +2106,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PreferredPathingBinaryCreateTranslation
     {
         public readonly static PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPreferredPathing item,
+            MutagenFrame frame)
+        {
+            item.NavmeshSets.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out NavmeshSet listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<NavmeshSet>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+            item.NavmeshTree.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out NavmeshNode listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<NavmeshNode>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+        }
 
     }
 

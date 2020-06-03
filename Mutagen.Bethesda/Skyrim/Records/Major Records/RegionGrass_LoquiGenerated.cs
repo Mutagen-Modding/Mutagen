@@ -1149,16 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionGrass item,
-            MutagenFrame frame)
-        {
-            item.Grass = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Unknown = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionGrass item,
             MutagenFrame frame,
@@ -1168,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RegionGrassBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1786,6 +1776,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionGrassBinaryCreateTranslation
     {
         public readonly static RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionGrass item,
+            MutagenFrame frame)
+        {
+            item.Grass = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Unknown = frame.ReadInt32();
+        }
 
     }
 

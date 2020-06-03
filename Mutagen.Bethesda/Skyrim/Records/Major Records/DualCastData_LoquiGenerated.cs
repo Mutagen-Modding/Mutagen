@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => DualCastData_Registration.DUAL_HEADER;
-        protected static void FillBinaryStructs(
-            IDualCastDataInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IDualCastDataInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: DualCastDataBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DualCastDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DualCastDataBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
+
+        public override RecordType RecordType => DualCastData_Registration.DUAL_HEADER;
+        public static void FillBinaryStructs(
+            IDualCastDataInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

@@ -1202,21 +1202,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRelatedWaters item,
-            MutagenFrame frame)
-        {
-            item.RelatedWaterDaytime = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.RelatedWaterNighttime = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.RelatedWaterUnderwater = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IRelatedWaters item,
             MutagenFrame frame,
@@ -1229,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RelatedWatersBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1899,6 +1884,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RelatedWatersBinaryCreateTranslation
     {
         public readonly static RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRelatedWaters item,
+            MutagenFrame frame)
+        {
+            item.RelatedWaterDaytime = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.RelatedWaterNighttime = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.RelatedWaterUnderwater = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

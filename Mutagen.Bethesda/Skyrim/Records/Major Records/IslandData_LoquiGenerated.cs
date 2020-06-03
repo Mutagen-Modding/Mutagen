@@ -1398,24 +1398,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IIslandData item,
-            MutagenFrame frame)
-        {
-            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Triangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Int16>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: P3Int16BinaryTranslation.Instance.Parse));
-            item.Vertices.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
-        }
-        
         public virtual void CopyInFromBinary(
             IIslandData item,
             MutagenFrame frame,
@@ -1425,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: IslandDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2230,6 +2212,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class IslandDataBinaryCreateTranslation
     {
         public readonly static IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IIslandData item,
+            MutagenFrame frame)
+        {
+            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Triangles.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Int16>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: P3Int16BinaryTranslation.Instance.Parse));
+            item.Vertices.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: P3FloatBinaryTranslation.Instance.Parse));
+        }
 
     }
 

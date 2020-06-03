@@ -1281,17 +1281,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAIPackageSchedule item,
-            MutagenFrame frame)
-        {
-            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Day = frame.ReadUInt8();
-            item.Time = frame.ReadUInt8();
-            item.Duration = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IAIPackageSchedule item,
             MutagenFrame frame,
@@ -1304,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AIPackageScheduleBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2051,6 +2040,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageScheduleBinaryCreateTranslation
     {
         public readonly static AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAIPackageSchedule item,
+            MutagenFrame frame)
+        {
+            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Day = frame.ReadUInt8();
+            item.Time = frame.ReadUInt8();
+            item.Duration = frame.ReadInt32();
+        }
 
     }
 

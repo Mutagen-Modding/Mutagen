@@ -1275,21 +1275,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFurnitureMarker item,
-            MutagenFrame frame)
-        {
-            item.Enabled = frame.ReadBoolean();
-            if (frame.Complete) return;
-            item.DisabledEntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
-            if (frame.Complete) return;
-            item.MarkerKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete) return;
-            item.EntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IFurnitureMarker item,
             MutagenFrame frame,
@@ -1299,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FurnitureMarkerBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2094,6 +2079,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class FurnitureMarkerBinaryCreateTranslation
     {
         public readonly static FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFurnitureMarker item,
+            MutagenFrame frame)
+        {
+            item.Enabled = frame.ReadBoolean();
+            if (frame.Complete) return;
+            item.DisabledEntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
+            if (frame.Complete) return;
+            item.MarkerKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete) return;
+            item.EntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
+        }
 
     }
 

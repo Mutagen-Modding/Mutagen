@@ -1226,55 +1226,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionSounds item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionSounds item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444D4452: // RDMD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
-                }
-                case 0x44534452: // RDSD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sounds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionSound listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<RegionSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<RegionSound>();
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
-                }
-                default:
-                    return RegionDataSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionSounds item,
             MutagenFrame frame,
@@ -1284,8 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RegionSoundsBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionSoundsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1990,6 +1941,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionSoundsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionSoundsBinaryCreateTranslation Instance = new RegionSoundsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionSounds item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionSounds item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444D4452: // RDMD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
+                }
+                case 0x44534452: // RDSD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sounds = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out RegionSound listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<RegionSound>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<RegionSound>();
+                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
+                }
+                default:
+                    return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

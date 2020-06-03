@@ -1255,53 +1255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICreatureSound item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ICreatureSound item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54445343: // CSDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
-                }
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
-                    item.Sounds.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out SoundItem listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ICreatureSound item,
             MutagenFrame frame,
@@ -1311,8 +1264,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: CreatureSoundBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CreatureSoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2012,6 +1965,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CreatureSoundBinaryCreateTranslation
     {
         public readonly static CreatureSoundBinaryCreateTranslation Instance = new CreatureSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICreatureSound item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ICreatureSound item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54445343: // CSDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
+                }
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    item.Sounds.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out SoundItem listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1283,12 +1283,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptEntry item,
-            MutagenFrame frame)
-        {
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptEntry item,
             MutagenFrame frame,
@@ -1298,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ScriptEntryBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2014,6 +2008,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ScriptEntryBinaryCreateTranslation
     {
         public readonly static ScriptEntryBinaryCreateTranslation Instance = new ScriptEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptEntry item,
+            MutagenFrame frame)
+        {
+        }
 
     }
 

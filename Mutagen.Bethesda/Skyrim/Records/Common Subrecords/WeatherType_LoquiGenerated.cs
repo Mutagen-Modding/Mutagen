@@ -1197,19 +1197,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherType item,
-            MutagenFrame frame)
-        {
-            item.Weather = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Chance = frame.ReadInt32();
-            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherType item,
             MutagenFrame frame,
@@ -1219,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherTypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1880,6 +1867,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherTypeBinaryCreateTranslation
     {
         public readonly static WeatherTypeBinaryCreateTranslation Instance = new WeatherTypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherType item,
+            MutagenFrame frame)
+        {
+            item.Weather = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Chance = frame.ReadInt32();
+            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

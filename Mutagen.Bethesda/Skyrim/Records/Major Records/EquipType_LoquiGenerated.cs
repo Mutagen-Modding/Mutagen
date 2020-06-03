@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => EquipType_Registration.EQUP_HEADER;
-        protected static void FillBinaryStructs(
-            IEquipTypeInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IEquipTypeInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: EquipTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: EquipTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EquipTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
+
+        public override RecordType RecordType => EquipType_Registration.EQUP_HEADER;
+        public static void FillBinaryStructs(
+            IEquipTypeInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

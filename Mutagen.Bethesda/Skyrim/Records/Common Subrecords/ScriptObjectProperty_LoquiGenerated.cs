@@ -1182,20 +1182,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptObjectProperty item,
-            MutagenFrame frame)
-        {
-            ScriptPropertySetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Alias = frame.ReadInt16();
-            item.Unused = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptObjectProperty item,
             MutagenFrame frame,
@@ -1205,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ScriptObjectPropertyBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1852,6 +1838,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ScriptObjectPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
         public new readonly static ScriptObjectPropertyBinaryCreateTranslation Instance = new ScriptObjectPropertyBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptObjectProperty item,
+            MutagenFrame frame)
+        {
+            ScriptPropertyBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Alias = frame.ReadInt16();
+            item.Unused = frame.ReadUInt16();
+        }
 
     }
 

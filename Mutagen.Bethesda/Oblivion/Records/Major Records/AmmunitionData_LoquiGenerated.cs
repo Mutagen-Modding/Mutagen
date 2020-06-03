@@ -1281,17 +1281,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAmmunitionData item,
-            MutagenFrame frame)
-        {
-            item.Speed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Damage = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IAmmunitionData item,
             MutagenFrame frame,
@@ -1304,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AmmunitionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2052,6 +2041,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AmmunitionDataBinaryCreateTranslation
     {
         public readonly static AmmunitionDataBinaryCreateTranslation Instance = new AmmunitionDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAmmunitionData item,
+            MutagenFrame frame)
+        {
+            item.Speed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Damage = frame.ReadUInt16();
+        }
 
     }
 

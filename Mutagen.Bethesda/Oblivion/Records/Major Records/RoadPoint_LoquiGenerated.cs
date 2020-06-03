@@ -1276,18 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRoadPoint item,
-            MutagenFrame frame)
-        {
-            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NumConnectionsFluffBytes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Connections.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
-                    frame: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
-        }
-        
         public virtual void CopyInFromBinary(
             IRoadPoint item,
             MutagenFrame frame,
@@ -1297,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RoadPointBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2009,6 +1997,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RoadPointBinaryCreateTranslation
     {
         public readonly static RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRoadPoint item,
+            MutagenFrame frame)
+        {
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NumConnectionsFluffBytes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Connections.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
+                    frame: frame,
+                    transl: P3FloatBinaryTranslation.Instance.Parse));
+        }
 
     }
 

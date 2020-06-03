@@ -1190,50 +1190,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEffect item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IEffect item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44494645: // EFID
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
-                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                case 0x54494645: // EFIT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.EffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
-                }
-                case 0x54494353: // SCIT
-                case 0x4C4C5546: // FULL
-                {
-                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IEffect item,
             MutagenFrame frame,
@@ -1243,8 +1199,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: EffectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: EffectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1958,6 +1914,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EffectBinaryCreateTranslation
     {
         public readonly static EffectBinaryCreateTranslation Instance = new EffectBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEffect item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IEffect item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44494645: // EFID
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                case 0x54494645: // EFIT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Oblivion.EffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                }
+                case 0x54494353: // SCIT
+                case 0x4C4C5546: // FULL
+                {
+                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
         static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,

@@ -48,29 +48,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        partial class WeatherSetterCommon
-        {
-            public static TryGet<int?> CustomRecordFallback(
-                IWeatherInternal item,
-                MutagenFrame frame,
-                RecordType nextRecordType,
-                int contentLength,
-                RecordTypeConverter? recordTypeConverter = null)
-            {
-                if (nextRecordType.TypeInt == 0x44494445) // EDID
-                {
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-                }
-                WeatherBinaryCreateTranslation.FillCloudTexture(frame, nextRecordType, item.CloudTextures);
-                return TryGet<int?>.Succeed(null);
-            }
-        }
-
         public partial class WeatherBinaryCreateTranslation
         {
             public const int NumLayers = 32;
@@ -204,6 +181,26 @@ namespace Mutagen.Bethesda.Skyrim
                     Sunset = Parse(),
                     Night = Parse(),
                 };
+            }
+
+            public static TryGet<int?> CustomRecordFallback(
+                IWeatherInternal item,
+                MutagenFrame frame,
+                RecordType nextRecordType,
+                int contentLength,
+                RecordTypeConverter? recordTypeConverter = null)
+            {
+                if (nextRecordType.TypeInt == 0x44494445) // EDID
+                {
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+                }
+                WeatherBinaryCreateTranslation.FillCloudTexture(frame, nextRecordType, item.CloudTextures);
+                return TryGet<int?>.Succeed(null);
             }
         }
 

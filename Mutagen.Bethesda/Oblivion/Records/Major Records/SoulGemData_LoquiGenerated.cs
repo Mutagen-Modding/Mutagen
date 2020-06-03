@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISoulGemData item,
-            MutagenFrame frame)
-        {
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ISoulGemData item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SoulGemDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1786,6 +1778,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoulGemDataBinaryCreateTranslation
     {
         public readonly static SoulGemDataBinaryCreateTranslation Instance = new SoulGemDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISoulGemData item,
+            MutagenFrame frame)
+        {
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

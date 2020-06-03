@@ -102,7 +102,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 PreferDirectTranslation = false
             };
-            this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this._typeGenerations[typeof(NothingType)] = new NothingBinaryTranslationGeneration();
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
@@ -310,6 +309,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
         {
+            await GenerateCreateExtras(obj, fg);
             GenerateCustomCreatePartials(obj, fg);
             GenerateCustomBinaryEndCreatePartial(obj, fg);
             await base.GenerateInTranslationCreateClass(obj, fg);
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var async = HasAsyncStructs(obj, self: true);
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
+                    $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(async)}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}Structs"))
+                            $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
                         {
                             args.Add("item: item");
                             args.Add("frame: frame");
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
+                    $"public static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Generation
                             else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}RecordTypes"))
+                                    $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
                                 {
                                     args.AddPassArg("item");
                                     args.AddPassArg("frame");
@@ -809,8 +809,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
                 }
-                else if (field.Field is SpecialParseType
-                    || field.Field is CustomLogic)
+                else if (field.Field is CustomLogic)
                 {
                     var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
                     var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
@@ -834,8 +833,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName});");
             }
-            else if (field.Field is SpecialParseType
-                || field.Field is CustomLogic)
+            else if (field.Field is CustomLogic)
             {
                 fg.AppendLine($"return TryGet<int?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
             }
@@ -1197,8 +1195,8 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"record: {accessor}");
                     args.Add($"frame: frame");
                     args.Add($"recordTypeConverter: recordTypeConverter");
-                    args.Add($"fillStructs: FillBinaryStructs");
-                    args.Add($"fillTyped: FillBinaryRecordTypes");
+                    args.Add($"fillStructs: {TranslationCreateClass(obj)}.FillBinaryStructs");
+                    args.Add($"fillTyped: {TranslationCreateClass(obj)}.FillBinaryRecordTypes");
                 }
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
@@ -1266,11 +1264,11 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
-                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1282,11 +1280,11 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
-                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1298,11 +1296,11 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj)
                                 || (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b))))
                             {
-                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -1315,10 +1313,10 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add("importMask: importMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
-                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
+                            args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
-                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
+                                args.Add($"fillTyped: {TranslationCreateClass(obj)}.Fill{ModuleNickname}RecordTypes");
                             }
                         }
                         break;
@@ -2720,15 +2718,6 @@ namespace Mutagen.Bethesda.Generation
                 await obj.GenerateToStringCode(fg);
             }
             fg.AppendLine();
-        }
-
-        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
-        {
-            if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal))
-            {
-                await GenerateCreateExtras(obj, fg);
-            }
-            await base.GenerateInCommon(obj, fg, maskTypes);
         }
 
         public override void CustomMainWriteMixInPreLoad(ObjectGeneration obj, FileGeneration fg)

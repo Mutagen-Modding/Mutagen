@@ -1119,16 +1119,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => LeveledSpell_Registration.LVSP_HEADER;
-        protected static void FillBinaryStructs(
-            ILeveledSpellInternal item,
-            MutagenFrame frame)
-        {
-            ASpellSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledSpellInternal item,
             MutagenFrame frame,
@@ -1138,8 +1128,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LeveledSpellBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LeveledSpellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1900,6 +1890,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LeveledSpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
+
+        public override RecordType RecordType => LeveledSpell_Registration.LVSP_HEADER;
+        public static void FillBinaryStructs(
+            ILeveledSpellInternal item,
+            MutagenFrame frame)
+        {
+            ASpellBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

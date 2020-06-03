@@ -1175,49 +1175,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionWeather item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionWeather item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54574452: // RDWT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weathers = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
-                }
-                default:
-                    return RegionDataSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionWeather item,
             MutagenFrame frame,
@@ -1227,8 +1184,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RegionWeatherBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionWeatherBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1883,6 +1840,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionWeatherBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionWeatherBinaryCreateTranslation Instance = new RegionWeatherBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionWeather item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionWeather item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54574452: // RDWT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Weathers = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<WeatherType>();
+                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
+                }
+                default:
+                    return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

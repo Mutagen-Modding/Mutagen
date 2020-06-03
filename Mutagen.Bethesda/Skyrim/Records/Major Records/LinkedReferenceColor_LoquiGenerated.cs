@@ -1144,14 +1144,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILinkedReferenceColor item,
-            MutagenFrame frame)
-        {
-            item.Start = frame.ReadColor(ColorBinaryType.Alpha);
-            item.End = frame.ReadColor(ColorBinaryType.Alpha);
-        }
-        
         public virtual void CopyInFromBinary(
             ILinkedReferenceColor item,
             MutagenFrame frame,
@@ -1164,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LinkedReferenceColorBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1789,6 +1781,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LinkedReferenceColorBinaryCreateTranslation
     {
         public readonly static LinkedReferenceColorBinaryCreateTranslation Instance = new LinkedReferenceColorBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILinkedReferenceColor item,
+            MutagenFrame frame)
+        {
+            item.Start = frame.ReadColor(ColorBinaryType.Alpha);
+            item.End = frame.ReadColor(ColorBinaryType.Alpha);
+        }
 
     }
 

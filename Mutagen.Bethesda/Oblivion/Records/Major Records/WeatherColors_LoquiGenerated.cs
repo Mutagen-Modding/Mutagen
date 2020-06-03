@@ -1230,16 +1230,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherColors item,
-            MutagenFrame frame)
-        {
-            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherColors item,
             MutagenFrame frame,
@@ -1249,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherColorsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1952,6 +1942,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeatherColorsBinaryCreateTranslation
     {
         public readonly static WeatherColorsBinaryCreateTranslation Instance = new WeatherColorsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherColors item,
+            MutagenFrame frame)
+        {
+            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
+        }
 
     }
 

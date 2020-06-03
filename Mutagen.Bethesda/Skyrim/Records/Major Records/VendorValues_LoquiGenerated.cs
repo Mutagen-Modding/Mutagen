@@ -1373,19 +1373,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IVendorValues item,
-            MutagenFrame frame)
-        {
-            item.StartHour = frame.ReadUInt16();
-            item.EndHour = frame.ReadUInt16();
-            item.Radius = frame.ReadUInt16();
-            item.Unknown = frame.ReadUInt16();
-            item.OnlyBuysStolenItems = frame.ReadBoolean();
-            item.NotSellBuy = frame.ReadBoolean();
-            item.Unknown2 = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IVendorValues item,
             MutagenFrame frame,
@@ -1398,7 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: VendorValuesBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2219,6 +2206,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class VendorValuesBinaryCreateTranslation
     {
         public readonly static VendorValuesBinaryCreateTranslation Instance = new VendorValuesBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IVendorValues item,
+            MutagenFrame frame)
+        {
+            item.StartHour = frame.ReadUInt16();
+            item.EndHour = frame.ReadUInt16();
+            item.Radius = frame.ReadUInt16();
+            item.Unknown = frame.ReadUInt16();
+            item.OnlyBuysStolenItems = frame.ReadBoolean();
+            item.NotSellBuy = frame.ReadBoolean();
+            item.Unknown2 = frame.ReadUInt16();
+        }
 
     }
 

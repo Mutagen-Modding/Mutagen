@@ -1103,16 +1103,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Location_Registration.LCTN_HEADER;
-        protected static void FillBinaryStructs(
-            ILocationInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILocationInternal item,
             MutagenFrame frame,
@@ -1122,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LocationBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LocationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1786,6 +1776,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LocationBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
+
+        public override RecordType RecordType => Location_Registration.LCTN_HEADER;
+        public static void FillBinaryStructs(
+            ILocationInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

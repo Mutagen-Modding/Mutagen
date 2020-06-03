@@ -1255,62 +1255,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRank item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRank item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E52: // RNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RankNumber = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FemaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
-                }
-                case 0x4D414E49: // INAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRank item,
             MutagenFrame frame,
@@ -1320,8 +1264,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RankBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2057,6 +2001,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RankBinaryCreateTranslation
     {
         public readonly static RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRank item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRank item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E52: // RNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RankNumber = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FemaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

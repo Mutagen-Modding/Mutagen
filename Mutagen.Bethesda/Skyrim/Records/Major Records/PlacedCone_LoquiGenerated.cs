@@ -1249,16 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => PlacedCone_Registration.PCON_HEADER;
-        protected static void FillBinaryStructs(
-            IPlacedConeInternal item,
-            MutagenFrame frame)
-        {
-            APlacedTrapSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IPlacedConeInternal item,
             MutagenFrame frame,
@@ -1268,8 +1258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PlacedConeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedConeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2117,6 +2107,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlacedConeBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedConeBinaryCreateTranslation Instance = new PlacedConeBinaryCreateTranslation();
+
+        public override RecordType RecordType => PlacedCone_Registration.PCON_HEADER;
+        public static void FillBinaryStructs(
+            IPlacedConeInternal item,
+            MutagenFrame frame)
+        {
+            APlacedTrapBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

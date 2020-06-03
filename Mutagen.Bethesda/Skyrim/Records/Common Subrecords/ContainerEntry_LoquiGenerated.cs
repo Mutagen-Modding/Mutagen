@@ -1178,39 +1178,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IContainerEntry item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IContainerEntry item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4F544E43: // CNTO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
-                    item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
-                }
-                case 0x44454F43: // COED
-                {
-                    item.Data = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IContainerEntry item,
             MutagenFrame frame,
@@ -1220,8 +1187,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ContainerEntryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ContainerEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1919,6 +1886,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ContainerEntryBinaryCreateTranslation
     {
         public readonly static ContainerEntryBinaryCreateTranslation Instance = new ContainerEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IContainerEntry item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IContainerEntry item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4F544E43: // CNTO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
+                    item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
+                }
+                case 0x44454F43: // COED
+                {
+                    item.Data = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

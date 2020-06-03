@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDimensions item,
-            MutagenFrame frame)
-        {
-            item.Width = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Height = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IDimensions item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DimensionsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1788,6 +1780,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class DimensionsBinaryCreateTranslation
     {
         public readonly static DimensionsBinaryCreateTranslation Instance = new DimensionsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDimensions item,
+            MutagenFrame frame)
+        {
+            item.Width = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Height = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

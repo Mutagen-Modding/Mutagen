@@ -1793,67 +1793,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => ShaderParticleGeometry_Registration.SPGD_HEADER;
-        protected static void FillBinaryStructs(
-            IShaderParticleGeometryInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IShaderParticleGeometryInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.GravityVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RotationVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ParticleSizeX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ParticleSizeY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.CenterOffsetMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.CenterOffsetMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.InitialRotationRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.NumSubtexturesX = dataFrame.ReadUInt32();
-                    item.NumSubtexturesY = dataFrame.ReadUInt32();
-                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.Type);
-                    }
-                    item.BoxSize = dataFrame.ReadUInt32();
-                    item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame,
@@ -1863,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ShaderParticleGeometryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ShaderParticleGeometryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3149,6 +3088,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ShaderParticleGeometryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
+
+        public override RecordType RecordType => ShaderParticleGeometry_Registration.SPGD_HEADER;
+        public static void FillBinaryStructs(
+            IShaderParticleGeometryInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IShaderParticleGeometryInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.GravityVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotationVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ParticleSizeX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ParticleSizeY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.CenterOffsetMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.CenterOffsetMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.InitialRotationRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NumSubtexturesX = dataFrame.ReadUInt32();
+                    item.NumSubtexturesY = dataFrame.ReadUInt32();
+                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.Type);
+                    }
+                    item.BoxSize = dataFrame.ReadUInt32();
+                    item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

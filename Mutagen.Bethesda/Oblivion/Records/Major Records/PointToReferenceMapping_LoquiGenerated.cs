@@ -1237,19 +1237,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPointToReferenceMapping item,
-            MutagenFrame frame)
-        {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Points.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Parse(
-                    frame: frame,
-                    transl: Int16BinaryTranslation.Instance.Parse));
-        }
-        
         public virtual void CopyInFromBinary(
             IPointToReferenceMapping item,
             MutagenFrame frame,
@@ -1262,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PointToReferenceMappingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1938,6 +1925,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class PointToReferenceMappingBinaryCreateTranslation
     {
         public readonly static PointToReferenceMappingBinaryCreateTranslation Instance = new PointToReferenceMappingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPointToReferenceMapping item,
+            MutagenFrame frame)
+        {
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Points.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Parse(
+                    frame: frame,
+                    transl: Int16BinaryTranslation.Instance.Parse));
+        }
 
     }
 

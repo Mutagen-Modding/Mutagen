@@ -1221,52 +1221,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFacePart item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IFacePart item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Index);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Icon) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Icon);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IFacePart item,
             MutagenFrame frame,
@@ -1276,8 +1230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FacePartBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: FacePartBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1999,6 +1953,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FacePartBinaryCreateTranslation
     {
         public readonly static FacePartBinaryCreateTranslation Instance = new FacePartBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFacePart item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IFacePart item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Index) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Index);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Icon) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Icon);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

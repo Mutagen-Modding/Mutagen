@@ -1474,25 +1474,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILightData item,
-            MutagenFrame frame)
-        {
-            item.Time = frame.ReadInt32();
-            item.Radius = frame.ReadUInt32();
-            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.FalloffExponent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FOV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            if (frame.Complete)
-            {
-                item.Versioning |= LightData.VersioningBreaks.Break0;
-                return;
-            }
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILightData item,
             MutagenFrame frame,
@@ -1505,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LightDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2420,6 +2401,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LightDataBinaryCreateTranslation
     {
         public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILightData item,
+            MutagenFrame frame)
+        {
+            item.Time = frame.ReadInt32();
+            item.Radius = frame.ReadUInt32();
+            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.FalloffExponent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FOV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= LightData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

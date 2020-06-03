@@ -1044,48 +1044,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IGroup<T> item,
-            MutagenFrame frame)
-        {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
-                frame: frame,
-                item: item);
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LastModified = frame.ReadInt32();
-            item.Unknown = frame.ReadInt32();
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGroup<T> item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                default:
-                    if (nextRecordType.Equals(Group<T>.T_RecordType))
-                    {
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Group<T>.T_RecordType,
-                            item: item.RecordCache,
-                            transl: (MutagenFrame r, out T dictSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<T>.Instance.Parse(
-                                    frame: r,
-                                    item: out dictSubItem!);
-                            });
-                        return TryGet<int?>.Failure;
-                    }
-                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGroup<T> item,
             MutagenFrame frame,
@@ -1095,8 +1053,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: GroupBinaryCreateTranslation<T>.FillBinaryStructs,
+                fillTyped: GroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1969,6 +1927,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
         public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
+
+        public static void FillBinaryStructs(
+            IGroup<T> item,
+            MutagenFrame frame)
+        {
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
+                frame: frame,
+                item: item);
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = frame.ReadInt32();
+            item.Unknown = frame.ReadInt32();
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGroup<T> item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                default:
+                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    {
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Group<T>.T_RecordType,
+                            item: item.RecordCache,
+                            transl: (MutagenFrame r, out T dictSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<T>.Instance.Parse(
+                                    frame: r,
+                                    item: out dictSubItem!);
+                            });
+                        return TryGet<int?>.Failure;
+                    }
+                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
         static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,

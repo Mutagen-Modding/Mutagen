@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEnchantmentData item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ChargeAmount = frame.ReadUInt32();
-            item.EnchantCost = frame.ReadUInt32();
-            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IEnchantmentData item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EnchantmentDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1964,6 +1954,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class EnchantmentDataBinaryCreateTranslation
     {
         public readonly static EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEnchantmentData item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ChargeAmount = frame.ReadUInt32();
+            item.EnchantCost = frame.ReadUInt32();
+            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

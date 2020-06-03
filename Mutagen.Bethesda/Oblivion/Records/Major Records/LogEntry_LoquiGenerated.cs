@@ -1371,71 +1371,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILogEntry item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILogEntry item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54445351: // QSDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
-                }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Entry = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
-                }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
-                    item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.ResultScript);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILogEntry item,
             MutagenFrame frame,
@@ -1445,8 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LogEntryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LogEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2284,6 +2219,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LogEntryBinaryCreateTranslation
     {
         public readonly static LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILogEntry item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILogEntry item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54445351: // QSDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Entry = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
+                }
+                case 0x44484353: // SCHD
+                case 0x52484353: // SCHR
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
+                    item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.ResultScript);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

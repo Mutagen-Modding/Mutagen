@@ -1195,17 +1195,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDoorTriangle item,
-            MutagenFrame frame)
-        {
-            item.TriangleBeforeDoor = frame.ReadInt16();
-            item.Unknown = frame.ReadInt32();
-            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IDoorTriangle item,
             MutagenFrame frame,
@@ -1215,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DoorTriangleBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1873,6 +1862,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DoorTriangleBinaryCreateTranslation
     {
         public readonly static DoorTriangleBinaryCreateTranslation Instance = new DoorTriangleBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDoorTriangle item,
+            MutagenFrame frame)
+        {
+            item.TriangleBeforeDoor = frame.ReadInt16();
+            item.Unknown = frame.ReadInt32();
+            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

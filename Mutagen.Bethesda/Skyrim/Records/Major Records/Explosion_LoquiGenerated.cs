@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Explosion_Registration.EXPL_HEADER;
-        protected static void FillBinaryStructs(
-            IExplosionInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IExplosionInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ExplosionBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ExplosionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ExplosionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
+
+        public override RecordType RecordType => Explosion_Registration.EXPL_HEADER;
+        public static void FillBinaryStructs(
+            IExplosionInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

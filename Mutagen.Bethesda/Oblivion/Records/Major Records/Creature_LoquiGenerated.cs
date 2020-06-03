@@ -2937,246 +2937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Creature_Registration.CREA_HEADER;
-        protected static void FillBinaryStructs(
-            ICreatureInternal item,
-            MutagenFrame frame)
-        {
-            ANpcSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ICreatureInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
-                }
-                case 0x4F544E43: // CNTO
-                {
-                    item.Items.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Creature_Registration.CNTO_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
-                }
-                case 0x4F4C5053: // SPLO
-                {
-                    item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Creature_Registration.SPLO_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
-                }
-                case 0x5A46494E: // NIFZ
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Models = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out String listSubItem) =>
-                            {
-                                return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                    r,
-                                    item: out listSubItem,
-                                    parseWhole: false);
-                            })
-                        .ToExtendedList<String>();
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Models);
-                }
-                case 0x5446494E: // NIFT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NIFT = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
-                }
-                case 0x53424341: // ACBS
-                {
-                    item.Configuration = Mutagen.Bethesda.Oblivion.CreatureConfiguration.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Configuration);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    item.Factions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Creature_Registration.SNAM_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
-                }
-                case 0x4D414E49: // INAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
-                }
-                case 0x49524353: // SCRI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
-                }
-                case 0x54444941: // AIDT
-                {
-                    item.AIData = Mutagen.Bethesda.Oblivion.CreatureAIData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIData);
-                }
-                case 0x44494B50: // PKID
-                {
-                    item.AIPackages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Creature_Registration.PKID_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
-                }
-                case 0x5A46464B: // KFFZ
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Animations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out String listSubItem) =>
-                            {
-                                return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                                    r,
-                                    item: out listSubItem,
-                                    parseWhole: false);
-                            })
-                        .ToExtendedList<String>();
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Animations);
-                }
-                case 0x41544144: // DATA
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.CreatureData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Data);
-                }
-                case 0x4D414E52: // RNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackReach = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
-                }
-                case 0x4D414E5A: // ZNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
-                }
-                case 0x4D414E54: // TNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TurningSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
-                }
-                case 0x4D414E42: // BNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
-                }
-                case 0x4D414E57: // WNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
-                }
-                case 0x304D414E: // NAM0
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BloodSpray = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
-                }
-                case 0x314D414E: // NAM1
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BloodDecal = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
-                }
-                case 0x52435343: // CSCR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
-                }
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
-                {
-                    item.Sounds.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out CreatureSound listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
-                }
-                default:
-                    return ANpcSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ICreatureInternal item,
             MutagenFrame frame,
@@ -3186,8 +2946,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: CreatureBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CreatureBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -5762,6 +5522,246 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CreatureBinaryCreateTranslation : ANpcBinaryCreateTranslation
     {
         public new readonly static CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
+
+        public override RecordType RecordType => Creature_Registration.CREA_HEADER;
+        public static void FillBinaryStructs(
+            ICreatureInternal item,
+            MutagenFrame frame)
+        {
+            ANpcBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ICreatureInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
+                }
+                case 0x4F544E43: // CNTO
+                {
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Creature_Registration.CNTO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
+                }
+                case 0x4F4C5053: // SPLO
+                {
+                    item.Spells.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Creature_Registration.SPLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
+                }
+                case 0x5A46494E: // NIFZ
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Models = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out String listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                                    r,
+                                    item: out listSubItem,
+                                    parseWhole: false);
+                            })
+                        .ToExtendedList<String>();
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Models);
+                }
+                case 0x5446494E: // NIFT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NIFT = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
+                }
+                case 0x53424341: // ACBS
+                {
+                    item.Configuration = Mutagen.Bethesda.Oblivion.CreatureConfiguration.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Configuration);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    item.Factions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Creature_Registration.SNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
+                }
+                case 0x49524353: // SCRI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
+                }
+                case 0x54444941: // AIDT
+                {
+                    item.AIData = Mutagen.Bethesda.Oblivion.CreatureAIData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIData);
+                }
+                case 0x44494B50: // PKID
+                {
+                    item.AIPackages.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Creature_Registration.PKID_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
+                }
+                case 0x5A46464B: // KFFZ
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Animations = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out String listSubItem) =>
+                            {
+                                return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                                    r,
+                                    item: out listSubItem,
+                                    parseWhole: false);
+                            })
+                        .ToExtendedList<String>();
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Animations);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.CreatureData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Data);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttackReach = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TurningSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FootWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BloodSpray = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BloodDecal = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
+                }
+                case 0x52435343: // CSCR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InheritsSoundFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
+                }
+                case 0x54445343: // CSDT
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
+                {
+                    item.Sounds.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out CreatureSound listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
+                }
+                default:
+                    return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

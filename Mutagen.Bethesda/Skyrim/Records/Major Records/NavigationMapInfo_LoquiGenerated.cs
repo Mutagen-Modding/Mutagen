@@ -1890,49 +1890,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INavigationMapInfo item,
-            MutagenFrame frame)
-        {
-            item.NavigationMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Unknown = frame.ReadInt32();
-            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.PreferredMergesFlag = frame.ReadUInt32();
-            item.MergedTo.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: FormLinkBinaryTranslation.Instance.Parse));
-            item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: FormLinkBinaryTranslation.Instance.Parse));
-            item.LinkedDoors.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out LinkedDoor listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<LinkedDoor>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-            if (frame.Complete) return;
-            NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustomPublic(
-                frame: frame,
-                item: item);
-            item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             INavigationMapInfo item,
             MutagenFrame frame,
@@ -1945,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NavigationMapInfoBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -3245,6 +3202,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NavigationMapInfoBinaryCreateTranslation
     {
         public readonly static NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INavigationMapInfo item,
+            MutagenFrame frame)
+        {
+            item.NavigationMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Unknown = frame.ReadInt32();
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.PreferredMergesFlag = frame.ReadUInt32();
+            item.MergedTo.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
+            item.PreferredMerges.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
+            item.LinkedDoors.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out LinkedDoor listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<LinkedDoor>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+            if (frame.Complete) return;
+            NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustomPublic(
+                frame: frame,
+                item: item);
+            item.Unknown2 = frame.ReadInt32();
+            item.ParentWorldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryIslandCustom(
             MutagenFrame frame,

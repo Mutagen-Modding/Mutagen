@@ -1558,23 +1558,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDecal item,
-            MutagenFrame frame)
-        {
-            item.MinWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Depth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Shininess = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ParallaxScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ParallaxPasses = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = frame.ReadUInt16();
-            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-        }
-        
         public virtual void CopyInFromBinary(
             IDecal item,
             MutagenFrame frame,
@@ -1587,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DecalBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2587,6 +2570,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DecalBinaryCreateTranslation
     {
         public readonly static DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDecal item,
+            MutagenFrame frame)
+        {
+            item.MinWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Depth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Shininess = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ParallaxScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ParallaxPasses = frame.ReadUInt8();
+            item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Unknown = frame.ReadUInt16();
+            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+        }
 
     }
 

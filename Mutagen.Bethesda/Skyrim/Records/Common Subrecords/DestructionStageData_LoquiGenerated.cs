@@ -1430,24 +1430,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDestructionStageData item,
-            MutagenFrame frame)
-        {
-            item.HealthPercent = frame.ReadUInt8();
-            item.Index = frame.ReadUInt8();
-            item.ModelDamageStage = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.SelfDamagePerSecond = frame.ReadInt32();
-            item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Debris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.DebrisCount = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IDestructionStageData item,
             MutagenFrame frame,
@@ -1460,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DestructionStageDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2330,6 +2312,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DestructionStageDataBinaryCreateTranslation
     {
         public readonly static DestructionStageDataBinaryCreateTranslation Instance = new DestructionStageDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDestructionStageData item,
+            MutagenFrame frame)
+        {
+            item.HealthPercent = frame.ReadUInt8();
+            item.Index = frame.ReadUInt8();
+            item.ModelDamageStage = frame.ReadUInt8();
+            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.SelfDamagePerSecond = frame.ReadInt32();
+            item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Debris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.DebrisCount = frame.ReadInt32();
+        }
 
     }
 

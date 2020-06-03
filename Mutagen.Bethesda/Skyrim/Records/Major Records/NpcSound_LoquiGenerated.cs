@@ -1165,44 +1165,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcSound item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INpcSound item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x49445343: // CSDI
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
-                }
-                case 0x43445343: // CSDC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundChance = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.SoundChance);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             INpcSound item,
             MutagenFrame frame,
@@ -1212,8 +1174,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: NpcSoundBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NpcSoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1852,6 +1814,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NpcSoundBinaryCreateTranslation
     {
         public readonly static NpcSoundBinaryCreateTranslation Instance = new NpcSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcSound item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            INpcSound item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x49445343: // CSDI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
+                }
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundChance = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.SoundChance);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

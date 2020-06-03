@@ -1203,21 +1203,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWaterReflection item,
-            MutagenFrame frame)
-        {
-            item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete)
-            {
-                item.Versioning |= WaterReflection.VersioningBreaks.Break0;
-                return;
-            }
-            item.Type = EnumBinaryTranslation<WaterReflection.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IWaterReflection item,
             MutagenFrame frame,
@@ -1230,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WaterReflectionBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1900,6 +1885,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WaterReflectionBinaryCreateTranslation
     {
         public readonly static WaterReflectionBinaryCreateTranslation Instance = new WaterReflectionBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWaterReflection item,
+            MutagenFrame frame)
+        {
+            item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete)
+            {
+                item.Versioning |= WaterReflection.VersioningBreaks.Break0;
+                return;
+            }
+            item.Type = EnumBinaryTranslation<WaterReflection.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

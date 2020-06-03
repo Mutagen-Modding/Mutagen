@@ -1241,51 +1241,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IActivateParents item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IActivateParents item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44504158: // XAPD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<ActivateParents.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
-                }
-                case 0x52504158: // XAPR
-                {
-                    item.Parents.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActivateParent>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: ActivateParents_Registration.XAPR_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ActivateParent listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ActivateParent>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Parents);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IActivateParents item,
             MutagenFrame frame,
@@ -1295,8 +1250,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ActivateParentsBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ActivateParentsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1990,6 +1945,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ActivateParentsBinaryCreateTranslation
     {
         public readonly static ActivateParentsBinaryCreateTranslation Instance = new ActivateParentsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IActivateParents item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IActivateParents item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44504158: // XAPD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<ActivateParents.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
+                }
+                case 0x52504158: // XAPR
+                {
+                    item.Parents.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActivateParent>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: ActivateParents_Registration.XAPR_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out ActivateParent listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<ActivateParent>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Parents);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

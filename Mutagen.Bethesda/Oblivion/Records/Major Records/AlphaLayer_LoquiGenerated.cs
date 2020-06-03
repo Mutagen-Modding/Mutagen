@@ -1093,34 +1093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IAlphaLayer item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54585456: // VTXT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
-                }
-                default:
-                    return BaseLayerSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter));
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IAlphaLayer item,
             MutagenFrame frame,
@@ -1130,8 +1102,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: AlphaLayerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AlphaLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1712,6 +1684,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AlphaLayerBinaryCreateTranslation : BaseLayerBinaryCreateTranslation
     {
         public new readonly static AlphaLayerBinaryCreateTranslation Instance = new AlphaLayerBinaryCreateTranslation();
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IAlphaLayer item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54585456: // VTXT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                }
+                default:
+                    return BaseLayerBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter));
+            }
+        }
 
     }
 

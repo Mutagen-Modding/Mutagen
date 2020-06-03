@@ -1137,14 +1137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILocation item,
-            MutagenFrame frame)
-        {
-            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ILocation item,
             MutagenFrame frame,
@@ -1154,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LocationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1773,6 +1765,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LocationBinaryCreateTranslation
     {
         public readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILocation item,
+            MutagenFrame frame)
+        {
+            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

@@ -1256,59 +1256,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ITintLayer item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ITintLayer item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x494E4954: // TINI
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
-                }
-                case 0x434E4954: // TINC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
-                }
-                case 0x564E4954: // TINV
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InterpolationValue = FloatBinaryTranslation.Parse(
-                        frame: frame,
-                        integerType: FloatIntegerType.UInt,
-                        multiplier: 1);
-                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
-                }
-                case 0x53414954: // TIAS
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Preset = frame.ReadInt16();
-                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Preset);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ITintLayer item,
             MutagenFrame frame,
@@ -1318,8 +1265,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: TintLayerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: TintLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2054,6 +2001,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class TintLayerBinaryCreateTranslation
     {
         public readonly static TintLayerBinaryCreateTranslation Instance = new TintLayerBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ITintLayer item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ITintLayer item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x494E4954: // TINI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
+                }
+                case 0x434E4954: // TINC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
+                }
+                case 0x564E4954: // TINV
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InterpolationValue = FloatBinaryTranslation.Parse(
+                        frame: frame,
+                        integerType: FloatIntegerType.UInt,
+                        multiplier: 1);
+                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
+                }
+                case 0x53414954: // TIAS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Preset = frame.ReadInt16();
+                    return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Preset);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1206,17 +1206,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPerkPlacement item,
-            MutagenFrame frame)
-        {
-            item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Rank = frame.ReadUInt8();
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-        }
-        
         public virtual void CopyInFromBinary(
             IPerkPlacement item,
             MutagenFrame frame,
@@ -1229,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PerkPlacementBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1896,6 +1885,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PerkPlacementBinaryCreateTranslation
     {
         public readonly static PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPerkPlacement item,
+            MutagenFrame frame)
+        {
+            item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Rank = frame.ReadUInt8();
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+        }
 
     }
 

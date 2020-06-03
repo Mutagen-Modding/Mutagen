@@ -1375,64 +1375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => LeveledSpell_Registration.LVSP_HEADER;
-        protected static void FillBinaryStructs(
-            ILeveledSpellInternal item,
-            MutagenFrame frame)
-        {
-            ASpellSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILeveledSpellInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444C564C: // LVLD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ChanceNone);
-                }
-                case 0x464C564C: // LVLF
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Flags);
-                }
-                case 0x4F4C564C: // LVLO
-                {
-                    item.Entries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: LeveledSpell_Registration.LVLO_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LeveledEntry<ASpell> listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
-                }
-                default:
-                    return ASpellSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledSpellInternal item,
             MutagenFrame frame,
@@ -1442,8 +1384,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LeveledSpellBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LeveledSpellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2423,6 +2365,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LeveledSpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
+
+        public override RecordType RecordType => LeveledSpell_Registration.LVSP_HEADER;
+        public static void FillBinaryStructs(
+            ILeveledSpellInternal item,
+            MutagenFrame frame)
+        {
+            ASpellBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILeveledSpellInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444C564C: // LVLD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ChanceNone = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Flags);
+                }
+                case 0x4F4C564C: // LVLO
+                {
+                    item.Entries.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: LeveledSpell_Registration.LVLO_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LeveledEntry<ASpell> listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LeveledEntry<ASpell>>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
+                }
+                default:
+                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

@@ -1118,14 +1118,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILocationFallback item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<LocationTarget.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Data = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             ILocationFallback item,
             MutagenFrame frame,
@@ -1135,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LocationFallbackBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1735,6 +1727,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
         public new readonly static LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILocationFallback item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<LocationTarget.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Data = frame.ReadInt32();
+        }
 
     }
 

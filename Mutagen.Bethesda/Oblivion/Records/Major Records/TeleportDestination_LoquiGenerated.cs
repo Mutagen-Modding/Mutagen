@@ -1198,17 +1198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ITeleportDestination item,
-            MutagenFrame frame)
-        {
-            item.Destination = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ITeleportDestination item,
             MutagenFrame frame,
@@ -1221,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: TeleportDestinationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1889,6 +1878,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class TeleportDestinationBinaryCreateTranslation
     {
         public readonly static TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ITeleportDestination item,
+            MutagenFrame frame)
+        {
+            item.Destination = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

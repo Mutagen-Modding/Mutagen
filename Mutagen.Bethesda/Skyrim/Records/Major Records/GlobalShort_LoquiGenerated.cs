@@ -1186,43 +1186,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => GlobalShort_Registration.GLOB_HEADER;
-        protected static void FillBinaryStructs(
-            IGlobalShortInternal item,
-            MutagenFrame frame)
-        {
-            GlobalSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGlobalShortInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x56544C46: // FLTV
-                {
-                    GlobalShortBinaryCreateTranslation.FillBinaryDataCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
-                }
-                default:
-                    return GlobalSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGlobalShortInternal item,
             MutagenFrame frame,
@@ -1232,8 +1195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: GlobalShortBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GlobalShortBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2066,6 +2029,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
         public new readonly static GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
+
+        public override RecordType RecordType => GlobalShort_Registration.GLOB_HEADER;
+        public static void FillBinaryStructs(
+            IGlobalShortInternal item,
+            MutagenFrame frame)
+        {
+            GlobalBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGlobalShortInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x56544C46: // FLTV
+                {
+                    GlobalShortBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
+                }
+                default:
+                    return GlobalBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,

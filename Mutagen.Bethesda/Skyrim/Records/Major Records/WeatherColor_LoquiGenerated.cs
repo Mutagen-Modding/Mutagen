@@ -1230,16 +1230,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherColor item,
-            MutagenFrame frame)
-        {
-            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherColor item,
             MutagenFrame frame,
@@ -1249,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherColorBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1952,6 +1942,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherColorBinaryCreateTranslation
     {
         public readonly static WeatherColorBinaryCreateTranslation Instance = new WeatherColorBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherColor item,
+            MutagenFrame frame)
+        {
+            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
+        }
 
     }
 

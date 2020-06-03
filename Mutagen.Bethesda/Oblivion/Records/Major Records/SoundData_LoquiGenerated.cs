@@ -1248,21 +1248,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISoundDataInternal item,
-            MutagenFrame frame)
-        {
-            SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustomPublic(
-                frame: frame,
-                item: item);
-            SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustomPublic(
-                frame: frame,
-                item: item);
-            item.FrequencyAdjustment = frame.ReadInt8();
-            frame.Position += 1;
-            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             ISoundDataInternal item,
             MutagenFrame frame,
@@ -1275,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SoundDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2025,6 +2010,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundDataBinaryCreateTranslation
     {
         public readonly static SoundDataBinaryCreateTranslation Instance = new SoundDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISoundDataInternal item,
+            MutagenFrame frame)
+        {
+            SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustomPublic(
+                frame: frame,
+                item: item);
+            SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustomPublic(
+                frame: frame,
+                item: item);
+            item.FrequencyAdjustment = frame.ReadInt8();
+            frame.Position += 1;
+            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
         static partial void FillBinaryMinimumAttenuationDistanceCustom(
             MutagenFrame frame,

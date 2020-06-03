@@ -1470,80 +1470,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => LeveledItem_Registration.LVLI_HEADER;
-        protected static void FillBinaryStructs(
-            ILeveledItemInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILeveledItemInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444E424F: // OBND
-                {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ObjectBounds);
-                }
-                case 0x444C564C: // LVLD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
-                }
-                case 0x464C564C: // LVLF
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
-                }
-                case 0x474C564C: // LVLG
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
-                }
-                case 0x54434C4C: // LLCT
-                {
-                    var amount = frame.ReadSubrecordFrame().Content[0];
-                    item.Entries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.ParsePerItem(
-                            frame: frame,
-                            amount: amount,
-                            triggeringRecord: LeveledItemEntry_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LeveledItemEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LeveledItemEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            })
-                        .ToExtendedList<LeveledItemEntry>();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledItemInternal item,
             MutagenFrame frame,
@@ -1553,8 +1479,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LeveledItemBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LeveledItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2565,6 +2491,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LeveledItemBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
+
+        public override RecordType RecordType => LeveledItem_Registration.LVLI_HEADER;
+        public static void FillBinaryStructs(
+            ILeveledItemInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ObjectBounds);
+                }
+                case 0x444C564C: // LVLD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ChanceNone = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                }
+                case 0x474C564C: // LVLG
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
+                }
+                case 0x54434C4C: // LLCT
+                {
+                    var amount = frame.ReadSubrecordFrame().Content[0];
+                    item.Entries = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.ParsePerItem(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: LeveledItemEntry_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LeveledItemEntry listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LeveledItemEntry>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            })
+                        .ToExtendedList<LeveledItemEntry>();
+                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

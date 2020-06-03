@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IClothingFlags item,
-            MutagenFrame frame)
-        {
-            item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-        }
-        
         public virtual void CopyInFromBinary(
             IClothingFlags item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ClothingFlagsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1790,6 +1782,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ClothingFlagsBinaryCreateTranslation
     {
         public readonly static ClothingFlagsBinaryCreateTranslation Instance = new ClothingFlagsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IClothingFlags item,
+            MutagenFrame frame)
+        {
+            item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+        }
 
     }
 

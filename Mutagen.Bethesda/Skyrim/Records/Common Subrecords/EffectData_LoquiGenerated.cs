@@ -1189,15 +1189,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEffectData item,
-            MutagenFrame frame)
-        {
-            item.Magnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Area = frame.ReadInt32();
-            item.Duration = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IEffectData item,
             MutagenFrame frame,
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EffectDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1873,6 +1864,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EffectDataBinaryCreateTranslation
     {
         public readonly static EffectDataBinaryCreateTranslation Instance = new EffectDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEffectData item,
+            MutagenFrame frame)
+        {
+            item.Magnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Area = frame.ReadInt32();
+            item.Duration = frame.ReadInt32();
+        }
 
     }
 

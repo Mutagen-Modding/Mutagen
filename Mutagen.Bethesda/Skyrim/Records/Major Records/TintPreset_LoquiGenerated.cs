@@ -1215,51 +1215,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ITintPreset item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ITintPreset item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x434E4954: // TINC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
-                }
-                case 0x564E4954: // TINV
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.DefaultValue) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.DefaultValue);
-                }
-                case 0x53524954: // TIRS
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Index);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ITintPreset item,
             MutagenFrame frame,
@@ -1269,8 +1224,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: TintPresetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: TintPresetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1958,6 +1913,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class TintPresetBinaryCreateTranslation
     {
         public readonly static TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ITintPreset item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ITintPreset item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x434E4954: // TINC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
+                }
+                case 0x564E4954: // TINV
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.DefaultValue) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.DefaultValue);
+                }
+                case 0x53524954: // TIRS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Index) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Index);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

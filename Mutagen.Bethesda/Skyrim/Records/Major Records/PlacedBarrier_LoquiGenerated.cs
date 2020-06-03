@@ -1249,16 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => PlacedBarrier_Registration.PBAR_HEADER;
-        protected static void FillBinaryStructs(
-            IPlacedBarrierInternal item,
-            MutagenFrame frame)
-        {
-            APlacedTrapSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IPlacedBarrierInternal item,
             MutagenFrame frame,
@@ -1268,8 +1258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PlacedBarrierBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedBarrierBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2117,6 +2107,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlacedBarrierBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedBarrierBinaryCreateTranslation Instance = new PlacedBarrierBinaryCreateTranslation();
+
+        public override RecordType RecordType => PlacedBarrier_Registration.PBAR_HEADER;
+        public static void FillBinaryStructs(
+            IPlacedBarrierInternal item,
+            MutagenFrame frame)
+        {
+            APlacedTrapBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

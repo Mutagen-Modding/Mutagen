@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFogDistance item,
-            MutagenFrame frame)
-        {
-            item.DayNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DayFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NightNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NightFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IFogDistance item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FogDistanceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1966,6 +1956,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FogDistanceBinaryCreateTranslation
     {
         public readonly static FogDistanceBinaryCreateTranslation Instance = new FogDistanceBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFogDistance item,
+            MutagenFrame frame)
+        {
+            item.DayNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DayFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NightNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NightFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

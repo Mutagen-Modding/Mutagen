@@ -1194,19 +1194,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDialogItemData item,
-            MutagenFrame frame)
-        {
-            item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            if (frame.Complete)
-            {
-                item.Versioning |= DialogItemData.VersioningBreaks.Break0;
-                return;
-            }
-            item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-        }
-        
         public virtual void CopyInFromBinary(
             IDialogItemData item,
             MutagenFrame frame,
@@ -1219,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DialogItemDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1889,6 +1876,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class DialogItemDataBinaryCreateTranslation
     {
         public readonly static DialogItemDataBinaryCreateTranslation Instance = new DialogItemDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDialogItemData item,
+            MutagenFrame frame)
+        {
+            item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            if (frame.Complete)
+            {
+                item.Versioning |= DialogItemData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+        }
 
     }
 

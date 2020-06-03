@@ -1143,18 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAIPackageData item,
-            MutagenFrame frame)
-        {
-            AIPackageDataBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
-                frame: frame,
-                item: item);
-            AIPackageDataBinaryCreateTranslation.FillBinaryGeneralTypeCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IAIPackageData item,
             MutagenFrame frame,
@@ -1167,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AIPackageDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1818,6 +1806,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageDataBinaryCreateTranslation
     {
         public readonly static AIPackageDataBinaryCreateTranslation Instance = new AIPackageDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAIPackageData item,
+            MutagenFrame frame)
+        {
+            AIPackageDataBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+                frame: frame,
+                item: item);
+            AIPackageDataBinaryCreateTranslation.FillBinaryGeneralTypeCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,

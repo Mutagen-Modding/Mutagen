@@ -1031,50 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IListGroup<T> item,
-            MutagenFrame frame)
-        {
-            ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
-                frame: frame,
-                item: item);
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LastModified = frame.ReadInt32();
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IListGroup<T> item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                default:
-                    if (nextRecordType.Equals(ListGroup<T>.T_RecordType))
-                    {
-                        item.Records.SetTo(
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
-                                frame: frame,
-                                triggeringRecord: ListGroup<T>.T_RecordType,
-                                thread: frame.MetaData.Parallel,
-                                recordTypeConverter: recordTypeConverter,
-                                transl: (MutagenFrame r, out T listSubItem, RecordTypeConverter? conv) =>
-                                {
-                                    return LoquiBinaryTranslation<T>.Instance.Parse(
-                                        frame: r,
-                                        item: out listSubItem!,
-                                        recordTypeConverter: conv);
-                                }));
-                        return TryGet<int?>.Failure;
-                    }
-                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IListGroup<T> item,
             MutagenFrame frame,
@@ -1084,8 +1040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ListGroupBinaryCreateTranslation<T>.FillBinaryStructs,
+                fillTyped: ListGroupBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1920,6 +1876,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         where T : class, ICellBlock, IXmlItem, IBinaryItem
     {
         public readonly static ListGroupBinaryCreateTranslation<T> Instance = new ListGroupBinaryCreateTranslation<T>();
+
+        public static void FillBinaryStructs(
+            IListGroup<T> item,
+            MutagenFrame frame)
+        {
+            ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
+                frame: frame,
+                item: item);
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = frame.ReadInt32();
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IListGroup<T> item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                default:
+                    if (nextRecordType.Equals(ListGroup<T>.T_RecordType))
+                    {
+                        item.Records.SetTo(
+                            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
+                                frame: frame,
+                                triggeringRecord: ListGroup<T>.T_RecordType,
+                                thread: frame.MetaData.Parallel,
+                                recordTypeConverter: recordTypeConverter,
+                                transl: (MutagenFrame r, out T listSubItem, RecordTypeConverter? conv) =>
+                                {
+                                    return LoquiBinaryTranslation<T>.Instance.Parse(
+                                        frame: r,
+                                        item: out listSubItem!,
+                                        recordTypeConverter: conv);
+                                }));
+                        return TryGet<int?>.Failure;
+                    }
+                    frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
         static partial void FillBinaryContainedRecordTypeCustom(
             MutagenFrame frame,

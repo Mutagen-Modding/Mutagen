@@ -1179,17 +1179,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INavmeshSet item,
-            MutagenFrame frame)
-        {
-            item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: FormLinkBinaryTranslation.Instance.Parse));
-        }
-        
         public virtual void CopyInFromBinary(
             INavmeshSet item,
             MutagenFrame frame,
@@ -1199,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NavmeshSetBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1838,6 +1827,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NavmeshSetBinaryCreateTranslation
     {
         public readonly static NavmeshSetBinaryCreateTranslation Instance = new NavmeshSetBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INavmeshSet item,
+            MutagenFrame frame)
+        {
+            item.Navmeshes.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
+        }
 
     }
 

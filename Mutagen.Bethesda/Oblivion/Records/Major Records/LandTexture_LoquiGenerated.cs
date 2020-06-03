@@ -1417,65 +1417,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => LandTexture_Registration.LTEX_HEADER;
-        protected static void FillBinaryStructs(
-            ILandTextureInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILandTextureInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
-                }
-                case 0x4D414E48: // HNAM
-                {
-                    item.Havok = Mutagen.Bethesda.Oblivion.HavokData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSpecularExponent = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
-                }
-                case 0x4D414E47: // GNAM
-                {
-                    item.PotentialGrass.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: LandTexture_Registration.GNAM_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILandTextureInternal item,
             MutagenFrame frame,
@@ -1485,8 +1426,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LandTextureBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LandTextureBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2446,6 +2387,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LandTextureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
+
+        public override RecordType RecordType => LandTexture_Registration.LTEX_HEADER;
+        public static void FillBinaryStructs(
+            ILandTextureInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILandTextureInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    item.Havok = Mutagen.Bethesda.Oblivion.HavokData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureSpecularExponent = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    item.PotentialGrass.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: LandTexture_Registration.GNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

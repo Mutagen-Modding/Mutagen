@@ -1751,74 +1751,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Region_Registration.REGN_HEADER;
-        protected static void FillBinaryStructs(
-            IRegionInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x524C4352: // RCLR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
-                }
-                case 0x4D414E57: // WNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
-                }
-                case 0x494C5052: // RPLI
-                case 0x444C5052: // RPLD
-                {
-                    item.RegionAreas.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RegionArea listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.RegionAreas);
-                }
-                case 0x54414452: // RDAT
-                {
-                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(null);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionInternal item,
             MutagenFrame frame,
@@ -1828,8 +1760,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RegionBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3226,6 +3158,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
+
+        public override RecordType RecordType => Region_Registration.REGN_HEADER;
+        public static void FillBinaryStructs(
+            IRegionInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x524C4352: // RCLR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                }
+                case 0x494C5052: // RPLI
+                case 0x444C5052: // RPLD
+                {
+                    item.RegionAreas.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out RegionArea listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Region_FieldIndex.RegionAreas);
+                }
+                case 0x54414452: // RDAT
+                {
+                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,

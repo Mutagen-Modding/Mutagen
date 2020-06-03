@@ -1248,41 +1248,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Armor_Registration.ARMO_HEADER;
-        protected static void FillBinaryStructs(
-            IArmorInternal item,
-            MutagenFrame frame)
-        {
-            AClothingSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IArmorInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.ArmorData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.Data);
-                }
-                default:
-                    return AClothingSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IArmorInternal item,
             MutagenFrame frame,
@@ -1292,8 +1257,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2264,6 +2229,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ArmorBinaryCreateTranslation : AClothingBinaryCreateTranslation
     {
         public new readonly static ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
+
+        public override RecordType RecordType => Armor_Registration.ARMO_HEADER;
+        public static void FillBinaryStructs(
+            IArmorInternal item,
+            MutagenFrame frame)
+        {
+            AClothingBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IArmorInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.ArmorData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.Data);
+                }
+                default:
+                    return AClothingBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

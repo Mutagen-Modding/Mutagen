@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICellGrid item,
-            MutagenFrame frame)
-        {
-            item.Point = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             ICellGrid item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CellGridBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1789,6 +1781,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CellGridBinaryCreateTranslation
     {
         public readonly static CellGridBinaryCreateTranslation Instance = new CellGridBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICellGrid item,
+            MutagenFrame frame)
+        {
+            item.Point = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

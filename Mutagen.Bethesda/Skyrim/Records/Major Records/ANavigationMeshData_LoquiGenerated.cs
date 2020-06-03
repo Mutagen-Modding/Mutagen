@@ -1945,63 +1945,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IANavigationMeshData item,
-            MutagenFrame frame)
-        {
-            item.NavmeshVersion = frame.ReadUInt32();
-            item.Magic = frame.ReadUInt32();
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryParentLogicCustomPublic(
-                frame: frame,
-                item: item);
-            item.Vertices.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
-            item.Triangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out NavmeshTriangle listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshTriangle>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-            item.EdgeLinks.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<EdgeLink>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out EdgeLink listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<EdgeLink>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-            item.DoorTriangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: (MutagenFrame r, out DoorTriangle listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<DoorTriangle>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustomPublic(
-                frame: frame,
-                item: item);
-            item.NavmeshGridDivisor = frame.ReadUInt32();
-            item.MaxDistanceX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxDistanceY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IANavigationMeshData item,
             MutagenFrame frame,
@@ -3348,6 +3291,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ANavigationMeshDataBinaryCreateTranslation
     {
         public readonly static ANavigationMeshDataBinaryCreateTranslation Instance = new ANavigationMeshDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IANavigationMeshData item,
+            MutagenFrame frame)
+        {
+            item.NavmeshVersion = frame.ReadUInt32();
+            item.Magic = frame.ReadUInt32();
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryParentLogicCustomPublic(
+                frame: frame,
+                item: item);
+            item.Vertices.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: P3FloatBinaryTranslation.Instance.Parse));
+            item.Triangles.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out NavmeshTriangle listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+            item.EdgeLinks.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<EdgeLink>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out EdgeLink listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<EdgeLink>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+            item.DoorTriangles.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: (MutagenFrame r, out DoorTriangle listSubItem) =>
+                    {
+                        return LoquiBinaryTranslation<DoorTriangle>.Instance.Parse(
+                            frame: r,
+                            item: out listSubItem!);
+                    }));
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustomPublic(
+                frame: frame,
+                item: item);
+            item.NavmeshGridDivisor = frame.ReadUInt32();
+            item.MaxDistanceX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxDistanceY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryParentLogicCustom(
             MutagenFrame frame,

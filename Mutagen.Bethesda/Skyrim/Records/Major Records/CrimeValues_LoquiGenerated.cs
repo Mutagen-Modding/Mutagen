@@ -1563,32 +1563,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICrimeValues item,
-            MutagenFrame frame)
-        {
-            item.Arrest = frame.ReadBoolean();
-            item.AttackOnSight = frame.ReadBoolean();
-            item.Murder = frame.ReadUInt16();
-            item.Assault = frame.ReadUInt16();
-            item.Trespass = frame.ReadUInt16();
-            item.Pickpocket = frame.ReadUInt16();
-            item.Unknown = frame.ReadUInt16();
-            if (frame.Complete)
-            {
-                item.Versioning |= CrimeValues.VersioningBreaks.Break0;
-                return;
-            }
-            item.StealMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            if (frame.Complete)
-            {
-                item.Versioning |= CrimeValues.VersioningBreaks.Break1;
-                return;
-            }
-            item.Escape = frame.ReadUInt16();
-            item.Werewolf = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             ICrimeValues item,
             MutagenFrame frame,
@@ -1601,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CrimeValuesBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2591,6 +2565,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CrimeValuesBinaryCreateTranslation
     {
         public readonly static CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICrimeValues item,
+            MutagenFrame frame)
+        {
+            item.Arrest = frame.ReadBoolean();
+            item.AttackOnSight = frame.ReadBoolean();
+            item.Murder = frame.ReadUInt16();
+            item.Assault = frame.ReadUInt16();
+            item.Trespass = frame.ReadUInt16();
+            item.Pickpocket = frame.ReadUInt16();
+            item.Unknown = frame.ReadUInt16();
+            if (frame.Complete)
+            {
+                item.Versioning |= CrimeValues.VersioningBreaks.Break0;
+                return;
+            }
+            item.StealMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CrimeValues.VersioningBreaks.Break1;
+                return;
+            }
+            item.Escape = frame.ReadUInt16();
+            item.Werewolf = frame.ReadUInt16();
+        }
 
     }
 

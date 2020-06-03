@@ -1181,43 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRaceMovementType item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRaceMovementType item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x5059544D: // MTYP
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MovementType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
-                }
-                case 0x44455053: // SPED
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
-                    item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.Overrides);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRaceMovementType item,
             MutagenFrame frame,
@@ -1227,8 +1190,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RaceMovementTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RaceMovementTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1903,6 +1866,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RaceMovementTypeBinaryCreateTranslation
     {
         public readonly static RaceMovementTypeBinaryCreateTranslation Instance = new RaceMovementTypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRaceMovementType item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRaceMovementType item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x5059544D: // MTYP
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MovementType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
+                }
+                case 0x44455053: // SPED
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
+                    item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.Overrides);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

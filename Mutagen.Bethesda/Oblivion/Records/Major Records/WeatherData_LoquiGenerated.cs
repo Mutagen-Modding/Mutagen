@@ -1650,25 +1650,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherData item,
-            MutagenFrame frame)
-        {
-            item.WindSpeed = frame.ReadUInt8();
-            item.CloudSpeedLower = frame.ReadUInt8();
-            item.CloudSpeedUpper = frame.ReadUInt8();
-            item.TransDelta = frame.ReadUInt8();
-            item.SunGlare = frame.ReadUInt8();
-            item.SunDamage = frame.ReadUInt8();
-            item.PrecipitationBeginFadeIn = frame.ReadUInt8();
-            item.PrecipitationEndFadeOut = frame.ReadUInt8();
-            item.ThunderLightningBeginFadeIn = frame.ReadUInt8();
-            item.ThunderLightningEndFadeOut = frame.ReadUInt8();
-            item.ThunderLightningFrequency = frame.ReadUInt8();
-            item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.LightningColor = frame.ReadColor(ColorBinaryType.NoAlpha);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherData item,
             MutagenFrame frame,
@@ -1681,7 +1662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2748,6 +2729,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeatherDataBinaryCreateTranslation
     {
         public readonly static WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherData item,
+            MutagenFrame frame)
+        {
+            item.WindSpeed = frame.ReadUInt8();
+            item.CloudSpeedLower = frame.ReadUInt8();
+            item.CloudSpeedUpper = frame.ReadUInt8();
+            item.TransDelta = frame.ReadUInt8();
+            item.SunGlare = frame.ReadUInt8();
+            item.SunDamage = frame.ReadUInt8();
+            item.PrecipitationBeginFadeIn = frame.ReadUInt8();
+            item.PrecipitationEndFadeOut = frame.ReadUInt8();
+            item.ThunderLightningBeginFadeIn = frame.ReadUInt8();
+            item.ThunderLightningEndFadeOut = frame.ReadUInt8();
+            item.ThunderLightningFrequency = frame.ReadUInt8();
+            item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.LightningColor = frame.ReadColor(ColorBinaryType.NoAlpha);
+        }
 
     }
 

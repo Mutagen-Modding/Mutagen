@@ -1223,49 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFaceGenData item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IFaceGenData item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x53474746: // FGGS
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
-                }
-                case 0x41474746: // FGGA
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AsymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
-                }
-                case 0x53544746: // FGTS
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SymmetricTexture = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IFaceGenData item,
             MutagenFrame frame,
@@ -1275,8 +1232,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FaceGenDataBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: FaceGenDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1981,6 +1938,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class FaceGenDataBinaryCreateTranslation
     {
         public readonly static FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFaceGenData item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IFaceGenData item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x53474746: // FGGS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
+                }
+                case 0x41474746: // FGGA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AsymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
+                }
+                case 0x53544746: // FGTS
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SymmetricTexture = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

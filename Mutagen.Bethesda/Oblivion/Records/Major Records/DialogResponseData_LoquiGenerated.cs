@@ -1289,17 +1289,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDialogResponseData item,
-            MutagenFrame frame)
-        {
-            item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.EmotionValue = frame.ReadInt32();
-            item.Unknown = frame.ReadInt32();
-            item.ResponseNumber = frame.ReadUInt8();
-            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-        }
-        
         public virtual void CopyInFromBinary(
             IDialogResponseData item,
             MutagenFrame frame,
@@ -1312,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DialogResponseDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2059,6 +2048,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class DialogResponseDataBinaryCreateTranslation
     {
         public readonly static DialogResponseDataBinaryCreateTranslation Instance = new DialogResponseDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDialogResponseData item,
+            MutagenFrame frame)
+        {
+            item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.EmotionValue = frame.ReadInt32();
+            item.Unknown = frame.ReadInt32();
+            item.ResponseNumber = frame.ReadUInt8();
+            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+        }
 
     }
 

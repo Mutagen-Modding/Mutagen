@@ -1246,56 +1246,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IQuestStage item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IQuestStage item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Stage = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
-                }
-                case 0x54445351: // QSDT
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                case 0x4D414E43: // CNAM
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
-                {
-                    item.LogEntries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LogEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IQuestStage item,
             MutagenFrame frame,
@@ -1305,8 +1255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: QuestStageBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: QuestStageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2000,6 +1950,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class QuestStageBinaryCreateTranslation
     {
         public readonly static QuestStageBinaryCreateTranslation Instance = new QuestStageBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IQuestStage item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IQuestStage item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Stage = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                }
+                case 0x54445351: // QSDT
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                case 0x4D414E43: // CNAM
+                case 0x44484353: // SCHD
+                case 0x52484353: // SCHR
+                {
+                    item.LogEntries.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LogEntry listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LogEntry>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

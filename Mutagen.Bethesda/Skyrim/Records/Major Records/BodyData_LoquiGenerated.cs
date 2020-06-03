@@ -1183,43 +1183,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBodyData item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBodyData item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IBodyData item,
             MutagenFrame frame,
@@ -1229,8 +1192,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: BodyDataBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: BodyDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1909,6 +1872,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class BodyDataBinaryCreateTranslation
     {
         public readonly static BodyDataBinaryCreateTranslation Instance = new BodyDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBodyData item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IBodyData item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

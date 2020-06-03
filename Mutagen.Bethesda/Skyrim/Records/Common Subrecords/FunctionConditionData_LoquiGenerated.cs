@@ -1551,17 +1551,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFunctionConditionData item,
-            MutagenFrame frame)
-        {
-            item.Function = frame.ReadUInt16();
-            item.Unknown2 = frame.ReadUInt16();
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IFunctionConditionData item,
             MutagenFrame frame,
@@ -1571,7 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -2549,6 +2538,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class FunctionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new readonly static FunctionConditionDataBinaryCreateTranslation Instance = new FunctionConditionDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFunctionConditionData item,
+            MutagenFrame frame)
+        {
+            item.Function = frame.ReadUInt16();
+            item.Unknown2 = frame.ReadUInt16();
+            FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,

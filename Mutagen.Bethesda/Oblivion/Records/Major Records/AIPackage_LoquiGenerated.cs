@@ -1511,73 +1511,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => AIPackage_Registration.PACK_HEADER;
-        protected static void FillBinaryStructs(
-            IAIPackageInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IAIPackageInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54444B50: // PKDT
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.AIPackageData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
-                }
-                case 0x54444C50: // PLDT
-                {
-                    item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
-                }
-                case 0x54445350: // PSDT
-                {
-                    item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
-                }
-                case 0x54445450: // PTDT
-                {
-                    item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
-                }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                {
-                    item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IAIPackageInternal item,
             MutagenFrame frame,
@@ -1587,8 +1520,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: AIPackageBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AIPackageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2716,6 +2649,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AIPackageBinaryCreateTranslation Instance = new AIPackageBinaryCreateTranslation();
+
+        public override RecordType RecordType => AIPackage_Registration.PACK_HEADER;
+        public static void FillBinaryStructs(
+            IAIPackageInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IAIPackageInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54444B50: // PKDT
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.AIPackageData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
+                }
+                case 0x54444C50: // PLDT
+                {
+                    item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
+                }
+                case 0x54445350: // PSDT
+                {
+                    item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
+                }
+                case 0x54445450: // PTDT
+                {
+                    item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

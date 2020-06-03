@@ -1249,16 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => PlacedFlame_Registration.PFLA_HEADER;
-        protected static void FillBinaryStructs(
-            IPlacedFlameInternal item,
-            MutagenFrame frame)
-        {
-            APlacedTrapSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IPlacedFlameInternal item,
             MutagenFrame frame,
@@ -1268,8 +1258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PlacedFlameBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedFlameBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2117,6 +2107,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlacedFlameBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
         public new readonly static PlacedFlameBinaryCreateTranslation Instance = new PlacedFlameBinaryCreateTranslation();
+
+        public override RecordType RecordType => PlacedFlame_Registration.PFLA_HEADER;
+        public static void FillBinaryStructs(
+            IPlacedFlameInternal item,
+            MutagenFrame frame)
+        {
+            APlacedTrapBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

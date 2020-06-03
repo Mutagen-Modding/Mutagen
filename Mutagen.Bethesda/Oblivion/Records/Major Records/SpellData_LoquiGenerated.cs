@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISpellData item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Cost = frame.ReadUInt32();
-            item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             ISpellData item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SpellDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1967,6 +1957,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SpellDataBinaryCreateTranslation
     {
         public readonly static SpellDataBinaryCreateTranslation Instance = new SpellDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISpellData item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Cost = frame.ReadUInt32();
+            item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

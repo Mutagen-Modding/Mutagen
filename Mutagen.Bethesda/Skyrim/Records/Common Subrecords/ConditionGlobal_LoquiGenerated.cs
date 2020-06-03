@@ -1148,21 +1148,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IConditionGlobal item,
-            MutagenFrame frame)
-        {
-            ConditionSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IConditionGlobal item,
             MutagenFrame frame,
@@ -1175,7 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ConditionGlobalBinaryCreateTranslation.FillBinaryStructs);
             ConditionGlobalBinaryCreateTranslation.CustomBinaryEndImportPublic(
                 frame: frame,
                 obj: item);
@@ -1850,6 +1835,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
         public new readonly static ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IConditionGlobal item,
+            MutagenFrame frame)
+        {
+            ConditionBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.ComparisonValue = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,

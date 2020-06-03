@@ -1121,16 +1121,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Shout_Registration.SHOU_HEADER;
-        protected static void FillBinaryStructs(
-            IShoutInternal item,
-            MutagenFrame frame)
-        {
-            ASpellSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IShoutInternal item,
             MutagenFrame frame,
@@ -1140,8 +1130,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ShoutBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ShoutBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1902,6 +1892,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ShoutBinaryCreateTranslation : ASpellBinaryCreateTranslation
     {
         public new readonly static ShoutBinaryCreateTranslation Instance = new ShoutBinaryCreateTranslation();
+
+        public override RecordType RecordType => Shout_Registration.SHOU_HEADER;
+        public static void FillBinaryStructs(
+            IShoutInternal item,
+            MutagenFrame frame)
+        {
+            ASpellBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

@@ -1137,14 +1137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IInterCellPoint item,
-            MutagenFrame frame)
-        {
-            item.PointID = frame.ReadInt32();
-            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IInterCellPoint item,
             MutagenFrame frame,
@@ -1154,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: InterCellPointBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1771,6 +1763,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class InterCellPointBinaryCreateTranslation
     {
         public readonly static InterCellPointBinaryCreateTranslation Instance = new InterCellPointBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IInterCellPoint item,
+            MutagenFrame frame)
+        {
+            item.PointID = frame.ReadInt32();
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

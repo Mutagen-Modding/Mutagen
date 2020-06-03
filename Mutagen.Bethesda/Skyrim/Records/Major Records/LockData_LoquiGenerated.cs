@@ -1306,19 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILockData item,
-            MutagenFrame frame)
-        {
-            item.Level = EnumBinaryTranslation<LockLevel>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Flags = EnumBinaryTranslation<LockData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(11));
-        }
-        
         public virtual void CopyInFromBinary(
             ILockData item,
             MutagenFrame frame,
@@ -1331,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LockDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2087,6 +2074,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LockDataBinaryCreateTranslation
     {
         public readonly static LockDataBinaryCreateTranslation Instance = new LockDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILockData item,
+            MutagenFrame frame)
+        {
+            item.Level = EnumBinaryTranslation<LockLevel>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Flags = EnumBinaryTranslation<LockData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(11));
+        }
 
     }
 

@@ -2219,173 +2219,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Faction_Registration.FACT_HEADER;
-        protected static void FillBinaryStructs(
-            IFactionInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IFactionInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
-                }
-                case 0x4D414E58: // XNAM
-                {
-                    item.Relations.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Faction_Registration.XNAM_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
-                }
-                case 0x4C49414A: // JAIL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
-                }
-                case 0x54494157: // WAIT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
-                }
-                case 0x4C4F5453: // STOL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
-                }
-                case 0x4E434C50: // PLCN
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
-                }
-                case 0x52475243: // CRGR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
-                }
-                case 0x54554F4A: // JOUT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
-                }
-                case 0x41565243: // CRVA
-                {
-                    item.CrimeValues = Mutagen.Bethesda.Skyrim.CrimeValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
-                }
-                case 0x4D414E52: // RNAM
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
-                case 0x4D414E49: // INAM
-                {
-                    item.Ranks.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
-                }
-                case 0x444E4556: // VEND
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
-                }
-                case 0x434E4556: // VENC
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
-                }
-                case 0x564E4556: // VENV
-                {
-                    item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
-                }
-                case 0x44564C50: // PLVD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTarget.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
-                }
-                case 0x43544943: // CITC
-                {
-                    FactionBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IFactionInternal item,
             MutagenFrame frame,
@@ -2395,8 +2228,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FactionBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: FactionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -4211,6 +4044,173 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class FactionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
+
+        public override RecordType RecordType => Faction_Registration.FACT_HEADER;
+        public static void FillBinaryStructs(
+            IFactionInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IFactionInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    item.Relations.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                }
+                case 0x4C49414A: // JAIL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
+                }
+                case 0x54494157: // WAIT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
+                }
+                case 0x4C4F5453: // STOL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
+                }
+                case 0x4E434C50: // PLCN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
+                }
+                case 0x52475243: // CRGR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
+                }
+                case 0x54554F4A: // JOUT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
+                }
+                case 0x41565243: // CRVA
+                {
+                    item.CrimeValues = Mutagen.Bethesda.Skyrim.CrimeValues.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
+                }
+                case 0x4D414E52: // RNAM
+                case 0x4D414E4D: // MNAM
+                case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
+                {
+                    item.Ranks.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                }
+                case 0x444E4556: // VEND
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
+                }
+                case 0x434E4556: // VENC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
+                }
+                case 0x564E4556: // VENV
+                {
+                    item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
+                }
+                case 0x44564C50: // PLVD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTarget.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
+                }
+                case 0x43544943: // CITC
+                {
+                    FactionBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,

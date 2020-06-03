@@ -1367,18 +1367,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INavmeshTriangle item,
-            MutagenFrame frame)
-        {
-            item.Vertices = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.EdgeLink_0_1 = frame.ReadInt16();
-            item.EdgeLink_1_2 = frame.ReadInt16();
-            item.EdgeLink_2_0 = frame.ReadInt16();
-            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.CoverFlags = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             INavmeshTriangle item,
             MutagenFrame frame,
@@ -1388,7 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NavmeshTriangleBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2207,6 +2195,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NavmeshTriangleBinaryCreateTranslation
     {
         public readonly static NavmeshTriangleBinaryCreateTranslation Instance = new NavmeshTriangleBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INavmeshTriangle item,
+            MutagenFrame frame)
+        {
+            item.Vertices = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.EdgeLink_0_1 = frame.ReadInt16();
+            item.EdgeLink_1_2 = frame.ReadInt16();
+            item.EdgeLink_2_0 = frame.ReadInt16();
+            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.CoverFlags = frame.ReadUInt16();
+        }
 
     }
 

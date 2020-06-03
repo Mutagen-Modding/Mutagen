@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBookData item,
-            MutagenFrame frame)
-        {
-            item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IBookData item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: BookDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1968,6 +1958,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BookDataBinaryCreateTranslation
     {
         public readonly static BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBookData item,
+            MutagenFrame frame)
+        {
+            item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

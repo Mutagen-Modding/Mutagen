@@ -1180,12 +1180,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMagicEffectArchetypeInternal item,
-            MutagenFrame frame)
-        {
-        }
-        
         public virtual void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
@@ -1195,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: MagicEffectArchetypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1860,6 +1854,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class MagicEffectArchetypeBinaryCreateTranslation
     {
         public readonly static MagicEffectArchetypeBinaryCreateTranslation Instance = new MagicEffectArchetypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMagicEffectArchetypeInternal item,
+            MutagenFrame frame)
+        {
+        }
 
     }
 

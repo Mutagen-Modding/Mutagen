@@ -1165,44 +1165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISoundItem item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISoundItem item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x49445343: // CSDI
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
-                }
-                case 0x43445343: // CSDC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Chance = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ISoundItem item,
             MutagenFrame frame,
@@ -1212,8 +1174,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SoundItemBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SoundItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1852,6 +1814,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundItemBinaryCreateTranslation
     {
         public readonly static SoundItemBinaryCreateTranslation Instance = new SoundItemBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISoundItem item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ISoundItem item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x49445343: // CSDI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
+                }
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Chance = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

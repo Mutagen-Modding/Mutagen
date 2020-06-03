@@ -1301,19 +1301,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptMetaSummary item,
-            MutagenFrame frame)
-        {
-            item.Unknown = frame.ReadInt32();
-            item.RefCount = frame.ReadUInt32();
-            ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustomPublic(
-                frame: frame,
-                item: item);
-            item.VariableCount = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
             MutagenFrame frame,
@@ -1326,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ScriptMetaSummaryBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2054,6 +2041,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ScriptMetaSummaryBinaryCreateTranslation
     {
         public readonly static ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptMetaSummary item,
+            MutagenFrame frame)
+        {
+            item.Unknown = frame.ReadInt32();
+            item.RefCount = frame.ReadUInt32();
+            ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustomPublic(
+                frame: frame,
+                item: item);
+            item.VariableCount = frame.ReadUInt32();
+            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
         static partial void FillBinaryCompiledSizeCustom(
             MutagenFrame frame,

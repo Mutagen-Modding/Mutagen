@@ -1183,42 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => GameSettingInt_Registration.GMST_HEADER;
-        protected static void FillBinaryStructs(
-            IGameSettingIntInternal item,
-            MutagenFrame frame)
-        {
-            GameSettingSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGameSettingIntInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Data = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)GameSettingInt_FieldIndex.Data);
-                }
-                default:
-                    return GameSettingSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGameSettingIntInternal item,
             MutagenFrame frame,
@@ -1228,8 +1192,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: GameSettingIntBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GameSettingIntBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2046,6 +2010,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class GameSettingIntBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
         public new readonly static GameSettingIntBinaryCreateTranslation Instance = new GameSettingIntBinaryCreateTranslation();
+
+        public override RecordType RecordType => GameSettingInt_Registration.GMST_HEADER;
+        public static void FillBinaryStructs(
+            IGameSettingIntInternal item,
+            MutagenFrame frame)
+        {
+            GameSettingBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGameSettingIntInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Data = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)GameSettingInt_FieldIndex.Data);
+                }
+                default:
+                    return GameSettingBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

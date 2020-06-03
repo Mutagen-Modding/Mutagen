@@ -1196,17 +1196,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionSound item,
-            MutagenFrame frame)
-        {
-            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionSound item,
             MutagenFrame frame,
@@ -1216,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RegionSoundBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1879,6 +1868,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionSoundBinaryCreateTranslation
     {
         public readonly static RegionSoundBinaryCreateTranslation Instance = new RegionSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionSound item,
+            MutagenFrame frame)
+        {
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

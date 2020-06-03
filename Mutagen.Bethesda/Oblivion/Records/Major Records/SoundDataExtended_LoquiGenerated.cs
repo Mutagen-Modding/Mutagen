@@ -1198,25 +1198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISoundDataExtendedInternal item,
-            MutagenFrame frame)
-        {
-            SoundDataSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            item.StaticAttenuation = FloatBinaryTranslation.Parse(
-                frame: frame,
-                integerType: FloatIntegerType.UShort,
-                multiplier: 1);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustomPublic(
-                frame: frame,
-                item: item);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             ISoundDataExtendedInternal item,
             MutagenFrame frame,
@@ -1229,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SoundDataExtendedBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1938,6 +1919,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundDataExtendedBinaryCreateTranslation : SoundDataBinaryCreateTranslation
     {
         public new readonly static SoundDataExtendedBinaryCreateTranslation Instance = new SoundDataExtendedBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISoundDataExtendedInternal item,
+            MutagenFrame frame)
+        {
+            SoundDataBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.StaticAttenuation = FloatBinaryTranslation.Parse(
+                frame: frame,
+                integerType: FloatIntegerType.UShort,
+                multiplier: 1);
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustomPublic(
+                frame: frame,
+                item: item);
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryStopTimeCustom(
             MutagenFrame frame,

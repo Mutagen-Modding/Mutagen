@@ -1637,27 +1637,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRaceData item,
-            MutagenFrame frame)
-        {
-            item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
-            item.Unused = frame.ReadInt32();
-            item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
-                frame: frame,
-                transl: FloatBinaryTranslation.Instance.Parse);
-            item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
-                frame: frame,
-                transl: FloatBinaryTranslation.Instance.Parse);
-            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-        }
-        
         public virtual void CopyInFromBinary(
             IRaceData item,
             MutagenFrame frame,
@@ -1670,7 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RaceDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2854,6 +2833,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RaceDataBinaryCreateTranslation
     {
         public readonly static RaceDataBinaryCreateTranslation Instance = new RaceDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRaceData item,
+            MutagenFrame frame)
+        {
+            item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
+            item.Unused = frame.ReadInt32();
+            item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                frame: frame,
+                transl: FloatBinaryTranslation.Instance.Parse);
+            item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                frame: frame,
+                transl: FloatBinaryTranslation.Instance.Parse);
+            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+        }
 
     }
 

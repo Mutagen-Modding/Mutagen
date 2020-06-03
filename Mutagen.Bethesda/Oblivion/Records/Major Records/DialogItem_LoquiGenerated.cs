@@ -2031,130 +2031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => DialogItem_Registration.INFO_HEADER;
-        protected static void FillBinaryStructs(
-            IDialogItemInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDialogItemInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
-                }
-                case 0x49545351: // QSTI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
-                }
-                case 0x4D414E50: // PNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
-                }
-                case 0x454D414E: // NAME
-                {
-                    item.Topics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: DialogItem_Registration.NAME_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
-                }
-                case 0x54445254: // TRDT
-                case 0x314D414E: // NAM1
-                case 0x324D414E: // NAM2
-                {
-                    item.Responses.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
-                }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                {
-                    item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
-                }
-                case 0x544C4354: // TCLT
-                {
-                    item.Choices.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: DialogItem_Registration.TCLT_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
-                }
-                case 0x464C4354: // TCLF
-                {
-                    item.LinkFrom.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: DialogItem_Registration.TCLF_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
-                }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
-                {
-                    item.Script.CopyInFromBinary(
-                        frame: frame,
-                        recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IDialogItemInternal item,
             MutagenFrame frame,
@@ -2164,8 +2040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: DialogItemBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DialogItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3609,6 +3485,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class DialogItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
+
+        public override RecordType RecordType => DialogItem_Registration.INFO_HEADER;
+        public static void FillBinaryStructs(
+            IDialogItemInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IDialogItemInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
+                }
+                case 0x49545351: // QSTI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                }
+                case 0x454D414E: // NAME
+                {
+                    item.Topics.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.NAME_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                }
+                case 0x54445254: // TRDT
+                case 0x314D414E: // NAM1
+                case 0x324D414E: // NAM2
+                {
+                    item.Responses.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                }
+                case 0x544C4354: // TCLT
+                {
+                    item.Choices.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.TCLT_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                }
+                case 0x464C4354: // TCLF
+                {
+                    item.LinkFrom.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DialogItem_Registration.TCLF_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                }
+                case 0x44484353: // SCHD
+                case 0x52484353: // SCHR
+                {
+                    item.Script.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

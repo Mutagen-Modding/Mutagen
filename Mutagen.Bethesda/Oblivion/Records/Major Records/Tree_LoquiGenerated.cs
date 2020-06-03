@@ -1487,71 +1487,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Tree_Registration.TREE_HEADER;
-        protected static void FillBinaryStructs(
-            ITreeInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ITreeInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeedTreeSeeds = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: UInt32BinaryTranslation.Instance.Parse)
-                        .ToExtendedList<UInt32>();
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
-                }
-                case 0x4D414E43: // CNAM
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.TreeData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
-                }
-                case 0x4D414E42: // BNAM
-                {
-                    item.BillboardDimensions = Mutagen.Bethesda.Oblivion.Dimensions.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ITreeInternal item,
             MutagenFrame frame,
@@ -1561,8 +1496,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: TreeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: TreeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2644,6 +2579,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class TreeBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
+
+        public override RecordType RecordType => Tree_Registration.TREE_HEADER;
+        public static void FillBinaryStructs(
+            ITreeInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ITreeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SpeedTreeSeeds = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: UInt32BinaryTranslation.Instance.Parse)
+                        .ToExtendedList<UInt32>();
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.TreeData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
+                }
+                case 0x4D414E42: // BNAM
+                {
+                    item.BillboardDimensions = Mutagen.Bethesda.Oblivion.Dimensions.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

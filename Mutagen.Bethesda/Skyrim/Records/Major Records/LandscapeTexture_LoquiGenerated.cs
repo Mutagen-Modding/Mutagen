@@ -1548,76 +1548,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => LandscapeTexture_Registration.LTEX_HEADER;
-        protected static void FillBinaryStructs(
-            ILandscapeTextureInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILandscapeTextureInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E54: // TNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
-                }
-                case 0x4D414E4D: // MNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
-                }
-                case 0x4D414E48: // HNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.HavokFriction = dataFrame.ReadUInt8();
-                    item.HavokRestitution = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
-                }
-                case 0x4D414E53: // SNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSpecularExponent = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
-                }
-                case 0x4D414E47: // GNAM
-                {
-                    item.Grasses.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: LandscapeTexture_Registration.GNAM_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILandscapeTextureInternal item,
             MutagenFrame frame,
@@ -1627,8 +1557,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LandscapeTextureBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LandscapeTextureBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2677,6 +2607,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LandscapeTextureBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LandscapeTextureBinaryCreateTranslation Instance = new LandscapeTextureBinaryCreateTranslation();
+
+        public override RecordType RecordType => LandscapeTexture_Registration.LTEX_HEADER;
+        public static void FillBinaryStructs(
+            ILandscapeTextureInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILandscapeTextureInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E54: // TNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
+                }
+                case 0x4D414E48: // HNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.HavokFriction = dataFrame.ReadUInt8();
+                    item.HavokRestitution = dataFrame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureSpecularExponent = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    item.Grasses.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: LandscapeTexture_Registration.GNAM_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

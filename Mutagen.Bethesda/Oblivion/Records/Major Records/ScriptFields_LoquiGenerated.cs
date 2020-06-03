@@ -1533,103 +1533,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptFields item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IScriptFields item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44484353: // SCHD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                case 0x52484353: // SCHR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    item.MetadataSummary.CopyInFromBinary(
-                        frame: frame,
-                        recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
-                }
-                case 0x41444353: // SCDA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
-                }
-                case 0x58544353: // SCTX
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.Plain);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
-                }
-                case 0x44534C53: // SLSD
-                case 0x52564353: // SCVR
-                {
-                    item.LocalVariables.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LocalVariable listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
-                }
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
-                {
-                    item.References.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                switch (header.TypeInt)
-                                {
-                                    case 0x56524353: // SCRV
-                                        return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
-                                    case 0x4F524353: // SCRO
-                                        return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptFields item,
             MutagenFrame frame,
@@ -1639,8 +1542,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ScriptFieldsBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ScriptFieldsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2566,6 +2469,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ScriptFieldsBinaryCreateTranslation
     {
         public readonly static ScriptFieldsBinaryCreateTranslation Instance = new ScriptFieldsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptFields item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IScriptFields item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44484353: // SCHD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                case 0x52484353: // SCHR
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    item.MetadataSummary.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
+                }
+                case 0x41444353: // SCDA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
+                }
+                case 0x58544353: // SCTX
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.Plain);
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
+                }
+                case 0x44534C53: // SLSD
+                case 0x52564353: // SCVR
+                {
+                    item.LocalVariables.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LocalVariable listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
+                }
+                case 0x56524353: // SCRV
+                case 0x4F524353: // SCRO
+                {
+                    item.References.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                switch (header.TypeInt)
+                                {
+                                    case 0x56524353: // SCRV
+                                        return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
+                                            frame: r,
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
+                                    case 0x4F524353: // SCRO
+                                        return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
+                                            frame: r,
+                                            item: out listSubItem!,
+                                            recordTypeConverter: conv);
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                            }));
+                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
         static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,

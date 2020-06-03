@@ -1257,22 +1257,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEnableParent item,
-            MutagenFrame frame)
-        {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete)
-            {
-                item.Versioning |= EnableParent.VersioningBreaks.Break0;
-                return;
-            }
-            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-        }
-        
         public virtual void CopyInFromBinary(
             IEnableParent item,
             MutagenFrame frame,
@@ -1285,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EnableParentBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1998,6 +1982,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EnableParentBinaryCreateTranslation
     {
         public readonly static EnableParentBinaryCreateTranslation Instance = new EnableParentBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEnableParent item,
+            MutagenFrame frame)
+        {
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete)
+            {
+                item.Versioning |= EnableParent.VersioningBreaks.Break0;
+                return;
+            }
+            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+        }
 
     }
 

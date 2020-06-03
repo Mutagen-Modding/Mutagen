@@ -1077,15 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILocationObjectId item,
-            MutagenFrame frame)
-        {
-            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             ILocationObjectId item,
             MutagenFrame frame,
@@ -1095,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LocationObjectIdBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1655,6 +1646,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LocationObjectIdBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
         public new readonly static LocationObjectIdBinaryCreateTranslation Instance = new LocationObjectIdBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILocationObjectId item,
+            MutagenFrame frame)
+        {
+            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

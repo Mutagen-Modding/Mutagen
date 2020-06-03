@@ -1373,19 +1373,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcConfiguration item,
-            MutagenFrame frame)
-        {
-            item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.BaseSpellPoints = frame.ReadUInt16();
-            item.Fatigue = frame.ReadUInt16();
-            item.BarterGold = frame.ReadUInt16();
-            item.LevelOffset = frame.ReadInt16();
-            item.CalcMin = frame.ReadUInt16();
-            item.CalcMax = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             INpcConfiguration item,
             MutagenFrame frame,
@@ -1398,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NpcConfigurationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2222,6 +2209,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class NpcConfigurationBinaryCreateTranslation
     {
         public readonly static NpcConfigurationBinaryCreateTranslation Instance = new NpcConfigurationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcConfiguration item,
+            MutagenFrame frame)
+        {
+            item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.BaseSpellPoints = frame.ReadUInt16();
+            item.Fatigue = frame.ReadUInt16();
+            item.BarterGold = frame.ReadUInt16();
+            item.LevelOffset = frame.ReadInt16();
+            item.CalcMin = frame.ReadUInt16();
+            item.CalcMax = frame.ReadUInt16();
+        }
 
     }
 

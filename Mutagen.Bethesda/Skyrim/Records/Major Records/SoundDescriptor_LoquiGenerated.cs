@@ -1103,16 +1103,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => SoundDescriptor_Registration.SNDR_HEADER;
-        protected static void FillBinaryStructs(
-            ISoundDescriptorInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ISoundDescriptorInternal item,
             MutagenFrame frame,
@@ -1122,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SoundDescriptorBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SoundDescriptorBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1786,6 +1776,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class SoundDescriptorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
+
+        public override RecordType RecordType => SoundDescriptor_Registration.SNDR_HEADER;
+        public static void FillBinaryStructs(
+            ISoundDescriptorInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

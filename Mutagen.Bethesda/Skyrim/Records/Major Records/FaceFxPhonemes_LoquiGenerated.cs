@@ -2085,12 +2085,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IFaceFxPhonemes item,
-            MutagenFrame frame)
-        {
-        }
-        
         public virtual void CopyInFromBinary(
             IFaceFxPhonemes item,
             MutagenFrame frame,
@@ -2100,7 +2094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FaceFxPhonemesBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -3922,6 +3916,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class FaceFxPhonemesBinaryCreateTranslation
     {
         public readonly static FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IFaceFxPhonemes item,
+            MutagenFrame frame)
+        {
+        }
 
     }
 

@@ -1189,15 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAIPackageTarget item,
-            MutagenFrame frame)
-        {
-            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Object = frame.ReadInt32();
-            item.Count = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IAIPackageTarget item,
             MutagenFrame frame,
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AIPackageTargetBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1874,6 +1865,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageTargetBinaryCreateTranslation
     {
         public readonly static AIPackageTargetBinaryCreateTranslation Instance = new AIPackageTargetBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAIPackageTarget item,
+            MutagenFrame frame)
+        {
+            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Object = frame.ReadInt32();
+            item.Count = frame.ReadInt32();
+        }
 
     }
 

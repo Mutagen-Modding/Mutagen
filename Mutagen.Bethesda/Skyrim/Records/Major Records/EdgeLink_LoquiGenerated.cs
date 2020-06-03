@@ -1195,17 +1195,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEdgeLink item,
-            MutagenFrame frame)
-        {
-            item.Unknown = frame.ReadInt32();
-            item.Mesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.TriangleIndex = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IEdgeLink item,
             MutagenFrame frame,
@@ -1215,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EdgeLinkBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1873,6 +1862,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EdgeLinkBinaryCreateTranslation
     {
         public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEdgeLink item,
+            MutagenFrame frame)
+        {
+            item.Unknown = frame.ReadInt32();
+            item.Mesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.TriangleIndex = frame.ReadInt16();
+        }
 
     }
 

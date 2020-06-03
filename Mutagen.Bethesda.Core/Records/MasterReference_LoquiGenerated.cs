@@ -1145,41 +1145,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMasterReference item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMasterReference item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x5453414D: // MAST
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileSize = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IMasterReference item,
             MutagenFrame frame,
@@ -1189,8 +1154,8 @@ namespace Mutagen.Bethesda.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: MasterReferenceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MasterReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1819,6 +1784,41 @@ namespace Mutagen.Bethesda.Internals
     public partial class MasterReferenceBinaryCreateTranslation
     {
         public readonly static MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMasterReference item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMasterReference item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x5453414D: // MAST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FileSize = frame.ReadUInt64();
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

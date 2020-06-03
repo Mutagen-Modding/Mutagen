@@ -1202,44 +1202,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Script_Registration.SCPT_HEADER;
-        protected static void FillBinaryStructs(
-            IScriptInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IScriptInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
-                {
-                    item.Fields.CopyInFromBinary(
-                        frame: frame,
-                        recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptInternal item,
             MutagenFrame frame,
@@ -1249,8 +1211,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ScriptBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ScriptBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1973,6 +1935,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ScriptBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ScriptBinaryCreateTranslation Instance = new ScriptBinaryCreateTranslation();
+
+        public override RecordType RecordType => Script_Registration.SCPT_HEADER;
+        public static void FillBinaryStructs(
+            IScriptInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IScriptInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44484353: // SCHD
+                case 0x52484353: // SCHR
+                {
+                    item.Fields.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null);
+                    return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

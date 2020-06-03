@@ -1300,36 +1300,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAvailableMorphs item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IAvailableMorphs item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4941504D: // MPAI
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
-                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IAvailableMorphs item,
             MutagenFrame frame,
@@ -1339,8 +1309,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: AvailableMorphsBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AvailableMorphsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2214,6 +2184,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class AvailableMorphsBinaryCreateTranslation
     {
         public readonly static AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAvailableMorphs item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IAvailableMorphs item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4941504D: // MPAI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
+                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
         static partial void FillBinaryParseCustom(
             MutagenFrame frame,

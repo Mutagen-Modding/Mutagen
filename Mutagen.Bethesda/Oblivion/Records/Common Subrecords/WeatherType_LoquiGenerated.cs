@@ -1149,16 +1149,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherType item,
-            MutagenFrame frame)
-        {
-            item.Weather = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Chance = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherType item,
             MutagenFrame frame,
@@ -1168,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherTypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1786,6 +1776,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeatherTypeBinaryCreateTranslation
     {
         public readonly static WeatherTypeBinaryCreateTranslation Instance = new WeatherTypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherType item,
+            MutagenFrame frame)
+        {
+            item.Weather = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Chance = frame.ReadInt32();
+        }
 
     }
 

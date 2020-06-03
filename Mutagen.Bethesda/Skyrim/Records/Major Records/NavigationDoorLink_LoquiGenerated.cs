@@ -1198,17 +1198,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INavigationDoorLink item,
-            MutagenFrame frame)
-        {
-            item.NavMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.NavMeshTriangleIndex = frame.ReadInt16();
-            item.Unused = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             INavigationDoorLink item,
             MutagenFrame frame,
@@ -1221,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NavigationDoorLinkBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1885,6 +1874,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NavigationDoorLinkBinaryCreateTranslation
     {
         public readonly static NavigationDoorLinkBinaryCreateTranslation Instance = new NavigationDoorLinkBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INavigationDoorLink item,
+            MutagenFrame frame)
+        {
+            item.NavMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.NavMeshTriangleIndex = frame.ReadInt16();
+            item.Unused = frame.ReadInt16();
+        }
 
     }
 

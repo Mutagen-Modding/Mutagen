@@ -1137,16 +1137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => SpellLeveled_Registration.LVSP_HEADER;
-        protected static void FillBinaryStructs(
-            ISpellLeveledInternal item,
-            MutagenFrame frame)
-        {
-            SpellSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ISpellLeveledInternal item,
             MutagenFrame frame,
@@ -1156,8 +1146,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SpellLeveledBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SpellLeveledBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2012,6 +2002,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SpellLeveledBinaryCreateTranslation : SpellBinaryCreateTranslation
     {
         public new readonly static SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
+
+        public override RecordType RecordType => SpellLeveled_Registration.LVSP_HEADER;
+        public static void FillBinaryStructs(
+            ISpellLeveledInternal item,
+            MutagenFrame frame)
+        {
+            SpellBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

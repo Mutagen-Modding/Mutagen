@@ -1697,27 +1697,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPlayerSkills item,
-            MutagenFrame frame)
-        {
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
-                item: item.SkillValues,
-                transl: ByteBinaryTranslation.Instance.Parse);
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
-                item: item.SkillOffsets,
-                transl: ByteBinaryTranslation.Instance.Parse);
-            item.Health = frame.ReadUInt16();
-            item.Magicka = frame.ReadUInt16();
-            item.Stamina = frame.ReadUInt16();
-            item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-        }
-        
         public virtual void CopyInFromBinary(
             IPlayerSkills item,
             MutagenFrame frame,
@@ -1730,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PlayerSkillsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2724,6 +2703,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlayerSkillsBinaryCreateTranslation
     {
         public readonly static PlayerSkillsBinaryCreateTranslation Instance = new PlayerSkillsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPlayerSkills item,
+            MutagenFrame frame)
+        {
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                frame: frame,
+                item: item.SkillValues,
+                transl: ByteBinaryTranslation.Instance.Parse);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                frame: frame,
+                item: item.SkillOffsets,
+                transl: ByteBinaryTranslation.Instance.Parse);
+            item.Health = frame.ReadUInt16();
+            item.Magicka = frame.ReadUInt16();
+            item.Stamina = frame.ReadUInt16();
+            item.Unused = frame.ReadUInt16();
+            item.FarAwayModelDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.GearedUpWeapons = frame.ReadUInt8();
+            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+        }
 
     }
 

@@ -1741,27 +1741,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICreatureData item,
-            MutagenFrame frame)
-        {
-            item.CreatureType = EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.CombatSkill = frame.ReadUInt8();
-            item.MagicSkill = frame.ReadUInt8();
-            item.StealthSkill = frame.ReadUInt8();
-            item.SoulLevel = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.Health = frame.ReadUInt32();
-            item.AttackDamage = frame.ReadUInt16();
-            item.Strength = frame.ReadUInt8();
-            item.Intelligence = frame.ReadUInt8();
-            item.Willpower = frame.ReadUInt8();
-            item.Agility = frame.ReadUInt8();
-            item.Speed = frame.ReadUInt8();
-            item.Endurance = frame.ReadUInt8();
-            item.Personality = frame.ReadUInt8();
-            item.Luck = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             ICreatureData item,
             MutagenFrame frame,
@@ -1774,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CreatureDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2921,6 +2900,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CreatureDataBinaryCreateTranslation
     {
         public readonly static CreatureDataBinaryCreateTranslation Instance = new CreatureDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICreatureData item,
+            MutagenFrame frame)
+        {
+            item.CreatureType = EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.CombatSkill = frame.ReadUInt8();
+            item.MagicSkill = frame.ReadUInt8();
+            item.StealthSkill = frame.ReadUInt8();
+            item.SoulLevel = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Health = frame.ReadUInt32();
+            item.AttackDamage = frame.ReadUInt16();
+            item.Strength = frame.ReadUInt8();
+            item.Intelligence = frame.ReadUInt8();
+            item.Willpower = frame.ReadUInt8();
+            item.Agility = frame.ReadUInt8();
+            item.Speed = frame.ReadUInt8();
+            item.Endurance = frame.ReadUInt8();
+            item.Personality = frame.ReadUInt8();
+            item.Luck = frame.ReadUInt8();
+        }
 
     }
 

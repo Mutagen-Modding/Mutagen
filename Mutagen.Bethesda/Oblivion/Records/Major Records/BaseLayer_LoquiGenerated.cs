@@ -1126,36 +1126,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBaseLayer item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBaseLayer item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IBaseLayer item,
             MutagenFrame frame,
@@ -1165,8 +1135,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: BaseLayerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: BaseLayerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1795,6 +1765,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class BaseLayerBinaryCreateTranslation
     {
         public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBaseLayer item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IBaseLayer item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54585442: // BTXT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
+                    item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

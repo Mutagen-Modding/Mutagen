@@ -1374,31 +1374,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IClimateData item,
-            MutagenFrame frame)
-        {
-            ClimateDataBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
-                frame: frame,
-                item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
-                frame: frame,
-                item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
-                frame: frame,
-                item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
-                frame: frame,
-                item: item);
-            item.Volatility = frame.ReadUInt8();
-            ClimateDataBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
-                frame: frame,
-                item: item);
-            ClimateDataBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IClimateData item,
             MutagenFrame frame,
@@ -1411,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ClimateDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2322,6 +2297,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ClimateDataBinaryCreateTranslation
     {
         public readonly static ClimateDataBinaryCreateTranslation Instance = new ClimateDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IClimateData item,
+            MutagenFrame frame)
+        {
+            ClimateDataBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
+                frame: frame,
+                item: item);
+            ClimateDataBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
+                frame: frame,
+                item: item);
+            ClimateDataBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
+                frame: frame,
+                item: item);
+            ClimateDataBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
+                frame: frame,
+                item: item);
+            item.Volatility = frame.ReadUInt8();
+            ClimateDataBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
+                frame: frame,
+                item: item);
+            ClimateDataBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinarySunriseBeginCustom(
             MutagenFrame frame,

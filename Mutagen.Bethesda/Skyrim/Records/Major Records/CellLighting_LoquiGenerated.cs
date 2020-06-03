@@ -2163,40 +2163,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICellLighting item,
-            MutagenFrame frame)
-        {
-            item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogNearColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DirectionalRotationXY = frame.ReadInt32();
-            item.DirectionalRotationZ = frame.ReadInt32();
-            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AmbientDirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientDirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientDirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientDirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientDirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientDirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            if (frame.Complete)
-            {
-                item.Versioning |= CellLighting.VersioningBreaks.Break0;
-                return;
-            }
-            item.AmbientSpecular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogFarColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.LightFadeBegin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.LightFadeEnd = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Inherits = EnumBinaryTranslation<CellLighting.Inherit>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             ICellLighting item,
             MutagenFrame frame,
@@ -2209,7 +2175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CellLightingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -3756,6 +3722,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class CellLightingBinaryCreateTranslation
     {
         public readonly static CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICellLighting item,
+            MutagenFrame frame)
+        {
+            item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogNearColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DirectionalRotationXY = frame.ReadInt32();
+            item.DirectionalRotationZ = frame.ReadInt32();
+            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.AmbientDirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientDirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientDirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientDirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientDirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientDirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break0;
+                return;
+            }
+            item.AmbientSpecular = frame.ReadColor(ColorBinaryType.Alpha);
+            item.AmbientScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogFarColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.LightFadeBegin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.LightFadeEnd = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Inherits = EnumBinaryTranslation<CellLighting.Inherit>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

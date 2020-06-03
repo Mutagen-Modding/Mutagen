@@ -1101,16 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => ImageSpaceAdapter_Registration.IMAD_HEADER;
-        protected static void FillBinaryStructs(
-            IImageSpaceAdapterInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
@@ -1120,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ImageSpaceAdapterBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ImageSpaceAdapterBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1784,6 +1774,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
+
+        public override RecordType RecordType => ImageSpaceAdapter_Registration.IMAD_HEADER;
+        public static void FillBinaryStructs(
+            IImageSpaceAdapterInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

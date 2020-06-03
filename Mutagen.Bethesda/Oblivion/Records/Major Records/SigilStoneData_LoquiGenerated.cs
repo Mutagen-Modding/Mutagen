@@ -1189,15 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISigilStoneData item,
-            MutagenFrame frame)
-        {
-            item.Uses = frame.ReadUInt8();
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ISigilStoneData item,
             MutagenFrame frame,
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SigilStoneDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1873,6 +1864,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SigilStoneDataBinaryCreateTranslation
     {
         public readonly static SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISigilStoneData item,
+            MutagenFrame frame)
+        {
+            item.Uses = frame.ReadUInt8();
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

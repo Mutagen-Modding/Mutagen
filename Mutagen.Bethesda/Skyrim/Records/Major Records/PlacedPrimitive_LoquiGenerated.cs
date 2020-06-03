@@ -1236,18 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPlacedPrimitive item,
-            MutagenFrame frame)
-        {
-            PlacedPrimitiveBinaryCreateTranslation.FillBinaryBoundsCustomPublic(
-                frame: frame,
-                item: item);
-            item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-            item.Unknown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IPlacedPrimitive item,
             MutagenFrame frame,
@@ -1260,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PlacedPrimitiveBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1984,6 +1972,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlacedPrimitiveBinaryCreateTranslation
     {
         public readonly static PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPlacedPrimitive item,
+            MutagenFrame frame)
+        {
+            PlacedPrimitiveBinaryCreateTranslation.FillBinaryBoundsCustomPublic(
+                frame: frame,
+                item: item);
+            item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+            item.Unknown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
         static partial void FillBinaryBoundsCustom(
             MutagenFrame frame,

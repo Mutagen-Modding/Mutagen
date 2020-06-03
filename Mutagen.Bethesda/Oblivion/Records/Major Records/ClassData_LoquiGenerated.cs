@@ -1559,41 +1559,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IClassData item,
-            MutagenFrame frame)
-        {
-            item.PrimaryAttributes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
-                    frame: frame,
-                    amount: 2,
-                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                    {
-                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.SpawnWithLength(4),
-                            item: out listSubItem);
-                    }));
-            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.SecondaryAttributes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
-                    frame: frame,
-                    amount: 7,
-                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
-                    {
-                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.SpawnWithLength(4),
-                            item: out listSubItem);
-                    }));
-            item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            if (frame.Complete)
-            {
-                item.Versioning |= ClassData.VersioningBreaks.Break0;
-                return;
-            }
-            item.Training = Mutagen.Bethesda.Oblivion.ClassTraining.CreateFromBinary(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IClassData item,
             MutagenFrame frame,
@@ -1606,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ClassDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2553,6 +2518,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ClassDataBinaryCreateTranslation
     {
         public readonly static ClassDataBinaryCreateTranslation Instance = new ClassDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IClassData item,
+            MutagenFrame frame)
+        {
+            item.PrimaryAttributes.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                    frame: frame,
+                    amount: 2,
+                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                    {
+                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: r.SpawnWithLength(4),
+                            item: out listSubItem);
+                    }));
+            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.SecondaryAttributes.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                    frame: frame,
+                    amount: 7,
+                    transl: (MutagenFrame r, out ActorValue listSubItem) =>
+                    {
+                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: r.SpawnWithLength(4),
+                            item: out listSubItem);
+                    }));
+            item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            if (frame.Complete)
+            {
+                item.Versioning |= ClassData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Training = Mutagen.Bethesda.Oblivion.ClassTraining.CreateFromBinary(frame: frame);
+        }
 
     }
 

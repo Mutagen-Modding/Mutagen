@@ -991,21 +991,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILeveledEntry<T> item,
-            MutagenFrame frame)
-        {
-            item.Level = frame.ReadInt16();
-            item.Unknown = frame.ReadInt16();
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete) return;
-            item.Count = frame.ReadInt16();
-            if (frame.Complete) return;
-            item.Unknown2 = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledEntry<T> item,
             MutagenFrame frame,
@@ -1018,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LeveledEntryBinaryCreateTranslation<T>.FillBinaryStructs);
         }
         
         #endregion
@@ -1805,6 +1790,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         public readonly static LeveledEntryBinaryCreateTranslation<T> Instance = new LeveledEntryBinaryCreateTranslation<T>();
+
+        public static void FillBinaryStructs(
+            ILeveledEntry<T> item,
+            MutagenFrame frame)
+        {
+            item.Level = frame.ReadInt16();
+            item.Unknown = frame.ReadInt16();
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete) return;
+            item.Count = frame.ReadInt16();
+            if (frame.Complete) return;
+            item.Unknown2 = frame.ReadInt16();
+        }
 
     }
 

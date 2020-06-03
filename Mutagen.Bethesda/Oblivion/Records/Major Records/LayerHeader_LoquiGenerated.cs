@@ -1248,17 +1248,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILayerHeaderInternal item,
-            MutagenFrame frame)
-        {
-            item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.LayerNumber = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             ILayerHeaderInternal item,
             MutagenFrame frame,
@@ -1271,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LayerHeaderBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1933,6 +1922,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LayerHeaderBinaryCreateTranslation
     {
         public readonly static LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILayerHeaderInternal item,
+            MutagenFrame frame)
+        {
+            item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.LayerNumber = frame.ReadUInt16();
+        }
 
     }
 

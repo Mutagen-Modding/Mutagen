@@ -1250,24 +1250,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherVolumetricLighting item,
-            MutagenFrame frame)
-        {
-            item.Sunrise = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Day = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Sunset = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Night = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherVolumetricLighting item,
             MutagenFrame frame,
@@ -1280,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherVolumetricLightingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1993,6 +1975,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherVolumetricLightingBinaryCreateTranslation
     {
         public readonly static WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherVolumetricLighting item,
+            MutagenFrame frame)
+        {
+            item.Sunrise = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Day = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Sunset = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Night = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

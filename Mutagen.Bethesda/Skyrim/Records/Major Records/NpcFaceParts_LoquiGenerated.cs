@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcFaceParts item,
-            MutagenFrame frame)
-        {
-            item.Nose = frame.ReadUInt32();
-            item.Unknown = frame.ReadUInt32();
-            item.Eyes = frame.ReadUInt32();
-            item.Mouth = frame.ReadUInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             INpcFaceParts item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NpcFacePartsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1958,6 +1948,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NpcFacePartsBinaryCreateTranslation
     {
         public readonly static NpcFacePartsBinaryCreateTranslation Instance = new NpcFacePartsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcFaceParts item,
+            MutagenFrame frame)
+        {
+            item.Nose = frame.ReadUInt32();
+            item.Unknown = frame.ReadUInt32();
+            item.Eyes = frame.ReadUInt32();
+            item.Mouth = frame.ReadUInt32();
+        }
 
     }
 

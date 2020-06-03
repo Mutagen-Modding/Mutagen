@@ -1470,25 +1470,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherAmbientColors item,
-            MutagenFrame frame)
-        {
-            item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
-            if (frame.Complete)
-            {
-                item.Versioning |= WeatherAmbientColors.VersioningBreaks.Break0;
-                return;
-            }
-            item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherAmbientColors item,
             MutagenFrame frame,
@@ -1498,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherAmbientColorsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2412,6 +2393,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherAmbientColorsBinaryCreateTranslation
     {
         public readonly static WeatherAmbientColorsBinaryCreateTranslation Instance = new WeatherAmbientColorsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherAmbientColors item,
+            MutagenFrame frame)
+        {
+            item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            if (frame.Complete)
+            {
+                item.Versioning |= WeatherAmbientColors.VersioningBreaks.Break0;
+                return;
+            }
+            item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

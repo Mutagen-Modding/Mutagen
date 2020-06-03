@@ -1564,27 +1564,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcConfiguration item,
-            MutagenFrame frame)
-        {
-            NpcConfigurationBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
-                frame: frame,
-                item: item);
-            item.MagickaOffset = frame.ReadInt16();
-            item.StaminaOffset = frame.ReadInt16();
-            NpcConfigurationBinaryCreateTranslation.FillBinaryLevelCustomPublic(
-                frame: frame,
-                item: item);
-            item.CalcMinLevel = frame.ReadInt16();
-            item.CalcMaxLevel = frame.ReadInt16();
-            item.SpeedMultiplier = frame.ReadInt16();
-            item.DispositionBase = frame.ReadInt16();
-            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.HealthOffset = frame.ReadInt16();
-            item.BleedoutOverride = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             INpcConfiguration item,
             MutagenFrame frame,
@@ -1597,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NpcConfigurationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2632,6 +2611,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NpcConfigurationBinaryCreateTranslation
     {
         public readonly static NpcConfigurationBinaryCreateTranslation Instance = new NpcConfigurationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcConfiguration item,
+            MutagenFrame frame)
+        {
+            NpcConfigurationBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+                frame: frame,
+                item: item);
+            item.MagickaOffset = frame.ReadInt16();
+            item.StaminaOffset = frame.ReadInt16();
+            NpcConfigurationBinaryCreateTranslation.FillBinaryLevelCustomPublic(
+                frame: frame,
+                item: item);
+            item.CalcMinLevel = frame.ReadInt16();
+            item.CalcMaxLevel = frame.ReadInt16();
+            item.SpeedMultiplier = frame.ReadInt16();
+            item.DispositionBase = frame.ReadInt16();
+            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.HealthOffset = frame.ReadInt16();
+            item.BleedoutOverride = frame.ReadInt16();
+        }
 
         static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,

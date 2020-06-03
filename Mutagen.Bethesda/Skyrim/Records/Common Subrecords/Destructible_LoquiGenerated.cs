@@ -1268,52 +1268,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDestructible item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDestructible item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54534544: // DEST
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Skyrim.DestructableData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
-                }
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
-                    item.Stages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DestructionStage>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DestructionStage listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DestructionStage>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IDestructible item,
             MutagenFrame frame,
@@ -1323,8 +1277,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: DestructibleBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DestructibleBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2059,6 +2013,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DestructibleBinaryCreateTranslation
     {
         public readonly static DestructibleBinaryCreateTranslation Instance = new DestructibleBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDestructible item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IDestructible item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54534544: // DEST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Skyrim.DestructableData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
+                }
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
+                    item.Stages.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DestructionStage>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out DestructionStage listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<DestructionStage>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1130,16 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INoOwner item,
-            MutagenFrame frame)
-        {
-            item.RawOwnerData = frame.ReadUInt32();
-            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             INoOwner item,
             MutagenFrame frame,
@@ -1149,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: NoOwnerBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1749,6 +1739,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NoOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
         public new readonly static NoOwnerBinaryCreateTranslation Instance = new NoOwnerBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INoOwner item,
+            MutagenFrame frame)
+        {
+            item.RawOwnerData = frame.ReadUInt32();
+            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

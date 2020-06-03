@@ -1149,16 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMagicEffectSound item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             IMagicEffectSound item,
             MutagenFrame frame,
@@ -1168,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: MagicEffectSoundBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1789,6 +1779,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class MagicEffectSoundBinaryCreateTranslation
     {
         public readonly static MagicEffectSoundBinaryCreateTranslation Instance = new MagicEffectSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMagicEffectSound item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

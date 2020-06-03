@@ -1466,21 +1466,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICellLighting item,
-            MutagenFrame frame)
-        {
-            item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DirectionalRotationXY = frame.ReadInt32();
-            item.DirectionalRotationZ = frame.ReadInt32();
-            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ICellLighting item,
             MutagenFrame frame,
@@ -1493,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: CellLightingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2408,6 +2393,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CellLightingBinaryCreateTranslation
     {
         public readonly static CellLightingBinaryCreateTranslation Instance = new CellLightingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICellLighting item,
+            MutagenFrame frame)
+        {
+            item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DirectionalRotationXY = frame.ReadInt32();
+            item.DirectionalRotationZ = frame.ReadInt32();
+            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

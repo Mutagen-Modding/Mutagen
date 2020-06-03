@@ -1847,92 +1847,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => ObjectEffect_Registration.ENCH_HEADER;
-        protected static void FillBinaryStructs(
-            IObjectEffectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IObjectEffectInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444E424F: // OBND
-                {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
-                }
-                case 0x4C4C5546: // FULL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
-                }
-                case 0x54494E45: // ENIT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.EnchantmentCost = dataFrame.ReadUInt32();
-                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.EnchantmentAmount = dataFrame.ReadInt32();
-                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BaseEnchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    if (dataFrame.Complete)
-                    {
-                        item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
-                        return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.BaseEnchantment);
-                    }
-                    item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
-                }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                case 0x41445443: // CTDA
-                {
-                    item.Effects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IObjectEffectInternal item,
             MutagenFrame frame,
@@ -1942,8 +1856,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ObjectEffectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ObjectEffectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3288,6 +3202,92 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ObjectEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ObjectEffectBinaryCreateTranslation Instance = new ObjectEffectBinaryCreateTranslation();
+
+        public override RecordType RecordType => ObjectEffect_Registration.ENCH_HEADER;
+        public static void FillBinaryStructs(
+            IObjectEffectInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IObjectEffectInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.EnchantmentCost = dataFrame.ReadUInt32();
+                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.EnchantmentAmount = dataFrame.ReadInt32();
+                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BaseEnchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    if (dataFrame.Complete)
+                    {
+                        item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
+                        return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.BaseEnchantment);
+                    }
+                    item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                case 0x41445443: // CTDA
+                {
+                    item.Effects.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

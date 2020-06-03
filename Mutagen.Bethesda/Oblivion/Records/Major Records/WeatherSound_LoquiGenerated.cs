@@ -1152,16 +1152,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherSound item,
-            MutagenFrame frame)
-        {
-            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherSound item,
             MutagenFrame frame,
@@ -1174,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherSoundBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1801,6 +1791,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class WeatherSoundBinaryCreateTranslation
     {
         public readonly static WeatherSoundBinaryCreateTranslation Instance = new WeatherSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherSound item,
+            MutagenFrame frame)
+        {
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

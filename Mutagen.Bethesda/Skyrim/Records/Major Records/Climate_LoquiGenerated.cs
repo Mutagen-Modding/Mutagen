@@ -1799,88 +1799,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Climate_Registration.CLMT_HEADER;
-        protected static void FillBinaryStructs(
-            IClimateInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IClimateInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54534C57: // WLST
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WeatherTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.WeatherTypes);
-                }
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
-                }
-                case 0x4D414E47: // GNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunGlareTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
-                }
-                case 0x4D414E54: // TNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.SunriseBeginRaw = dataFrame.ReadUInt8();
-                    item.SunriseEndRaw = dataFrame.ReadUInt8();
-                    item.SunsetBeginRaw = dataFrame.ReadUInt8();
-                    item.SunsetEndRaw = dataFrame.ReadUInt8();
-                    item.Volatility = dataFrame.ReadUInt8();
-                    ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IClimateInternal item,
             MutagenFrame frame,
@@ -1890,8 +1808,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ClimateBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ClimateBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3232,6 +3150,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ClimateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
+
+        public override RecordType RecordType => Climate_Registration.CLMT_HEADER;
+        public static void FillBinaryStructs(
+            IClimateInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IClimateInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54534C57: // WLST
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WeatherTypes = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out WeatherType listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<WeatherType>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<WeatherType>();
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.WeatherTypes);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SunTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SunGlareTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.SunriseBeginRaw = dataFrame.ReadUInt8();
+                    item.SunriseEndRaw = dataFrame.ReadUInt8();
+                    item.SunsetBeginRaw = dataFrame.ReadUInt8();
+                    item.SunsetEndRaw = dataFrame.ReadUInt8();
+                    item.Volatility = dataFrame.ReadUInt8();
+                    ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryMoonAndPhaseLengthCustom(
             MutagenFrame frame,

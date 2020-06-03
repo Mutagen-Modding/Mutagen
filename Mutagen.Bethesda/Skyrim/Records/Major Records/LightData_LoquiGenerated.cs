@@ -1332,22 +1332,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILightData item,
-            MutagenFrame frame)
-        {
-            item.FovOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FadeOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EndDistanceCap = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ShadowDepthBias = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            if (frame.Complete)
-            {
-                item.Versioning |= LightData.VersioningBreaks.Break0;
-                return;
-            }
-            item.Unknown = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             ILightData item,
             MutagenFrame frame,
@@ -1360,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LightDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2152,6 +2136,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LightDataBinaryCreateTranslation
     {
         public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILightData item,
+            MutagenFrame frame)
+        {
+            item.FovOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FadeOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.EndDistanceCap = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ShadowDepthBias = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= LightData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Unknown = frame.ReadInt32();
+        }
 
     }
 

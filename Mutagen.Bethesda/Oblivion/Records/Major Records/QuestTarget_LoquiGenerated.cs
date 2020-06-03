@@ -1251,51 +1251,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IQuestTarget item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IQuestTarget item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41545351: // QSTA
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.QuestTargetData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Data);
-                }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                {
-                    item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IQuestTarget item,
             MutagenFrame frame,
@@ -1305,8 +1260,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: QuestTargetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: QuestTargetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2021,6 +1976,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class QuestTargetBinaryCreateTranslation
     {
         public readonly static QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IQuestTarget item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IQuestTarget item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41545351: // QSTA
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Oblivion.QuestTargetData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Data);
+                }
+                case 0x41445443: // CTDA
+                case 0x54445443: // CTDT
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Condition listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Condition>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

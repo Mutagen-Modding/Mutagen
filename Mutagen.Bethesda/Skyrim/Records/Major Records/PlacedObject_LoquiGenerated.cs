@@ -4826,425 +4826,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => PlacedObject_Registration.REFR_HEADER;
-        protected static void FillBinaryStructs(
-            IPlacedObjectInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IPlacedObjectInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44414D56: // VMAD
-                {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
-                }
-                case 0x454D414E: // NAME
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
-                }
-                case 0x4F424D58: // XMBO
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BoundHalfExtents = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
-                }
-                case 0x4D525058: // XPRM
-                {
-                    item.Primitive = Mutagen.Bethesda.Skyrim.PlacedPrimitive.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
-                }
-                case 0x44524F58: // XORD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
-                }
-                case 0x50434F58: // XOCP
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
-                }
-                case 0x444F5058: // XPOD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Portals = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Portal>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out Portal listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<Portal>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<Portal>();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
-                }
-                case 0x4C545058: // XPTL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
-                }
-                case 0x524D5258: // XRMR
-                {
-                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(null);
-                }
-                case 0x50424D58: // XMBP
-                {
-                    item.MultiBoundPrimitive = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
-                }
-                case 0x44475258: // XRGD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
-                }
-                case 0x42475258: // XRGB
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollBipedData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
-                }
-                case 0x53445258: // XRDS
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
-                }
-                case 0x52575058: // XPWR
-                {
-                    item.Reflections.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WaterReflection>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: PlacedObject_Registration.XPWR_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out WaterReflection listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<WaterReflection>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
-                }
-                case 0x57544C58: // XLTW
-                {
-                    item.LitWater.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<PlacedObject>>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: PlacedObject_Registration.XLTW_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
-                }
-                case 0x494D4558: // XEMI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
-                }
-                case 0x47494C58: // XLIG
-                {
-                    item.LightData = Mutagen.Bethesda.Skyrim.LightData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
-                }
-                case 0x504C4158: // XALP
-                {
-                    item.Alpha = Mutagen.Bethesda.Skyrim.Alpha.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
-                }
-                case 0x4C455458: // XTEL
-                {
-                    item.TeleportDestination = Mutagen.Bethesda.Skyrim.TeleportDestination.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
-                }
-                case 0x4D4E5458: // XTNM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TeleportMessageBox = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
-                }
-                case 0x52424D58: // XMBR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
-                }
-                case 0x4E435758: // XWCN
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
-                }
-                case 0x53435758: // XWCS
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
-                }
-                case 0x55435758: // XWCU
-                {
-                    item.WaterVelocity = Mutagen.Bethesda.Skyrim.WaterVelocity.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
-                }
-                case 0x4C564358: // XCVL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
-                }
-                case 0x525A4358: // XCZR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown6 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
-                }
-                case 0x415A4358: // XCZA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown7 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
-                }
-                case 0x435A4358: // XCZC
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown8 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
-                }
-                case 0x4C435358: // XSCL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
-                }
-                case 0x43505358: // XSPC
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpawnContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
-                }
-                case 0x44504158: // XAPD
-                {
-                    item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
-                }
-                case 0x42494C58: // XLIB
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LeveledItemBaseObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
-                }
-                case 0x4D434C58: // XLCM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LevelModifier = EnumBinaryTranslation<LevelModifier>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
-                }
-                case 0x4E434C58: // XLCN
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PersistentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
-                }
-                case 0x49525458: // XTRI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CollisionLayer = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
-                }
-                case 0x434F4C58: // XLOC
-                {
-                    item.Lock = Mutagen.Bethesda.Skyrim.LockData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
-                }
-                case 0x4E5A4558: // XEZN
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
-                }
-                case 0x50444E58: // XNDP
-                {
-                    item.NavigationDoorLink = Mutagen.Bethesda.Skyrim.NavigationDoorLink.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
-                }
-                case 0x54524C58: // XLRT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LocationReferenceType>>();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
-                }
-                case 0x32534958: // XIS2
-                {
-                    item.IgnoredBySandbox = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
-                }
-                case 0x4E574F58: // XOWN
-                case 0x4B4E5258: // XRNK
-                {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
-                }
-                case 0x544E4358: // XCNT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ItemCount = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
-                }
-                case 0x47484358: // XCHG
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Charge = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
-                }
-                case 0x4C524C58: // XLRL
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
-                }
-                case 0x50534558: // XESP
-                {
-                    item.EnableParent = Mutagen.Bethesda.Skyrim.EnableParent.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
-                }
-                case 0x524B4C58: // XLKR
-                {
-                    item.LinkedReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: PlacedObject_Registration.XLKR_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LinkedReferences listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LinkedReferences>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
-                }
-                case 0x44525058: // XPRD
-                {
-                    item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
-                }
-                case 0x54434158: // XACT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
-                }
-                case 0x57544858: // XHTW
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadTrackingWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
-                }
-                case 0x43564658: // XFVC
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FavorCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
-                }
-                case 0x4D414E4F: // ONAM
-                {
-                    item.OpenByDefault = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
-                }
-                case 0x4B524D58: // XMRK
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
-                }
-                case 0x52544158: // XATR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttachRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
-                }
-                case 0x444F4C58: // XLOD
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistantLodData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IPlacedObjectInternal item,
             MutagenFrame frame,
@@ -5254,8 +4835,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PlacedObjectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -9932,6 +9513,425 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlacedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
+
+        public override RecordType RecordType => PlacedObject_Registration.REFR_HEADER;
+        public static void FillBinaryStructs(
+            IPlacedObjectInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IPlacedObjectInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x454D414E: // NAME
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                }
+                case 0x4F424D58: // XMBO
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BoundHalfExtents = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                }
+                case 0x4D525058: // XPRM
+                {
+                    item.Primitive = Mutagen.Bethesda.Skyrim.PlacedPrimitive.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
+                }
+                case 0x44524F58: // XORD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                }
+                case 0x50434F58: // XOCP
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
+                }
+                case 0x444F5058: // XPOD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Portals = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Portal>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out Portal listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<Portal>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<Portal>();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
+                }
+                case 0x4C545058: // XPTL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
+                }
+                case 0x524D5258: // XRMR
+                {
+                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x50424D58: // XMBP
+                {
+                    item.MultiBoundPrimitive = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                }
+                case 0x44475258: // XRGD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                }
+                case 0x42475258: // XRGB
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RagdollBipedData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
+                }
+                case 0x53445258: // XRDS
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
+                }
+                case 0x52575058: // XPWR
+                {
+                    item.Reflections.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WaterReflection>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XPWR_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out WaterReflection listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<WaterReflection>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
+                }
+                case 0x57544C58: // XLTW
+                {
+                    item.LitWater.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<PlacedObject>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XLTW_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
+                }
+                case 0x494D4558: // XEMI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Emittance = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
+                }
+                case 0x47494C58: // XLIG
+                {
+                    item.LightData = Mutagen.Bethesda.Skyrim.LightData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
+                }
+                case 0x504C4158: // XALP
+                {
+                    item.Alpha = Mutagen.Bethesda.Skyrim.Alpha.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
+                }
+                case 0x4C455458: // XTEL
+                {
+                    item.TeleportDestination = Mutagen.Bethesda.Skyrim.TeleportDestination.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                }
+                case 0x4D4E5458: // XTNM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TeleportMessageBox = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                }
+                case 0x52424D58: // XMBR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MultiboundReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
+                }
+                case 0x4E435758: // XWCN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
+                }
+                case 0x53435758: // XWCS
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
+                }
+                case 0x55435758: // XWCU
+                {
+                    item.WaterVelocity = Mutagen.Bethesda.Skyrim.WaterVelocity.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
+                }
+                case 0x4C564358: // XCVL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
+                }
+                case 0x525A4358: // XCZR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown6 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
+                }
+                case 0x415A4358: // XCZA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown7 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
+                }
+                case 0x435A4358: // XCZC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown8 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
+                }
+                case 0x4C435358: // XSCL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                }
+                case 0x43505358: // XSPC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SpawnContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
+                }
+                case 0x44504158: // XAPD
+                {
+                    item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
+                }
+                case 0x42494C58: // XLIB
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LeveledItemBaseObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                }
+                case 0x4D434C58: // XLCM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LevelModifier = EnumBinaryTranslation<LevelModifier>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                }
+                case 0x4E434C58: // XLCN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PersistentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
+                }
+                case 0x49525458: // XTRI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CollisionLayer = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
+                }
+                case 0x434F4C58: // XLOC
+                {
+                    item.Lock = Mutagen.Bethesda.Skyrim.LockData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                }
+                case 0x4E5A4558: // XEZN
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
+                }
+                case 0x50444E58: // XNDP
+                {
+                    item.NavigationDoorLink = Mutagen.Bethesda.Skyrim.NavigationDoorLink.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                }
+                case 0x54524C58: // XLRT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationRefTypes = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<LocationReferenceType>>();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
+                }
+                case 0x32534958: // XIS2
+                {
+                    item.IgnoredBySandbox = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                }
+                case 0x4E574F58: // XOWN
+                case 0x4B4E5258: // XRNK
+                {
+                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
+                }
+                case 0x544E4358: // XCNT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ItemCount = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
+                }
+                case 0x47484358: // XCHG
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Charge = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                }
+                case 0x4C524C58: // XLRL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
+                }
+                case 0x50534558: // XESP
+                {
+                    item.EnableParent = Mutagen.Bethesda.Skyrim.EnableParent.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                }
+                case 0x524B4C58: // XLKR
+                {
+                    item.LinkedReferences.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PlacedObject_Registration.XLKR_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LinkedReferences listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LinkedReferences>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
+                }
+                case 0x44525058: // XPRD
+                {
+                    item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
+                }
+                case 0x54434158: // XACT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
+                }
+                case 0x57544858: // XHTW
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HeadTrackingWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                }
+                case 0x43564658: // XFVC
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FavorCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
+                }
+                case 0x4D414E4F: // ONAM
+                {
+                    item.OpenByDefault = true;
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                }
+                case 0x4B524D58: // XMRK
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                }
+                case 0x52544158: // XATR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
+                }
+                case 0x444F4C58: // XLOD
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DistantLodData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryBoundDataCustom(
             MutagenFrame frame,

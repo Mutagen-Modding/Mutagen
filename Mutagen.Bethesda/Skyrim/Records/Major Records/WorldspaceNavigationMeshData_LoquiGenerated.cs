@@ -1166,15 +1166,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWorldspaceNavigationMeshData item,
-            MutagenFrame frame)
-        {
-            ANavigationMeshDataSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IWorldspaceNavigationMeshData item,
             MutagenFrame frame,
@@ -1184,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WorldspaceNavigationMeshDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1807,6 +1798,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WorldspaceNavigationMeshDataBinaryCreateTranslation : ANavigationMeshDataBinaryCreateTranslation
     {
         public new readonly static WorldspaceNavigationMeshDataBinaryCreateTranslation Instance = new WorldspaceNavigationMeshDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWorldspaceNavigationMeshData item,
+            MutagenFrame frame)
+        {
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 

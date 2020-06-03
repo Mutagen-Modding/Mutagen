@@ -1080,37 +1080,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcInheritSound item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INpcInheritSound item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x52435343: // CSCR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundsFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             INpcInheritSound item,
             MutagenFrame frame,
@@ -1120,8 +1089,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: NpcInheritSoundBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NpcInheritSoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1693,6 +1662,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NpcInheritSoundBinaryCreateTranslation : ANpcSoundDefinitionBinaryCreateTranslation
     {
         public new readonly static NpcInheritSoundBinaryCreateTranslation Instance = new NpcInheritSoundBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcInheritSound item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            INpcInheritSound item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x52435343: // CSCR
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InheritsSoundsFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

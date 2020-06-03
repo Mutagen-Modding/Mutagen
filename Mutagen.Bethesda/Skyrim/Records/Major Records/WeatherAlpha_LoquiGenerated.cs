@@ -1229,16 +1229,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeatherAlpha item,
-            MutagenFrame frame)
-        {
-            item.Sunrise = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Day = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Sunset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Night = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IWeatherAlpha item,
             MutagenFrame frame,
@@ -1248,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeatherAlphaBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1951,6 +1941,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeatherAlphaBinaryCreateTranslation
     {
         public readonly static WeatherAlphaBinaryCreateTranslation Instance = new WeatherAlphaBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeatherAlpha item,
+            MutagenFrame frame)
+        {
+            item.Sunrise = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Day = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Sunset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Night = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

@@ -1179,44 +1179,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IModel item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x53444F4D: // MODS
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateTextures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
-                            amount: frame.ReadInt32(),
-                            frame: frame,
-                            transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<AlternateTexture>();
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
-                }
-                default:
-                    return SimpleModelSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IModel item,
             MutagenFrame frame,
@@ -1226,8 +1188,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ModelBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1885,6 +1847,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ModelBinaryCreateTranslation : SimpleModelBinaryCreateTranslation
     {
         public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IModel item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x53444F4D: // MODS
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateTextures = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
+                            amount: frame.ReadInt32(),
+                            frame: frame,
+                            transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<AlternateTexture>();
+                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                }
+                default:
+                    return SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

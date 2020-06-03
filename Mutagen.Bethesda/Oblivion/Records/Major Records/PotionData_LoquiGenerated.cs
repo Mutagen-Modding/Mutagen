@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPotionData item,
-            MutagenFrame frame)
-        {
-            item.Value = frame.ReadUInt32();
-            item.Flags = EnumBinaryTranslation<IngredientFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IPotionData item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PotionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1787,6 +1779,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class PotionDataBinaryCreateTranslation
     {
         public readonly static PotionDataBinaryCreateTranslation Instance = new PotionDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPotionData item,
+            MutagenFrame frame)
+        {
+            item.Value = frame.ReadUInt32();
+            item.Flags = EnumBinaryTranslation<IngredientFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

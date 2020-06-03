@@ -1071,13 +1071,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ITopicReferenceSubtype item,
-            MutagenFrame frame)
-        {
-            item.Subtype = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ITopicReferenceSubtype item,
             MutagenFrame frame,
@@ -1087,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: TopicReferenceSubtypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1646,6 +1639,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class TopicReferenceSubtypeBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
     {
         public new readonly static TopicReferenceSubtypeBinaryCreateTranslation Instance = new TopicReferenceSubtypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ITopicReferenceSubtype item,
+            MutagenFrame frame)
+        {
+            item.Subtype = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

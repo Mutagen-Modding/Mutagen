@@ -1198,44 +1198,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IArmorModel item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IArmorModel item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4C444F4D: // MODL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
-                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Icons);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IArmorModel item,
             MutagenFrame frame,
@@ -1245,8 +1207,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ArmorModelBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1960,6 +1922,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ArmorModelBinaryCreateTranslation
     {
         public readonly static ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IArmorModel item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IArmorModel item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Icons);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1230,54 +1230,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Sound_Registration.SOUN_HEADER;
-        protected static void FillBinaryStructs(
-            ISoundInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ISoundInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4D414E46: // FNAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
-                }
-                case 0x44444E53: // SNDD
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
-                }
-                case 0x58444E53: // SNDX
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ISoundInternal item,
             MutagenFrame frame,
@@ -1287,8 +1239,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: SoundBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SoundBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2095,6 +2047,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SoundBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoundBinaryCreateTranslation Instance = new SoundBinaryCreateTranslation();
+
+        public override RecordType RecordType => Sound_Registration.SOUN_HEADER;
+        public static void FillBinaryStructs(
+            ISoundInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ISoundInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
+                }
+                case 0x44444E53: // SNDD
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                case 0x58444E53: // SNDX
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

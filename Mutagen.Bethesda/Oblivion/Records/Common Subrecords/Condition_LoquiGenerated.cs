@@ -1449,21 +1449,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ICondition item,
-            MutagenFrame frame)
-        {
-            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustomPublic(
-                frame: frame,
-                item: item);
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
-            item.ThirdParameter = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
@@ -1476,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ConditionBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2359,6 +2344,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ConditionBinaryCreateTranslation
     {
         public readonly static ConditionBinaryCreateTranslation Instance = new ConditionBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ICondition item,
+            MutagenFrame frame)
+        {
+            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustomPublic(
+                frame: frame,
+                item: item);
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.FirstParameter = frame.ReadInt32();
+            item.SecondParameter = frame.ReadInt32();
+            item.ThirdParameter = frame.ReadInt32();
+        }
 
         static partial void FillBinaryInitialParserCustom(
             MutagenFrame frame,

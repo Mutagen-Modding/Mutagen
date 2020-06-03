@@ -1137,14 +1137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IEntryPoints item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<Furniture.AnimationType>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.Points = EnumBinaryTranslation<Furniture.Entry>.Instance.Parse(frame: frame.SpawnWithLength(2));
-        }
-        
         public virtual void CopyInFromBinary(
             IEntryPoints item,
             MutagenFrame frame,
@@ -1154,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: EntryPointsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1775,6 +1767,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class EntryPointsBinaryCreateTranslation
     {
         public readonly static EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IEntryPoints item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<Furniture.AnimationType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Points = EnumBinaryTranslation<Furniture.Entry>.Instance.Parse(frame: frame.SpawnWithLength(2));
+        }
 
     }
 

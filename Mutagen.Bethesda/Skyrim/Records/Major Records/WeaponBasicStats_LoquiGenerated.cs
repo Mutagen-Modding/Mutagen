@@ -1191,15 +1191,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWeaponBasicStats item,
-            MutagenFrame frame)
-        {
-            item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Damage = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IWeaponBasicStats item,
             MutagenFrame frame,
@@ -1212,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WeaponBasicStatsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1875,6 +1866,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WeaponBasicStatsBinaryCreateTranslation
     {
         public readonly static WeaponBasicStatsBinaryCreateTranslation Instance = new WeaponBasicStatsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWeaponBasicStats item,
+            MutagenFrame frame)
+        {
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Damage = frame.ReadUInt16();
+        }
 
     }
 

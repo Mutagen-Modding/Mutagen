@@ -1165,44 +1165,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IHeadPartReference item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IHeadPartReference item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x58444E49: // INDX
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Number) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Number = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Number);
-                }
-                case 0x44414548: // HEAD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Head = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Head);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IHeadPartReference item,
             MutagenFrame frame,
@@ -1212,8 +1174,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: HeadPartReferenceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: HeadPartReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1852,6 +1814,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class HeadPartReferenceBinaryCreateTranslation
     {
         public readonly static HeadPartReferenceBinaryCreateTranslation Instance = new HeadPartReferenceBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IHeadPartReference item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IHeadPartReference item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x58444E49: // INDX
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Number) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Number = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Number);
+                }
+                case 0x44414548: // HEAD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Head = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Head);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

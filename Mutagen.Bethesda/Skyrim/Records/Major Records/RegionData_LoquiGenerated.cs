@@ -1176,36 +1176,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionData item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54414452: // RDAT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
-                    item.Header = Mutagen.Bethesda.Skyrim.RegionDataHeader.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
-                }
-                case 0x4E4F4349: // ICON
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
-                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Icons);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionData item,
             MutagenFrame frame,
@@ -1917,6 +1887,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionDataBinaryCreateTranslation
     {
         public readonly static RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionData item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54414452: // RDAT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
+                    item.Header = Mutagen.Bethesda.Skyrim.RegionDataHeader.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Icons);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

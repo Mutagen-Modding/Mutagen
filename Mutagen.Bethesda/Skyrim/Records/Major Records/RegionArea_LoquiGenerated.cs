@@ -1238,46 +1238,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionArea item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionArea item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x494C5052: // RPLI
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EdgeFallOff = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
-                }
-                case 0x444C5052: // RPLD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RegionPointListData = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: P2FloatBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<P2Float>();
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPointListData);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionArea item,
             MutagenFrame frame,
@@ -1287,8 +1247,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RegionAreaBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionAreaBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1979,6 +1939,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionAreaBinaryCreateTranslation
     {
         public readonly static RegionAreaBinaryCreateTranslation Instance = new RegionAreaBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionArea item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionArea item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x494C5052: // RPLI
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EdgeFallOff = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
+                }
+                case 0x444C5052: // RPLD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RegionPointListData = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: P2FloatBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<P2Float>();
+                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPointListData);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

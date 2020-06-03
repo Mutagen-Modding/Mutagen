@@ -1142,7 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
         public virtual void CopyInFromBinary(
             IAItemInternal item,
             MutagenFrame frame,
@@ -1799,6 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AItemBinaryCreateTranslation Instance = new AItemBinaryCreateTranslation();
 
+        public override RecordType RecordType => throw new ArgumentException();
     }
 
 }

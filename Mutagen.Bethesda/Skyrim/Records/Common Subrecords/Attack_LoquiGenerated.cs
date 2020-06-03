@@ -1181,43 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAttack item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IAttack item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444B5441: // ATKD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return TryGet<int?>.Failure;
-                    item.AttackData = Mutagen.Bethesda.Skyrim.AttackData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackData);
-                }
-                case 0x454B5441: // ATKE
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackEvent);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IAttack item,
             MutagenFrame frame,
@@ -1227,8 +1190,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: AttackBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AttackBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1907,6 +1870,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class AttackBinaryCreateTranslation
     {
         public readonly static AttackBinaryCreateTranslation Instance = new AttackBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAttack item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IAttack item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444B5441: // ATKD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return TryGet<int?>.Failure;
+                    item.AttackData = Mutagen.Bethesda.Skyrim.AttackData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackData);
+                }
+                case 0x454B5441: // ATKE
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttackEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackEvent);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

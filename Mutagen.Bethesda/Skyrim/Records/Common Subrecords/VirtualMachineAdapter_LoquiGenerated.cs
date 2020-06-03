@@ -1288,17 +1288,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IVirtualMachineAdapter item,
-            MutagenFrame frame)
-        {
-            item.Version = frame.ReadInt16();
-            item.ObjectFormat = frame.ReadUInt16();
-            VirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
             MutagenFrame frame,
@@ -1311,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: VirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2051,6 +2040,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class VirtualMachineAdapterBinaryCreateTranslation
     {
         public readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IVirtualMachineAdapter item,
+            MutagenFrame frame)
+        {
+            item.Version = frame.ReadInt16();
+            item.ObjectFormat = frame.ReadUInt16();
+            VirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,

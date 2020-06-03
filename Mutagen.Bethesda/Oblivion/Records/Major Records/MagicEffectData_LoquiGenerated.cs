@@ -1591,32 +1591,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMagicEffectData item,
-            MutagenFrame frame)
-        {
-            item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.BaseCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unused = frame.ReadInt32();
-            item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.CounterEffectCount = frame.ReadUInt32();
-            item.Light = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.ProjectileSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EffectShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete)
-            {
-                item.Versioning |= MagicEffectData.VersioningBreaks.Break0;
-                return;
-            }
-            if (frame.Complete) return;
-            item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.CreateFromBinary(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IMagicEffectData item,
             MutagenFrame frame,
@@ -1629,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: MagicEffectDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2683,6 +2657,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class MagicEffectDataBinaryCreateTranslation
     {
         public readonly static MagicEffectDataBinaryCreateTranslation Instance = new MagicEffectDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMagicEffectData item,
+            MutagenFrame frame)
+        {
+            item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.BaseCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Unused = frame.ReadInt32();
+            item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.CounterEffectCount = frame.ReadUInt32();
+            item.Light = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.ProjectileSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.EffectShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete)
+            {
+                item.Versioning |= MagicEffectData.VersioningBreaks.Break0;
+                return;
+            }
+            if (frame.Complete) return;
+            item.SubData = Mutagen.Bethesda.Oblivion.MagicEffectSubData.CreateFromBinary(frame: frame);
+        }
 
     }
 

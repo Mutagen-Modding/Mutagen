@@ -1656,40 +1656,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         #region Binary Translation
-        public virtual RecordType RecordType => throw new ArgumentException();
-        protected static void FillBinaryStructs(
-            IMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            item.MajorRecordFlagsRaw = frame.ReadInt32();
-            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
-            item.Version = frame.ReadUInt32();
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44494445: // EDID
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
-                }
-                default:
-                    frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
@@ -2437,6 +2403,40 @@ namespace Mutagen.Bethesda.Internals
     public partial class MajorRecordBinaryCreateTranslation
     {
         public readonly static MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
+
+        public virtual RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            IMajorRecordInternal item,
+            MutagenFrame frame)
+        {
+            item.MajorRecordFlagsRaw = frame.ReadInt32();
+            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
+            item.Version = frame.ReadUInt32();
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44494445: // EDID
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                }
+                default:
+                    frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
     }
 

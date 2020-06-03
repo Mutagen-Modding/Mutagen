@@ -1290,19 +1290,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILeveledItemEntryData item,
-            MutagenFrame frame)
-        {
-            item.Level = frame.ReadInt16();
-            item.Unknown = frame.ReadInt16();
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Count = frame.ReadInt16();
-            item.Unknown2 = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledItemEntryData item,
             MutagenFrame frame,
@@ -1315,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LeveledItemEntryDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2059,6 +2046,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LeveledItemEntryDataBinaryCreateTranslation
     {
         public readonly static LeveledItemEntryDataBinaryCreateTranslation Instance = new LeveledItemEntryDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILeveledItemEntryData item,
+            MutagenFrame frame)
+        {
+            item.Level = frame.ReadInt16();
+            item.Unknown = frame.ReadInt16();
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Count = frame.ReadInt16();
+            item.Unknown2 = frame.ReadInt16();
+        }
 
     }
 

@@ -1582,78 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => PathGrid_Registration.PGRD_HEADER;
-        protected static void FillBinaryStructs(
-            IPathGridInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IPathGridInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x41544144: // DATA
-                {
-                    PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
-                }
-                case 0x47414750: // PGAG
-                {
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
-                }
-                case 0x49524750: // PGRI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InterCellConnections = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<InterCellPoint>();
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
-                }
-                case 0x4C524750: // PGRL
-                {
-                    item.PointToReferenceMappings.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: PathGrid_Registration.PGRL_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IPathGridInternal item,
             MutagenFrame frame,
@@ -1663,8 +1591,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PathGridBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PathGridBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2751,6 +2679,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class PathGridBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
+
+        public override RecordType RecordType => PathGrid_Registration.PGRD_HEADER;
+        public static void FillBinaryStructs(
+            IPathGridInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IPathGridInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
+                }
+                case 0x47414750: // PGAG
+                {
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
+                }
+                case 0x49524750: // PGRI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InterCellConnections = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<InterCellPoint>();
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
+                }
+                case 0x4C524750: // PGRL
+                {
+                    item.PointToReferenceMappings.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: PathGrid_Registration.PGRL_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,

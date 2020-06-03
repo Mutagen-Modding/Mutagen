@@ -1190,49 +1190,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionObjects item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionObjects item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x544F4452: // RDOT
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Objects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionObject>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionObject listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<RegionObject>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToExtendedList<RegionObject>();
-                    return TryGet<int?>.Succeed((int)RegionObjects_FieldIndex.Objects);
-                }
-                default:
-                    return RegionDataSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionObjects item,
             MutagenFrame frame,
@@ -1242,8 +1199,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: RegionObjectsBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionObjectsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1900,6 +1857,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionObjectsBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
         public new readonly static RegionObjectsBinaryCreateTranslation Instance = new RegionObjectsBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionObjects item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IRegionObjects item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x544F4452: // RDOT
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Objects = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionObject>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out RegionObject listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<RegionObject>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<RegionObject>();
+                    return TryGet<int?>.Succeed((int)RegionObjects_FieldIndex.Objects);
+                }
+                default:
+                    return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

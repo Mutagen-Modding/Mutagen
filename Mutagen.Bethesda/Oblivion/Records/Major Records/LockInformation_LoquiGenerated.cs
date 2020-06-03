@@ -1252,18 +1252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILockInformation item,
-            MutagenFrame frame)
-        {
-            item.LockLevel = frame.ReadUInt8();
-            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             ILockInformation item,
             MutagenFrame frame,
@@ -1276,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LockInformationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1986,6 +1974,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class LockInformationBinaryCreateTranslation
     {
         public readonly static LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILockInformation item,
+            MutagenFrame frame)
+        {
+            item.LockLevel = frame.ReadUInt8();
+            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

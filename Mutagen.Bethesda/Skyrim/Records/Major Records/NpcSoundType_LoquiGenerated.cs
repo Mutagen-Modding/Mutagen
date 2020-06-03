@@ -1255,53 +1255,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            INpcSoundType item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INpcSoundType item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54445343: // CSDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
-                }
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
-                    item.Sounds.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSound>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: NpcSound_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out NpcSound listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<NpcSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             INpcSoundType item,
             MutagenFrame frame,
@@ -1311,8 +1264,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: NpcSoundTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NpcSoundTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2012,6 +1965,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NpcSoundTypeBinaryCreateTranslation
     {
         public readonly static NpcSoundTypeBinaryCreateTranslation Instance = new NpcSoundTypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            INpcSoundType item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            INpcSoundType item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54445343: // CSDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
+                }
+                case 0x49445343: // CSDI
+                case 0x43445343: // CSDC
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    item.Sounds.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSound>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: NpcSound_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out NpcSound listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<NpcSound>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

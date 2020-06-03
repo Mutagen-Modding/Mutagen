@@ -1207,47 +1207,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDestructionStage item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDestructionStage item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44545344: // DSTD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Skyrim.DestructionStageData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Data);
-                }
-                case 0x4C444D44: // DMDL
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Model) return TryGet<int?>.Failure;
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: DestructionStage_Registration.ModelConverter);
-                    return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Model);
-                }
-                case 0x46545344: // DSTF: End Marker
-                {
-                    frame.ReadSubrecordFrame();
-                    return TryGet<int?>.Failure;
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IDestructionStage item,
             MutagenFrame frame,
@@ -1257,8 +1216,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: DestructionStageBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DestructionStageBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1980,6 +1939,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DestructionStageBinaryCreateTranslation
     {
         public readonly static DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDestructionStage item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IDestructionStage item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44545344: // DSTD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Skyrim.DestructionStageData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Data);
+                }
+                case 0x4C444D44: // DMDL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: DestructionStage_Registration.ModelConverter);
+                    return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Model);
+                }
+                case 0x46545344: // DSTF: End Marker
+                {
+                    frame.ReadSubrecordFrame();
+                    return TryGet<int?>.Failure;
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

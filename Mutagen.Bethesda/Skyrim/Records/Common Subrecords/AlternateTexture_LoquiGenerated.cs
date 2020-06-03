@@ -1195,19 +1195,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAlternateTexture item,
-            MutagenFrame frame)
-        {
-            item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
-            item.NewTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Index = frame.ReadInt32();
-        }
-        
         public virtual void CopyInFromBinary(
             IAlternateTexture item,
             MutagenFrame frame,
@@ -1217,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AlternateTextureBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1878,6 +1865,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class AlternateTextureBinaryCreateTranslation
     {
         public readonly static AlternateTextureBinaryCreateTranslation Instance = new AlternateTextureBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAlternateTexture item,
+            MutagenFrame frame)
+        {
+            item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                frame: frame,
+                stringBinaryType: StringBinaryType.PrependLength);
+            item.NewTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Index = frame.ReadInt32();
+        }
 
     }
 

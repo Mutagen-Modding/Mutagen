@@ -1242,46 +1242,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
-        protected static void FillBinaryStructs(
-            ICombatStyleInternal item,
-            MutagenFrame frame)
-        {
-            OblivionMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ICombatStyleInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44545343: // CSTD
-                {
-                    item.Data = Mutagen.Bethesda.Oblivion.CombatStyleData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
-                }
-                case 0x44415343: // CSAD
-                {
-                    item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
-                }
-                default:
-                    return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ICombatStyleInternal item,
             MutagenFrame frame,
@@ -1291,8 +1251,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: CombatStyleBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CombatStyleBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2134,6 +2094,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class CombatStyleBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
+
+        public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
+        public static void FillBinaryStructs(
+            ICombatStyleInternal item,
+            MutagenFrame frame)
+        {
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ICombatStyleInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44545343: // CSTD
+                {
+                    item.Data = Mutagen.Bethesda.Oblivion.CombatStyleData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
+                }
+                case 0x44415343: // CSAD
+                {
+                    item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
+                }
+                default:
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

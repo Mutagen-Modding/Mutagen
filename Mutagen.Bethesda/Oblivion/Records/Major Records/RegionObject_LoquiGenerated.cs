@@ -1847,31 +1847,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionObject item,
-            MutagenFrame frame)
-        {
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.ParentIndex = frame.ReadUInt16();
-            item.Unknown = frame.ReadInt16();
-            item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Clustering = frame.ReadUInt8();
-            item.MinSlope = frame.ReadUInt8();
-            item.MaxSlope = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.RadiusWrtPercent = frame.ReadUInt16();
-            item.Radius = frame.ReadUInt16();
-            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Sink = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SinkVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SizeVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AngleVariance = Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(6));
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionObject item,
             MutagenFrame frame,
@@ -1881,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RegionObjectBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -3119,6 +3094,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class RegionObjectBinaryCreateTranslation
     {
         public readonly static RegionObjectBinaryCreateTranslation Instance = new RegionObjectBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionObject item,
+            MutagenFrame frame)
+        {
+            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.ParentIndex = frame.ReadUInt16();
+            item.Unknown = frame.ReadInt16();
+            item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Clustering = frame.ReadUInt8();
+            item.MinSlope = frame.ReadUInt8();
+            item.MaxSlope = frame.ReadUInt8();
+            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.RadiusWrtPercent = frame.ReadUInt16();
+            item.Radius = frame.ReadUInt16();
+            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Sink = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SinkVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SizeVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.AngleVariance = Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(6));
+        }
 
     }
 

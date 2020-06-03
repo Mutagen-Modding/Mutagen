@@ -1221,52 +1221,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDialogResponse item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IDialogResponse item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54445254: // TRDT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.DialogResponseData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
-                }
-                case 0x314D414E: // NAM1
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResponseText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
-                }
-                case 0x324D414E: // NAM2
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IDialogResponse item,
             MutagenFrame frame,
@@ -1276,8 +1230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: DialogResponseBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DialogResponseBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1999,6 +1953,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class DialogResponseBinaryCreateTranslation
     {
         public readonly static DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDialogResponse item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IDialogResponse item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54445254: // TRDT
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Oblivion.DialogResponseData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ResponseText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

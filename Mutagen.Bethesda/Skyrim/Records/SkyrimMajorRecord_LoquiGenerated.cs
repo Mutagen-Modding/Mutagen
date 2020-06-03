@@ -1479,18 +1479,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
-        protected static void FillBinaryStructs(
-            ISkyrimMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            MajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            item.FormVersion = frame.ReadUInt16();
-            item.Version2 = frame.ReadUInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
@@ -2165,6 +2153,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
         public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
+
+        public override RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            ISkyrimMajorRecordInternal item,
+            MutagenFrame frame)
+        {
+            MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.FormVersion = frame.ReadUInt16();
+            item.Version2 = frame.ReadUInt16();
+        }
 
     }
 

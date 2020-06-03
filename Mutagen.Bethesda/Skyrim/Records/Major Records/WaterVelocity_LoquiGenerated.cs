@@ -1243,16 +1243,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IWaterVelocity item,
-            MutagenFrame frame)
-        {
-            item.Offset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown = frame.ReadInt32();
-            item.Angle = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(20));
-        }
-        
         public virtual void CopyInFromBinary(
             IWaterVelocity item,
             MutagenFrame frame,
@@ -1265,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: WaterVelocityBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1973,6 +1963,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class WaterVelocityBinaryCreateTranslation
     {
         public readonly static WaterVelocityBinaryCreateTranslation Instance = new WaterVelocityBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IWaterVelocity item,
+            MutagenFrame frame)
+        {
+            item.Offset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Unknown = frame.ReadInt32();
+            item.Angle = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(20));
+        }
 
     }
 

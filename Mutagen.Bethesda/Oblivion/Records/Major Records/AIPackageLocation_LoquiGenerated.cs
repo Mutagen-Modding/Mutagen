@@ -1198,17 +1198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAIPackageLocation item,
-            MutagenFrame frame)
-        {
-            item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IAIPackageLocation item,
             MutagenFrame frame,
@@ -1221,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AIPackageLocationBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1890,6 +1879,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class AIPackageLocationBinaryCreateTranslation
     {
         public readonly static AIPackageLocationBinaryCreateTranslation Instance = new AIPackageLocationBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAIPackageLocation item,
+            MutagenFrame frame)
+        {
+            item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

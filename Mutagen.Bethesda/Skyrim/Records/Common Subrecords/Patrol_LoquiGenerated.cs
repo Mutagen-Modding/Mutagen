@@ -1401,69 +1401,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPatrol item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IPatrol item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44525058: // XPRD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
-                }
-                case 0x41505058: // XPPA
-                {
-                    PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
-                case 0x4D414E49: // INAM
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
-                }
-                case 0x52484353: // SCHR
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown);
-                }
-                case 0x58544353: // SCTX
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown2);
-                }
-                case 0x4F544450: // PDTO
-                {
-                    PatrolBinaryCreateTranslation.FillBinaryTopicsCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IPatrol item,
             MutagenFrame frame,
@@ -1473,8 +1410,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: PatrolBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PatrolBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -2345,6 +2282,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PatrolBinaryCreateTranslation
     {
         public readonly static PatrolBinaryCreateTranslation Instance = new PatrolBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPatrol item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IPatrol item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44525058: // XPRD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
+                }
+                case 0x41505058: // XPPA
+                {
+                    PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
+                }
+                case 0x52484353: // SCHR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown);
+                }
+                case 0x58544353: // SCTX
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown2);
+                }
+                case 0x4F544450: // PDTO
+                {
+                    PatrolBinaryCreateTranslation.FillBinaryTopicsCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
         static partial void FillBinaryPatrolScriptMarkerCustom(
             MutagenFrame frame,

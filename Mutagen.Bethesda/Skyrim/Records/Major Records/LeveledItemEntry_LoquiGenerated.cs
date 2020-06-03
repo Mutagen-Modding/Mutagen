@@ -1194,40 +1194,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILeveledItemEntry item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILeveledItemEntry item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4F4C564C: // LVLO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Skyrim.LeveledItemEntryData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledItemEntry_FieldIndex.Data);
-                }
-                case 0x44454F43: // COED
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
-                    item.ExtraData = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledItemEntry_FieldIndex.ExtraData);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             ILeveledItemEntry item,
             MutagenFrame frame,
@@ -1237,8 +1203,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: LeveledItemEntryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LeveledItemEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1959,6 +1925,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LeveledItemEntryBinaryCreateTranslation
     {
         public readonly static LeveledItemEntryBinaryCreateTranslation Instance = new LeveledItemEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILeveledItemEntry item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILeveledItemEntry item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4F4C564C: // LVLO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Skyrim.LeveledItemEntryData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LeveledItemEntry_FieldIndex.Data);
+                }
+                case 0x44454F43: // COED
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledItemEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
+                    item.ExtraData = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LeveledItemEntry_FieldIndex.ExtraData);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1281,17 +1281,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ISkillData item,
-            MutagenFrame frame)
-        {
-            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.UseValueFirst = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UseValueSecond = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             ISkillData item,
             MutagenFrame frame,
@@ -1304,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: SkillDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -2058,6 +2047,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class SkillDataBinaryCreateTranslation
     {
         public readonly static SkillDataBinaryCreateTranslation Instance = new SkillDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ISkillData item,
+            MutagenFrame frame)
+        {
+            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.UseValueFirst = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.UseValueSecond = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
     }
 

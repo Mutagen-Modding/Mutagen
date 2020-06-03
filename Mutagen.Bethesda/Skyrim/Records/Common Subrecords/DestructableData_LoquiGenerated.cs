@@ -1235,16 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IDestructableData item,
-            MutagenFrame frame)
-        {
-            item.Health = frame.ReadInt32();
-            item.DESTCount = frame.ReadUInt8();
-            item.VATSTargetable = frame.ReadBoolean();
-            item.Unknown = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IDestructableData item,
             MutagenFrame frame,
@@ -1257,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: DestructableDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1958,6 +1948,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class DestructableDataBinaryCreateTranslation
     {
         public readonly static DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IDestructableData item,
+            MutagenFrame frame)
+        {
+            item.Health = frame.ReadInt32();
+            item.DESTCount = frame.ReadUInt8();
+            item.VATSTargetable = frame.ReadBoolean();
+            item.Unknown = frame.ReadInt16();
+        }
 
     }
 

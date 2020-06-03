@@ -1143,14 +1143,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IAlpha item,
-            MutagenFrame frame)
-        {
-            item.Cutoff = frame.ReadUInt8();
-            item.Base = frame.ReadUInt8();
-        }
-        
         public virtual void CopyInFromBinary(
             IAlpha item,
             MutagenFrame frame,
@@ -1163,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: AlphaBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1784,6 +1776,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class AlphaBinaryCreateTranslation
     {
         public readonly static AlphaBinaryCreateTranslation Instance = new AlphaBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IAlpha item,
+            MutagenFrame frame)
+        {
+            item.Cutoff = frame.ReadUInt8();
+            item.Base = frame.ReadUInt8();
+        }
 
     }
 

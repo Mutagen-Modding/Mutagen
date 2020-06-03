@@ -1239,16 +1239,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionDataHeaderInternal item,
-            MutagenFrame frame)
-        {
-            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Priority = frame.ReadUInt8();
-            frame.SetPosition(frame.Position + 2);
-        }
-        
         public virtual void CopyInFromBinary(
             IRegionDataHeaderInternal item,
             MutagenFrame frame,
@@ -1261,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: RegionDataHeaderBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1924,6 +1914,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class RegionDataHeaderBinaryCreateTranslation
     {
         public readonly static RegionDataHeaderBinaryCreateTranslation Instance = new RegionDataHeaderBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IRegionDataHeaderInternal item,
+            MutagenFrame frame)
+        {
+            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Priority = frame.ReadUInt8();
+            frame.SetPosition(frame.Position + 2);
+        }
 
     }
 

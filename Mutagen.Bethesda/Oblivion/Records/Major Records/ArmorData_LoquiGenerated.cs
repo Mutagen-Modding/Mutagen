@@ -1235,18 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IArmorData item,
-            MutagenFrame frame)
-        {
-            ArmorDataBinaryCreateTranslation.FillBinaryArmorValueCustomPublic(
-                frame: frame,
-                item: item);
-            item.Value = frame.ReadUInt32();
-            item.Health = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-        }
-        
         public virtual void CopyInFromBinary(
             IArmorData item,
             MutagenFrame frame,
@@ -1259,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ArmorDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1977,6 +1965,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ArmorDataBinaryCreateTranslation
     {
         public readonly static ArmorDataBinaryCreateTranslation Instance = new ArmorDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IArmorData item,
+            MutagenFrame frame)
+        {
+            ArmorDataBinaryCreateTranslation.FillBinaryArmorValueCustomPublic(
+                frame: frame,
+                item: item);
+            item.Value = frame.ReadUInt32();
+            item.Health = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+        }
 
         static partial void FillBinaryArmorValueCustom(
             MutagenFrame frame,

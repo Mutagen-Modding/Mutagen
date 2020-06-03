@@ -1065,15 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IPcLevelMult item,
-            MutagenFrame frame)
-        {
-            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustomPublic(
-                frame: frame,
-                item: item);
-        }
-        
         public virtual void CopyInFromBinary(
             IPcLevelMult item,
             MutagenFrame frame,
@@ -1083,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: PcLevelMultBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1651,6 +1642,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
         public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IPcLevelMult item,
+            MutagenFrame frame)
+        {
+            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustomPublic(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryLevelMultCustom(
             MutagenFrame frame,

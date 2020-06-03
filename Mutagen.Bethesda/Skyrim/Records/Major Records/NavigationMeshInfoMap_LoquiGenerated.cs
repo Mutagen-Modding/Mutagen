@@ -1429,69 +1429,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => NavigationMeshInfoMap_Registration.NAVI_HEADER;
-        protected static void FillBinaryStructs(
-            INavigationMeshInfoMapInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            INavigationMeshInfoMapInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x5245564E: // NVER
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NavMeshVersion = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
-                }
-                case 0x494D564E: // NVMI
-                {
-                    item.MapInfos.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: NavigationMeshInfoMap_Registration.NVMI_HEADER,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out NavigationMapInfo listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<NavigationMapInfo>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
-                }
-                case 0x5050564E: // NVPP
-                {
-                    item.PreferredPathing = Mutagen.Bethesda.Skyrim.PreferredPathing.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
-                }
-                case 0x4953564E: // NVSI
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.Unknown);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame,
@@ -1501,8 +1438,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: NavigationMeshInfoMapBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: NavigationMeshInfoMapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2486,6 +2423,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class NavigationMeshInfoMapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
+
+        public override RecordType RecordType => NavigationMeshInfoMap_Registration.NAVI_HEADER;
+        public static void FillBinaryStructs(
+            INavigationMeshInfoMapInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            INavigationMeshInfoMapInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x5245564E: // NVER
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NavMeshVersion = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
+                }
+                case 0x494D564E: // NVMI
+                {
+                    item.MapInfos.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: NavigationMeshInfoMap_Registration.NVMI_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out NavigationMapInfo listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<NavigationMapInfo>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                }
+                case 0x5050564E: // NVPP
+                {
+                    item.PreferredPathing = Mutagen.Bethesda.Skyrim.PreferredPathing.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                }
+                case 0x4953564E: // NVSI
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.Unknown);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

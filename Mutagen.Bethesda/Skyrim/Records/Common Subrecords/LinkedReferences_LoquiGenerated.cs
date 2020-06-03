@@ -1205,23 +1205,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILinkedReferences item,
-            MutagenFrame frame)
-        {
-            item.KeywordOrReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            if (frame.Complete)
-            {
-                item.Versioning |= LinkedReferences.VersioningBreaks.Break0;
-                return;
-            }
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             ILinkedReferences item,
             MutagenFrame frame,
@@ -1234,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LinkedReferencesBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1904,6 +1887,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LinkedReferencesBinaryCreateTranslation
     {
         public readonly static LinkedReferencesBinaryCreateTranslation Instance = new LinkedReferencesBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILinkedReferences item,
+            MutagenFrame frame)
+        {
+            item.KeywordOrReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            if (frame.Complete)
+            {
+                item.Versioning |= LinkedReferences.VersioningBreaks.Break0;
+                return;
+            }
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

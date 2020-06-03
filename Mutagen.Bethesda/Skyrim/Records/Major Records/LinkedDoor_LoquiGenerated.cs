@@ -1149,16 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            ILinkedDoor item,
-            MutagenFrame frame)
-        {
-            item.Unknown = frame.ReadInt32();
-            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-        }
-        
         public virtual void CopyInFromBinary(
             ILinkedDoor item,
             MutagenFrame frame,
@@ -1168,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: LinkedDoorBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1786,6 +1776,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class LinkedDoorBinaryCreateTranslation
     {
         public readonly static LinkedDoorBinaryCreateTranslation Instance = new LinkedDoorBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILinkedDoor item,
+            MutagenFrame frame)
+        {
+            item.Unknown = frame.ReadInt32();
+            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+        }
 
     }
 

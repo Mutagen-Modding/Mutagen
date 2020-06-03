@@ -1908,67 +1908,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Grass_Registration.GRAS_HEADER;
-        protected static void FillBinaryStructs(
-            IGrassInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGrassInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x444E424F: // OBND
-                {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
-                }
-                case 0x4C444F4D: // MODL
-                {
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Density = dataFrame.ReadUInt8();
-                    item.MinSlope = dataFrame.ReadUInt8();
-                    item.MaxSlope = dataFrame.ReadUInt8();
-                    item.Unknown = dataFrame.ReadUInt8();
-                    item.UnitsFromWater = dataFrame.ReadUInt16();
-                    item.Unknown2 = dataFrame.ReadUInt16();
-                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.PositionRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HeightRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ColorRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
-                }
-                default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGrassInternal item,
             MutagenFrame frame,
@@ -1978,8 +1917,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: GrassBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GrassBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -3398,6 +3337,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GrassBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
+
+        public override RecordType RecordType => Grass_Registration.GRAS_HEADER;
+        public static void FillBinaryStructs(
+            IGrassInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGrassInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Density = dataFrame.ReadUInt8();
+                    item.MinSlope = dataFrame.ReadUInt8();
+                    item.MaxSlope = dataFrame.ReadUInt8();
+                    item.Unknown = dataFrame.ReadUInt8();
+                    item.UnitsFromWater = dataFrame.ReadUInt16();
+                    item.Unknown2 = dataFrame.ReadUInt16();
+                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.PositionRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HeightRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ColorRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

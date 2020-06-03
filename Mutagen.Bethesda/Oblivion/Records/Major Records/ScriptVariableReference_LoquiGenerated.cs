@@ -1071,35 +1071,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IScriptVariableReference item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IScriptVariableReference item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x56524353: // SCRV
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VariableIndex = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IScriptVariableReference item,
             MutagenFrame frame,
@@ -1109,8 +1080,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: ScriptVariableReferenceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ScriptVariableReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1672,6 +1643,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ScriptVariableReferenceBinaryCreateTranslation : ScriptReferenceBinaryCreateTranslation
     {
         public new readonly static ScriptVariableReferenceBinaryCreateTranslation Instance = new ScriptVariableReferenceBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptVariableReference item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IScriptVariableReference item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x56524353: // SCRV
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VariableIndex = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 

@@ -1183,42 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => GlobalFloat_Registration.GLOB_HEADER;
-        protected static void FillBinaryStructs(
-            IGlobalFloatInternal item,
-            MutagenFrame frame)
-        {
-            GlobalSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IGlobalFloatInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x56544C46: // FLTV
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
-                }
-                default:
-                    return GlobalSetterCommon.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IGlobalFloatInternal item,
             MutagenFrame frame,
@@ -1228,8 +1192,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: GlobalFloatBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GlobalFloatBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -2046,6 +2010,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class GlobalFloatBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
         public new readonly static GlobalFloatBinaryCreateTranslation Instance = new GlobalFloatBinaryCreateTranslation();
+
+        public override RecordType RecordType => GlobalFloat_Registration.GLOB_HEADER;
+        public static void FillBinaryStructs(
+            IGlobalFloatInternal item,
+            MutagenFrame frame)
+        {
+            GlobalBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IGlobalFloatInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x56544C46: // FLTV
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
+                }
+                default:
+                    return GlobalBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
 
     }
 

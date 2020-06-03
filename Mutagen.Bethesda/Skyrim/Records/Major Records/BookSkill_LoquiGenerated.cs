@@ -1067,14 +1067,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IBookSkill item,
-            MutagenFrame frame)
-        {
-            if (frame.Complete) return;
-            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
-        }
-        
         public virtual void CopyInFromBinary(
             IBookSkill item,
             MutagenFrame frame,
@@ -1084,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: BookSkillBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1650,6 +1642,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class BookSkillBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
         public new readonly static BookSkillBinaryCreateTranslation Instance = new BookSkillBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IBookSkill item,
+            MutagenFrame frame)
+        {
+            if (frame.Complete) return;
+            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
 
     }
 

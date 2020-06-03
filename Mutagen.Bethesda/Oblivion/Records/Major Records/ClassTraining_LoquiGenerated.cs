@@ -1184,15 +1184,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IClassTraining item,
-            MutagenFrame frame)
-        {
-            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.MaximumTrainingLevel = frame.ReadUInt8();
-            item.Unknown = frame.ReadInt16();
-        }
-        
         public virtual void CopyInFromBinary(
             IClassTraining item,
             MutagenFrame frame,
@@ -1202,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: ClassTrainingBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1860,6 +1851,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ClassTrainingBinaryCreateTranslation
     {
         public readonly static ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IClassTraining item,
+            MutagenFrame frame)
+        {
+            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.MaximumTrainingLevel = frame.ReadUInt8();
+            item.Unknown = frame.ReadInt16();
+        }
 
     }
 
