@@ -197,13 +197,13 @@ namespace Mutagen.Bethesda.Skyrim
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _TopCellLocation;
-            public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
+            public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package, insideWorldspace: true) : default;
 
             public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
-            public int SubCellsUnknown => throw new NotImplementedException();
+            public int SubCellsUnknown => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : 0;
 
             partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {

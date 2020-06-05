@@ -60,12 +60,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WorldspaceObjectBoundsBinaryOverlay
         {
-            public P2Float GetMinCustom() => new P2Float(
-                SpanExt.GetFloat(_data) / 4096f,
-                SpanExt.GetFloat(_data.Slice(4)) / 4096f);
-            public P2Float GetMaxCustom() => new P2Float(
-                SpanExt.GetFloat(_data.Slice(8)) / 4096f,
-                SpanExt.GetFloat(_data.Slice(12)) / 4096f);
+            private int? _minLoc;
+            public P2Float GetMinCustom() => _minLoc.HasValue 
+                ? new P2Float(
+                    SpanExt.GetFloat(_data.Slice(_minLoc.Value + 6)) / 4096f,
+                    SpanExt.GetFloat(_data.Slice(_minLoc.Value + 10)) / 4096f)
+                : default;
+
+            private int? _maxLoc;
+            public P2Float GetMaxCustom() => _maxLoc.HasValue 
+                ? new P2Float(
+                    SpanExt.GetFloat(_data.Slice(_maxLoc.Value + 6)) / 4096f,
+                    SpanExt.GetFloat(_data.Slice(_maxLoc.Value + 10)) / 4096f)
+                : default;
+
+            partial void MinCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                this._minLoc = stream.Position - offset;
+            }
+
+            partial void MaxCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                this._maxLoc = stream.Position - offset;
+            }
         }
     }
 }

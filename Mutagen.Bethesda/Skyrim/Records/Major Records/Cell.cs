@@ -371,6 +371,8 @@ namespace Mutagen.Bethesda.Skyrim
                 APlacedTrap_Registration.PGRE_HEADER,
             };
 
+            internal bool InsideWorldspace;
+
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             public IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; private set; } = ListExt.Empty<IANavigationMeshGetter>();
@@ -394,6 +396,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             public int TemporaryUnknownGroupData => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_temporaryLocation.Value + 20)) : 0;
 
+            int? _flagsLoc;
+
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 List<int> ret = new List<int>();
@@ -412,6 +416,38 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 return ret.ToArray();
+            }
+
+            public static CellBinaryOverlay CellFactory(
+                BinaryMemoryReadStream stream,
+                BinaryOverlayFactoryPackage package,
+                bool insideWorldspace)
+            {
+                stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+                var ret = new CellBinaryOverlay(
+                    bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                    package: package)
+                {
+                    InsideWorldspace = true
+                };
+                var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+                int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+                stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+                ret.CustomCtor(
+                    stream: stream,
+                    finalPos: finalPos,
+                    offset: offset);
+                ret.FillSubrecordTypes(
+                    stream: stream,
+                    finalPos: finalPos,
+                    offset: offset,
+                    recordTypeConverter: null,
+                    fill: ret.FillRecordType);
+                ret.CustomEnd(
+                    stream: stream,
+                    finalPos: stream.Length,
+                    offset: offset);
+                return ret;
             }
 
             partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int _)
@@ -516,16 +552,32 @@ namespace Mutagen.Bethesda.Skyrim
                                         switch (recType.TypeInt)
                                         {
                                             case 0x4D56414E: // NAVM
-                                                this.NavigationMeshes = BinaryOverlayList<ICellNavigationMeshGetter>.FactoryByArray(
-                                                    mem: stream.RemainingMemory,
-                                                    package: _package,
-                                                    getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
-                                                    locs: ParseRecordLocations(
-                                                        stream: stream,
-                                                        finalPos: finalPos,
-                                                        constants: _package.MetaData.Constants.MajorConstants,
-                                                        trigger: recType,
-                                                        skipHeader: false));
+                                                if (this.InsideWorldspace)
+                                                {
+                                                    this.NavigationMeshes = BinaryOverlayList<IWorldspaceNavigationMeshGetter>.FactoryByArray(
+                                                        mem: stream.RemainingMemory,
+                                                        package: _package,
+                                                        getter: (s, p) => WorldspaceNavigationMeshBinaryOverlay.WorldspaceNavigationMeshFactory(s, p),
+                                                        locs: ParseRecordLocations(
+                                                            stream: stream,
+                                                            finalPos: finalPos,
+                                                            constants: _package.MetaData.Constants.MajorConstants,
+                                                            trigger: recType,
+                                                            skipHeader: false));
+                                                }
+                                                else
+                                                {
+                                                    this.NavigationMeshes = BinaryOverlayList<ICellNavigationMeshGetter>.FactoryByArray(
+                                                        mem: stream.RemainingMemory,
+                                                        package: _package,
+                                                        getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
+                                                        locs: ParseRecordLocations(
+                                                            stream: stream,
+                                                            finalPos: finalPos,
+                                                            constants: _package.MetaData.Constants.MajorConstants,
+                                                            trigger: recType,
+                                                            skipHeader: false));
+                                                }
                                                 break;
                                             case 0x444e414c: // LAND
                                                 if (_landscapeLocation.HasValue)
@@ -550,6 +602,26 @@ namespace Mutagen.Bethesda.Skyrim
                         default:
                             throw new NotImplementedException();
                     }
+                }
+            }
+
+            partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                _flagsLoc = (stream.Position - offset);
+            }
+
+            public Cell.Flag GetFlagsCustom()
+            {
+                if (!_flagsLoc.HasValue) return default(Cell.Flag);
+                var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(_flagsLoc.Value));
+                switch (subHeader.Content.Length)
+                {
+                    case 1:
+                        return (Cell.Flag)subHeader.Content[0];
+                    case 2:
+                        return (Cell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content);
+                    default:
+                        throw new NotImplementedException();
                 }
             }
         }

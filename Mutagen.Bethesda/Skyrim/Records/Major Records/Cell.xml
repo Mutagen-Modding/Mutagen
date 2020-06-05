@@ -22,7 +22,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Enum name="Flags" enumName="Cell.Flag" byteLength="2" hasBeenSet="False" recordType="DATA" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="2" hasBeenSet="False" recordType="DATA" binaryOverlay="Custom" />
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <ByteArray name="OcclusionData" recordType="TVDT" />

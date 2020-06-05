@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mem: stream.RemainingMemory,
                 package: _package,
                 recordTypeConverter: null,
-                getter: (s, p, recConv) => CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(s), p, recConv),
+                getter: (s, p, recConv) => CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(s), p, insideWorldspace: true),
                 locs: CellBinaryOverlay.ParseRecordLocations(
                     stream: stream,
                     package: _package));

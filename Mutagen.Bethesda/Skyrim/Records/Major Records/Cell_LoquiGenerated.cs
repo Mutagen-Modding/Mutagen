@@ -6490,8 +6490,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Flags
-        private int? _FlagsLocation;
-        public Cell.Flag Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag);
+        partial void FlagsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset);
+        public Cell.Flag Flags => GetFlagsCustom();
         #endregion
         #region Grid
         private RangeInt32? _GridLocation;
@@ -6663,7 +6666,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _FlagsLocation = (stream.Position - offset);
+                    FlagsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
                 }
                 case 0x434C4358: // XCLC
