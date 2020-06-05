@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float MountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public P3Float DismountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         public P3Float MountCameraOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x18, 0xC));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x24;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

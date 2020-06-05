@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _SymmetricTextureLocation;
         public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SymmetricTextureLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

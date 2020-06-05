@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Byte Cutoff => _data.Span[0x0];
         public Byte Base => _data.Span[0x1];
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

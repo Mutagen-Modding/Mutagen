@@ -3413,7 +3413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3439,7 +3439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset);

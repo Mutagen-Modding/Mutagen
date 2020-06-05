@@ -3657,7 +3657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_ProductionLocation!.Value.Min)), _package) : default;
         public bool Production_IsSet => _ProductionLocation.HasValue;
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3683,7 +3683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset);

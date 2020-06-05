@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _ChanceLocation;
         public Byte? Chance => _ChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         private int TrianglesEndingPos;
         private int VerticesEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 6 + 4;
             ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.TrianglesEndingPos)) * 12 + 4;
             stream.Position += ret.VerticesEndingPos;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

@@ -3380,7 +3380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int IslandEndingPos;
         partial void CustomIslandEndPos();
         private int ParentParseLogicEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3409,7 +3409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
             ret.CustomIslandEndPos();
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

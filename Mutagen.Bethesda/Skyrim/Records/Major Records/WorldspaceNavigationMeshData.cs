@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
                 BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(12)),
                 BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(14)));
 
-            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 CustomLogic();
             }

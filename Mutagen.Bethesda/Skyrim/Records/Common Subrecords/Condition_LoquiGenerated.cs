@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Condition.Flag Flags => GetFlagsCustom(location: 0x0);
         public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x1, 0x3).ToArray();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

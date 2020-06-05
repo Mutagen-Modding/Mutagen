@@ -2503,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color DirectionalZMinus => _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single Scale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x20;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

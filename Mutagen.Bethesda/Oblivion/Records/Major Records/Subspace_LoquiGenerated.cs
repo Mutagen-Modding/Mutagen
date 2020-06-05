@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _PointLocation;
         public P3Float? Point => _PointLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _PointLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset);

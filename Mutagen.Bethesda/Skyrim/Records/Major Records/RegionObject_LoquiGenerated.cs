@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single SizeVariance => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(0x28, 0x6));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x2E, 0x6).ToArray();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3248,7 +3248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x34;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<Int32> Data => BinaryOverlayList<Int32>.FactoryByStartIndex(_data, _package, 4, (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
         private int DataEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += ret.DataEndingPos;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

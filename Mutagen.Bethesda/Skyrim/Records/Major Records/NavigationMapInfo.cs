@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 if (_data[LinkedDoorsEndingPos] > 0)
                 {

@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single StaticAttenuation => FloatBinaryTranslation.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 1);
         public Single StopTime => GetStopTimeCustom(location: 0xA);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2054,7 +2054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

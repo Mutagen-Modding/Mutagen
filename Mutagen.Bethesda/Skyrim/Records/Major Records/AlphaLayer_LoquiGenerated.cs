@@ -1778,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _AlphaLayerDataLocation;
         public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AlphaLayerDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

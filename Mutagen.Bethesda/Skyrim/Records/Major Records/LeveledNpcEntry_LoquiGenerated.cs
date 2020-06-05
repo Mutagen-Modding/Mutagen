@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_ExtraDataLocation!.Value.Min)), _package) : default;
         public bool ExtraData_IsSet => _ExtraDataLocation.HasValue;
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

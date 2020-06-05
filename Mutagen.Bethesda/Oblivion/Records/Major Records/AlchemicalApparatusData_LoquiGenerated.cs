@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x5, 0x4));
         public Single Quality => SpanExt.GetFloat(_data.Slice(0x9, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xD + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

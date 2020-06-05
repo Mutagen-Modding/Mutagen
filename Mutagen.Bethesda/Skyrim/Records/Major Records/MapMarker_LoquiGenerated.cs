@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TypeLocation;
         public MapMarker.MarkerType Type => _TypeLocation.HasValue ? (MapMarker.MarkerType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MapMarker.MarkerType);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

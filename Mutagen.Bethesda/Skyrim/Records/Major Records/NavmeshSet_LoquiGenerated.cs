@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         private int NavmeshesEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position;
             ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 4 + 4;
             stream.Position += ret.NavmeshesEndingPos;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

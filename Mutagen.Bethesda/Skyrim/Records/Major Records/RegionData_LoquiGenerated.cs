@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

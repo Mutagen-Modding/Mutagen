@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
             private AListGroup.GroupListOverlay<T>? _Records;
             public IReadOnlyList<T> Records => _Records!;
 
-            partial void CustomCtor(
+            partial void CustomFactoryEnd(
                 BinaryMemoryReadStream stream,
                 int finalPos,
                 int offset)

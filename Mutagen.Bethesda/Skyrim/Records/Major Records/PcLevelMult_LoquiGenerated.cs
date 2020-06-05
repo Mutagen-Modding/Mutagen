@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Single LevelMult => GetLevelMultCustom(location: 0x0);
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x4;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

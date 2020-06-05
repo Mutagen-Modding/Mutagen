@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
         public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

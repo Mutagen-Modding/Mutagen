@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P2Int16 GridPosition => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
         public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList<IWorldspaceReferenceGetter>.FactoryByCountLength(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         private int ReferencesEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x4)) * 8 + 4;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

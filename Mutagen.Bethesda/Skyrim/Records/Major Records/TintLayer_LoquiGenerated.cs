@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PresetLocation;
         public Int16? Preset => _PresetLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

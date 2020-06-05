@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

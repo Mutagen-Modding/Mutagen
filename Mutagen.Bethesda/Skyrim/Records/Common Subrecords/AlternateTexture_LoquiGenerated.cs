@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLink<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
         private int NameEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position;
             ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) + 4;
             stream.Position += ret.NameEndingPos + 0x8;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

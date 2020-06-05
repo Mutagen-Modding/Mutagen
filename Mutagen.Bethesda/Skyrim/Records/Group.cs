@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IEnumerable<T> Records => RecordCache.Items;
             public int Count => this.RecordCache.Count;
 
-            partial void CustomCtor(
+            partial void CustomFactoryEnd(
                 BinaryMemoryReadStream stream,
                 int finalPos,
                 int offset)

@@ -1949,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _SoundChanceLocation;
         public Byte? SoundChance => _SoundChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SoundChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

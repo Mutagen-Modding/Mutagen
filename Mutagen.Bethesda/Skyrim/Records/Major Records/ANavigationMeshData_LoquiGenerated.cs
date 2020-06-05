@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int EdgeLinksEndingPos;
         private int DoorTrianglesEndingPos;
         private int CoverTrianglesLogicEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IQuestTargetDataGetter Data => _Data ?? new QuestTargetData();
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

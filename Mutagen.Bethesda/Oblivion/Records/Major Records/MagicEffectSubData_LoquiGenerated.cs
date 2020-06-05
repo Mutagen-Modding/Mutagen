@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLink<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
         public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2372,7 +2372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x1C;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

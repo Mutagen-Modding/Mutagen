@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         public P2Float Max => GetMaxCustom();
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

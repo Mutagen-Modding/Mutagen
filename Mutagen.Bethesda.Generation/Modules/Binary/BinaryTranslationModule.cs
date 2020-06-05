@@ -2057,7 +2057,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"partial void CustomCtor"))
+                        $"partial void CustomFactoryEnd"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                 }
                                 using (var args = new ArgsWrapper(fg,
-                                    $"ret.CustomCtor"))
+                                    $"ret.CustomFactoryEnd"))
                                 {
                                     args.AddPassArg($"stream");
                                     args.AddPassArg($"finalPos");
@@ -2579,7 +2579,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.CustomCtor"))
+                                $"ret.CustomFactoryEnd"))
                             {
                                 args.AddPassArg($"stream");
                                 args.Add($"finalPos: stream.Length");

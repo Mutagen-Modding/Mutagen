@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xC, 0x2));
         public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x10;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

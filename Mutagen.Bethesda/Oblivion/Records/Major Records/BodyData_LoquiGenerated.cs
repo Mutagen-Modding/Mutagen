@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

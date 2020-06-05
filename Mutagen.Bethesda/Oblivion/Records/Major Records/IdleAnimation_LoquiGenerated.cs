@@ -2693,7 +2693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
         #endregion
         public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2719,7 +2719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset);

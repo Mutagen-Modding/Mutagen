@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new BinaryMemoryReadStream(_data.Slice(_OverridesLocation!.Value.Min)), _package) : default;
         public bool Overrides_IsSet => _OverridesLocation.HasValue;
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

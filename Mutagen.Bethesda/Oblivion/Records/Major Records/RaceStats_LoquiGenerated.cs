@@ -2381,7 +2381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Endurance => _data.Span[0x5];
         public Byte Personality => _data.Span[0x6];
         public Byte Luck => _data.Span[0x7];
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2405,7 +2405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x8;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

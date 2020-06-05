@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         private int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

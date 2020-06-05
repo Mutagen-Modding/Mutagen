@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = ListExt.Empty<LogEntryBinaryOverlay>();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

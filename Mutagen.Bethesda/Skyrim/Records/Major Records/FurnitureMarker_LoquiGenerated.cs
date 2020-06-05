@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new BinaryMemoryReadStream(_data.Slice(0x1)), _package, default(RecordTypeConverter));
         public IFormLinkNullable<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
         public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new BinaryMemoryReadStream(_data.Slice(0x9)), _package, default(RecordTypeConverter));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0xD;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

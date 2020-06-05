@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int NavmeshSetsEndingPos;
         partial void CustomNavmeshSetsEndPos();
         private int NavmeshTreeEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomNavmeshSetsEndPos();
             ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

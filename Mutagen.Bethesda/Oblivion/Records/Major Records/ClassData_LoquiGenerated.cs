@@ -2642,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x28, 0x4));
         public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2C, 0x4));
         public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(0x30)), _package, default(RecordTypeConverter));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Versioning |= ClassData.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

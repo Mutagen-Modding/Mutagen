@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DialogItemData.VersioningBreaks Versioning { get; private set; }
         public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public DialogItem.Flag Flags => (DialogItem.Flag)_data.Span.Slice(0x2, 0x1)[0];
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Versioning |= DialogItemData.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

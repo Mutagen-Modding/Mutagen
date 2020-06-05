@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IModelGetter? Model { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

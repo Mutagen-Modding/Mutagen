@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x4;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

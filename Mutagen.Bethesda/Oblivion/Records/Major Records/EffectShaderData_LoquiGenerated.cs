@@ -6842,7 +6842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ColorKey1ColorKeyTime => SpanExt.GetFloat(_data.Slice(0xD4, 0x4));
         public Single ColorKey2ColorKeyTime => SpanExt.GetFloat(_data.Slice(0xD8, 0x4));
         public Single ColorKey3ColorKeyTime => SpanExt.GetFloat(_data.Slice(0xDC, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -6870,7 +6870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Versioning |= EffectShaderData.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

@@ -2206,7 +2206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IScriptFragmentGetter> Fragments { get; private set; } = ListExt.Empty<ScriptFragmentBinaryOverlay>();
         private int FileNameEndingPos;
         private int FragmentsEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2231,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset = stream.Position;
             ret.FileNameEndingPos = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x2)) + 2;
             stream.Position += ret.FragmentsEndingPos;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

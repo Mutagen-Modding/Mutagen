@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _Unknown3Location;
         public Boolean Unknown3 => _Unknown3Location.HasValue ? true : default;
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

@@ -2684,7 +2684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single StealMult => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
         public UInt16 Werewolf => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ret.Versioning |= CrimeValues.VersioningBreaks.Break1;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

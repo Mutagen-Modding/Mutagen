@@ -1959,7 +1959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public HavokData.MaterialType Material => (HavokData.MaterialType)_data.Span.Slice(0x0, 0x1)[0];
         public Byte Friction => _data.Span[0x1];
         public Byte Restitution => _data.Span[0x2];
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x3 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

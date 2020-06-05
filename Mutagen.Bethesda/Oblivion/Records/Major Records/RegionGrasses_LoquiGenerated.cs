@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IReadOnlyList<IFormLink<IGrassGetter>>? Grasses { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

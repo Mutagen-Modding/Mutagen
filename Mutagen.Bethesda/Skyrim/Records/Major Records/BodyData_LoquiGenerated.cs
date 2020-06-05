@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

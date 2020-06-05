@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String FragmentName => BinaryStringUtility.ParsePrependedString(_data.Slice(ScriptNameEndingPos), lengthLength: 2);
         private int ScriptNameEndingPos;
         private int FragmentNameEndingPos;
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ScriptNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x1)) + 2;
             ret.FragmentNameEndingPos = ret.ScriptNameEndingPos + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(ret.ScriptNameEndingPos)) + 2;
             stream.Position += ret.FragmentNameEndingPos;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

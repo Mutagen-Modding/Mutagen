@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

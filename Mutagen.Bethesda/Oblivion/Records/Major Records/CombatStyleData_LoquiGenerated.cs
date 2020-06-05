@@ -5110,7 +5110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -5154,7 +5154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Versioning |= CombatStyleData.VersioningBreaks.Break4;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

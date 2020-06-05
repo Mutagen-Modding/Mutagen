@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = ListExt.Empty<NpcSoundTypeBinaryOverlay>();
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

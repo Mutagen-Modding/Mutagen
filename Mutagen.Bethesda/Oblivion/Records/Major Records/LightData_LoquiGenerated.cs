@@ -2511,7 +2511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single FOV => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2539,7 +2539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

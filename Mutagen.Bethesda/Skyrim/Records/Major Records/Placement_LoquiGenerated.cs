@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RotationQ2 => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public Single RotationQ3 => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         public Single RotationQ4 => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x24;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

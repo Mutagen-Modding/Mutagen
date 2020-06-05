@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IFormLink<ICellGetter> Parent =>
                 new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(12))));
 
-            partial void CustomCtor(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 CustomLogic();
             }

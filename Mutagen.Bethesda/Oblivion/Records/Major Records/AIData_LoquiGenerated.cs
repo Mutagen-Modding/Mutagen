@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
         public Byte MaximumTrainingLevel => _data.Span[0x9];
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

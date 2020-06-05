@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single AttackDuringBlockMult => SpanExt.GetFloat(_data.Slice(0x48, 0x4));
         public Single PowerAttackFatigueModBase => SpanExt.GetFloat(_data.Slice(0x4C, 0x4));
         public Single PowerAttackFatigueModMult => SpanExt.GetFloat(_data.Slice(0x50, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3607,7 +3607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x54 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

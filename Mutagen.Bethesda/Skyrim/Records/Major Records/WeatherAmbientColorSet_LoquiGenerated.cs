@@ -2181,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IWeatherAmbientColorsGetter Day => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x24)), _package, default(RecordTypeConverter));
         public IWeatherAmbientColorsGetter Sunset => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x48)), _package, default(RecordTypeConverter));
         public IWeatherAmbientColorsGetter Night => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x6C)), _package, default(RecordTypeConverter));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2206,7 +2206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x90 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

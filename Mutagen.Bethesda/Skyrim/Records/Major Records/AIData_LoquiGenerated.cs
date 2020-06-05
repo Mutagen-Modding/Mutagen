@@ -2675,7 +2675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
         public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IScriptFieldsGetter? ResultScript { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

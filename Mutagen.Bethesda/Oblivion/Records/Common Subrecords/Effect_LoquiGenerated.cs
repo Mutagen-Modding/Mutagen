@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IEffectDataGetter Data => _Data ?? new EffectData();
         #endregion
         public IScriptEffectGetter? ScriptEffect { get; private set; }
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

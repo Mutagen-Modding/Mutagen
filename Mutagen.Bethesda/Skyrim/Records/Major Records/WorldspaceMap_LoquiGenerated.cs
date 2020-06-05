@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single CameraMinHeight => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
         public Single CameraMaxHeight => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public Single CameraInitialPitch => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ret.Versioning |= WorldspaceMap.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

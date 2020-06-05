@@ -2489,7 +2489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);

@@ -2240,7 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single EndDistanceCap => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         public Single ShadowDepthBias => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -2268,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);

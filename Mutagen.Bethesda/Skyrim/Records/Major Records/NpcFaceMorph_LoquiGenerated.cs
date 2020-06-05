@@ -3402,7 +3402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single ChinUnderbiteVsOverbite => SpanExt.GetFloat(_data.Slice(0x40, 0x4));
         public Single EyesForwardVsBack => SpanExt.GetFloat(_data.Slice(0x44, 0x4));
         public Single Unknown => SpanExt.GetFloat(_data.Slice(0x48, 0x4));
-        partial void CustomCtor(
+        partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset);
@@ -3427,7 +3427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4C + package.MetaData.Constants.SubConstants.HeaderLength;
-            ret.CustomCtor(
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset);
