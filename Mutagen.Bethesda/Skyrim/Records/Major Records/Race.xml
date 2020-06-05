@@ -297,10 +297,10 @@
   <Object name="AvailableMorphs" objType="Subrecord" GUID="43c181c2-3ab3-4a0c-82ce-3eb86e48d09b" ID="74">
     <Fields>
       <CustomLogic name="Parse" recordType="MPAI" />
-      <RefDirect name="Nose" refName="Morph" hasBeenSet="True" binary="DoNothing" />
-      <RefDirect name="Brow" refName="Morph" hasBeenSet="True" binary="DoNothing" />
-      <RefDirect name="Eye" refName="Morph" hasBeenSet="True" binary="DoNothing" />
-      <RefDirect name="Lip" refName="Morph" hasBeenSet="True" binary="DoNothing" />
+      <RefDirect name="Nose" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Brow" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Eye" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Lip" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="Morph" objType="Subrecord" GUID="db314c60-7ba5-4df9-8229-527af27db99a" ID="84">

@@ -124,7 +124,6 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg($"offset");
                     }
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                 default:
                     return;

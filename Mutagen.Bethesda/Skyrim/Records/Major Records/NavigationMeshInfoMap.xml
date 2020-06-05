@@ -25,8 +25,8 @@
       <Int32 name="Unknown2" />
       <FormLink name="ParentWorldspace" refName="Worldspace" />
       <CustomLogic name="ParentParseLogic" />
-      <P2Int16 name="ParentWorldspaceCoord" binary="DoNothing" />
-      <FormLink name="ParentCell" refName="Cell" binary="DoNothing" />
+      <P2Int16 name="ParentWorldspaceCoord" binary="NoGeneration" />
+      <FormLink name="ParentCell" refName="Cell" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="LinkedDoor" objType="Subrecord" GUID="47c9da10-da3e-4e0b-b735-a20fa8632f68" ID="275">

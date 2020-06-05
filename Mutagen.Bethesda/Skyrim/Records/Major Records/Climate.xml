@@ -15,8 +15,8 @@
           <UInt8 name="SunsetEndRaw" />
           <UInt8 name="Volatility" />
           <CustomLogic name="MoonAndPhaseLength" />
-          <Enum name="Moons" enumName="Climate.Moon" binary="DoNothing" />
-          <UInt8 name="PhaseLength" min="0" max="64" binary="DoNothing" />
+          <Enum name="Moons" enumName="Climate.Moon" binary="NoGeneration" />
+          <UInt8 name="PhaseLength" min="0" max="64" binary="NoGeneration" />
         </Fields>
       </Data>
     </Fields>

@@ -53,11 +53,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (field is SetMarkerType) continue;
                 if (field.Derivative || !field.IntegrateField) continue;
-                var hasTrigger = field.TryGetFieldData(out var fieldData)
-                    && fieldData.HasTrigger;
-                if (field.GetFieldData()?.Binary == BinaryGenerationType.NoGeneration
-                    || field.GetFieldData()?.Binary == BinaryGenerationType.DoNothing) continue;
-                if (hasTrigger)
+                var data = field.GetFieldData();
+                if (data.Binary == BinaryGenerationType.NoGeneration) continue;
+                if (data.HasTrigger)
                 {
                     triggerEncountered = true;
                 }

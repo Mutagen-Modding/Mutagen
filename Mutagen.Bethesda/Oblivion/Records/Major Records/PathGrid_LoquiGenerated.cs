@@ -2705,10 +2705,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
                 }
-                case 0x47414750: // PGAG
-                {
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
-                }
                 case 0x49524750: // PGRI
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2912,10 +2908,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         type: type,
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
-                }
-                case 0x47414750: // PGAG
-                {
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
                 }
                 case 0x49524750: // PGRI
                 {

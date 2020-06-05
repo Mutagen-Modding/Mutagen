@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Generation
     public enum BinaryGenerationType
     {
         Normal,
-        DoNothing,
         NoGeneration,
         Custom,
     }
@@ -476,7 +475,6 @@ namespace Mutagen.Bethesda.Generation
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
-                        if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!field.Enabled) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -562,24 +560,21 @@ namespace Mutagen.Bethesda.Generation
                                         fieldData: fieldData,
                                         toDo: async () =>
                                         {
-                                            if (fieldData.Binary != BinaryGenerationType.DoNothing)
+                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                            if (groupMask)
                                             {
-                                                var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
-                                                if (groupMask)
+                                                fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                            }
+                                            using (new BraceWrapper(fg, doIt: groupMask))
+                                            {
+                                                await GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                            }
+                                            if (groupMask)
+                                            {
+                                                fg.AppendLine("else");
+                                                using (new BraceWrapper(fg))
                                                 {
-                                                    fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
-                                                }
-                                                using (new BraceWrapper(fg, doIt: groupMask))
-                                                {
-                                                    await GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
-                                                }
-                                                if (groupMask)
-                                                {
-                                                    fg.AppendLine("else");
-                                                    using (new BraceWrapper(fg))
-                                                    {
-                                                        fg.AppendLine("frame.Position += contentLength;");
-                                                    }
+                                                    fg.AppendLine("frame.Position += contentLength;");
                                                 }
                                             }
                                         });
@@ -1007,7 +1002,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 case BinaryGenerationType.Normal:
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
@@ -1498,7 +1492,6 @@ namespace Mutagen.Bethesda.Generation
                             && fieldData.HasTrigger) continue;
                         if (field is CustomLogic logic && logic.IsRecordType) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
-                        if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (field is BreakType breakType)
                         {
@@ -1613,7 +1606,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case BinaryGenerationType.Normal:
                                 break;
-                            case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
                                 continue;
                             case BinaryGenerationType.Custom:
@@ -1659,7 +1651,6 @@ namespace Mutagen.Bethesda.Generation
                                             {
                                                 case BinaryGenerationType.Normal:
                                                     break;
-                                                case BinaryGenerationType.DoNothing:
                                                 case BinaryGenerationType.NoGeneration:
                                                     continue;
                                                 case BinaryGenerationType.Custom:
@@ -1714,7 +1705,6 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!generator.ShouldGenerateWrite(field)) return;
                                 if (fieldData.Binary == BinaryGenerationType.NoGeneration) return;
-                                if (fieldData.Binary == BinaryGenerationType.DoNothing) return;
 
                                 var loqui = field as LoquiType;
 
@@ -1957,7 +1947,6 @@ namespace Mutagen.Bethesda.Generation
                         var data = field.GetFieldData();
                         switch (data.BinaryOverlayFallback)
                         {
-                            case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
                                 continue;
                             default:
@@ -2400,7 +2389,6 @@ namespace Mutagen.Bethesda.Generation
                                             case BinaryGenerationType.Custom:
                                                 fg.AppendLine($"ret.Custom{field.Item.Field.Name}EndPos();");
                                                 break;
-                                            case BinaryGenerationType.DoNothing:
                                             case BinaryGenerationType.NoGeneration:
                                                 break;
                                             case BinaryGenerationType.Normal:

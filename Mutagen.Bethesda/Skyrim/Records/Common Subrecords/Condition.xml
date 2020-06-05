@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="9c510483-e3ef-4271-b240-0bd227beab19" ID="36" >
     <Fields>
-      <Enum name="CompareOperator" enumName="CompareOperator" binary="DoNothing" />
+      <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
       <ByteArray name="Unknown1" byteLength="3" hasBeenSet="False" />
     </Fields>
@@ -28,15 +28,15 @@
       <UInt16 name="Function" />
       <UInt16 name="Unknown2" />
       <CustomLogic name="ParameterParsing" />
-      <FormLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="DoNothing" />
-      <Int32 name="ParameterOneNumber" binary="DoNothing" />
-      <String name="ParameterOneString" binary="DoNothing" hasBeenSet="True" />
-      <FormLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="DoNothing" />
-      <Int32 name="ParameterTwoNumber" binary="DoNothing" />
-      <String name="ParameterTwoString" binary="DoNothing" hasBeenSet="True" />
-      <Int32 name="Unknown3" binary="DoNothing" />
-      <Int32 name="Unknown4" binary="DoNothing" />
-      <Int32 name="Unknown5" binary="DoNothing" default="-1" />
+      <FormLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
+      <Int32 name="ParameterOneNumber" binary="NoGeneration" />
+      <String name="ParameterOneString" binary="NoGeneration" hasBeenSet="True" />
+      <FormLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
+      <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
+      <String name="ParameterTwoString" binary="NoGeneration" hasBeenSet="True" />
+      <Int32 name="Unknown3" binary="NoGeneration" />
+      <Int32 name="Unknown4" binary="NoGeneration" />
+      <Int32 name="Unknown5" binary="NoGeneration" default="-1" />
     </Fields>
   </Object>
   <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">

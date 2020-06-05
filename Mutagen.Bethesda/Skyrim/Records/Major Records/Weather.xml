@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weather" baseClass="SkyrimMajorRecord" objType="Record" customRecordFallback="true" recordType="WTHR" GUID="2a067384-8f2a-4245-9c26-092e2a0351f0" ID="248">
     <Fields>
-      <Array name="CloudTextures" fixedSize="29" binary="DoNothing" >
+      <Array name="CloudTextures" fixedSize="29" binary="NoGeneration" >
         <String hasBeenSet="True" />
       </Array>
       <CustomLogic name="CloudTexturesParse" isUntypedRecordType="true" />
@@ -91,11 +91,11 @@
   </Object>
   <Object name="CloudLayer" objType="Subrecord" GUID="e89335dd-a532-4104-9ce3-b607df804f84" ID="249">
     <Fields>
-      <Bool name="Enabled" hasBeenSet="True" binary="DoNothing" />
-      <Float name="XSpeed" hasBeenSet="True" binary="DoNothing" />
-      <Float name="YSpeed" hasBeenSet="True" binary="DoNothing" />
-      <RefDirect name="Colors" refName="WeatherColor" hasBeenSet="True" binary="DoNothing" />
-      <RefDirect name="Alphas" refName="WeatherAlpha" hasBeenSet="True" binary="DoNothing" />
+      <Bool name="Enabled" hasBeenSet="True" binary="NoGeneration" />
+      <Float name="XSpeed" hasBeenSet="True" binary="NoGeneration" />
+      <Float name="YSpeed" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Colors" refName="WeatherColor" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Alphas" refName="WeatherAlpha" hasBeenSet="True" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="WeatherColor" objType="Subrecord" GUID="ee22f5d2-7247-45d2-85f7-5adb24f8f37b" ID="250">

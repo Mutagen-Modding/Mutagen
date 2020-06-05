@@ -11,7 +11,7 @@
       <RefDirect name="RelatedWaters" refName="RelatedWaters" />
     </Fields>
   </Object>
-  <Object name="WaterData" objType="Subrecord" recordType="DATA" binaryOverlay="DoNothing" GUID="19681672-407a-45b4-a1a8-5fdab94b9777" ID="214">
+  <Object name="WaterData" objType="Subrecord" recordType="DATA" binaryOverlay="NoGeneration" GUID="19681672-407a-45b4-a1a8-5fdab94b9777" ID="214">
     <Fields>
       <Break />
       <Float name="WindVelocity" />
