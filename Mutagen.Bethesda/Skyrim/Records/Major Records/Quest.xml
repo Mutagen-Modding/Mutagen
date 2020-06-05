@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="SkyrimMajorRecord" GUID="480d7a0d-3841-44f9-9a48-b53a29731f22" ID="351">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

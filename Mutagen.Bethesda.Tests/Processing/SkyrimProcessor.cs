@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessCells(stream, formID, recType, loc);
             ProcessPlaced(stream, formID, recType, loc);
             ProcessNavmeshes(stream, formID, recType, loc);
+            ProcessDialogs(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -265,6 +266,19 @@ namespace Mutagen.Bethesda.Tests
                 formID);
         }
 
+        private void ProcessDialogs(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!DialogTopic_Registration.TriggeringRecordType.Equals(recType)) return;
+            CleanEmptyDialogGroups(
+                stream,
+                formID,
+                loc);
+        }
+
         private void ProcessPlaced(
             IMutagenReadStream stream,
             FormID formID,
@@ -417,7 +431,9 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "KEYM", "FULL" },
                     new RecordType[] { "CELL", "FULL" },
                     new RecordType[] { "REFR", "FULL" },
-                    new RecordType[] { "WRLD", "FULL" }
+                    new RecordType[] { "WRLD", "FULL" },
+                    new RecordType[] { "DIAL", "FULL" },
+                    new RecordType[] { "INFO", "RNAM" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,
@@ -442,7 +458,9 @@ namespace Mutagen.Bethesda.Tests
                 RenumberStringsFileEntries(
                     stream,
                     language,
-                    StringsSource.IL
+                    StringsSource.IL,
+                    new RecordType[] { "DIAL" },
+                    new RecordType[] { "INFO", "NAM1" }
                 ));
         }
     }

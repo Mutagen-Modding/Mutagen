@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="SkyrimMajorRecord" GUID="29f5de6a-ecd3-4ce8-8ffb-b443aad13295" ID="314">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal" GUID="29f5de6a-ecd3-4ce8-8ffb-b443aad13295" ID="314">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IDialog</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Float name="Priority" recordType="PNAM" hasBeenSet="False" multiplier="50" />
+      <FormLink name="Branch" recordType="BNAM" refName="DialogBranch" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <Data>
+        <Fields>
+          <Enum name="TopicFlags" enumName="DialogTopic.TopicFlag" byteLength="1" />
+          <Enum name="Category" enumName="DialogTopic.CategoryEnum" byteLength="1" />
+          <Enum name="Subtype" enumName="DialogTopic.SubtypeEnum" byteLength="2" />
+        </Fields>
+      </Data>
+      <RecordType name="SubtypeName" recordType="SNAM" hasBeenSet="False" />
+      <CustomLogic name="ResponseCount" recordType="TIFC" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="Unknown" binary="NoGeneration" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+    </Fields>
   </Object>
 </Loqui>

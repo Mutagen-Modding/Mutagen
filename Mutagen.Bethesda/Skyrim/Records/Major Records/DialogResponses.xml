@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="39a0ccd0-da05-4f90-b32a-20fcdb7a9ea3" ID="350">
+    <Interface>IDialog</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="DialogResponseAdapter" recordType="VMAD" />
+      <ByteArray name="Unknown" recordType="DATA" />
+      <RefDirect name="Flags" refName="DialogResponseFlags" />
+      <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
+      <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
+      <Enum name="FavorLevel" enumName="FavorLevel" byteLength="1" recordType="CNAM" />
+      <List name="LinkTo">
+        <FormLink recordType="TCLT" objType="Record">
+          <Interface>IDialog</Interface>
+        </FormLink>
+      </List>
+      <FormLink name="ResponseData" recordType="DNAM" refName="DialogResponses" />
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="UnknownData" refName="DialogResponsesUnknownData" />
+      <String name="Prompt" recordType="RNAM" translated="Normal" />
+      <FormLink name="Speaker" recordType="ANAM" refName="Npc" />
+      <FormLink name="WalkAwayTopic" recordType="TWAT" refName="DialogTopic" />
+      <FormLink name="AudioOutputOverride" recordType="ONAM" refName="SoundOutputModel" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="8f8feabd-8d62-4c94-8fb7-3edfc3c31f25" ID="359">
+    <Fields>
+      <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
+      <Float name="ResetHours" binaryType="Integer" integerType="UShort" divisor="2730" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="b6994042-d407-490d-8387-54e33396f705" ID="352">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord" GUID="a48dd14d-639a-47de-b96d-4517394936b7" ID="356">
+    <Fields>
+      <Data recordType="TRDT">
+        <Fields>
+          <Enum name="Emotion" enumName="EmotionType" byteLength="4" />
+          <UInt32 name="EmotionValue" />
+          <Int32 name="Unknown" />
+          <UInt8 name="ResponseNumber" />
+          <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
+          <FormLink name="Sound" refName="SoundDescriptor" />
+          <Enum name="Flags" enumName="DialogResponse.Flag" byteLength="1" />
+          <ByteArray name="Unknown3" byteLength="3" hasBeenSet="False" />
+        </Fields>
+      </Data>
+      <String name="Text" recordType="NAM1" translated="IL" hasBeenSet="False" />
+      <String name="ScriptNotes" recordType="NAM2" hasBeenSet="False" />
+      <String name="Edits" recordType="NAM3" hasBeenSet="False" />
+      <FormLink name="SpeakerIdleAnimation" refName="IdleAnimation" recordType="SNAM" />
+      <FormLink name="ListenerIdleAnimation" refName="IdleAnimation" recordType="LNAM" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponsesUnknownData" objType="Subrecord" GUID="17054176-0068-49c7-be25-be4e156505d0" ID="357">
+    <Fields>
+      <ByteArray name="Unknown" recordType="SCHR" />
+      <FormLink name="Unknown2" recordType="QNAM" refName="SkyrimMajorRecord" />
+      <Bool name="Unknown3" boolAsMarker="NEXT" />
+    </Fields>
+  </Object>
+</Loqui>

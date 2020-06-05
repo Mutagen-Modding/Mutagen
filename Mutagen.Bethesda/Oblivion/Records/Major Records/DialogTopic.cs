@@ -71,7 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
-                if (obj.Items == null || obj.Items.Count == 0) return;
+                if (!obj.Items.TryGet(out var items)
+                    || items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write(obj.Timestamp);
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
                         writer: writer,
-                        items: obj.Items,
+                        items: items,
                         transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>
                         {
                             subItem.WriteToBinary(subWriter);

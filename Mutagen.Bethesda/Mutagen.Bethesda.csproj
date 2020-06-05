@@ -63,6 +63,7 @@
     <Compile Include="Skyrim\Enums\Assistance.cs" />
     <Compile Include="Skyrim\Enums\BasicStat.cs" />
     <Compile Include="Skyrim\Enums\Confidence.cs" />
+    <Compile Include="Skyrim\Enums\FavorLevel.cs" />
     <Compile Include="Skyrim\Enums\LevelModifier.cs" />
     <Compile Include="Skyrim\Enums\LockLevel.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Skyrim\Enums\SpellDataFlag.cs" />
     <Compile Include="Skyrim\Enums\SpellType.cs" />
     <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
+    <Compile Include="Skyrim\Interfaces\EmotionType.cs" />
     <Compile Include="Skyrim\Interfaces\IAmbientColors.cs" />
     <Compile Include="Skyrim\Interfaces\IEmittance.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
+    <Compile Include="Skyrim\Interfaces\IDialog.cs" />
     <Compile Include="Skyrim\Interfaces\IOwner.cs" />
     <Compile Include="Skyrim\Interfaces\IPlacedThing.cs" />
     <Compile Include="Skyrim\Interfaces\IPlaced.cs" />
@@ -103,6 +106,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ATopicReference.cs">
       <DependentUpon>TopicReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AVirtualMachineAdapter.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
@@ -124,6 +130,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Patrol.cs">
       <DependentUpon>Patrol.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptFragments.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
@@ -163,6 +172,18 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ANavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponse.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponseAdapter.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponses.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogTopic.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedArrow.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
@@ -1117,9 +1138,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ScriptProperty.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\VirtualMachineAdapter.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Group.cs">
@@ -2304,8 +2322,38 @@
     <Compile Include="Skyrim\Records\Major Records\LayerHeader_LoquiGenerated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogBranch_LoquiGenerated.cs">
+      <DependentUpon>DialogBranch.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Quest_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponseAdapter_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptFragments_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ScriptFragment_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\AVirtualMachineAdapter_LoquiGenerated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponses_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponse_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponsesUnknownData_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoundOutputModel_LoquiGenerated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DialogResponseFlags_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

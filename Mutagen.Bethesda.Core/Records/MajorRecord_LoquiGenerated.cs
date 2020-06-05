@@ -1298,6 +1298,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType DLBR_HEADER = new RecordType("DLBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType ECZN_HEADER = new RecordType("ECZN");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
@@ -1348,6 +1349,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
+        public static readonly RecordType SOPM_HEADER = new RecordType("SOPM");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
@@ -1453,6 +1455,7 @@ namespace Mutagen.Bethesda.Internals
                         CLFM_HEADER,
                         COBJ_HEADER,
                         DEBR_HEADER,
+                        DLBR_HEADER,
                         DUAL_HEADER,
                         ECZN_HEADER,
                         EQUP_HEADER,
@@ -1503,6 +1506,7 @@ namespace Mutagen.Bethesda.Internals
                         SCRL_HEADER,
                         SPGD_HEADER,
                         SNDR_HEADER,
+                        SOPM_HEADER,
                         TACT_HEADER,
                         TXST_HEADER,
                         RFCT_HEADER,

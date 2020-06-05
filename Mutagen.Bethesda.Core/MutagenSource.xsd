@@ -279,6 +279,7 @@
         <xs:extension base="RangedFloat">
           <xs:attribute name="binaryType" type="FloatBinaryType" />
           <xs:attribute name="multiplier" type="xs:double" />
+          <xs:attribute name="divisor" type="xs:double" />
           <xs:attribute name="integerType" type="FloatIntegerType" />
         </xs:extension>
       </xs:complexContent>

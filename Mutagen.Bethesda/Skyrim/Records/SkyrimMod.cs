@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
+using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -288,6 +289,54 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+            }
+
+            public static void WriteGroupParallel<T>(
+                IGroupGetter<T> group,
+                MasterReferenceReader masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+                where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            {
+                if (group.RecordCache.Count == 0) return;
+                var cuts = group.Records.Cut(CutCount).ToArray();
+                Stream[] subStreams = new Stream[cuts.Length + 1];
+                byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                var groupByteStream = new MemoryStream(groupBytes);
+                var bundle = new WritingBundle(GameConstants.Oblivion)
+                {
+                    MasterReferences = masters
+                };
+                using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
+                {
+                    stream.Position += 8;
+                    GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
+                }
+                subStreams[0] = groupByteStream;
+                Parallel.ForEach(cuts, (cutItems, state, counter) =>
+                {
+                    MemoryTributary trib = new MemoryTributary();
+                    using (var stream = new MutagenWriter(trib, bundle, dispose: false))
+                    {
+                        foreach (var item in cutItems)
+                        {
+                            item.WriteToBinary(stream);
+                        }
+                    }
+                    subStreams[(int)counter + 1] = trib;
+                });
+                UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+                streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
+            }
+
+            public static void WriteDialogTopicsParallel(
+                IGroupGetter<IDialogTopicGetter> group,
+                MasterReferenceReader masters,
+                int targetIndex,
+                Stream[] streamDepositArray)
+            {
+                WriteGroupParallel(group, masters, targetIndex, streamDepositArray);
             }
         }
     }

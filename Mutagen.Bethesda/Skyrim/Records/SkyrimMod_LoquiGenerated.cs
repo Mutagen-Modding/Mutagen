@@ -98,6 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Regions_Object = new Group<Region>(this);
             _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
             _Worldspaces_Object = new Group<Worldspace>(this);
+            _DialogTopics_Object = new Group<DialogTopic>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -495,6 +496,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IWorldspaceGetter> ISkyrimModGetter.Worldspaces => _Worldspaces_Object;
         #endregion
+        #region DialogTopics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<DialogTopic> _DialogTopics_Object;
+        public Group<DialogTopic> DialogTopics => _DialogTopics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDialogTopicGetter> ISkyrimModGetter.DialogTopics => _DialogTopics_Object;
+        #endregion
 
         #region To String
 
@@ -721,6 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(initialValue, new ListGroup.Mask<TItem>(initialValue));
                 this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -779,7 +788,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Regions,
                 TItem NavigationMeshInfoMaps,
                 TItem Cells,
-                TItem Worldspaces)
+                TItem Worldspaces,
+                TItem DialogTopics)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -837,6 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavigationMeshInfoMaps = new MaskItem<TItem, Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Group.Mask<TItem>(NavigationMeshInfoMaps));
                 this.Cells = new MaskItem<TItem, ListGroup.Mask<TItem>?>(Cells, new ListGroup.Mask<TItem>(Cells));
                 this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Worldspaces, new Group.Mask<TItem>(Worldspaces));
+                this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(DialogTopics, new Group.Mask<TItem>(DialogTopics));
             }
 
             #pragma warning disable CS8618
@@ -904,6 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
             public MaskItem<TItem, ListGroup.Mask<TItem>?>? Cells { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Worldspaces { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DialogTopics { get; set; }
             #endregion
 
             #region Equals
@@ -972,6 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
+                if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1033,6 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.NavigationMeshInfoMaps);
                 hash.Add(this.Cells);
                 hash.Add(this.Worldspaces);
+                hash.Add(this.DialogTopics);
                 return hash.ToHashCode();
             }
 
@@ -1321,6 +1335,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Worldspaces.Overall)) return false;
                     if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.All(eval)) return false;
                 }
+                if (DialogTopics != null)
+                {
+                    if (!eval(this.DialogTopics.Overall)) return false;
+                    if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1608,6 +1627,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Worldspaces.Overall)) return true;
                     if (this.Worldspaces.Specific != null && this.Worldspaces.Specific.Any(eval)) return true;
                 }
+                if (DialogTopics != null)
+                {
+                    if (eval(this.DialogTopics.Overall)) return true;
+                    if (this.DialogTopics.Specific != null && this.DialogTopics.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1678,6 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
                 obj.Cells = this.Cells == null ? null : new MaskItem<R, ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
+                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1924,6 +1949,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Worldspaces?.ToString(fg);
                     }
+                    if (printMask?.DialogTopics?.Overall ?? true)
+                    {
+                        DialogTopics?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2005,6 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
             public MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
             public MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
+            public MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
             #endregion
 
             #region IErrorMask
@@ -2125,6 +2155,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Cells;
                     case SkyrimMod_FieldIndex.Worldspaces:
                         return Worldspaces;
+                    case SkyrimMod_FieldIndex.DialogTopics:
+                        return DialogTopics;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2302,6 +2334,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Worldspaces:
                         this.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.DialogTopics:
+                        this.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2481,6 +2516,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Worldspaces:
                         this.Worldspaces = (MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.DialogTopics:
+                        this.DialogTopics = (MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2545,6 +2583,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (NavigationMeshInfoMaps != null) return true;
                 if (Cells != null) return true;
                 if (Worldspaces != null) return true;
+                if (DialogTopics != null) return true;
                 return false;
             }
             #endregion
@@ -2635,6 +2674,7 @@ namespace Mutagen.Bethesda.Skyrim
                 NavigationMeshInfoMaps?.ToString(fg);
                 Cells?.ToString(fg);
                 Worldspaces?.ToString(fg);
+                DialogTopics?.ToString(fg);
             }
             #endregion
 
@@ -2699,6 +2739,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps.Combine(rhs.NavigationMeshInfoMaps, (l, r) => l.Combine(r));
                 ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
+                ret.DialogTopics = this.DialogTopics.Combine(rhs.DialogTopics, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2776,6 +2817,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>?> NavigationMeshInfoMaps;
             public MaskItem<bool, ListGroup.TranslationMask<CellBlock.TranslationMask>?> Cells;
             public MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?> Worldspaces;
+            public MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?> DialogTopics;
             #endregion
 
             #region Ctors
@@ -2837,6 +2879,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavigationMeshInfoMaps = new MaskItem<bool, Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>?>(defaultOn, null);
                 this.Cells = new MaskItem<bool, ListGroup.TranslationMask<CellBlock.TranslationMask>?>(defaultOn, null);
                 this.Worldspaces = new MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?>(defaultOn, null);
+                this.DialogTopics = new MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2908,6 +2951,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavigationMeshInfoMaps?.Overall ?? true, NavigationMeshInfoMaps?.Specific?.GetCrystal()));
                 ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
                 ret.Add((Worldspaces?.Overall ?? true, Worldspaces?.Specific?.GetCrystal()));
+                ret.Add((DialogTopics?.Overall ?? true, DialogTopics?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2977,6 +3021,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Regions_Object = new Group<Region>(this);
             _NavigationMeshInfoMaps_Object = new Group<NavigationMeshInfoMap>(this);
             _Worldspaces_Object = new Group<Worldspace>(this);
+            _DialogTopics_Object = new Group<DialogTopic>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3204,6 +3249,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Worldspaces ?? true)
             {
                 this.Worldspaces.RecordCache.Set(rhsMod.Worldspaces.RecordCache.Items);
+            }
+            if (mask?.DialogTopics ?? true)
+            {
+                this.DialogTopics.RecordCache.Set(rhsMod.DialogTopics.RecordCache.Items);
             }
         }
 
@@ -3597,6 +3646,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Worldspace>());
             }
+            if (mask?.DialogTopics ?? true)
+            {
+                this.DialogTopics.RecordCache.Set(
+                    rhs.DialogTopics.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<DialogTopic>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3671,6 +3727,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : 0;
             count += Cells.Records.Count > 0 ? 1 : 0;
             count += Worldspaces.RecordCache.Count > 0 ? 1 : 0;
+            count += DialogTopics.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3945,6 +4002,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
         new ListGroup<CellBlock> Cells { get; }
         new Group<Worldspace> Worldspaces { get; }
+        new Group<DialogTopic> DialogTopics { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4018,6 +4076,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
         IListGroupGetter<ICellBlockGetter> Cells { get; }
         IGroupGetter<IWorldspaceGetter> Worldspaces { get; }
+        IGroupGetter<IDialogTopicGetter> DialogTopics { get; }
 
     }
 
@@ -4529,6 +4588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         NavigationMeshInfoMaps = 53,
         Cells = 54,
         Worldspaces = 55,
+        DialogTopics = 56,
     }
     #endregion
 
@@ -4546,9 +4606,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 56;
+        public const ushort AdditionalFieldCount = 57;
 
-        public const ushort FieldCount = 56;
+        public const ushort FieldCount = 57;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4690,6 +4750,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Cells;
                 case "WORLDSPACES":
                     return (ushort)SkyrimMod_FieldIndex.Worldspaces;
+                case "DIALOGTOPICS":
+                    return (ushort)SkyrimMod_FieldIndex.DialogTopics;
                 default:
                     return null;
             }
@@ -4756,6 +4818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                 case SkyrimMod_FieldIndex.Cells:
                 case SkyrimMod_FieldIndex.Worldspaces:
+                case SkyrimMod_FieldIndex.DialogTopics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4823,6 +4886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                 case SkyrimMod_FieldIndex.Cells:
                 case SkyrimMod_FieldIndex.Worldspaces:
+                case SkyrimMod_FieldIndex.DialogTopics:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4890,6 +4954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                 case SkyrimMod_FieldIndex.Cells:
                 case SkyrimMod_FieldIndex.Worldspaces:
+                case SkyrimMod_FieldIndex.DialogTopics:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5013,6 +5078,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Cells";
                 case SkyrimMod_FieldIndex.Worldspaces:
                     return "Worldspaces";
+                case SkyrimMod_FieldIndex.DialogTopics:
+                    return "DialogTopics";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5079,6 +5146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                 case SkyrimMod_FieldIndex.Cells:
                 case SkyrimMod_FieldIndex.Worldspaces:
+                case SkyrimMod_FieldIndex.DialogTopics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5147,6 +5215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Regions:
                 case SkyrimMod_FieldIndex.NavigationMeshInfoMaps:
                 case SkyrimMod_FieldIndex.Worldspaces:
+                case SkyrimMod_FieldIndex.DialogTopics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5270,6 +5339,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ListGroup<CellBlock>);
                 case SkyrimMod_FieldIndex.Worldspaces:
                     return typeof(Group<Worldspace>);
+                case SkyrimMod_FieldIndex.DialogTopics:
+                    return typeof(Group<DialogTopic>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5332,9 +5403,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
+        public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 56;
+        public const int NumTypedFields = 57;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5431,6 +5503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Regions.Clear();
             item.NavigationMeshInfoMaps.Clear();
             item.Worldspaces.Clear();
+            item.DialogTopics.Clear();
         }
         
         #region Xml Translation
@@ -5641,6 +5714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NavigationMeshInfoMaps = MaskItemExt.Factory(item.NavigationMeshInfoMaps.GetEqualsMask(rhs.NavigationMeshInfoMaps, include), include);
             ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
+            ret.DialogTopics = MaskItemExt.Factory(item.DialogTopics.GetEqualsMask(rhs.DialogTopics, include), include);
         }
         
         public string ToString(
@@ -5911,6 +5985,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Worldspaces?.ToString(fg, "Worldspaces");
             }
+            if (printMask?.DialogTopics?.Overall ?? true)
+            {
+                item.DialogTopics?.ToString(fg, "DialogTopics");
+            }
         }
         
         public bool HasBeenSet(
@@ -5980,6 +6058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.NavigationMeshInfoMaps = new MaskItem<bool, Group.Mask<bool>?>(true, item.NavigationMeshInfoMaps?.GetHasBeenSetMask());
             mask.Cells = new MaskItem<bool, ListGroup.Mask<bool>?>(true, item.Cells?.GetHasBeenSetMask());
             mask.Worldspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
+            mask.DialogTopics = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6045,6 +6124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
             if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
             if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
+            if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
             return true;
         }
         
@@ -6107,6 +6187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.NavigationMeshInfoMaps);
             hash.Add(item.Cells);
             hash.Add(item.Worldspaces);
+            hash.Add(item.DialogTopics);
             return hash.ToHashCode();
         }
         
@@ -6398,6 +6479,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspace":
                 case "IWorldspaceInternal":
                     return obj.Worldspaces.RecordCache;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    return obj.DialogTopics.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -6417,7 +6503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[55];
+            Stream[] outputStreams = new Stream[56];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -6474,6 +6560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, outputStreams));
             toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6909,6 +6996,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.DialogTopics is ILinkedFormKeyContainer DialogTopicslinkCont)
+            {
+                foreach (var item in DialogTopicslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7132,6 +7226,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Worldspaces.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogTopics.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7643,6 +7741,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspace":
                 case "IWorldspaceInternal":
                     foreach (var item in obj.Worldspaces.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -8786,6 +8893,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogTopics) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogTopics);
+                try
+                {
+                    item.DialogTopics.DeepCopyIn(
+                        rhs: rhs.DialogTopics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogTopics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9490,6 +9617,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Worldspaces,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Worldspaces));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogTopics) ?? true))
+            {
+                var DialogTopicsItem = item.DialogTopics;
+                ((GroupXmlWriteTranslation)((IXmlItem)DialogTopicsItem).XmlWriteTranslator).Write<IDialogTopicGetter>(
+                    item: DialogTopicsItem,
+                    node: node,
+                    name: nameof(item.DialogTopics),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogTopics,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogTopics));
             }
         }
 
@@ -10623,6 +10761,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DialogTopics":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogTopics);
+                    try
+                    {
+                        item.DialogTopics.CopyInFromXml<DialogTopic>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -10847,6 +11004,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool NavigationMeshInfoMaps;
         public bool Cells;
         public bool Worldspaces;
+        public bool DialogTopics;
         public GroupMask()
         {
         }
@@ -10907,6 +11065,7 @@ namespace Mutagen.Bethesda.Skyrim
             NavigationMeshInfoMaps = defaultValue;
             Cells = defaultValue;
             Worldspaces = defaultValue;
+            DialogTopics = defaultValue;
         }
     }
 
@@ -11536,6 +11695,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
                         item: WorldspacesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.DialogTopics ?? true)
+            {
+                var DialogTopicsItem = item.DialogTopics;
+                if (DialogTopicsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
+                        item: DialogTopicsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -12379,6 +12549,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
                 }
+                case 0x4C414944: // DIAL
+                {
+                    if (importMask?.DialogTopics ?? true)
+                    {
+                        item.DialogTopics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -12825,6 +13009,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocation.HasValue ? GroupBinaryOverlay<IWorldspaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WorldspacesLocation!.Value.Min, _WorldspacesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Group<Worldspace>(this);
         #endregion
+        #region DialogTopics
+        private RangeInt64? _DialogTopicsLocation;
+        private IGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocation.HasValue ? GroupBinaryOverlay<IDialogTopicGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _DialogTopicsLocation!.Value.Min, _DialogTopicsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new Group<DialogTopic>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13194,6 +13383,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
+                }
+                case 0x4C414944: // DIAL
+                {
+                    _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

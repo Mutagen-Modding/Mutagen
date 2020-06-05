@@ -1106,6 +1106,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType DLBR_HEADER = new RecordType("DLBR");
+        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
@@ -1178,6 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
+        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
@@ -1186,6 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType SOPM_HEADER = new RecordType("SOPM");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
@@ -1233,6 +1237,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         COBJ_HEADER,
                         CONT_HEADER,
                         DEBR_HEADER,
+                        DLBR_HEADER,
+                        INFO_HEADER,
                         DIAL_HEADER,
                         DOOR_HEADER,
                         DUAL_HEADER,
@@ -1305,6 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         XSCL_HEADER,
                         DATA_HEADER,
                         PROJ_HEADER,
+                        QUST_HEADER,
                         RACE_HEADER,
                         REGN_HEADER,
                         REVB_HEADER,
@@ -1313,6 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         SLGM_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
+                        SOPM_HEADER,
                         STAT_HEADER,
                         TACT_HEADER,
                         TXST_HEADER,

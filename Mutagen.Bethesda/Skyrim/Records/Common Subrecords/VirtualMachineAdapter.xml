@@ -7,7 +7,7 @@
       <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="34c100aa-df15-43e7-82c6-ce43d35bf0a5" ID="349" />
+  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="4780aba9-4c81-4f2d-9508-6373ee5a87ec" ID="355" />
   <Object name="ScriptEntry" objType="Subrecord" GUID="8c87188a-56aa-441d-a648-ebe0bd9b2aa0" ID="92">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="DoNothing" />
@@ -78,6 +78,21 @@
       <List name="Data">
         <Bool />
       </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptFragments" objType="Subrecord" GUID="2ec19b11-bd07-4dcc-beb4-826dfc1de531" ID="353">
+    <Fields>
+      <Int8 name="Unknown" />
+      <Enum name="Flags" enumName="ScriptFragments.Flag" byteLength="1" />
+      <String name="FileName" binaryType="PrependLengthUShort" />
+      <RefList name="Fragments" refName="ScriptFragment" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragment" objType="Subrecord" GUID="602e4f3f-6487-4203-8fcb-44bf6ce5d9cf" ID="354">
+    <Fields>
+      <Int8 name="Unknown" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
 </Loqui>

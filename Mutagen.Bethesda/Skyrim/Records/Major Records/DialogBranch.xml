@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="SkyrimMajorRecord" GUID="84dcef28-d603-4bf3-90e2-bc5ac1a36ff2" ID="349">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

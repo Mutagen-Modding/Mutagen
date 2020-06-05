@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="SkyrimMajorRecord" GUID="77db90e7-5e9c-488e-bd71-80dec6cd3265" ID="358">
+  </Object>
+</Loqui>

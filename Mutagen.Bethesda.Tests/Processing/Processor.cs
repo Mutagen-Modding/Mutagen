@@ -441,5 +441,42 @@ namespace Mutagen.Bethesda.Tests
                 formID,
                 doRecordLen: false);
         }
+
+        public void CleanEmptyDialogGroups(
+            IMutagenReadStream stream,
+            FormID formID,
+            RangeInt64 loc)
+        {
+            List<RangeInt64> removes = new List<RangeInt64>();
+            stream.Position = loc.Min;
+            // Skip Major Record
+            var majorHeader = stream.ReadMajorRecord();
+            stream.Position += majorHeader.ContentLength;
+            var blockGroupPos = stream.Position;
+            var blockGroup = stream.ReadGroup();
+            if (!blockGroup.IsGroup) return;
+            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
+            if (blockGrupType != GroupTypeEnum.TopicChildren) return;
+            if (blockGroup.ContentLength == 0)
+            {
+                removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            }
+
+            if (removes.Count == 0) return;
+
+            int amount = 0;
+            foreach (var remove in removes)
+            {
+                this._Instructions.SetRemove(
+                    section: remove);
+                amount -= (int)remove.Width;
+            }
+            ProcessSubrecordLengths(
+                stream,
+                amount,
+                loc.Min,
+                formID,
+                doRecordLen: false);
+        }
     }
 }
