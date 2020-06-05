@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    partial class VirtualMachineAdapterBinaryCreateTranslation
+    partial class AVirtualMachineAdapterBinaryCreateTranslation
     {
         public static IEnumerable<ScriptEntry> ReadEntries(MutagenFrame frame, ushort objectFormat)
         {
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryScriptsCustom(MutagenFrame frame, IVirtualMachineAdapter item)
+        static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
         {
             item.Scripts.AddRange(ReadEntries(frame, item.ObjectFormat));
         }
@@ -90,9 +90,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    public partial class VirtualMachineAdapterBinaryWriteTranslation
+    public partial class AVirtualMachineAdapterBinaryWriteTranslation
     {
-        static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IVirtualMachineAdapterGetter item)
+        static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
         {
             var scripts = item.Scripts;
             writer.Write(checked((ushort)scripts.Count));
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
     }
 
-    public partial class VirtualMachineAdapterBinaryOverlay
+    public partial class AVirtualMachineAdapterBinaryOverlay
     {
         public IReadOnlyList<IScriptEntryGetter> Scripts
         {

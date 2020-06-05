@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class VirtualMachineAdapter :
+        AVirtualMachineAdapter,
         IVirtualMachineAdapter,
         ILoquiObjectSetter<VirtualMachineAdapter>,
         IEquatable<VirtualMachineAdapter>,
@@ -47,32 +48,10 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Version
-        public readonly static Int16 _Version_Default = 5;
-        public Int16 Version { get; set; } = default;
-        #endregion
-        #region ObjectFormat
-        public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = default;
-        #endregion
-        #region Scripts
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptEntry> _Scripts = new ExtendedList<ScriptEntry>();
-        public ExtendedList<ScriptEntry> Scripts
-        {
-            get => this._Scripts;
-            protected set => this._Scripts = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptEntryGetter> IVirtualMachineAdapterGetter.Scripts => _Scripts;
-        #endregion
-
-        #endregion
 
         #region To String
 
-        public void ToString(
+        public override void ToString(
             FileGeneration fg,
             string? name = null)
         {
@@ -101,9 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => VirtualMachineAdapterXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected override object XmlWriteTranslator => VirtualMachineAdapterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -119,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static VirtualMachineAdapter CreateFromXml(
+        public static new VirtualMachineAdapter CreateFromXml(
             XElement node,
             VirtualMachineAdapter.TranslationMask? translationMask = null)
         {
@@ -144,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static VirtualMachineAdapter CreateFromXml(
+        public new static VirtualMachineAdapter CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -231,27 +208,27 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mask
-        public class Mask<TItem> :
+        public new class Mask<TItem> :
+            AVirtualMachineAdapter.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
+            : base(initialValue)
             {
-                this.Version = initialValue;
-                this.ObjectFormat = initialValue;
-                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
             }
 
             public Mask(
                 TItem Version,
                 TItem ObjectFormat,
                 TItem Scripts)
+            : base(
+                Version: Version,
+                ObjectFormat: ObjectFormat,
+                Scripts: Scripts)
             {
-                this.Version = Version;
-                this.ObjectFormat = ObjectFormat;
-                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(Scripts, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -260,12 +237,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public TItem Version;
-            public TItem ObjectFormat;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>? Scripts;
             #endregion
 
             #region Equals
@@ -278,66 +249,36 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Version, rhs.Version)) return false;
-                if (!object.Equals(this.ObjectFormat, rhs.ObjectFormat)) return false;
-                if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
+                if (!base.Equals(rhs)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Version);
-                hash.Add(this.ObjectFormat);
-                hash.Add(this.Scripts);
+                hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public override bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Version)) return false;
-                if (!eval(this.ObjectFormat)) return false;
-                if (this.Scripts != null)
-                {
-                    if (!eval(this.Scripts.Overall)) return false;
-                    if (this.Scripts.Specific != null)
-                    {
-                        foreach (var item in this.Scripts.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!base.All(eval)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public override bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Version)) return true;
-                if (eval(this.ObjectFormat)) return true;
-                if (this.Scripts != null)
-                {
-                    if (eval(this.Scripts.Overall)) return true;
-                    if (this.Scripts.Specific != null)
-                    {
-                        foreach (var item in this.Scripts.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (base.Any(eval)) return true;
                 return false;
             }
             #endregion
 
             #region Translate
-            public Mask<R> Translate<R>(Func<TItem, R> eval)
+            public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new VirtualMachineAdapter.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -346,23 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Version = eval(this.Version);
-                obj.ObjectFormat = eval(this.ObjectFormat);
-                if (Scripts != null)
-                {
-                    obj.Scripts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>?>(eval(this.Scripts.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>());
-                    if (Scripts.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>();
-                        obj.Scripts.Specific = l;
-                        foreach (var item in Scripts.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, ScriptEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                base.Translate_InternalFill(obj, eval);
             }
             #endregion
 
@@ -385,37 +310,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Version ?? true)
-                    {
-                        fg.AppendItem(Version, "Version");
-                    }
-                    if (printMask?.ObjectFormat ?? true)
-                    {
-                        fg.AppendItem(ObjectFormat, "ObjectFormat");
-                    }
-                    if ((printMask?.Scripts?.Overall ?? true)
-                        && Scripts.TryGet(out var ScriptsItem))
-                    {
-                        fg.AppendLine("Scripts =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(ScriptsItem.Overall);
-                            if (ScriptsItem.Specific != null)
-                            {
-                                foreach (var subItem in ScriptsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -423,90 +317,46 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
 
-        public class ErrorMask :
-            IErrorMask,
+        public new class ErrorMask :
+            AVirtualMachineAdapter.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public Exception? Overall { get; set; }
-            private List<string>? _warnings;
-            public List<string> Warnings
-            {
-                get
-                {
-                    if (_warnings == null)
-                    {
-                        _warnings = new List<string>();
-                    }
-                    return _warnings;
-                }
-            }
-            public Exception? Version;
-            public Exception? ObjectFormat;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>? Scripts;
-            #endregion
-
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public override object? GetNthMask(int index)
             {
                 VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case VirtualMachineAdapter_FieldIndex.Version:
-                        return Version;
-                    case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                        return ObjectFormat;
-                    case VirtualMachineAdapter_FieldIndex.Scripts:
-                        return Scripts;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        return base.GetNthMask(index);
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public override void SetNthException(int index, Exception ex)
             {
                 VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case VirtualMachineAdapter_FieldIndex.Version:
-                        this.Version = ex;
-                        break;
-                    case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                        this.ObjectFormat = ex;
-                        break;
-                    case VirtualMachineAdapter_FieldIndex.Scripts:
-                        this.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ex, null);
-                        break;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        base.SetNthException(index, ex);
+                        break;
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public override void SetNthMask(int index, object obj)
             {
                 VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case VirtualMachineAdapter_FieldIndex.Version:
-                        this.Version = (Exception?)obj;
-                        break;
-                    case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                        this.ObjectFormat = (Exception?)obj;
-                        break;
-                    case VirtualMachineAdapter_FieldIndex.Scripts:
-                        this.Scripts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>)obj;
-                        break;
                     default:
-                        throw new ArgumentException($"Index is out of range: {index}");
+                        base.SetNthMask(index, obj);
+                        break;
                 }
             }
 
-            public bool IsInError()
+            public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Version != null) return true;
-                if (ObjectFormat != null) return true;
-                if (Scripts != null) return true;
                 return false;
             }
             #endregion
@@ -519,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public override void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -539,32 +389,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected override void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Version, "Version");
-                fg.AppendItem(ObjectFormat, "ObjectFormat");
-                if (Scripts.TryGet(out var ScriptsItem))
-                {
-                    fg.AppendLine("Scripts =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(ScriptsItem.Overall);
-                        if (ScriptsItem.Specific != null)
-                        {
-                            foreach (var subItem in ScriptsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                base.ToString_FillInternal(fg);
             }
             #endregion
 
@@ -573,9 +400,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Version = this.Version.Combine(rhs.Version);
-                ret.ObjectFormat = this.ObjectFormat.Combine(rhs.ObjectFormat);
-                ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -586,65 +410,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Factory
-            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public class TranslationMask : ITranslationMask
+        public new class TranslationMask :
+            AVirtualMachineAdapter.TranslationMask,
+            ITranslationMask
         {
-            #region Members
-            private TranslationCrystal? _crystal;
-            public bool Version;
-            public bool ObjectFormat;
-            public MaskItem<bool, ScriptEntry.TranslationMask?> Scripts;
-            #endregion
-
             #region Ctors
             public TranslationMask(bool defaultOn)
+                : base(defaultOn)
             {
-                this.Version = defaultOn;
-                this.ObjectFormat = defaultOn;
-                this.Scripts = new MaskItem<bool, ScriptEntry.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
-            public TranslationCrystal GetCrystal()
-            {
-                if (_crystal != null) return _crystal;
-                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-                GetCrystal(ret);
-                _crystal = new TranslationCrystal(ret.ToArray());
-                return _crystal;
-            }
-
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                ret.Add((Version, null));
-                ret.Add((ObjectFormat, null));
-                ret.Add((Scripts?.Overall ?? true, Scripts?.Specific?.GetCrystal()));
-            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = VirtualMachineAdapter_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => VirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => VirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
@@ -656,14 +450,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static VirtualMachineAdapter CreateFromBinary(MutagenFrame frame)
+        public static new VirtualMachineAdapter CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static VirtualMachineAdapter CreateFromBinary(
+        public new static VirtualMachineAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -688,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((VirtualMachineAdapterSetterCommon)((IVirtualMachineAdapterGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static VirtualMachineAdapter GetNew()
+        internal static new VirtualMachineAdapter GetNew()
         {
             return new VirtualMachineAdapter();
         }
@@ -699,30 +493,18 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IVirtualMachineAdapter :
         IVirtualMachineAdapterGetter,
+        IAVirtualMachineAdapter,
         ILoquiObjectSetter<IVirtualMachineAdapter>
     {
-        new Int16 Version { get; set; }
-        new UInt16 ObjectFormat { get; set; }
-        new ExtendedList<ScriptEntry> Scripts { get; }
     }
 
     public partial interface IVirtualMachineAdapterGetter :
-        ILoquiObject,
+        IAVirtualMachineAdapterGetter,
         ILoquiObject<IVirtualMachineAdapterGetter>,
         IXmlItem,
-        ILinkedFormKeyContainer,
         IBinaryItem
     {
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonInstance();
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object? CommonSetterInstance();
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => VirtualMachineAdapter_Registration.Instance;
-        Int16 Version { get; }
-        UInt16 ObjectFormat { get; }
-        IReadOnlyList<IScriptEntryGetter> Scripts { get; }
 
     }
 
@@ -796,29 +578,6 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
-        }
-
-        public static void DeepCopyIn(
-            this IVirtualMachineAdapter lhs,
-            IVirtualMachineAdapterGetter rhs)
-        {
-            ((VirtualMachineAdapterSetterTranslationCommon)((IVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: default);
-        }
-
-        public static void DeepCopyIn(
-            this IVirtualMachineAdapter lhs,
-            IVirtualMachineAdapterGetter rhs,
-            VirtualMachineAdapter.TranslationMask? copyMask = null)
-        {
-            ((VirtualMachineAdapterSetterTranslationCommon)((IVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1055,12 +814,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 91,
+            msgID: 349,
             version: 0);
 
-        public const string GUID = "fa07e160-72ef-43d5-9f19-66c1803dfa93";
+        public const string GUID = "34c100aa-df15-43e7-82c6-ce43d35bf0a5";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 3;
 
@@ -1092,12 +851,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "VERSION":
-                    return (ushort)VirtualMachineAdapter_FieldIndex.Version;
-                case "OBJECTFORMAT":
-                    return (ushort)VirtualMachineAdapter_FieldIndex.ObjectFormat;
-                case "SCRIPTS":
-                    return (ushort)VirtualMachineAdapter_FieldIndex.Scripts;
                 default:
                     return null;
             }
@@ -1108,13 +861,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return true;
-                case VirtualMachineAdapter_FieldIndex.Version:
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1123,13 +871,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return true;
-                case VirtualMachineAdapter_FieldIndex.Version:
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1138,12 +881,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Version:
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1152,14 +891,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Version:
-                    return "Version";
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return "ObjectFormat";
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return "Scripts";
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.GetNthName(index);
             }
         }
 
@@ -1168,12 +901,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Version:
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1182,12 +911,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Version:
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.IsProtected(index);
             }
         }
 
@@ -1196,21 +921,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter_FieldIndex enu = (VirtualMachineAdapter_FieldIndex)index;
             switch (enu)
             {
-                case VirtualMachineAdapter_FieldIndex.Version:
-                    return typeof(Int16);
-                case VirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return typeof(UInt16);
-                case VirtualMachineAdapter_FieldIndex.Scripts:
-                    return typeof(ExtendedList<ScriptEntry>);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return AVirtualMachineAdapter_Registration.GetNthType(index);
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(VirtualMachineAdapterXmlWriteTranslation);
         public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
         public static readonly RecordType TriggeringRecordType = VMAD_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
@@ -1245,18 +964,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VirtualMachineAdapterSetterCommon
+    public partial class VirtualMachineAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
-        public static readonly VirtualMachineAdapterSetterCommon Instance = new VirtualMachineAdapterSetterCommon();
+        public new static readonly VirtualMachineAdapterSetterCommon Instance = new VirtualMachineAdapterSetterCommon();
 
         partial void ClearPartial();
         
         public void Clear(IVirtualMachineAdapter item)
         {
             ClearPartial();
-            item.Version = VirtualMachineAdapter._Version_Default;
-            item.ObjectFormat = VirtualMachineAdapter._ObjectFormat_Default;
-            item.Scripts.Clear();
+            base.Clear(item);
+        }
+        
+        public override void Clear(IAVirtualMachineAdapter item)
+        {
+            Clear(item: (IVirtualMachineAdapter)item);
         }
         
         #region Xml Translation
@@ -1285,6 +1007,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public override void CopyInFromXml(
+            IAVirtualMachineAdapter item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (VirtualMachineAdapter)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1303,12 +1038,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 fillStructs: VirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs);
         }
         
+        public override void CopyInFromBinary(
+            IAVirtualMachineAdapter item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (VirtualMachineAdapter)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
         #endregion
         
     }
-    public partial class VirtualMachineAdapterCommon
+    public partial class VirtualMachineAdapterCommon : AVirtualMachineAdapterCommon
     {
-        public static readonly VirtualMachineAdapterCommon Instance = new VirtualMachineAdapterCommon();
+        public new static readonly VirtualMachineAdapterCommon Instance = new VirtualMachineAdapterCommon();
 
         public VirtualMachineAdapter.Mask<bool> GetEqualsMask(
             IVirtualMachineAdapterGetter item,
@@ -1331,12 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Version = item.Version == rhs.Version;
-            ret.ObjectFormat = item.ObjectFormat == rhs.ObjectFormat;
-            ret.Scripts = item.Scripts.CollectionEqualsHelper(
-                rhs.Scripts,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
@@ -1383,49 +1124,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
-            if (printMask?.Version ?? true)
-            {
-                fg.AppendItem(item.Version, "Version");
-            }
-            if (printMask?.ObjectFormat ?? true)
-            {
-                fg.AppendItem(item.ObjectFormat, "ObjectFormat");
-            }
-            if (printMask?.Scripts?.Overall ?? true)
-            {
-                fg.AppendLine("Scripts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Scripts)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
+            AVirtualMachineAdapterCommon.ToStringFields(
+                item: item,
+                fg: fg,
+                printMask: printMask);
         }
         
         public bool HasBeenSet(
             IVirtualMachineAdapterGetter item,
             VirtualMachineAdapter.Mask<bool?> checkMask)
         {
-            return true;
+            return base.HasBeenSet(
+                item: item,
+                checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
             IVirtualMachineAdapterGetter item,
             VirtualMachineAdapter.Mask<bool> mask)
         {
-            mask.Version = true;
-            mask.ObjectFormat = true;
-            var ScriptsItem = item.Scripts;
-            mask.Scripts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptEntry.Mask<bool>?>>?>(true, ScriptsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            base.FillHasBeenSetMask(
+                item: item,
+                mask: mask);
+        }
+        
+        public static VirtualMachineAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
+        {
+            switch (index)
+            {
+                case AVirtualMachineAdapter_FieldIndex.Version:
+                    return (VirtualMachineAdapter_FieldIndex)((int)index);
+                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                    return (VirtualMachineAdapter_FieldIndex)((int)index);
+                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                    return (VirtualMachineAdapter_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
         
         #region Equals and Hash
@@ -1435,25 +1170,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
-            if (!lhs.Scripts.SequenceEqual(rhs.Scripts)) return false;
+            if (!base.Equals(rhs)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IAVirtualMachineAdapterGetter? lhs,
+            IAVirtualMachineAdapterGetter? rhs)
+        {
+            return Equals(
+                lhs: (IVirtualMachineAdapterGetter?)lhs,
+                rhs: rhs as IVirtualMachineAdapterGetter);
         }
         
         public virtual int GetHashCode(IVirtualMachineAdapterGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Version);
-            hash.Add(item.ObjectFormat);
-            hash.Add(item.Scripts);
+            hash.Add(base.GetHashCode());
             return hash.ToHashCode();
+        }
+        
+        public override int GetHashCode(IAVirtualMachineAdapterGetter item)
+        {
+            return GetHashCode(item: (IVirtualMachineAdapterGetter)item);
         }
         
         #endregion
         
         
-        public object GetNew()
+        public override object GetNew()
         {
             return VirtualMachineAdapter.GetNew();
         }
@@ -1461,8 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IVirtualMachineAdapterGetter obj)
         {
-            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainer> ()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
@@ -1473,9 +1217,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterSetterTranslationCommon
+    public partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
-        public static readonly VirtualMachineAdapterSetterTranslationCommon Instance = new VirtualMachineAdapterSetterTranslationCommon();
+        public new static readonly VirtualMachineAdapterSetterTranslationCommon Instance = new VirtualMachineAdapterSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
@@ -1484,38 +1228,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.Version) ?? true))
-            {
-                item.Version = rhs.Version;
-            }
-            if ((copyMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
-            {
-                item.ObjectFormat = rhs.ObjectFormat;
-            }
-            if ((copyMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.Scripts) ?? true))
-            {
-                errorMask?.PushIndex((int)VirtualMachineAdapter_FieldIndex.Scripts);
-                try
-                {
-                    item.Scripts.SetTo(
-                        rhs.Scripts
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
+            base.DeepCopyIn(
+                (IAVirtualMachineAdapter)item,
+                (IAVirtualMachineAdapterGetter)rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        
+        public override void DeepCopyIn(
+            IAVirtualMachineAdapter item,
+            IAVirtualMachineAdapterGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IVirtualMachineAdapter)item,
+                rhs: (IVirtualMachineAdapterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -1569,22 +1300,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public static VirtualMachineAdapter_Registration Registration => VirtualMachineAdapter_Registration.Instance;
+        public new static VirtualMachineAdapter_Registration Registration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VirtualMachineAdapterCommon.Instance;
+        protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected override object CommonSetterInstance()
         {
             return VirtualMachineAdapterSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VirtualMachineAdapterSetterTranslationCommon.Instance;
-        [DebuggerStepThrough]
-        object IVirtualMachineAdapterGetter.CommonInstance() => this.CommonInstance();
-        [DebuggerStepThrough]
-        object IVirtualMachineAdapterGetter.CommonSetterInstance() => this.CommonSetterInstance();
-        [DebuggerStepThrough]
-        object IVirtualMachineAdapterGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        protected override object CommonSetterTranslationInstance() => VirtualMachineAdapterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1595,9 +1320,11 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VirtualMachineAdapterXmlWriteTranslation : IXmlWriteTranslator
+    public partial class VirtualMachineAdapterXmlWriteTranslation :
+        AVirtualMachineAdapterXmlWriteTranslation,
+        IXmlWriteTranslator
     {
-        public readonly static VirtualMachineAdapterXmlWriteTranslation Instance = new VirtualMachineAdapterXmlWriteTranslation();
+        public new readonly static VirtualMachineAdapterXmlWriteTranslation Instance = new VirtualMachineAdapterXmlWriteTranslation();
 
         public static void WriteToNodeXml(
             IVirtualMachineAdapterGetter item,
@@ -1605,44 +1332,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.Version) ?? true))
-            {
-                Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)VirtualMachineAdapter_FieldIndex.Version,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObjectFormat),
-                    item: item.ObjectFormat,
-                    fieldIndex: (int)VirtualMachineAdapter_FieldIndex.ObjectFormat,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)VirtualMachineAdapter_FieldIndex.Scripts) ?? true))
-            {
-                ListXmlTranslation<IScriptEntryGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Scripts),
-                    item: item.Scripts,
-                    fieldIndex: (int)VirtualMachineAdapter_FieldIndex.Scripts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)VirtualMachineAdapter_FieldIndex.Scripts),
-                    transl: (XElement subNode, IScriptEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ScriptEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
+            AVirtualMachineAdapterXmlWriteTranslation.WriteToNodeXml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
 
         public void Write(
@@ -1665,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public void Write(
+        public override void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1680,40 +1374,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public void Write(
+        public override void Write(
             XElement node,
-            IVirtualMachineAdapterGetter item,
+            IAVirtualMachineAdapterGetter item,
             ErrorMaskBuilder? errorMask,
-            int fieldIndex,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IVirtualMachineAdapterGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
+            Write(
+                item: (IVirtualMachineAdapterGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
 
     }
 
-    public partial class VirtualMachineAdapterXmlCreateTranslation
+    public partial class VirtualMachineAdapterXmlCreateTranslation : AVirtualMachineAdapterXmlCreateTranslation
     {
-        public readonly static VirtualMachineAdapterXmlCreateTranslation Instance = new VirtualMachineAdapterXmlCreateTranslation();
+        public new readonly static VirtualMachineAdapterXmlCreateTranslation Instance = new VirtualMachineAdapterXmlCreateTranslation();
 
         public static void FillPublicXml(
             IVirtualMachineAdapter item,
@@ -1749,71 +1429,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Version":
-                    errorMask?.PushIndex((int)VirtualMachineAdapter_FieldIndex.Version);
-                    try
-                    {
-                        item.Version = Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectFormat":
-                    errorMask?.PushIndex((int)VirtualMachineAdapter_FieldIndex.ObjectFormat);
-                    try
-                    {
-                        item.ObjectFormat = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Scripts":
-                    errorMask?.PushIndex((int)VirtualMachineAdapter_FieldIndex.Scripts);
-                    try
-                    {
-                        if (ListXmlTranslation<ScriptEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var ScriptsItem,
-                            transl: LoquiXmlTranslation<ScriptEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Scripts.SetTo(ScriptsItem);
-                        }
-                        else
-                        {
-                            item.Scripts.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
+                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
                     break;
             }
         }
@@ -1862,23 +1484,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void WriteToXml(
             this IVirtualMachineAdapterGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
             Stream stream,
             out VirtualMachineAdapter.ErrorMask errorMask,
             VirtualMachineAdapter.TranslationMask? translationMask = null,
@@ -1894,82 +1499,6 @@ namespace Mutagen.Bethesda.Skyrim
             node.Elements().First().Save(stream);
         }
 
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((VirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
-            XElement node,
-            string? name = null,
-            VirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            ((VirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((VirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IVirtualMachineAdapterGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((VirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
     }
     #endregion
 
@@ -1980,33 +1509,11 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VirtualMachineAdapterBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class VirtualMachineAdapterBinaryWriteTranslation :
+        AVirtualMachineAdapterBinaryWriteTranslation,
+        IBinaryWriteTranslator
     {
-        public readonly static VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
-
-        static partial void WriteBinaryScriptsCustom(
-            MutagenWriter writer,
-            IVirtualMachineAdapterGetter item);
-
-        public static void WriteBinaryScripts(
-            MutagenWriter writer,
-            IVirtualMachineAdapterGetter item)
-        {
-            WriteBinaryScriptsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IVirtualMachineAdapterGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Version);
-            writer.Write(item.ObjectFormat);
-            VirtualMachineAdapterBinaryWriteTranslation.WriteBinaryScripts(
-                writer: writer,
-                item: item);
-        }
+        public new readonly static VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
@@ -2018,13 +1525,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(VirtualMachineAdapter_Registration.VMAD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
-                WriteEmbedded(
+                AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
             }
         }
 
-        public void Write(
+        public override void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2035,34 +1542,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override void Write(
+            MutagenWriter writer,
+            IAVirtualMachineAdapterGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IVirtualMachineAdapterGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
     }
 
-    public partial class VirtualMachineAdapterBinaryCreateTranslation
+    public partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
+        public new readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IVirtualMachineAdapter item,
             MutagenFrame frame)
         {
-            item.Version = frame.ReadInt16();
-            item.ObjectFormat = frame.ReadUInt16();
-            VirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustomPublic(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryScriptsCustom(
-            MutagenFrame frame,
-            IVirtualMachineAdapter item);
-
-        public static void FillBinaryScriptsCustomPublic(
-            MutagenFrame frame,
-            IVirtualMachineAdapter item)
-        {
-            FillBinaryScriptsCustom(
-                frame: frame,
-                item: item);
+            AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
         }
 
     }
@@ -2073,16 +1576,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Binary Write Mixins
     public static class VirtualMachineAdapterBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IVirtualMachineAdapterGetter item,
-            MutagenWriter writer)
-        {
-            ((VirtualMachineAdapterBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                writer: writer,
-                recordTypeConverter: null);
-        }
-
     }
     #endregion
 
@@ -2091,23 +1584,17 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class VirtualMachineAdapterBinaryOverlay :
-        BinaryOverlay,
+        AVirtualMachineAdapterBinaryOverlay,
         IVirtualMachineAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public static VirtualMachineAdapter_Registration Registration => VirtualMachineAdapter_Registration.Instance;
+        public new static VirtualMachineAdapter_Registration Registration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VirtualMachineAdapterCommon.Instance;
+        protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VirtualMachineAdapterSetterTranslationCommon.Instance;
-        [DebuggerStepThrough]
-        object IVirtualMachineAdapterGetter.CommonInstance() => this.CommonInstance();
-        [DebuggerStepThrough]
-        object? IVirtualMachineAdapterGetter.CommonSetterInstance() => null;
-        [DebuggerStepThrough]
-        object IVirtualMachineAdapterGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        protected override object CommonSetterTranslationInstance() => VirtualMachineAdapterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2116,15 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVirtualMachineAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => VirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => VirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => VirtualMachineAdapterXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
+        protected override object XmlWriteTranslator => VirtualMachineAdapterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -2139,9 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
+        protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2152,8 +1629,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         private int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
         partial void CustomCtor(
@@ -2201,7 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public void ToString(
+        public override void ToString(
             FileGeneration fg,
             string? name = null)
         {

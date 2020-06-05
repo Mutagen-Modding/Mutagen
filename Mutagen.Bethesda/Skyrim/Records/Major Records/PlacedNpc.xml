@@ -7,7 +7,7 @@
     <Interface>ILinkedReference</Interface>
     <Interface>IPositionRotation</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <ByteArray name="RagdollData" recordType="XRGD" />

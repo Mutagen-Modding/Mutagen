@@ -6,7 +6,7 @@
     <Interface>ILinkedReference</Interface>
     <Interface>IPositionRotation</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
       <RefDirect name="Ownership" refName="Ownership" />

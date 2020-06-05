@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="VirtualMachineAdapter" objType="Subrecord" recordType="VMAD" GUID="fa07e160-72ef-43d5-9f19-66c1803dfa93" ID="91">
+  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD" GUID="fa07e160-72ef-43d5-9f19-66c1803dfa93" ID="91">
     <Fields>
       <Int16 name="Version" default="5" />
       <UInt16 name="ObjectFormat" default="2" />
       <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
     </Fields>
   </Object>
+  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="34c100aa-df15-43e7-82c6-ce43d35bf0a5" ID="349" />
   <Object name="ScriptEntry" objType="Subrecord" GUID="8c87188a-56aa-441d-a648-ebe0bd9b2aa0" ID="92">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="DoNothing" />

@@ -6,7 +6,7 @@
     <Interface>IObjectBounded</Interface>
     <Interface>IRegionTarget</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" hasBeenSet="False" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

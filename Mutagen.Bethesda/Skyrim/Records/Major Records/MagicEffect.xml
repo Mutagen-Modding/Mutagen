@@ -3,7 +3,7 @@
   <Object name="MagicEffect" objType="Record" recordType="MGEF" baseClass="SkyrimMajorRecord" GUID="6f4b3983-51e3-47e9-894e-9c442948e6d1" ID="90">
     <Interface>ITranslatedNamed</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >

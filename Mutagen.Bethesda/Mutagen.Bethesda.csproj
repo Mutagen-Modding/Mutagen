@@ -2304,6 +2304,9 @@
     <Compile Include="Skyrim\Records\Major Records\LayerHeader_LoquiGenerated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AVirtualMachineAdapter_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
