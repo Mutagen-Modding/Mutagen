@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ClothingFlagsXmlWriteTranslation);
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType TriggeringRecordType = BMDT_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ClothingFlagsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

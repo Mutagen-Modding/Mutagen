@@ -1092,8 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PlacedBarrierXmlWriteTranslation);
         public static readonly RecordType PBAR_HEADER = new RecordType("PBAR");
         public static readonly RecordType TriggeringRecordType = PBAR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedBarrierBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

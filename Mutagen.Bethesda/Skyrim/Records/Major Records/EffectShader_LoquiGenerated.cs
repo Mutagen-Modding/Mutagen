@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(EffectShaderXmlWriteTranslation);
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType TriggeringRecordType = EFSH_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

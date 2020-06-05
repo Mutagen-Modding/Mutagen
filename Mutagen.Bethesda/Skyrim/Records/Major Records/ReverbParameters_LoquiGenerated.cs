@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ReverbParametersXmlWriteTranslation);
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType TriggeringRecordType = REVB_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ReverbParametersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

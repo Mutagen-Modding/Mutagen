@@ -2724,8 +2724,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODS"),
                 new RecordType("MO3S")));
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 31;
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

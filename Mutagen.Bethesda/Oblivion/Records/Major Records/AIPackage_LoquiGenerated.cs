@@ -1368,8 +1368,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static readonly RecordType TriggeringRecordType = PACK_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

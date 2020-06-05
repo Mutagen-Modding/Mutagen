@@ -1287,8 +1287,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NVPP_HEADER = new RecordType("NVPP");
         public static readonly RecordType NVSI_HEADER = new RecordType("NVSI");
         public static readonly RecordType TriggeringRecordType = NAVI_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshInfoMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

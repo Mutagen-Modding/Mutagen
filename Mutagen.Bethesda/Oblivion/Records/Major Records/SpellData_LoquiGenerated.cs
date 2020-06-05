@@ -1156,8 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(SpellDataXmlWriteTranslation);
         public static readonly RecordType SPIT_HEADER = new RecordType("SPIT");
         public static readonly RecordType TriggeringRecordType = SPIT_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SpellDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

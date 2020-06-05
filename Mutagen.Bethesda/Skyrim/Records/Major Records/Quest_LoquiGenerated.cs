@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(QuestXmlWriteTranslation);
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType TriggeringRecordType = QUST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

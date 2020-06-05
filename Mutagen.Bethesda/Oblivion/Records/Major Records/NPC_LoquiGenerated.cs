@@ -2674,8 +2674,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FGTS_HEADER = new RecordType("FGTS");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TriggeringRecordType = NPC__HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 23;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

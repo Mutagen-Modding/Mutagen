@@ -1102,8 +1102,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CSTD_HEADER = new RecordType("CSTD");
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
         public static readonly RecordType TriggeringRecordType = CSTY_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

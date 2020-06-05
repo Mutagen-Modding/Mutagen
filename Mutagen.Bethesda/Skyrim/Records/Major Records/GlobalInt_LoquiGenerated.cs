@@ -1029,8 +1029,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalIntBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

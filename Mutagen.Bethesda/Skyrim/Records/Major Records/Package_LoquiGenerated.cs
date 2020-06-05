@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PackageXmlWriteTranslation);
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType TriggeringRecordType = PACK_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PackageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

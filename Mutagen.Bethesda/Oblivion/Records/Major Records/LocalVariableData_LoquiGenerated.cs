@@ -1164,8 +1164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(LocalVariableDataXmlWriteTranslation);
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
         public static readonly RecordType TriggeringRecordType = SLSD_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LocalVariableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1032,8 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = LCRT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

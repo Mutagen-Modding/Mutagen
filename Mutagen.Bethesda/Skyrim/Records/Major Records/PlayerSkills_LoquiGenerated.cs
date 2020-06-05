@@ -1613,8 +1613,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PlayerSkillsXmlWriteTranslation);
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType TriggeringRecordType = DNAM_HEADER;
-        public const int NumStructFields = 9;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PlayerSkillsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

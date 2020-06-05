@@ -1572,8 +1572,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RPLD_HEADER = new RecordType("RPLD");
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType TriggeringRecordType = REGN_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

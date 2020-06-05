@@ -1171,8 +1171,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(WeatherImageSpacesXmlWriteTranslation);
         public static readonly RecordType IMSP_HEADER = new RecordType("IMSP");
         public static readonly RecordType TriggeringRecordType = IMSP_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherImageSpacesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

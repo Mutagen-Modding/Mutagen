@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ImageSpaceAdapterXmlWriteTranslation);
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType TriggeringRecordType = IMAD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

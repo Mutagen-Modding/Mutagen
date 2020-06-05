@@ -1879,8 +1879,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TriggeringRecordType = WRLD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 14;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

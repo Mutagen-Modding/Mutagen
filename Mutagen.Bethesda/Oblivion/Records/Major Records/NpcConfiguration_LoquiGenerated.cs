@@ -1291,8 +1291,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(NpcConfigurationXmlWriteTranslation);
         public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
         public static readonly RecordType TriggeringRecordType = ACBS_HEADER;
-        public const int NumStructFields = 7;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(NpcConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

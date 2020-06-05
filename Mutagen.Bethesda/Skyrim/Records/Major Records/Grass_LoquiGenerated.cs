@@ -1754,8 +1754,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = GRAS_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

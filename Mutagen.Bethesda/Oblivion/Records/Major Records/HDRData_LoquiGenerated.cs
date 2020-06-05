@@ -1606,8 +1606,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(HDRDataXmlWriteTranslation);
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType TriggeringRecordType = HNAM_HEADER;
-        public const int NumStructFields = 14;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(HDRDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1733,8 +1733,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
         public static readonly RecordType TriggeringRecordType = FLOR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

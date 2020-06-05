@@ -2519,8 +2519,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
         public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
         public static readonly RecordType TriggeringRecordType = PROJ_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

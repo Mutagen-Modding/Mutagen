@@ -21,7 +21,6 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new GenericsModule());
             this.SubModules.Add(new VersioningModule());
             this.SubModules.Add(new RecordTypeConverterModule());
-            this.SubModules.Add(new NumFieldsModule());
             this.SubModules.Add(new CorrectnessModule());
             this.SubModules.Add(new ModModule());
             this.SubModules.Add(new ColorTypeModule());

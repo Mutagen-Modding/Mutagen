@@ -1263,8 +1263,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(CriticalDataXmlWriteTranslation);
         public static readonly RecordType CRDT_HEADER = new RecordType("CRDT");
         public static readonly RecordType TriggeringRecordType = CRDT_HEADER;
-        public const int NumStructFields = 6;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CriticalDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

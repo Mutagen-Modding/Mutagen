@@ -1075,8 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(QuestTargetDataXmlWriteTranslation);
         public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
         public static readonly RecordType TriggeringRecordType = QSTA_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

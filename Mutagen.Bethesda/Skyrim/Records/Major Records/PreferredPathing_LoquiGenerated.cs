@@ -1248,8 +1248,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PreferredPathingXmlWriteTranslation);
         public static readonly RecordType NVPP_HEADER = new RecordType("NVPP");
         public static readonly RecordType TriggeringRecordType = NVPP_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PreferredPathingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

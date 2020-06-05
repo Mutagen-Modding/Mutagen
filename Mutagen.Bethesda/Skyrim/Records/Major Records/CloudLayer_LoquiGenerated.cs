@@ -1235,8 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CloudLayerXmlWriteTranslation);
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CloudLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1191,8 +1191,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType TriggeringRecordType = ASPC_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(AcousticSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

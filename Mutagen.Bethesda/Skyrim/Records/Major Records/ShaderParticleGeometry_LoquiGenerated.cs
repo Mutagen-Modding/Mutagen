@@ -1640,8 +1640,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType TriggeringRecordType = SPGD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

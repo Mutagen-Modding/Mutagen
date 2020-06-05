@@ -1171,8 +1171,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(WeatherVolumetricLightingXmlWriteTranslation);
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType TriggeringRecordType = HNAM_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherVolumetricLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

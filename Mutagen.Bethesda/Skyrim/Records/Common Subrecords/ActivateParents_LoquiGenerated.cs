@@ -1164,8 +1164,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType XAPD_HEADER = new RecordType("XAPD");
         public static readonly RecordType XAPR_HEADER = new RecordType("XAPR");
         public static readonly RecordType TriggeringRecordType = XAPD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(ActivateParentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1167,8 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(TeleportDestinationXmlWriteTranslation);
         public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
         public static readonly RecordType TriggeringRecordType = XTEL_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

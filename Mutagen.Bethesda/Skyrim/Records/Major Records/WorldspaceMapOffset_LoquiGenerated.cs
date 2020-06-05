@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceMapOffsetXmlWriteTranslation);
         public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
         public static readonly RecordType TriggeringRecordType = ONAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMapOffsetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

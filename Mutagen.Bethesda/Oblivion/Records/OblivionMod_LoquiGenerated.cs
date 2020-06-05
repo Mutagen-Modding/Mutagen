@@ -5365,8 +5365,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 57;
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

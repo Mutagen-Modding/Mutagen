@@ -1156,8 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(FogDistanceXmlWriteTranslation);
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TriggeringRecordType = FNAM_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(FogDistanceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

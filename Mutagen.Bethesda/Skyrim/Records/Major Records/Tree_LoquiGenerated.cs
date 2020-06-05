@@ -1681,8 +1681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = TREE_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

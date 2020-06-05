@@ -1864,8 +1864,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
         public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

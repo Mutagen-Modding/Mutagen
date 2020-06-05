@@ -1128,8 +1128,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(RankPlacementXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RankPlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

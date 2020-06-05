@@ -1352,8 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType IDLA_HEADER = new RecordType("IDLA");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = IDLM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(IdleMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

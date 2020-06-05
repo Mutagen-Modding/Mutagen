@@ -1202,8 +1202,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptMetaSummaryXmlWriteTranslation);
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType TriggeringRecordType = SCHR_HEADER;
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptMetaSummaryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1092,8 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PlacedMissileXmlWriteTranslation);
         public static readonly RecordType PMIS_HEADER = new RecordType("PMIS");
         public static readonly RecordType TriggeringRecordType = PMIS_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedMissileBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

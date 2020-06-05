@@ -4628,8 +4628,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = REFR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 56;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

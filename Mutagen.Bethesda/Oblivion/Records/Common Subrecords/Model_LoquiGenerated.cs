@@ -1121,8 +1121,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType TriggeringRecordType = MODL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

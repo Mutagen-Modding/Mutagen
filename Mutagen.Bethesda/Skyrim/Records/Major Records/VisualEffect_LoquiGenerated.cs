@@ -1177,8 +1177,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = RFCT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VisualEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -976,8 +976,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptVariableReferenceXmlWriteTranslation);
         public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
         public static readonly RecordType TriggeringRecordType = SCRV_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptVariableReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

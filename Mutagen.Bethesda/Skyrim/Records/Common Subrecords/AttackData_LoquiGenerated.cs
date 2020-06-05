@@ -1482,8 +1482,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AttackDataXmlWriteTranslation);
         public static readonly RecordType ATKD_HEADER = new RecordType("ATKD");
         public static readonly RecordType TriggeringRecordType = ATKD_HEADER;
-        public const int NumStructFields = 11;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AttackDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1120,8 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(NavigationDoorLinkXmlWriteTranslation);
         public static readonly RecordType XNDP_HEADER = new RecordType("XNDP");
         public static readonly RecordType TriggeringRecordType = XNDP_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationDoorLinkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

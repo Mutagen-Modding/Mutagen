@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(AIPackageDataXmlWriteTranslation);
         public static readonly RecordType PKDT_HEADER = new RecordType("PKDT");
         public static readonly RecordType TriggeringRecordType = PKDT_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

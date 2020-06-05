@@ -1471,8 +1471,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AIDataXmlWriteTranslation);
         public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
         public static readonly RecordType TriggeringRecordType = AIDT_HEADER;
-        public const int NumStructFields = 11;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -3483,8 +3483,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = MGEF_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

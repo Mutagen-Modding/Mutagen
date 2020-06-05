@@ -1026,8 +1026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType TriggeringRecordType = SBSP_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(SubspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

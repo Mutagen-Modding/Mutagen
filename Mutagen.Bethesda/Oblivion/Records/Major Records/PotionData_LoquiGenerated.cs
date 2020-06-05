@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(PotionDataXmlWriteTranslation);
         public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
         public static readonly RecordType TriggeringRecordType = ENIT_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PotionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -2098,8 +2098,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TWAT_HEADER = new RecordType("TWAT");
         public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
         public static readonly RecordType TriggeringRecordType = INFO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 15;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

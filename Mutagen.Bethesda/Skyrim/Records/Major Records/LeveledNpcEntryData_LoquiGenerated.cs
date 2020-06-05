@@ -1210,8 +1210,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(LeveledNpcEntryDataXmlWriteTranslation);
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType TriggeringRecordType = LVLO_HEADER;
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcEntryDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

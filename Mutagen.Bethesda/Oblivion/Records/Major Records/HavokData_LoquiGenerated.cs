@@ -1111,8 +1111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(HavokDataXmlWriteTranslation);
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType TriggeringRecordType = HNAM_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(HavokDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

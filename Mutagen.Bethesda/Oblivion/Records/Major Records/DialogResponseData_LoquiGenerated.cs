@@ -1209,8 +1209,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(DialogResponseDataXmlWriteTranslation);
         public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
         public static readonly RecordType TriggeringRecordType = TRDT_HEADER;
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

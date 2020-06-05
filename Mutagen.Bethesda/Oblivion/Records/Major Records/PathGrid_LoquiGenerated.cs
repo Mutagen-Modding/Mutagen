@@ -1440,8 +1440,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRI_HEADER = new RecordType("PGRI");
         public static readonly RecordType PGRL_HEADER = new RecordType("PGRL");
         public static readonly RecordType TriggeringRecordType = PGRD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(PathGridBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

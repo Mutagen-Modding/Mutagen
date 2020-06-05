@@ -1336,8 +1336,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(TreeDataXmlWriteTranslation);
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = CNAM_HEADER;
-        public const int NumStructFields = 8;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(TreeDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

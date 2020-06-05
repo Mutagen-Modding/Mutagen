@@ -1524,8 +1524,6 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

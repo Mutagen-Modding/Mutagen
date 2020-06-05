@@ -1156,8 +1156,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(NpcFacePartsXmlWriteTranslation);
         public static readonly RecordType NAMA_HEADER = new RecordType("NAMA");
         public static readonly RecordType TriggeringRecordType = NAMA_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(NpcFacePartsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

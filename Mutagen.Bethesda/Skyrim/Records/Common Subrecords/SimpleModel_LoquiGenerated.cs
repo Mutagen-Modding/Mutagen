@@ -1082,8 +1082,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType TriggeringRecordType = MODL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

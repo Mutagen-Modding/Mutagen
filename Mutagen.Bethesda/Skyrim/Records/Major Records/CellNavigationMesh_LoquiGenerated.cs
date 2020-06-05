@@ -1058,8 +1058,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(CellNavigationMeshXmlWriteTranslation);
         public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
         public static readonly RecordType TriggeringRecordType = NAVM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CellNavigationMeshBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

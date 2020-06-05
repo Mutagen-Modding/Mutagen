@@ -1330,8 +1330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RaceStatsXmlWriteTranslation);
-        public const int NumStructFields = 8;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RaceStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

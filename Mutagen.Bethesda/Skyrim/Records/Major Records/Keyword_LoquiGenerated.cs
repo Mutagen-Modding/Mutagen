@@ -1032,8 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = KYWD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(KeywordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

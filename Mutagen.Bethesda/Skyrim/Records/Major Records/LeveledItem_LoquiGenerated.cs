@@ -1327,8 +1327,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType COED_HEADER = new RecordType("COED");
         public static readonly RecordType TriggeringRecordType = LVLI_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

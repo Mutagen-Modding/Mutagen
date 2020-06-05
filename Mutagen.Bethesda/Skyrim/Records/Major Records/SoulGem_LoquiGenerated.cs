@@ -1814,8 +1814,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SLCP_HEADER = new RecordType("SLCP");
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType TriggeringRecordType = SLGM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

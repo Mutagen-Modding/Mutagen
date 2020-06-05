@@ -965,8 +965,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(LocationXmlWriteTranslation);
         public static readonly RecordType LCTN_HEADER = new RecordType("LCTN");
         public static readonly RecordType TriggeringRecordType = LCTN_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

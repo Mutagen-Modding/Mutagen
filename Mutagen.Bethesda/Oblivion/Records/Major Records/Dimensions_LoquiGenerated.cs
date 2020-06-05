@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(DimensionsXmlWriteTranslation);
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType TriggeringRecordType = BNAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DimensionsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1045,8 +1045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType TriggeringRecordType = SCPT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

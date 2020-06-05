@@ -1101,8 +1101,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(SoundDataExtendedXmlWriteTranslation);
         public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
         public static readonly RecordType TriggeringRecordType = SNDX_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataExtendedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

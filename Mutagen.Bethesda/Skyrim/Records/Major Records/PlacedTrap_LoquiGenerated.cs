@@ -1092,8 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PlacedTrapXmlWriteTranslation);
         public static readonly RecordType PGRE_HEADER = new RecordType("PGRE");
         public static readonly RecordType TriggeringRecordType = PGRE_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedTrapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

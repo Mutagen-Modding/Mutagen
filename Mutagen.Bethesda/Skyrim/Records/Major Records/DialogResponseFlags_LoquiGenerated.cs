@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(DialogResponseFlagsXmlWriteTranslation);
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType TriggeringRecordType = ENAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseFlagsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

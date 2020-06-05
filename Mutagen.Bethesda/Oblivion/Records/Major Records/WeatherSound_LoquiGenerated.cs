@@ -1075,8 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(WeatherSoundXmlWriteTranslation);
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

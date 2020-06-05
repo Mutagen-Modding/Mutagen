@@ -1732,8 +1732,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = KEYM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(KeyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

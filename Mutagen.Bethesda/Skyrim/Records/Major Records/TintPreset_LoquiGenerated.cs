@@ -1137,8 +1137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     })
             );
         });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(TintPresetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

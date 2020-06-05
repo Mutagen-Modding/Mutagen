@@ -1221,8 +1221,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AvailableMorphsXmlWriteTranslation);
         public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
         public static readonly RecordType TriggeringRecordType = MPAI_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

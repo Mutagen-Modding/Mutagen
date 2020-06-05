@@ -2240,8 +2240,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XSOL_HEADER = new RecordType("XSOL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = REFR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 24;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

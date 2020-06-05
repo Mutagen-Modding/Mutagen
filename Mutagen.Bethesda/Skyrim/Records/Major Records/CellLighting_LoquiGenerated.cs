@@ -2064,8 +2064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(CellLightingXmlWriteTranslation);
         public static readonly RecordType XCLL_HEADER = new RecordType("XCLL");
         public static readonly RecordType TriggeringRecordType = XCLL_HEADER;
-        public const int NumStructFields = 23;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CellLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

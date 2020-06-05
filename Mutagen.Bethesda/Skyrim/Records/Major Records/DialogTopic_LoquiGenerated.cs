@@ -1678,8 +1678,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TIFC_HEADER = new RecordType("TIFC");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType TriggeringRecordType = DIAL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

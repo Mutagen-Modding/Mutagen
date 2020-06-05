@@ -1687,8 +1687,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = APPA_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -4404,8 +4404,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = WTHR_HEADER;
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 16;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

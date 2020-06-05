@@ -1494,8 +1494,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TriggeringRecordType = DOOR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

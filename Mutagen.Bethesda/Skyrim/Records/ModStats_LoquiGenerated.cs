@@ -1111,8 +1111,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ModStatsXmlWriteTranslation);
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType TriggeringRecordType = HEDR_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ModStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

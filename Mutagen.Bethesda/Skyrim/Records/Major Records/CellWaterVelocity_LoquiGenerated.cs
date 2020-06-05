@@ -1164,8 +1164,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(CellWaterVelocityXmlWriteTranslation);
         public static readonly RecordType XWCU_HEADER = new RecordType("XWCU");
         public static readonly RecordType TriggeringRecordType = XWCU_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CellWaterVelocityBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

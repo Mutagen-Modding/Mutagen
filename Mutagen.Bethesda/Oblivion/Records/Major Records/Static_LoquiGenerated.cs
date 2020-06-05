@@ -1040,8 +1040,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = STAT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

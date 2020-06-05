@@ -1117,8 +1117,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType TriggeringRecordType = FNAM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

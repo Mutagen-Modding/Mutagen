@@ -1877,8 +1877,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FNPR_HEADER = new RecordType("FNPR");
         public static readonly RecordType XMRK_HEADER = new RecordType("XMRK");
         public static readonly RecordType TriggeringRecordType = FURN_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

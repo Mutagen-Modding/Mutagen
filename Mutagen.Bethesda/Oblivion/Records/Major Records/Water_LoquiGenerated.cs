@@ -1350,8 +1350,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType TriggeringRecordType = WATR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

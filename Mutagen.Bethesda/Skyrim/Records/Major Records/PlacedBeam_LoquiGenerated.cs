@@ -1092,8 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PlacedBeamXmlWriteTranslation);
         public static readonly RecordType PBEA_HEADER = new RecordType("PBEA");
         public static readonly RecordType TriggeringRecordType = PBEA_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedBeamBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

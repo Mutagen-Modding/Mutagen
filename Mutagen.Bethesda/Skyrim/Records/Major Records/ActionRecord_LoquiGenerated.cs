@@ -1030,8 +1030,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = AACT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

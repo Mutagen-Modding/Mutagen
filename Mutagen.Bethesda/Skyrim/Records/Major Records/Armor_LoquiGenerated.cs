@@ -2342,8 +2342,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType TriggeringRecordType = ARMO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 20;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

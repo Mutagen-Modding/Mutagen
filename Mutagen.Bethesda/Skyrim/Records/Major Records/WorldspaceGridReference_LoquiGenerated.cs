@@ -1163,8 +1163,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceGridReferenceXmlWriteTranslation);
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
         public static readonly RecordType TriggeringRecordType = RNAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceGridReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

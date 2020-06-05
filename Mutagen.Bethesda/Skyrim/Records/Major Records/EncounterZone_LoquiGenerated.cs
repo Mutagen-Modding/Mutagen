@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(EncounterZoneXmlWriteTranslation);
         public static readonly RecordType ECZN_HEADER = new RecordType("ECZN");
         public static readonly RecordType TriggeringRecordType = ECZN_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EncounterZoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

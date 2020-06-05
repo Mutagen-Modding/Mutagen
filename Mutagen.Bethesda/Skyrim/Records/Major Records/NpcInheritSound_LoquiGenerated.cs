@@ -985,8 +985,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(NpcInheritSoundXmlWriteTranslation);
         public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
         public static readonly RecordType TriggeringRecordType = CSCR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(NpcInheritSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

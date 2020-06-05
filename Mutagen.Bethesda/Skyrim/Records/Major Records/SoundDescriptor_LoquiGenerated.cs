@@ -965,8 +965,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SoundDescriptorXmlWriteTranslation);
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TriggeringRecordType = SNDR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

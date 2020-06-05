@@ -3111,8 +3111,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType TriggeringRecordType = CELL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 28;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

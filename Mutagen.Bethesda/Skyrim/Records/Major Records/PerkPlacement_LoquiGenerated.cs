@@ -1128,8 +1128,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(PerkPlacementXmlWriteTranslation);
         public static readonly RecordType PRKR_HEADER = new RecordType("PRKR");
         public static readonly RecordType TriggeringRecordType = PRKR_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(PerkPlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

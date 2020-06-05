@@ -5405,8 +5405,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 57;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

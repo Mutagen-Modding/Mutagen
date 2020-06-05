@@ -1534,8 +1534,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DODT_HEADER = new RecordType("DODT");
         public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType TriggeringRecordType = TXST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

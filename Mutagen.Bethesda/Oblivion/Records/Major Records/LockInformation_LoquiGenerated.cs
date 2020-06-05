@@ -1173,8 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(LockInformationXmlWriteTranslation);
         public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
         public static readonly RecordType TriggeringRecordType = XLOC_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LockInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

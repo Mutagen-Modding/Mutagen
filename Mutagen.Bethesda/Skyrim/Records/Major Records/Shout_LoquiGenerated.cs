@@ -965,8 +965,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ShoutXmlWriteTranslation);
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType TriggeringRecordType = SHOU_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ShoutBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

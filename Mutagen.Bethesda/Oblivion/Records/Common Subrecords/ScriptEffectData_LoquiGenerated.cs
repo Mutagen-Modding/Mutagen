@@ -1218,8 +1218,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptEffectDataXmlWriteTranslation);
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
         public static readonly RecordType TriggeringRecordType = SCIT_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

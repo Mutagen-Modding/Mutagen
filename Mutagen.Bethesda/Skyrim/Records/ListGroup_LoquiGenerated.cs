@@ -924,8 +924,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ListGroupXmlWriteTranslation);
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

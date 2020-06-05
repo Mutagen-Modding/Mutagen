@@ -1251,8 +1251,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(LightDataXmlWriteTranslation);
         public static readonly RecordType XLIG_HEADER = new RecordType("XLIG");
         public static readonly RecordType TriggeringRecordType = XLIG_HEADER;
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

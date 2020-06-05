@@ -1156,8 +1156,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(DestructableDataXmlWriteTranslation);
         public static readonly RecordType DEST_HEADER = new RecordType("DEST");
         public static readonly RecordType TriggeringRecordType = DEST_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DestructableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

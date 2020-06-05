@@ -1446,8 +1446,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FunctionConditionDataXmlWriteTranslation);
-        public const int NumStructFields = 11;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(FunctionConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

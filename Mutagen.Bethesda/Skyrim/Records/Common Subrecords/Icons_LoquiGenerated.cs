@@ -1069,8 +1069,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType MICO_HEADER = new RecordType("MICO");
         public static readonly RecordType TriggeringRecordType = ICON_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(IconsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

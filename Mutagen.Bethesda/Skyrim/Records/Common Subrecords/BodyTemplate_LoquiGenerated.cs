@@ -1161,8 +1161,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(BodyTemplateXmlWriteTranslation);
         public static readonly RecordType BODT_HEADER = new RecordType("BODT");
         public static readonly RecordType TriggeringRecordType = BODT_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

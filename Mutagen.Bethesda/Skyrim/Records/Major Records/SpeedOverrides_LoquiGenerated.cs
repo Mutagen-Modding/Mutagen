@@ -1471,8 +1471,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SpeedOverridesXmlWriteTranslation);
         public static readonly RecordType SPED_HEADER = new RecordType("SPED");
         public static readonly RecordType TriggeringRecordType = SPED_HEADER;
-        public const int NumStructFields = 11;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SpeedOverridesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1106,8 +1106,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ConditionXmlWriteTranslation);
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = CTDA_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

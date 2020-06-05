@@ -1077,8 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType RDGS_HEADER = new RecordType("RDGS");
         public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(RegionGrassesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

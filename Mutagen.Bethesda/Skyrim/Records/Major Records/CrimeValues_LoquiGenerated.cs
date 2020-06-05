@@ -1477,8 +1477,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(CrimeValuesXmlWriteTranslation);
         public static readonly RecordType CRVA_HEADER = new RecordType("CRVA");
         public static readonly RecordType TriggeringRecordType = CRVA_HEADER;
-        public const int NumStructFields = 10;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CrimeValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

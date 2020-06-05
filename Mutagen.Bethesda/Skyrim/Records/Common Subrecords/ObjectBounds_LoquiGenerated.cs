@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ObjectBoundsXmlWriteTranslation);
         public static readonly RecordType OBND_HEADER = new RecordType("OBND");
         public static readonly RecordType TriggeringRecordType = OBND_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectBoundsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

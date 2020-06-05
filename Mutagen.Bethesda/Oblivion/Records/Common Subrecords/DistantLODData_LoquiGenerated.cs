@@ -1111,8 +1111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(DistantLODDataXmlWriteTranslation);
         public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
         public static readonly RecordType TriggeringRecordType = XLOD_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(DistantLODDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

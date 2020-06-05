@@ -2065,8 +2065,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CITC_HEADER = new RecordType("CITC");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = FACT_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 16;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

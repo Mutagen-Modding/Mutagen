@@ -957,8 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1406,8 +1406,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = ACRE_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedCreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

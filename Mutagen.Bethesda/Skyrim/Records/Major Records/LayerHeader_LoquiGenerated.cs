@@ -1120,8 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(LayerHeaderXmlWriteTranslation);
         public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
         public static readonly RecordType TriggeringRecordType = BTXT_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(LayerHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

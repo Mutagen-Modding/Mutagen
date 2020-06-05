@@ -5457,8 +5457,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODL"),
                 new RecordType("ANAM")));
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 38;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(

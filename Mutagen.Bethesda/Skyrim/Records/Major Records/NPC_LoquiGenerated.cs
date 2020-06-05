@@ -4042,8 +4042,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TINV_HEADER = new RecordType("TINV");
         public static readonly RecordType TIAS_HEADER = new RecordType("TIAS");
         public static readonly RecordType TriggeringRecordType = NPC__HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 45;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

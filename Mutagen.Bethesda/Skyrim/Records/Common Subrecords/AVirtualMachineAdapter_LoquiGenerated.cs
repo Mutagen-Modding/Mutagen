@@ -1190,8 +1190,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AVirtualMachineAdapterXmlWriteTranslation);
         public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
         public static readonly RecordType TriggeringRecordType = VMAD_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AVirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1073,8 +1073,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = ARMO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

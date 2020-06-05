@@ -985,8 +985,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptObjectReferenceXmlWriteTranslation);
         public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static readonly RecordType TriggeringRecordType = SCRO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptObjectReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

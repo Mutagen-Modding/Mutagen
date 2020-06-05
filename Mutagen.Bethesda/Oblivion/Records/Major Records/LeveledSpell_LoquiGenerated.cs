@@ -1216,8 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType TriggeringRecordType = LVSP_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledSpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

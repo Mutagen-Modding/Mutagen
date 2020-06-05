@@ -985,8 +985,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(TopicReferenceXmlWriteTranslation);
         public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
         public static readonly RecordType TriggeringRecordType = PDTO_HEADER;
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(TopicReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

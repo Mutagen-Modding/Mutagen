@@ -1921,8 +1921,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleAdvancedXmlWriteTranslation);
         public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
         public static readonly RecordType TriggeringRecordType = CSAD_HEADER;
-        public const int NumStructFields = 21;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleAdvancedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

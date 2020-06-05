@@ -1618,8 +1618,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODT"),
                 new RecordType("MO4T")));
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(AClothingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

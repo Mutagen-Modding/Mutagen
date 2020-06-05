@@ -1111,8 +1111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
         public static readonly RecordType PGRP_HEADER = new RecordType("PGRP");
         public static readonly RecordType TriggeringRecordType = ROAD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(RoadBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

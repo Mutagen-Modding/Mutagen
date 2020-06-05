@@ -1715,8 +1715,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = HAZD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

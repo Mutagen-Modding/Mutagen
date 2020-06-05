@@ -1120,8 +1120,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(TeleportDestinationXmlWriteTranslation);
         public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
         public static readonly RecordType TriggeringRecordType = XTEL_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

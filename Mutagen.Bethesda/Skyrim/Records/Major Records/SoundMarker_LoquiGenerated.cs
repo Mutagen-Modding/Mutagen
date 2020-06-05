@@ -1205,8 +1205,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
         public static readonly RecordType SDSC_HEADER = new RecordType("SDSC");
         public static readonly RecordType TriggeringRecordType = SOUN_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(SoundMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

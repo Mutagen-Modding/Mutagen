@@ -1831,8 +1831,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INTV_HEADER = new RecordType("INTV");
         public static readonly RecordType INCC_HEADER = new RecordType("INCC");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
-        public const int NumStructFields = 5;
-        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

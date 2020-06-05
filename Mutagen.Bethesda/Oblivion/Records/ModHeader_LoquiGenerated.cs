@@ -1556,8 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

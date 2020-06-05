@@ -1156,8 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(SeasonalIngredientProductionXmlWriteTranslation);
         public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
         public static readonly RecordType TriggeringRecordType = PFPC_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SeasonalIngredientProductionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

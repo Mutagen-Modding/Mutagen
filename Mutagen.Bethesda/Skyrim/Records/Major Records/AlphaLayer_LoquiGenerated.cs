@@ -998,8 +998,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("BTXT"),
                 new RecordType("ATXT")));
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(AlphaLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

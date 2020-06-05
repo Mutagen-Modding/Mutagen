@@ -1469,8 +1469,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
         public static readonly RecordType VTEX_HEADER = new RecordType("VTEX");
         public static readonly RecordType TriggeringRecordType = LAND_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

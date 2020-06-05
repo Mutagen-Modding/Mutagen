@@ -1075,8 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(EnableParentXmlWriteTranslation);
         public static readonly RecordType XESP_HEADER = new RecordType("XESP");
         public static readonly RecordType TriggeringRecordType = XESP_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EnableParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

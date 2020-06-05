@@ -1291,8 +1291,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(CreatureAIDataXmlWriteTranslation);
         public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
         public static readonly RecordType TriggeringRecordType = AIDT_HEADER;
-        public const int NumStructFields = 7;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureAIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1255,8 +1255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(EffectDataXmlWriteTranslation);
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType TriggeringRecordType = EFIT_HEADER;
-        public const int NumStructFields = 6;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(EffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

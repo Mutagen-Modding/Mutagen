@@ -1101,8 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
         public static readonly RecordType COED_HEADER = new RecordType("COED");
         public static readonly RecordType TriggeringRecordType = CNTO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

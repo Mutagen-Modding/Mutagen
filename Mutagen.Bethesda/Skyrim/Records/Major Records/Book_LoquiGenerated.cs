@@ -2063,8 +2063,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = BOOK_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1216,8 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
         public static readonly RecordType TriggeringRecordType = LSCR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

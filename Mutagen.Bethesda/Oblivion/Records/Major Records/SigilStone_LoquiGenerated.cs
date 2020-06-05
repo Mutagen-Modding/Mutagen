@@ -1391,8 +1391,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = SGST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

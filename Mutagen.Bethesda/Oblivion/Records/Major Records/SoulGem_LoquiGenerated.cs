@@ -1352,8 +1352,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SOUL_HEADER = new RecordType("SOUL");
         public static readonly RecordType SLCP_HEADER = new RecordType("SLCP");
         public static readonly RecordType TriggeringRecordType = SLGM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

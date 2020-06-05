@@ -1803,8 +1803,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(NavigationMapInfoXmlWriteTranslation);
         public static readonly RecordType NVMI_HEADER = new RecordType("NVMI");
         public static readonly RecordType TriggeringRecordType = NVMI_HEADER;
-        public const int NumStructFields = 12;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMapInfoBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

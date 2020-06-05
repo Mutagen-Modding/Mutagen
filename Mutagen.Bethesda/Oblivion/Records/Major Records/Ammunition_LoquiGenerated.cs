@@ -1304,8 +1304,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

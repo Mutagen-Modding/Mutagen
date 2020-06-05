@@ -1469,8 +1469,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType TriggeringRecordType = DOOR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

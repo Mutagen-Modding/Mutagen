@@ -1344,8 +1344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType TriggeringRecordType = TREE_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

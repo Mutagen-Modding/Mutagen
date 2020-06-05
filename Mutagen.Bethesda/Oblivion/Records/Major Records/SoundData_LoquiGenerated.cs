@@ -1169,8 +1169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     })
             );
         });
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

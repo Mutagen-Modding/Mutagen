@@ -1197,8 +1197,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(WeatherAmbientColorSetXmlWriteTranslation);
         public static readonly RecordType DALC_HEADER = new RecordType("DALC");
         public static readonly RecordType TriggeringRecordType = DALC_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherAmbientColorSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1695,8 +1695,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

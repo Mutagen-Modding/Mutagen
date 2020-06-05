@@ -1321,8 +1321,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
         public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
         public static readonly RecordType TriggeringRecordType = XPRD_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

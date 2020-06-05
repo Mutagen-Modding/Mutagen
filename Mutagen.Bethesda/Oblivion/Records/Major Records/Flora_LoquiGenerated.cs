@@ -1256,8 +1256,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PFIG_HEADER = new RecordType("PFIG");
         public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
         public static readonly RecordType TriggeringRecordType = FLOR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

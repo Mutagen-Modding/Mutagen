@@ -1075,8 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(RaceRelationXmlWriteTranslation);
         public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
         public static readonly RecordType TriggeringRecordType = XNAM_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RaceRelationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

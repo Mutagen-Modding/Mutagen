@@ -2709,8 +2709,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = ACHR_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 27;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

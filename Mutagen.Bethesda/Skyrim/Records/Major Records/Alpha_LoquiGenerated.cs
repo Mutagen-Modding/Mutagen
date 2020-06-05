@@ -1066,8 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(AlphaXmlWriteTranslation);
         public static readonly RecordType XALP_HEADER = new RecordType("XALP");
         public static readonly RecordType TriggeringRecordType = XALP_HEADER;
-        public const int NumStructFields = 2;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(AlphaBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

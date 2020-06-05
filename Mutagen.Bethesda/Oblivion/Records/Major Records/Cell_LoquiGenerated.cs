@@ -2406,8 +2406,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TriggeringRecordType = CELL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 17;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

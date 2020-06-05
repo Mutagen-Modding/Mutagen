@@ -1291,8 +1291,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(VendorValuesXmlWriteTranslation);
         public static readonly RecordType VENV_HEADER = new RecordType("VENV");
         public static readonly RecordType TriggeringRecordType = VENV_HEADER;
-        public const int NumStructFields = 7;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

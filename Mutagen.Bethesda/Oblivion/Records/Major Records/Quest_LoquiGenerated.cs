@@ -1595,8 +1595,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
         public static readonly RecordType TriggeringRecordType = QUST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

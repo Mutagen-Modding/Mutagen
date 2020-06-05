@@ -963,8 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SoundOutputModelXmlWriteTranslation);
         public static readonly RecordType SOPM_HEADER = new RecordType("SOPM");
         public static readonly RecordType TriggeringRecordType = SOPM_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
