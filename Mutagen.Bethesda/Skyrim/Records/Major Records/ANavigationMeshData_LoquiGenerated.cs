@@ -3490,12 +3490,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        private int VerticesEndingPos;
-        private int TrianglesEndingPos;
+        protected int VerticesEndingPos;
+        protected int TrianglesEndingPos;
         partial void CustomTrianglesEndPos();
-        private int EdgeLinksEndingPos;
-        private int DoorTrianglesEndingPos;
-        private int CoverTrianglesLogicEndingPos;
+        protected int EdgeLinksEndingPos;
+        protected int DoorTrianglesEndingPos;
+        protected int CoverTrianglesLogicEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
-        private int DataEndingPos;
+        protected int DataEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -1951,8 +1951,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
         public String ScriptName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2);
         public String FragmentName => BinaryStringUtility.ParsePrependedString(_data.Slice(ScriptNameEndingPos), lengthLength: 2);
-        private int ScriptNameEndingPos;
-        private int FragmentNameEndingPos;
+        protected int ScriptNameEndingPos;
+        protected int FragmentNameEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

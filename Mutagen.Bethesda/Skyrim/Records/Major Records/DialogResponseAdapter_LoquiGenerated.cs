@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: 0x0);
-        private int ScriptFragmentsEndingPos;
+        protected int ScriptFragmentsEndingPos;
         partial void CustomScriptFragmentsEndPos();
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,

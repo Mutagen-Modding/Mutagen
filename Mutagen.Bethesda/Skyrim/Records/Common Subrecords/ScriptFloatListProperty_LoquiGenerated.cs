@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IReadOnlyList<Single> Data => BinaryOverlayList<Single>.FactoryByStartIndex(_data, _package, 4, (s, p) => SpanExt.GetFloat(s));
-        private int DataEndingPos;
+        protected int DataEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

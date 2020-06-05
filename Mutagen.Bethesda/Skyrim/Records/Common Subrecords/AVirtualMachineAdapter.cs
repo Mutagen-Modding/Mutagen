@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         break;
                     case ScriptObjectListProperty objList:
                         throw new NotImplementedException();
-                        break;
                     default:
                         prop.CopyInFromBinary(frame);
                         break;
@@ -152,18 +151,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     public partial class AVirtualMachineAdapterBinaryOverlay
     {
-        public IReadOnlyList<IScriptEntryGetter> Scripts
+        public IReadOnlyList<IScriptEntryGetter> Scripts { get; private set; } = null!;
+
+        partial void CustomCtor()
         {
-            get
+            var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
             {
-                var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
-                {
-                    Position = 0x04
-                };
-                var ret = new ExtendedList<IScriptEntryGetter>();
-                ret.AddRange(VirtualMachineAdapterBinaryCreateTranslation.ReadEntries(frame, this.ObjectFormat));
-                return ret;
-            }
+                Position = 0x04
+            };
+            var ret = new ExtendedList<IScriptEntryGetter>();
+            ret.AddRange(VirtualMachineAdapterBinaryCreateTranslation.ReadEntries(frame, this.ObjectFormat));
+            this.Scripts = ret;
+            this.ScriptsEndingPos = checked((int)frame.Position);
         }
     }
 }

@@ -2221,9 +2221,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList<INavmeshNodeGetter>.FactoryByCountLength(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
-        private int NavmeshSetsEndingPos;
+        protected int NavmeshSetsEndingPos;
         partial void CustomNavmeshSetsEndPos();
-        private int NavmeshTreeEndingPos;
+        protected int NavmeshTreeEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -2040,7 +2040,7 @@ namespace Mutagen.Bethesda.Generation
                                 || (field.Item.InternalIndex < (obj.Fields.Count - 1)
                                 && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
                             {
-                                fg.AppendLine($"private int {field.Item.Field.Name}EndingPos;");
+                                fg.AppendLine($"protected int {field.Item.Field.Name}EndingPos;");
                                 if (data.BinaryOverlayFallback == BinaryGenerationType.Custom)
                                 {
                                     fg.AppendLine($"partial void Custom{field.Item.Field.Name}EndPos();");

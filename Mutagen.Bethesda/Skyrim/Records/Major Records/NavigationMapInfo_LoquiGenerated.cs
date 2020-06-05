@@ -3374,12 +3374,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        private int MergedToEndingPos;
-        private int PreferredMergesEndingPos;
-        private int LinkedDoorsEndingPos;
-        private int IslandEndingPos;
+        protected int MergedToEndingPos;
+        protected int PreferredMergesEndingPos;
+        protected int LinkedDoorsEndingPos;
+        protected int IslandEndingPos;
         partial void CustomIslandEndPos();
-        private int ParentParseLogicEndingPos;
+        protected int ParentParseLogicEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

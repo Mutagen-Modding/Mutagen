@@ -26,7 +26,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class DialogResponseAdapterBinaryOverlay
         {
-            IScriptFragmentsGetter? GetScriptFragmentsCustom(int location) => throw new NotImplementedException();
+            IScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+            {
+                if (this.ScriptsEndingPos == _data.Length) return null;
+                return ScriptFragmentsBinaryOverlay.ScriptFragmentsFactory(
+                    _data.Slice(this.ScriptsEndingPos),
+                    _package);
+            }
         }
     }
 }

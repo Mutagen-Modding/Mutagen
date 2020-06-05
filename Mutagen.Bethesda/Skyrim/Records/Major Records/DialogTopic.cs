@@ -269,15 +269,13 @@ namespace Mutagen.Bethesda.Skyrim
             TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
             #endregion
 
-            public IReadOnlyList<IDialogResponsesGetter> Responses => throw new NotImplementedException();
+            public IReadOnlyList<IDialogResponsesGetter> Responses { get; private set; } = ListExt.Empty<IDialogResponsesGetter>();
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
-            public int Unknown => throw new NotImplementedException();
-
-            public IReadOnlyList<IDialogResponsesGetter> Items { get; private set; } = ListExt.Empty<IDialogResponsesGetter>();
+            public int Unknown => BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(20));
 
             partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
@@ -293,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Items = BinaryOverlayList<IDialogResponsesGetter>.FactoryByArray(
+                this.Responses = BinaryOverlayList<IDialogResponsesGetter>.FactoryByArray(
                     contentSpan,
                     _package,
                     getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new BinaryMemoryReadStream(s), p),

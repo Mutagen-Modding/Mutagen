@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        private int ScriptsEndingPos;
+        protected int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
