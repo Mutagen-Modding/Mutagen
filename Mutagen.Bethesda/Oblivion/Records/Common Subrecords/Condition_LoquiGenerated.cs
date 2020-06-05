@@ -2347,7 +2347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICondition item,
             MutagenFrame frame)
         {
-            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustomPublic(
+            ConditionBinaryCreateTranslation.FillBinaryInitialParserCustom(
                 frame: frame,
                 item: item);
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
@@ -2361,15 +2361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryInitialParserCustom(
             MutagenFrame frame,
             ICondition item);
-
-        public static void FillBinaryInitialParserCustomPublic(
-            MutagenFrame frame,
-            ICondition item)
-        {
-            FillBinaryInitialParserCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

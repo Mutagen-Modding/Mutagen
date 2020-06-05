@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILod item,
             MutagenFrame frame)
         {
-            LodBinaryCreateTranslation.FillBinaryLevel0CustomPublic(
+            LodBinaryCreateTranslation.FillBinaryLevel0Custom(
                 frame: frame,
                 item: item);
         }
@@ -2395,15 +2395,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryLevel0Custom(
             MutagenFrame frame,
             ILod item);
-
-        public static void FillBinaryLevel0CustomPublic(
-            MutagenFrame frame,
-            ILod item)
-        {
-            FillBinaryLevel0Custom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

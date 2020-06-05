@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4941504D: // MPAI
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
-                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
+                    AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
@@ -2216,15 +2216,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryParseCustom(
             MutagenFrame frame,
             IAvailableMorphs item);
-
-        public static void FillBinaryParseCustomPublic(
-            MutagenFrame frame,
-            IAvailableMorphs item)
-        {
-            FillBinaryParseCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

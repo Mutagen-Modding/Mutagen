@@ -3232,14 +3232,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             item: out listSubItem!);
                     }));
             if (frame.Complete) return;
-            NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustomPublic(
+            NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustom(
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
             item.ParentWorldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustomPublic(
+            NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);
         }
@@ -3248,27 +3248,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             INavigationMapInfo item);
 
-        public static void FillBinaryIslandCustomPublic(
-            MutagenFrame frame,
-            INavigationMapInfo item)
-        {
-            FillBinaryIslandCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryParentParseLogicCustom(
             MutagenFrame frame,
             INavigationMapInfo item);
-
-        public static void FillBinaryParentParseLogicCustomPublic(
-            MutagenFrame frame,
-            INavigationMapInfo item)
-        {
-            FillBinaryParentParseLogicCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

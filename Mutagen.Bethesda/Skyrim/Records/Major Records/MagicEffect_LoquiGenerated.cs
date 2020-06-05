@@ -6800,7 +6800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<MagicEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.BaseCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustomPublic(
+                    MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustom(
                         frame: dataFrame,
                         item: item);
                     item.MagicSkill = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
@@ -6823,7 +6823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TaperCurve = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.TaperDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.SecondActorValueWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustomPublic(
+                    MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
                     item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -6908,7 +6908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41445443: // CTDA
                 {
-                    MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                    MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Conditions);
@@ -6927,40 +6927,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IMagicEffectInternal item);
 
-        public static void FillBinaryAssociatedItemCustomPublic(
-            MutagenFrame frame,
-            IMagicEffectInternal item)
-        {
-            FillBinaryAssociatedItemCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryArchetypeCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
-        public static void FillBinaryArchetypeCustomPublic(
-            MutagenFrame frame,
-            IMagicEffectInternal item)
-        {
-            FillBinaryArchetypeCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
-
-        public static void FillBinaryConditionsCustomPublic(
-            MutagenFrame frame,
-            IMagicEffectInternal item)
-        {
-            FillBinaryConditionsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

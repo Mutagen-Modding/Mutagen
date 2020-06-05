@@ -2488,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44484353: // SCHD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
+                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
@@ -2568,15 +2568,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
             IScriptFields item);
-
-        public static void FillBinaryMetadataSummaryOldCustomPublic(
-            MutagenFrame frame,
-            IScriptFields item)
-        {
-            FillBinaryMetadataSummaryOldCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

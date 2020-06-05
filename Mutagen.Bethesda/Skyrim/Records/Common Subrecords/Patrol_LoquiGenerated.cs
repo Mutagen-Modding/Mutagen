@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41505058: // XPPA
                 {
-                    PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustomPublic(
+                    PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4F544450: // PDTO
                 {
-                    PatrolBinaryCreateTranslation.FillBinaryTopicsCustomPublic(
+                    PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
@@ -2348,27 +2348,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IPatrol item);
 
-        public static void FillBinaryPatrolScriptMarkerCustomPublic(
-            MutagenFrame frame,
-            IPatrol item)
-        {
-            FillBinaryPatrolScriptMarkerCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
             IPatrol item);
-
-        public static void FillBinaryTopicsCustomPublic(
-            MutagenFrame frame,
-            IPatrol item)
-        {
-            FillBinaryTopicsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

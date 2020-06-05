@@ -2300,23 +2300,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateData item,
             MutagenFrame frame)
         {
-            ClimateDataBinaryCreateTranslation.FillBinarySunriseBeginCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinarySunriseBeginCustom(
                 frame: frame,
                 item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunriseEndCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinarySunriseEndCustom(
                 frame: frame,
                 item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunsetBeginCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinarySunsetBeginCustom(
                 frame: frame,
                 item: item);
-            ClimateDataBinaryCreateTranslation.FillBinarySunsetEndCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinarySunsetEndCustom(
                 frame: frame,
                 item: item);
             item.Volatility = frame.ReadUInt8();
-            ClimateDataBinaryCreateTranslation.FillBinaryPhaseCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinaryPhaseCustom(
                 frame: frame,
                 item: item);
-            ClimateDataBinaryCreateTranslation.FillBinaryPhaseLengthCustomPublic(
+            ClimateDataBinaryCreateTranslation.FillBinaryPhaseLengthCustom(
                 frame: frame,
                 item: item);
         }
@@ -2325,79 +2325,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             IClimateData item);
 
-        public static void FillBinarySunriseBeginCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinarySunriseBeginCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinarySunriseEndCustom(
             MutagenFrame frame,
             IClimateData item);
-
-        public static void FillBinarySunriseEndCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinarySunriseEndCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinarySunsetBeginCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        public static void FillBinarySunsetBeginCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinarySunsetBeginCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinarySunsetEndCustom(
             MutagenFrame frame,
             IClimateData item);
-
-        public static void FillBinarySunsetEndCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinarySunsetEndCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinaryPhaseCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        public static void FillBinaryPhaseCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinaryPhaseCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryPhaseLengthCustom(
             MutagenFrame frame,
             IClimateData item);
-
-        public static void FillBinaryPhaseLengthCustomPublic(
-            MutagenFrame frame,
-            IClimateData item)
-        {
-            FillBinaryPhaseLengthCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

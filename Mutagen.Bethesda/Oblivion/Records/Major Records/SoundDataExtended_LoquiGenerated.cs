@@ -1929,10 +1929,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 1);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustomPublic(
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustom(
                 frame: frame,
                 item: item);
-            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustomPublic(
+            SoundDataExtendedBinaryCreateTranslation.FillBinaryStartTimeCustom(
                 frame: frame,
                 item: item);
         }
@@ -1941,27 +1941,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
 
-        public static void FillBinaryStopTimeCustomPublic(
-            MutagenFrame frame,
-            ISoundDataExtendedInternal item)
-        {
-            FillBinaryStopTimeCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryStartTimeCustom(
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
-
-        public static void FillBinaryStartTimeCustomPublic(
-            MutagenFrame frame,
-            ISoundDataExtendedInternal item)
-        {
-            FillBinaryStartTimeCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

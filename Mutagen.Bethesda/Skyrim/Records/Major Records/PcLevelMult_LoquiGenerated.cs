@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPcLevelMult item,
             MutagenFrame frame)
         {
-            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustomPublic(
+            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustom(
                 frame: frame,
                 item: item);
         }
@@ -1653,15 +1653,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryLevelMultCustom(
             MutagenFrame frame,
             IPcLevelMult item);
-
-        public static void FillBinaryLevelMultCustomPublic(
-            MutagenFrame frame,
-            IPcLevelMult item)
-        {
-            FillBinaryLevelMultCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

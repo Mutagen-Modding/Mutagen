@@ -2674,7 +2674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41445443: // CTDA
                 {
-                    ConstructibleObjectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                    ConstructibleObjectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Conditions);
@@ -2714,15 +2714,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
             IConstructibleObjectInternal item);
-
-        public static void FillBinaryConditionsCustomPublic(
-            MutagenFrame frame,
-            IConstructibleObjectInternal item)
-        {
-            FillBinaryConditionsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

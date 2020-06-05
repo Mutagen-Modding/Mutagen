@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Lip = 3,
             }
 
-            static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            public static void FillBinaryParse(MutagenFrame frame, IAvailableMorphs item)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -65,6 +65,11 @@ namespace Mutagen.Bethesda.Skyrim
                             throw new ArgumentException($"Unexpected morph index: {index}");
                     }
                 }
+            }
+
+            static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            {
+                FillBinaryParse(frame, item);
             }
         }
 
@@ -107,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void ParseCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 morphs = new AvailableMorphs();
-                AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustomPublic(
+                AvailableMorphsBinaryCreateTranslation.FillBinaryParse(
                     new MutagenFrame(new MutagenInterfaceReadStream(stream: stream, metaData: _package.MetaData)),
                     morphs);
             }

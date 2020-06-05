@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Version = frame.ReadInt16();
             item.ObjectFormat = frame.ReadUInt16();
-            AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustomPublic(
+            AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustom(
                 frame: frame,
                 item: item);
         }
@@ -2025,15 +2025,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
             IAVirtualMachineAdapter item);
-
-        public static void FillBinaryScriptsCustomPublic(
-            MutagenFrame frame,
-            IAVirtualMachineAdapter item)
-        {
-            FillBinaryScriptsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

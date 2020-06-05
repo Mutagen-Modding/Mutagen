@@ -3945,7 +3945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
             item.Speed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Reach = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            WeaponDataBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+            WeaponDataBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
             item.Unused2 = frame.ReadInt16();
@@ -3958,7 +3958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RangeMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.RangeMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.OnHit = EnumBinaryTranslation<WeaponData.OnHitType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            WeaponDataBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
+            WeaponDataBinaryCreateTranslation.FillBinaryFlags2Custom(
                 frame: frame,
                 item: item);
             item.AnimationAttackMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -3979,27 +3979,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IWeaponData item);
 
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            IWeaponData item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IWeaponData item);
-
-        public static void FillBinaryFlags2CustomPublic(
-            MutagenFrame frame,
-            IWeaponData item)
-        {
-            FillBinaryFlags2Custom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

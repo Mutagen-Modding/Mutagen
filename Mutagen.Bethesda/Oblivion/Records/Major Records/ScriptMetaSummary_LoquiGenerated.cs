@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Unknown = frame.ReadInt32();
             item.RefCount = frame.ReadUInt32();
-            ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustomPublic(
+            ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustom(
                 frame: frame,
                 item: item);
             item.VariableCount = frame.ReadUInt32();
@@ -2056,15 +2056,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryCompiledSizeCustom(
             MutagenFrame frame,
             IScriptMetaSummary item);
-
-        public static void FillBinaryCompiledSizeCustomPublic(
-            MutagenFrame frame,
-            IScriptMetaSummary item)
-        {
-            FillBinaryCompiledSizeCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

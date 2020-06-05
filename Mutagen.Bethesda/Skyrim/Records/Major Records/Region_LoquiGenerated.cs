@@ -3210,7 +3210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54414452: // RDAT
                 {
-                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustomPublic(
+                    RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -3228,15 +3228,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
             IRegionInternal item);
-
-        public static void FillBinaryRegionAreaLogicCustomPublic(
-            MutagenFrame frame,
-            IRegionInternal item)
-        {
-            FillBinaryRegionAreaLogicCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

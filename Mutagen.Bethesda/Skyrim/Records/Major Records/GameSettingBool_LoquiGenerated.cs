@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                    GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
@@ -2068,15 +2068,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGameSettingBoolInternal item);
-
-        public static void FillBinaryDataCustomPublic(
-            MutagenFrame frame,
-            IGameSettingBoolInternal item)
-        {
-            FillBinaryDataCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

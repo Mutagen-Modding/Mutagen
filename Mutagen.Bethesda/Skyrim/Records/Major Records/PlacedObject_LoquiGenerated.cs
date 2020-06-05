@@ -9591,7 +9591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x524D5258: // XRMR
                 {
-                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustomPublic(
+                    PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -9934,15 +9934,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryBoundDataCustom(
             MutagenFrame frame,
             IPlacedObjectInternal item);
-
-        public static void FillBinaryBoundDataCustomPublic(
-            MutagenFrame frame,
-            IPlacedObjectInternal item)
-        {
-            FillBinaryBoundDataCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

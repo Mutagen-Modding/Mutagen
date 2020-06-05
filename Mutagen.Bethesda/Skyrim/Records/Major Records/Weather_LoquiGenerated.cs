@@ -8940,28 +8940,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudsCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x4D414E4A: // JNAM
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -9066,7 +9066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x314D414E: // NAM1
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -9104,7 +9104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x434C4144: // DALC
                 {
-                    WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustomPublic(
+                    WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
@@ -9142,92 +9142,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static void FillBinaryCloudTexturesParseCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryCloudTexturesParseCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryCloudsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
-
-        public static void FillBinaryCloudsCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryCloudsCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static void FillBinaryCloudXSpeedsCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryCloudXSpeedsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryCloudColorsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
-
-        public static void FillBinaryCloudColorsCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryCloudColorsCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinaryCloudAlphasCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static void FillBinaryCloudAlphasCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryCloudAlphasCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryDisabledCloudLayersCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        public static void FillBinaryDisabledCloudLayersCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryDisabledCloudLayersCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
-
-        public static void FillBinaryDirectionalAmbientLightingColorsCustomPublic(
-            MutagenFrame frame,
-            IWeatherInternal item)
-        {
-            FillBinaryDirectionalAmbientLightingColorsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

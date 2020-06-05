@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ComparisonValue = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustomPublic(
+            ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);
         }
@@ -1852,15 +1852,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IConditionGlobal item);
-
-        public static void FillBinaryDataCustomPublic(
-            MutagenFrame frame,
-            IConditionGlobal item)
-        {
-            FillBinaryDataCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,

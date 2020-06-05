@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustomPublic(
+            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);
         }
@@ -1847,15 +1847,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IConditionFloat item);
-
-        public static void FillBinaryDataCustomPublic(
-            MutagenFrame frame,
-            IConditionFloat item)
-        {
-            FillBinaryDataCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,

@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x50524750: // PGRP
                 {
-                    RoadBinaryCreateTranslation.FillBinaryPointsCustomPublic(
+                    RoadBinaryCreateTranslation.FillBinaryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
@@ -2098,15 +2098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryPointsCustom(
             MutagenFrame frame,
             IRoadInternal item);
-
-        public static void FillBinaryPointsCustomPublic(
-            MutagenFrame frame,
-            IRoadInternal item)
-        {
-            FillBinaryPointsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

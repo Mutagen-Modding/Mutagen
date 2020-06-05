@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             if (frame.Complete) return;
-            DialogResponseAdapterBinaryCreateTranslation.FillBinaryScriptFragmentsCustomPublic(
+            DialogResponseAdapterBinaryCreateTranslation.FillBinaryScriptFragmentsCustom(
                 frame: frame,
                 item: item);
         }
@@ -1756,15 +1756,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryScriptFragmentsCustom(
             MutagenFrame frame,
             IDialogResponseAdapter item);
-
-        public static void FillBinaryScriptFragmentsCustomPublic(
-            MutagenFrame frame,
-            IDialogResponseAdapter item)
-        {
-            FillBinaryScriptFragmentsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

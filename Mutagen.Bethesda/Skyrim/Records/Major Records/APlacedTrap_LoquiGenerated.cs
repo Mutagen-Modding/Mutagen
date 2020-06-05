@@ -4573,7 +4573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x454D414E: // NAME
                 {
-                    APlacedTrapBinaryCreateTranslation.FillBinaryTrapFormCustomPublic(
+                    APlacedTrapBinaryCreateTranslation.FillBinaryTrapFormCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -4728,15 +4728,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryTrapFormCustom(
             MutagenFrame frame,
             IAPlacedTrapInternal item);
-
-        public static void FillBinaryTrapFormCustomPublic(
-            MutagenFrame frame,
-            IAPlacedTrapInternal item)
-        {
-            FillBinaryTrapFormCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

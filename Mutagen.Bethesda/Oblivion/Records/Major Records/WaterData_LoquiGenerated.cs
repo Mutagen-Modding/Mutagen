@@ -4065,7 +4065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ScrollXSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ScrollYSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FogDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            WaterDataBinaryCreateTranslation.FillBinaryBloodCustomLogicCustomPublic(
+            WaterDataBinaryCreateTranslation.FillBinaryBloodCustomLogicCustom(
                 frame: frame,
                 item: item);
             if (frame.Complete)
@@ -4079,7 +4079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ReflectionColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.TextureBlend = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 3);
-            WaterDataBinaryCreateTranslation.FillBinaryOilCustomLogicCustomPublic(
+            WaterDataBinaryCreateTranslation.FillBinaryOilCustomLogicCustom(
                 frame: frame,
                 item: item);
             if (frame.Complete)
@@ -4093,7 +4093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RainSimulatorDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.RainSimulatorStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.DisplacementSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            WaterDataBinaryCreateTranslation.FillBinaryOddExtraBytesCustomPublic(
+            WaterDataBinaryCreateTranslation.FillBinaryOddExtraBytesCustom(
                 frame: frame,
                 item: item);
             if (frame.Complete)
@@ -4112,40 +4112,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             IWaterData item);
 
-        public static void FillBinaryBloodCustomLogicCustomPublic(
-            MutagenFrame frame,
-            IWaterData item)
-        {
-            FillBinaryBloodCustomLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryOilCustomLogicCustom(
             MutagenFrame frame,
             IWaterData item);
 
-        public static void FillBinaryOilCustomLogicCustomPublic(
-            MutagenFrame frame,
-            IWaterData item)
-        {
-            FillBinaryOilCustomLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryOddExtraBytesCustom(
             MutagenFrame frame,
             IWaterData item);
-
-        public static void FillBinaryOddExtraBytesCustomPublic(
-            MutagenFrame frame,
-            IWaterData item)
-        {
-            FillBinaryOddExtraBytesCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

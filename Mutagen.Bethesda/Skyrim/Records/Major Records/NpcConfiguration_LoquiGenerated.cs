@@ -2614,12 +2614,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcConfiguration item,
             MutagenFrame frame)
         {
-            NpcConfigurationBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+            NpcConfigurationBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
             item.MagickaOffset = frame.ReadInt16();
             item.StaminaOffset = frame.ReadInt16();
-            NpcConfigurationBinaryCreateTranslation.FillBinaryLevelCustomPublic(
+            NpcConfigurationBinaryCreateTranslation.FillBinaryLevelCustom(
                 frame: frame,
                 item: item);
             item.CalcMinLevel = frame.ReadInt16();
@@ -2635,27 +2635,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             INpcConfiguration item);
 
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            INpcConfiguration item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryLevelCustom(
             MutagenFrame frame,
             INpcConfiguration item);
-
-        public static void FillBinaryLevelCustomPublic(
-            MutagenFrame frame,
-            INpcConfiguration item)
-        {
-            FillBinaryLevelCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

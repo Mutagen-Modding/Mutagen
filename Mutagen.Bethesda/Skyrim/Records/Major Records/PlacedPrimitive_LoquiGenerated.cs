@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedPrimitive item,
             MutagenFrame frame)
         {
-            PlacedPrimitiveBinaryCreateTranslation.FillBinaryBoundsCustomPublic(
+            PlacedPrimitiveBinaryCreateTranslation.FillBinaryBoundsCustom(
                 frame: frame,
                 item: item);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
@@ -1986,15 +1986,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryBoundsCustom(
             MutagenFrame frame,
             IPlacedPrimitive item);
-
-        public static void FillBinaryBoundsCustomPublic(
-            MutagenFrame frame,
-            IPlacedPrimitive item)
-        {
-            FillBinaryBoundsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

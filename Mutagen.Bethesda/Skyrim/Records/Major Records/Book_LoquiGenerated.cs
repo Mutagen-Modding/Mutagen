@@ -4230,12 +4230,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    BookBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+                    BookBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: dataFrame,
                         item: item);
                     item.Type = EnumBinaryTranslation<Book.BookType>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unused = dataFrame.ReadUInt16();
-                    BookBinaryCreateTranslation.FillBinaryTeachesCustomPublic(
+                    BookBinaryCreateTranslation.FillBinaryTeachesCustom(
                         frame: dataFrame,
                         item: item);
                     item.Value = dataFrame.ReadUInt32();
@@ -4272,27 +4272,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IBookInternal item);
 
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            IBookInternal item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryTeachesCustom(
             MutagenFrame frame,
             IBookInternal item);
-
-        public static void FillBinaryTeachesCustomPublic(
-            MutagenFrame frame,
-            IBookInternal item)
-        {
-            FillBinaryTeachesCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

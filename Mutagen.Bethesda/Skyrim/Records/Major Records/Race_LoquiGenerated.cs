@@ -10877,7 +10877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            RaceBinaryCreateTranslation.FillBinaryExtraNAM2CustomPublic(
+            RaceBinaryCreateTranslation.FillBinaryExtraNAM2Custom(
                 frame: frame,
                 item: item);
         }
@@ -10991,7 +10991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FlightRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.AngularAccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.AngularTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    RaceBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
+                    RaceBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Complete)
@@ -11187,7 +11187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x454D414E: // NAME
                 {
-                    RaceBinaryCreateTranslation.FillBinaryBipedObjectNamesCustomPublic(
+                    RaceBinaryCreateTranslation.FillBinaryBipedObjectNamesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BipedObjectNames);
@@ -11235,14 +11235,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E544850: // PHTN
                 {
-                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustomPublic(
+                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x54574850: // PHWT
                 {
-                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustomPublic(
+                    RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -11320,66 +11320,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IRaceInternal item);
 
-        public static void FillBinaryFlags2CustomPublic(
-            MutagenFrame frame,
-            IRaceInternal item)
-        {
-            FillBinaryFlags2Custom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryExtraNAM2Custom(
             MutagenFrame frame,
             IRaceInternal item);
-
-        public static void FillBinaryExtraNAM2CustomPublic(
-            MutagenFrame frame,
-            IRaceInternal item)
-        {
-            FillBinaryExtraNAM2Custom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinaryBipedObjectNamesCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        public static void FillBinaryBipedObjectNamesCustomPublic(
-            MutagenFrame frame,
-            IRaceInternal item)
-        {
-            FillBinaryBipedObjectNamesCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        public static void FillBinaryFaceFxPhonemesListingParsingCustomPublic(
-            MutagenFrame frame,
-            IRaceInternal item)
-        {
-            FillBinaryFaceFxPhonemesListingParsingCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
-
-        public static void FillBinaryFaceFxPhonemesRawParsingCustomPublic(
-            MutagenFrame frame,
-            IRaceInternal item)
-        {
-            FillBinaryFaceFxPhonemesRawParsingCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

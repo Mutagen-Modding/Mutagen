@@ -1869,7 +1869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICondition item,
             MutagenFrame frame)
         {
-            ConditionBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+            ConditionBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
             item.Unknown1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
@@ -1878,15 +1878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             ICondition item);
-
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            ICondition item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

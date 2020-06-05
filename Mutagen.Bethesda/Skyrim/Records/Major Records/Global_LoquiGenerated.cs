@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E46: // FNAM
                 {
-                    GlobalBinaryCreateTranslation.FillBinaryTypeCharCustomPublic(
+                    GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -1815,15 +1815,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
             IGlobalInternal item);
-
-        public static void FillBinaryTypeCharCustomPublic(
-            MutagenFrame frame,
-            IGlobalInternal item)
-        {
-            FillBinaryTypeCharCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

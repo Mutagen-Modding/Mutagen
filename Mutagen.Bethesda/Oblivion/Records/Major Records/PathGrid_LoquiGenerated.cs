@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
+                    PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
@@ -2749,15 +2749,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,
             IPathGridInternal item);
-
-        public static void FillBinaryPointToPointConnectionsCustomPublic(
-            MutagenFrame frame,
-            IPathGridInternal item)
-        {
-            FillBinaryPointToPointConnectionsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

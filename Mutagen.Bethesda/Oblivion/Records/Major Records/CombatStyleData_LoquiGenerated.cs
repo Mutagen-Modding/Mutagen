@@ -4967,7 +4967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break4;
                 return;
             }
-            CombatStyleDataBinaryCreateTranslation.FillBinarySecondaryFlagsCustomPublic(
+            CombatStyleDataBinaryCreateTranslation.FillBinarySecondaryFlagsCustom(
                 frame: frame,
                 item: item);
         }
@@ -4975,15 +4975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinarySecondaryFlagsCustom(
             MutagenFrame frame,
             ICombatStyleData item);
-
-        public static void FillBinarySecondaryFlagsCustomPublic(
-            MutagenFrame frame,
-            ICombatStyleData item)
-        {
-            FillBinarySecondaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

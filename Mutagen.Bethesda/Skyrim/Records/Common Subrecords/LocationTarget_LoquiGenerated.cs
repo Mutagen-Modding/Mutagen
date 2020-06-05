@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationTarget item,
             MutagenFrame frame)
         {
-            LocationTargetBinaryCreateTranslation.FillBinaryTargetCustomPublic(
+            LocationTargetBinaryCreateTranslation.FillBinaryTargetCustom(
                 frame: frame,
                 item: item);
             item.Radius = frame.ReadUInt32();
@@ -1833,15 +1833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryTargetCustom(
             MutagenFrame frame,
             ILocationTarget item);
-
-        public static void FillBinaryTargetCustomPublic(
-            MutagenFrame frame,
-            ILocationTarget item)
-        {
-            FillBinaryTargetCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

@@ -3216,7 +3216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SunsetBeginRaw = dataFrame.ReadUInt8();
                     item.SunsetEndRaw = dataFrame.ReadUInt8();
                     item.Volatility = dataFrame.ReadUInt8();
-                    ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustomPublic(
+                    ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustom(
                         frame: dataFrame,
                         item: item);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
@@ -3234,15 +3234,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryMoonAndPhaseLengthCustom(
             MutagenFrame frame,
             IClimateInternal item);
-
-        public static void FillBinaryMoonAndPhaseLengthCustomPublic(
-            MutagenFrame frame,
-            IClimateInternal item)
-        {
-            FillBinaryMoonAndPhaseLengthCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

@@ -4696,7 +4696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    PlacedObjectBinaryCreateTranslation.FillBinaryOpenByDefaultCustomPublic(
+                    PlacedObjectBinaryCreateTranslation.FillBinaryOpenByDefaultCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
@@ -4740,15 +4740,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryOpenByDefaultCustom(
             MutagenFrame frame,
             IPlacedObjectInternal item);
-
-        public static void FillBinaryOpenByDefaultCustomPublic(
-            MutagenFrame frame,
-            IPlacedObjectInternal item)
-        {
-            FillBinaryOpenByDefaultCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

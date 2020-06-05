@@ -2543,7 +2543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Function = frame.ReadUInt16();
             item.Unknown2 = frame.ReadUInt16();
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustomPublic(
+            FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,
                 item: item);
         }
@@ -2551,15 +2551,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
             IFunctionConditionData item);
-
-        public static void FillBinaryParameterParsingCustomPublic(
-            MutagenFrame frame,
-            IFunctionConditionData item)
-        {
-            FillBinaryParameterParsingCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

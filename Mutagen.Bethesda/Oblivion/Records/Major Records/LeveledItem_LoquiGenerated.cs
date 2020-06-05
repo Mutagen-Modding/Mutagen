@@ -2431,7 +2431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustomPublic(
+                    LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -2449,15 +2449,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryVestigialCustom(
             MutagenFrame frame,
             ILeveledItemInternal item);
-
-        public static void FillBinaryVestigialCustomPublic(
-            MutagenFrame frame,
-            ILeveledItemInternal item)
-        {
-            FillBinaryVestigialCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

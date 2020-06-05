@@ -2607,7 +2607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x434C4449: // IDLC
                 {
-                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustomPublic(
+                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -2620,7 +2620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x414C4449: // IDLA
                 {
-                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustomPublic(
+                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Animations);
@@ -2646,27 +2646,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IIdleMarkerInternal item);
 
-        public static void FillBinaryAnimationCountCustomPublic(
-            MutagenFrame frame,
-            IIdleMarkerInternal item)
-        {
-            FillBinaryAnimationCountCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
-
-        public static void FillBinaryAnimationsCustomPublic(
-            MutagenFrame frame,
-            IIdleMarkerInternal item)
-        {
-            FillBinaryAnimationsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

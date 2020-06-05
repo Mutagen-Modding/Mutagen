@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44494645: // EFID
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
-                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustomPublic(
+                    EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
@@ -1960,15 +1960,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,
             IEffect item);
-
-        public static void FillBinaryEffectInitialCustomPublic(
-            MutagenFrame frame,
-            IEffect item)
-        {
-            FillBinaryEffectInitialCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

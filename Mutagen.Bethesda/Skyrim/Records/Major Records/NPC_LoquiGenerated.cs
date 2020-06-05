@@ -8334,7 +8334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    NpcBinaryCreateTranslation.FillBinaryDataMarkerCustomPublic(
+                    NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -8506,15 +8506,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryDataMarkerCustom(
             MutagenFrame frame,
             INpcInternal item);
-
-        public static void FillBinaryDataMarkerCustomPublic(
-            MutagenFrame frame,
-            INpcInternal item)
-        {
-            FillBinaryDataMarkerCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

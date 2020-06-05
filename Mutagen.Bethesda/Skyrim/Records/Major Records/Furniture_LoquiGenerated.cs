@@ -3823,7 +3823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+                    FurnitureBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Flags);
@@ -3838,7 +3838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
+                    FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -3858,14 +3858,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E45: // ENAM
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustomPublic(
+                    FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x52504E46: // FNPR
                 {
-                    FurnitureBinaryCreateTranslation.FillBinaryMarkersCustomPublic(
+                    FurnitureBinaryCreateTranslation.FillBinaryMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Markers);
@@ -3892,53 +3892,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            IFurnitureInternal item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IFurnitureInternal item);
-
-        public static void FillBinaryFlags2CustomPublic(
-            MutagenFrame frame,
-            IFurnitureInternal item)
-        {
-            FillBinaryFlags2Custom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void FillBinaryDisabledMarkersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        public static void FillBinaryDisabledMarkersCustomPublic(
-            MutagenFrame frame,
-            IFurnitureInternal item)
-        {
-            FillBinaryDisabledMarkersCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryMarkersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
-
-        public static void FillBinaryMarkersCustomPublic(
-            MutagenFrame frame,
-            IFurnitureInternal item)
-        {
-            FillBinaryMarkersCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

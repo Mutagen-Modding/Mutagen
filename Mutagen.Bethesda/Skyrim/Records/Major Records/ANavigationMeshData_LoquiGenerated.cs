@@ -3296,7 +3296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.NavmeshVersion = frame.ReadUInt32();
             item.Magic = frame.ReadUInt32();
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryParentLogicCustomPublic(
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryParentLogicCustom(
                 frame: frame,
                 item: item);
             item.Vertices.SetTo(
@@ -3334,7 +3334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: r,
                             item: out listSubItem!);
                     }));
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustomPublic(
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustom(
                 frame: frame,
                 item: item);
             item.NavmeshGridDivisor = frame.ReadUInt32();
@@ -3342,7 +3342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MaxDistanceY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustomPublic(
+            ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustom(
                 frame: frame,
                 item: item);
         }
@@ -3351,40 +3351,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        public static void FillBinaryParentLogicCustomPublic(
-            MutagenFrame frame,
-            IANavigationMeshData item)
-        {
-            FillBinaryParentLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryCoverTrianglesLogicCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        public static void FillBinaryCoverTrianglesLogicCustomPublic(
-            MutagenFrame frame,
-            IANavigationMeshData item)
-        {
-            FillBinaryCoverTrianglesLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryNavmeshGridCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
-
-        public static void FillBinaryNavmeshGridCustomPublic(
-            MutagenFrame frame,
-            IANavigationMeshData item)
-        {
-            FillBinaryNavmeshGridCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

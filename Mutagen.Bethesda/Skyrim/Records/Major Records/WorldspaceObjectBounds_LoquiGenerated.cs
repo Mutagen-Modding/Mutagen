@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x304D414E: // NAM0
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return TryGet<int?>.Failure;
-                    WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMinCustomPublic(
+                    WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMinCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Min);
@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x394D414E: // NAM9
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return TryGet<int?>.Failure;
-                    WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMaxCustomPublic(
+                    WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMaxCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Max);
@@ -1849,27 +1849,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IWorldspaceObjectBounds item);
 
-        public static void FillBinaryMinCustomPublic(
-            MutagenFrame frame,
-            IWorldspaceObjectBounds item)
-        {
-            FillBinaryMinCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryMaxCustom(
             MutagenFrame frame,
             IWorldspaceObjectBounds item);
-
-        public static void FillBinaryMaxCustomPublic(
-            MutagenFrame frame,
-            IWorldspaceObjectBounds item)
-        {
-            FillBinaryMaxCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

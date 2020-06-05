@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorData item,
             MutagenFrame frame)
         {
-            ArmorDataBinaryCreateTranslation.FillBinaryArmorValueCustomPublic(
+            ArmorDataBinaryCreateTranslation.FillBinaryArmorValueCustom(
                 frame: frame,
                 item: item);
             item.Value = frame.ReadUInt32();
@@ -1979,15 +1979,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryArmorValueCustom(
             MutagenFrame frame,
             IArmorData item);
-
-        public static void FillBinaryArmorValueCustomPublic(
-            MutagenFrame frame,
-            IArmorData item)
-        {
-            FillBinaryArmorValueCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

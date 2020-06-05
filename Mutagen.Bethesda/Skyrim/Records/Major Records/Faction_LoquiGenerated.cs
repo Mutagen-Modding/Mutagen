@@ -4195,7 +4195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x43544943: // CITC
                 {
-                    FactionBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                    FactionBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
@@ -4213,15 +4213,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
             IFactionInternal item);
-
-        public static void FillBinaryConditionsCustomPublic(
-            MutagenFrame frame,
-            IFactionInternal item)
-        {
-            FillBinaryConditionsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

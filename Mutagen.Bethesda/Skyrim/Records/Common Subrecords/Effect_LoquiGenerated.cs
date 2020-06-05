@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41445443: // CTDA
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    EffectBinaryCreateTranslation.FillBinaryConditionsCustomPublic(
+                    EffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.Conditions);
@@ -2168,15 +2168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
             IEffect item);
-
-        public static void FillBinaryConditionsCustomPublic(
-            MutagenFrame frame,
-            IEffect item)
-        {
-            FillBinaryConditionsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

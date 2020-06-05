@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x56544C46: // FLTV
                 {
-                    GlobalShortBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                    GlobalShortBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)GlobalShort_FieldIndex.Data);
@@ -2068,15 +2068,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGlobalShortInternal item);
-
-        public static void FillBinaryDataCustomPublic(
-            MutagenFrame frame,
-            IGlobalShortInternal item)
-        {
-            FillBinaryDataCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

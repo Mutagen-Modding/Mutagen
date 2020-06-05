@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IExtraData item,
             MutagenFrame frame)
         {
-            ExtraDataBinaryCreateTranslation.FillBinaryOwnerCustomPublic(
+            ExtraDataBinaryCreateTranslation.FillBinaryOwnerCustom(
                 frame: frame,
                 item: item);
             item.ItemCondition = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1847,15 +1847,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryOwnerCustom(
             MutagenFrame frame,
             IExtraData item);
-
-        public static void FillBinaryOwnerCustomPublic(
-            MutagenFrame frame,
-            IExtraData item)
-        {
-            FillBinaryOwnerCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

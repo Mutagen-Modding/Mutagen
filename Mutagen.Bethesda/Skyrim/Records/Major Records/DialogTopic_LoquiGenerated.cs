@@ -3281,7 +3281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x43464954: // TIFC
                 {
-                    DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustomPublic(
+                    DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -3299,15 +3299,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryResponseCountCustom(
             MutagenFrame frame,
             IDialogTopicInternal item);
-
-        public static void FillBinaryResponseCountCustomPublic(
-            MutagenFrame frame,
-            IDialogTopicInternal item)
-        {
-            FillBinaryResponseCountCustom(
-                frame: frame,
-                item: item);
-        }
 
         static partial void CustomBinaryEndImport(
             MutagenFrame frame,

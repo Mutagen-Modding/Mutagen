@@ -102,31 +102,6 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine();
-
-                using (var args = new FunctionWrapper(fg,
-                    $"public static void FillBinary{field.Name}CustomPublic"))
-                {
-                    args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    if (DoErrorMasksStatic)
-                    {
-                        args.Add($"ErrorMaskBuilder errorMask");
-                    }
-                }
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"FillBinary{field.Name}Custom"))
-                    {
-                        args.AddPassArg($"frame");
-                        args.AddPassArg($"item");
-                        if (DoErrorMasksStatic)
-                        {
-                            args.Add($"errorMask: errorMask");
-                        }
-                    }
-                }
-                fg.AppendLine();
             }
         }
 
@@ -202,7 +177,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = field.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}CustomPublic"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
                 args.Add("item: item");

@@ -1809,10 +1809,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageData item,
             MutagenFrame frame)
         {
-            AIPackageDataBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+            AIPackageDataBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
-            AIPackageDataBinaryCreateTranslation.FillBinaryGeneralTypeCustomPublic(
+            AIPackageDataBinaryCreateTranslation.FillBinaryGeneralTypeCustom(
                 frame: frame,
                 item: item);
         }
@@ -1821,27 +1821,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             IAIPackageData item);
 
-        public static void FillBinaryFlagsCustomPublic(
-            MutagenFrame frame,
-            IAIPackageData item)
-        {
-            FillBinaryFlagsCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryGeneralTypeCustom(
             MutagenFrame frame,
             IAIPackageData item);
-
-        public static void FillBinaryGeneralTypeCustomPublic(
-            MutagenFrame frame,
-            IAIPackageData item)
-        {
-            FillBinaryGeneralTypeCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

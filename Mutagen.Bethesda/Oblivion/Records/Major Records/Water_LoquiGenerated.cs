@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    WaterBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                    WaterBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
@@ -2695,15 +2695,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IWaterInternal item);
-
-        public static void FillBinaryDataCustomPublic(
-            MutagenFrame frame,
-            IWaterInternal item)
-        {
-            FillBinaryDataCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

@@ -2172,14 +2172,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x58585858: // XXXX
                 {
-                    ANavigationMeshBinaryCreateTranslation.FillBinaryLengthLogicCustomPublic(
+                    ANavigationMeshBinaryCreateTranslation.FillBinaryLengthLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x4D4E564E: // NVNM
                 {
-                    ANavigationMeshBinaryCreateTranslation.FillBinaryDataLogicCustomPublic(
+                    ANavigationMeshBinaryCreateTranslation.FillBinaryDataLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
@@ -2216,27 +2216,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
-        public static void FillBinaryLengthLogicCustomPublic(
-            MutagenFrame frame,
-            IANavigationMeshInternal item)
-        {
-            FillBinaryLengthLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryDataLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
-
-        public static void FillBinaryDataLogicCustomPublic(
-            MutagenFrame frame,
-            IANavigationMeshInternal item)
-        {
-            FillBinaryDataLogicCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

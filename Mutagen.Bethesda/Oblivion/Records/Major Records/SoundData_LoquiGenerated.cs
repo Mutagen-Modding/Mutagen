@@ -2013,10 +2013,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataInternal item,
             MutagenFrame frame)
         {
-            SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustomPublic(
+            SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustom(
                 frame: frame,
                 item: item);
-            SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustomPublic(
+            SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustom(
                 frame: frame,
                 item: item);
             item.FrequencyAdjustment = frame.ReadInt8();
@@ -2028,27 +2028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             ISoundDataInternal item);
 
-        public static void FillBinaryMinimumAttenuationDistanceCustomPublic(
-            MutagenFrame frame,
-            ISoundDataInternal item)
-        {
-            FillBinaryMinimumAttenuationDistanceCustom(
-                frame: frame,
-                item: item);
-        }
-
         static partial void FillBinaryMaximumAttenuationDistanceCustom(
             MutagenFrame frame,
             ISoundDataInternal item);
-
-        public static void FillBinaryMaximumAttenuationDistanceCustomPublic(
-            MutagenFrame frame,
-            ISoundDataInternal item)
-        {
-            FillBinaryMaximumAttenuationDistanceCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

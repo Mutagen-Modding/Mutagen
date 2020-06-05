@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IListGroup<T> item,
             MutagenFrame frame)
         {
-            ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustomPublic(
+            ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustom(
                 frame: frame,
                 item: item);
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1981,15 +1981,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryContainedRecordTypeCustom(
             MutagenFrame frame,
             IListGroup<T> item);
-
-        public static void FillBinaryContainedRecordTypeCustomPublic(
-            MutagenFrame frame,
-            IListGroup<T> item)
-        {
-            FillBinaryContainedRecordTypeCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 

@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroup<T> item,
             MutagenFrame frame)
         {
-            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
+            GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1912,15 +1912,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item);
-
-        public static void FillBinaryContainedRecordTypeParseCustomPublic(
-            MutagenFrame frame,
-            IGroup<T> item)
-        {
-            FillBinaryContainedRecordTypeParseCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 
