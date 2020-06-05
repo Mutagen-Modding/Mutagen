@@ -4024,7 +4024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FaceFxPhonemesBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x0),
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x0;

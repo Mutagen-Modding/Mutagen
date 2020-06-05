@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Generation
                 foreach (var field in obj.IterateFieldIndices(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                         nonIntegrated: true,
-                        includeBaseClass: true)
+                        includeBaseClass: false)
                     .Where(field =>
                     {
                         if (!this.TryGetTypeGeneration(field.Field.GetType(), out var _)) return false;
@@ -2274,7 +2274,9 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (obj.IsTypelessStruct())
                             {
-                                if (anyHasRecordTypes || passedLength == null)
+                                if (anyHasRecordTypes
+                                    || passedLength == null
+                                    || passedLength.Value == 0)
                                 {
                                     args.Add($"bytes: stream.RemainingMemory");
                                 }
@@ -2384,21 +2386,24 @@ namespace Mutagen.Bethesda.Generation
                                                 passedAccessor += $" + 0x{passedLength:X}";
                                             }
                                         }
-                                        switch (data.BinaryOverlayFallback)
+                                        if (obj.Fields.Contains(field.Item.Field))
                                         {
-                                            case BinaryGenerationType.Custom:
-                                                fg.AppendLine($"ret.Custom{field.Item.Field.Name}EndPos();");
-                                                break;
-                                            case BinaryGenerationType.NoGeneration:
-                                                break;
-                                            case BinaryGenerationType.Normal:
-                                                await typeGen.GenerateWrapperUnknownLengthParse(
-                                                    fg,
-                                                    obj,
-                                                    field.Item.Field,
-                                                    passedLength,
-                                                    passedAccessor);
-                                                break;
+                                            switch (data.BinaryOverlayFallback)
+                                            {
+                                                case BinaryGenerationType.Custom:
+                                                    fg.AppendLine($"ret.Custom{field.Item.Field.Name}EndPos();");
+                                                    break;
+                                                case BinaryGenerationType.NoGeneration:
+                                                    break;
+                                                case BinaryGenerationType.Normal:
+                                                    await typeGen.GenerateWrapperUnknownLengthParse(
+                                                        fg,
+                                                        obj,
+                                                        field.Item.Field,
+                                                        passedLength,
+                                                        passedAccessor);
+                                                    break;
+                                            }
                                         }
                                         lastUnknownFieldParse = field.Item.Field;
                                     }
