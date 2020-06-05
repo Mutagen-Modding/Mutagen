@@ -2453,6 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected TintAssetsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2460,6 +2461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static TintAssetsBinaryOverlay TintAssetsFactory(

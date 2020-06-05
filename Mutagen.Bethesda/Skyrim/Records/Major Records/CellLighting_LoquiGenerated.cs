@@ -3867,6 +3867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected CellLightingBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -3874,6 +3875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static CellLightingBinaryOverlay CellLightingFactory(

@@ -2545,6 +2545,7 @@ namespace Mutagen.Bethesda.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected MajorRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2552,6 +2553,7 @@ namespace Mutagen.Bethesda.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
 

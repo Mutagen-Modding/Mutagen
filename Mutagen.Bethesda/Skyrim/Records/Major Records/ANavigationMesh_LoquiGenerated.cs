@@ -2335,6 +2335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected ANavigationMeshBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2342,6 +2343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
 

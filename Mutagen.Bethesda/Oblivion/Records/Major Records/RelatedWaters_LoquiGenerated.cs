@@ -1995,6 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected RelatedWatersBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2002,6 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static RelatedWatersBinaryOverlay RelatedWatersFactory(

@@ -1914,6 +1914,7 @@ namespace Mutagen.Bethesda.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected MasterReferenceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -1921,6 +1922,7 @@ namespace Mutagen.Bethesda.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static MasterReferenceBinaryOverlay MasterReferenceFactory(

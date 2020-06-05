@@ -6847,6 +6847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected EffectShaderDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -6854,6 +6855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static EffectShaderDataBinaryOverlay EffectShaderDataFactory(

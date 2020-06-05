@@ -3587,6 +3587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected CombatStyleAdvancedBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -3594,6 +3595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(

@@ -2698,6 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected IdleAnimationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2705,6 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static IdleAnimationBinaryOverlay IdleAnimationFactory(

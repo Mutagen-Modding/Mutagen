@@ -2074,6 +2074,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                     fg.AppendLine();
+                    using (var args = new ArgsWrapper(fg,
+                        $"partial void CustomCtor"))
+                    {
+                    }
                 }
 
                 using (var args = new FunctionWrapper(fg,
@@ -2126,6 +2130,13 @@ namespace Mutagen.Bethesda.Generation
                             fg: fg,
                             objGen: obj,
                             typeGen: field);
+                    }
+                    if (obj.GetObjectType() != ObjectType.Mod)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"this.CustomCtor"))
+                        {
+                        }
                     }
                 }
                 fg.AppendLine();

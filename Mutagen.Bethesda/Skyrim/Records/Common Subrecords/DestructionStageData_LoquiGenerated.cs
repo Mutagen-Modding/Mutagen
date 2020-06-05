@@ -2431,6 +2431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected DestructionStageDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2438,6 +2439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static DestructionStageDataBinaryOverlay DestructionStageDataFactory(
