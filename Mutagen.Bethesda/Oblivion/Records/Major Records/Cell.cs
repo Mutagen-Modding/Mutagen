@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -310,12 +311,13 @@ namespace Mutagen.Bethesda.Oblivion
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             String INamedRequiredGetter.Name => this.Name ?? string.Empty;
 
-            static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
-            {
-                Cell_Registration.ACHR_HEADER,
-                Cell_Registration.ACRE_HEADER,
-                Cell_Registration.REFR_HEADER
-            };
+            static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>()
+                {
+                    Cell_Registration.ACHR_HEADER,
+                    Cell_Registration.ACRE_HEADER,
+                    Cell_Registration.REFR_HEADER
+                });
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 

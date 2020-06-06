@@ -357,19 +357,20 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             #endregion
 
-            static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
-            {
-                Cell_Registration.ACHR_HEADER,
-                Cell_Registration.REFR_HEADER,
-                APlacedTrap_Registration.PARW_HEADER,
-                APlacedTrap_Registration.PBAR_HEADER,
-                APlacedTrap_Registration.PBEA_HEADER,
-                APlacedTrap_Registration.PCON_HEADER,
-                APlacedTrap_Registration.PFLA_HEADER,
-                APlacedTrap_Registration.PHZD_HEADER,
-                APlacedTrap_Registration.PMIS_HEADER,
-                APlacedTrap_Registration.PGRE_HEADER,
-            };
+            static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>()
+                {
+                    Cell_Registration.ACHR_HEADER,
+                    Cell_Registration.REFR_HEADER,
+                    APlacedTrap_Registration.PARW_HEADER,
+                    APlacedTrap_Registration.PBAR_HEADER,
+                    APlacedTrap_Registration.PBEA_HEADER,
+                    APlacedTrap_Registration.PCON_HEADER,
+                    APlacedTrap_Registration.PFLA_HEADER,
+                    APlacedTrap_Registration.PHZD_HEADER,
+                    APlacedTrap_Registration.PMIS_HEADER,
+                    APlacedTrap_Registration.PGRE_HEADER,
+                });
 
             internal bool InsideWorldspace;
 

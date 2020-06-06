@@ -169,11 +169,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ConditionBinaryOverlay
         {
-            private static RecordType[] IncludeTriggers = new RecordType[]
-            {
-                new RecordType("CIS1"),
-                new RecordType("CIS2"),
-            };
+            private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
+                new RecordType[]
+                {
+                    new RecordType("CIS1"),
+                    new RecordType("CIS2"),
+                });
 
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);

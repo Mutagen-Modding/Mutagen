@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Binary
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
             long finalPos,
-            ICollection<RecordType> triggers,
+            ICollectionGetter<RecordType> triggers,
             RecordHeaderConstants constants,
             bool skipHeader,
             RecordTypeConverter? recordTypeConverter = null)
@@ -259,8 +259,8 @@ namespace Mutagen.Bethesda.Binary
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
             long finalPos,
-            ICollection<RecordType> triggers,
-            ICollection<RecordType> includeTriggers,
+            ICollectionGetter<RecordType> triggers,
+            ICollectionGetter<RecordType> includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             long finalPos,
             RecordType trigger,
-            ICollection<RecordType> includeTriggers,
+            ICollectionGetter<RecordType> includeTriggers,
             RecordHeaderConstants constants,
             bool skipHeader)
         {
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Binary
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
             long finalPos,
-            ICollection<RecordType> triggers,
+            ICollectionGetter<RecordType> triggers,
             RecordType includeTrigger,
             RecordHeaderConstants constants,
             bool skipHeader)
