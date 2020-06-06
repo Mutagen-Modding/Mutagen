@@ -2062,8 +2062,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType VENC_HEADER = new RecordType("VENC");
         public static readonly RecordType VENV_HEADER = new RecordType("VENV");
         public static readonly RecordType PLVD_HEADER = new RecordType("PLVD");
-        public static readonly RecordType CITC_HEADER = new RecordType("CITC");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
+        public static readonly RecordType CITC_HEADER = new RecordType("CITC");
         public static readonly RecordType TriggeringRecordType = FACT_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -4193,6 +4193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTarget.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
+                case 0x41445443: // CTDA
                 case 0x43544943: // CITC
                 {
                     FactionBinaryCreateTranslation.FillBinaryConditionsCustom(
@@ -4509,6 +4510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
+                case 0x41445443: // CTDA
                 case 0x43544943: // CITC
                 {
                     ConditionsCustomParse(

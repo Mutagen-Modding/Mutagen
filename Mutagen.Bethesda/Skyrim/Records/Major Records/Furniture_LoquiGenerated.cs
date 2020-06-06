@@ -3802,13 +3802,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Destructible);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Furniture_Registration.KSIZ_HEADER,
                             triggeringRecord: Furniture_Registration.KWDA_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -4133,18 +4134,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Destructible);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
-                    var subLen = subMeta.ContentLength;
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        stream: stream,
                         package: _package,
                         itemLength: 0x4,
-                        count: count,
+                        countLength: 4,
+                        countType: Furniture_Registration.KSIZ_HEADER,
+                        subrecordType: Furniture_Registration.KWDA_HEADER,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Keywords);
                 }
                 case 0x4D414E50: // PNAM

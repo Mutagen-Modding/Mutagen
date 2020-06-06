@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "SpecialParse_Vestigial";
+            string testString = "his.Entries = BinaryOverlayList<LeveledNpcEntryBinaryOverlay>.FactoryByA";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

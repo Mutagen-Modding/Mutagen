@@ -4004,10 +4004,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType OCOR_HEADER = new RecordType("OCOR");
         public static readonly RecordType GWOR_HEADER = new RecordType("GWOR");
         public static readonly RecordType ECOR_HEADER = new RecordType("ECOR");
-        public static readonly RecordType PRKZ_HEADER = new RecordType("PRKZ");
         public static readonly RecordType PRKR_HEADER = new RecordType("PRKR");
-        public static readonly RecordType COCT_HEADER = new RecordType("COCT");
+        public static readonly RecordType PRKZ_HEADER = new RecordType("PRKZ");
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
+        public static readonly RecordType COCT_HEADER = new RecordType("COCT");
         public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
         public static readonly RecordType PKID_HEADER = new RecordType("PKID");
         public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
@@ -8146,13 +8146,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
+                case 0x4F4C5053: // SPLO
                 case 0x54435053: // SPCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.ActorEffect = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Npc_Registration.SPCT_HEADER,
                             triggeringRecord: Npc_Registration.SPLO_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -8241,13 +8242,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
                 }
+                case 0x524B5250: // PRKR
                 case 0x5A4B5250: // PRKZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Perks = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkPlacement>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Npc_Registration.PRKZ_HEADER,
                             triggeringRecord: Npc_Registration.PRKR_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out PerkPlacement listSubItem, RecordTypeConverter? conv) =>
@@ -8260,13 +8262,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         .ToExtendedList<PerkPlacement>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }
+                case 0x4F544E43: // CNTO
                 case 0x54434F43: // COCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Items = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Npc_Registration.COCT_HEADER,
                             triggeringRecord: Npc_Registration.CNTO_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ContainerEntry listSubItem, RecordTypeConverter? conv) =>
@@ -8294,13 +8297,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Npc_Registration.KSIZ_HEADER,
                             triggeringRecord: Npc_Registration.KWDA_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -8867,18 +8871,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _RaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
+                case 0x4F4C5053: // SPLO
                 case 0x54435053: // SPCT
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subLen = checked((int)((4 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
                         itemLength: 0x4,
+                        countLength: 4,
+                        countType: Npc_Registration.SPCT_HEADER,
+                        finalPos: finalPos,
                         subrecordType: Npc_Registration.SPLO_HEADER,
-                        count: count,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
                 }
                 case 0x54534544: // DEST
@@ -8936,35 +8940,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _CombatOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
                 }
+                case 0x524B5250: // PRKR
                 case 0x5A4B5250: // PRKZ
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subLen = checked((int)((8 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
                         itemLength: 0x8,
+                        countLength: 4,
+                        countType: Npc_Registration.PRKZ_HEADER,
+                        finalPos: finalPos,
                         subrecordType: Npc_Registration.PRKR_HEADER,
-                        count: count,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }
+                case 0x4F544E43: // CNTO
                 case 0x54434F43: // COCT
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByArray(
-                        mem: stream.RemainingMemory,
+                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
+                        countLength: 4,
+                        subrecordType: Npc_Registration.CNTO_HEADER,
+                        countType: Npc_Registration.COCT_HEADER,
+                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: ParseRecordLocationsByCount(
-                            stream: stream,
-                            count: count,
-                            trigger: Npc_Registration.CNTO_HEADER,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        skipHeader: false);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
                 case 0x54444941: // AIDT
@@ -8987,18 +8990,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
-                    var subLen = subMeta.ContentLength;
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        stream: stream,
                         package: _package,
                         itemLength: 0x4,
-                        count: count,
+                        countLength: 4,
+                        countType: Npc_Registration.KSIZ_HEADER,
+                        subrecordType: Npc_Registration.KWDA_HEADER,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Keywords);
                 }
                 case 0x4D414E43: // CNAM

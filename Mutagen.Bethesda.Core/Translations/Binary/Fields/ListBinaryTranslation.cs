@@ -9,6 +9,7 @@ using System.IO;
 using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
 using static Mutagen.Bethesda.UtilityTranslation;
+using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -362,6 +363,43 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return Parse(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+        }
+
         public IEnumerable<T> ParsePerItem(
             MutagenFrame frame,
             int amount,
@@ -392,6 +430,80 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
             return ret;
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    transl,
+                    triggeringRecord,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    transl,
+                    triggeringRecord,
+                    recordTypeConverter);
+            }
         }
 
         public IEnumerable<T> ParsePerItem(

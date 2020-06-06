@@ -1323,9 +1323,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
         public static readonly RecordType LVLG_HEADER = new RecordType("LVLG");
-        public static readonly RecordType LLCT_HEADER = new RecordType("LLCT");
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType COED_HEADER = new RecordType("COED");
+        public static readonly RecordType LLCT_HEADER = new RecordType("LLCT");
         public static readonly RecordType TriggeringRecordType = LVLI_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
@@ -2535,13 +2535,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
                 }
+                case 0x4F4C564C: // LVLO
+                case 0x44454F43: // COED
                 case 0x54434C4C: // LLCT
                 {
-                    var amount = frame.ReadSubrecordFrame().Content[0];
                     item.Entries = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 1,
+                            countRecord: LeveledItem_Registration.LLCT_HEADER,
                             triggeringRecord: LeveledItemEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledItemEntry listSubItem, RecordTypeConverter? conv) =>
@@ -2733,20 +2735,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _GlobalLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
                 }
+                case 0x4F4C564C: // LVLO
+                case 0x44454F43: // COED
                 case 0x54434C4C: // LLCT
                 {
-                    var count = _package.MetaData.Constants.ReadSubrecordFrame(stream).Content[0];
-                    this.Entries = BinaryOverlayList<LeveledItemEntryBinaryOverlay>.FactoryByArray(
-                        mem: stream.RemainingMemory,
+                    this.Entries = BinaryOverlayList<LeveledItemEntryBinaryOverlay>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
+                        countLength: 1,
+                        subrecordType: LeveledItemEntry_Registration.TriggeringRecordTypes,
+                        countType: LeveledItem_Registration.LLCT_HEADER,
+                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: ParseRecordLocationsByCount(
-                            stream: stream,
-                            count: count,
-                            trigger: LeveledItemEntry_Registration.TriggeringRecordTypes,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        skipHeader: false);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 }
                 default:

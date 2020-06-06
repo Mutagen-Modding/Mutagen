@@ -1380,9 +1380,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
         public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
         public static readonly RecordType LVLG_HEADER = new RecordType("LVLG");
-        public static readonly RecordType LLCT_HEADER = new RecordType("LLCT");
         public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
         public static readonly RecordType COED_HEADER = new RecordType("COED");
+        public static readonly RecordType LLCT_HEADER = new RecordType("LLCT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = LVLN_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcBinaryWriteTranslation);
@@ -2686,13 +2686,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Global);
                 }
+                case 0x4F4C564C: // LVLO
+                case 0x44454F43: // COED
                 case 0x54434C4C: // LLCT
                 {
-                    var amount = frame.ReadSubrecordFrame().Content[0];
                     item.Entries = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledNpcEntry>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 1,
+                            countRecord: LeveledNpc_Registration.LLCT_HEADER,
                             triggeringRecord: LeveledNpcEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledNpcEntry listSubItem, RecordTypeConverter? conv) =>
@@ -2892,20 +2894,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _GlobalLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Global);
                 }
+                case 0x4F4C564C: // LVLO
+                case 0x44454F43: // COED
                 case 0x54434C4C: // LLCT
                 {
-                    var count = _package.MetaData.Constants.ReadSubrecordFrame(stream).Content[0];
-                    this.Entries = BinaryOverlayList<LeveledNpcEntryBinaryOverlay>.FactoryByArray(
-                        mem: stream.RemainingMemory,
+                    this.Entries = BinaryOverlayList<LeveledNpcEntryBinaryOverlay>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
+                        countLength: 1,
+                        subrecordType: LeveledNpcEntry_Registration.TriggeringRecordTypes,
+                        countType: LeveledNpc_Registration.LLCT_HEADER,
+                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: ParseRecordLocationsByCount(
-                            stream: stream,
-                            count: count,
-                            trigger: LeveledNpcEntry_Registration.TriggeringRecordTypes,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        skipHeader: false);
                     return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Entries);
                 }
                 case 0x4C444F4D: // MODL

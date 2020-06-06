@@ -74,6 +74,200 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCount(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            int itemLength,
+            int countLength,
+            RecordType subrecordType,
+            RecordType countType,
+            BinaryOverlay.SpanFactory<T> getter)
+        {
+            var mem = stream.RemainingMemory;
+            var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+            var recType = initialHeader.Header.RecordType;
+            if (recType == countType)
+            {
+                var count = countLength switch
+                {
+                    1 => initialHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                stream.Position += initialHeader.TotalLength;
+                var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
+                return new BinaryOverlayListByStartIndex(
+                    contentFrame.Content,
+                    package,
+                    getter,
+                    itemLength);
+            }
+            else
+            {
+                return FactoryByStartIndex(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    getter: getter,
+                    itemLength: itemLength);
+            }
+        }
+
+        public static IReadOnlyList<T> FactoryByCountPerItem(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            int countLength,
+            ICollectionGetter<RecordType> subrecordType,
+            RecordType countType,
+            int finalPos,
+            RecordTypeConverter? recordTypeConverter,
+            BinaryOverlay.SpanRecordFactory<T> getter,
+            bool skipHeader = true)
+        {
+            var mem = stream.RemainingMemory;
+            var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+            var recType = initialHeader.Header.RecordType;
+            if (recType == countType)
+            {
+                var count = countLength switch
+                {
+                    1 => initialHeader.Content[0],
+                    2 => BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                    4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
+                    _ => throw new NotImplementedException(),
+                };
+                return FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    recordTypeConverter: recordTypeConverter,
+                    getter: getter,
+                    locs: BinaryOverlay.ParseRecordLocationsByCount(
+                        stream: stream,
+                        count: count,
+                        trigger: subrecordType,
+                        constants: package.MetaData.Constants.SubConstants,
+                        skipHeader: false));
+            }
+            else
+            {
+                return FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    recordTypeConverter: recordTypeConverter,
+                    getter: getter,
+                    locs: BinaryOverlay.ParseRecordLocations(
+                        stream: stream,
+                        finalPos: finalPos,
+                        constants: package.MetaData.Constants.SubConstants,
+                        triggers: subrecordType,
+                        skipHeader: skipHeader,
+                        recordTypeConverter: recordTypeConverter));
+            }
+        }
+
+        public static IReadOnlyList<T> FactoryByCountPerItem(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            int countLength,
+            RecordType subrecordType,
+            RecordType countType,
+            int finalPos,
+            RecordTypeConverter? recordTypeConverter,
+            BinaryOverlay.SpanRecordFactory<T> getter,
+            bool skipHeader = true)
+        {
+            var mem = stream.RemainingMemory;
+            var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+            var recType = initialHeader.Header.RecordType;
+            if (recType == countType)
+            {
+                var count = countLength switch
+                {
+                    1 => initialHeader.Content[0],
+                    2 => BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                    4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
+                    _ => throw new NotImplementedException(),
+                };
+                stream.Position += initialHeader.TotalLength;
+                return FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    recordTypeConverter: recordTypeConverter,
+                    getter: getter,
+                    locs: BinaryOverlay.ParseRecordLocationsByCount(
+                        stream: stream,
+                        count: count,
+                        trigger: subrecordType,
+                        constants: package.MetaData.Constants.SubConstants,
+                        skipHeader: false));
+            }
+            else
+            {
+                return FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    recordTypeConverter: recordTypeConverter,
+                    getter: getter,
+                    locs: BinaryOverlay.ParseRecordLocations(
+                        stream: stream,
+                        finalPos: finalPos,
+                        constants: package.MetaData.Constants.SubConstants,
+                        trigger: subrecordType,
+                        skipHeader: skipHeader,
+                        recordTypeConverter: recordTypeConverter));
+            }
+        }
+
+        public static IReadOnlyList<T> FactoryByCountPerItem(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            int itemLength,
+            int countLength,
+            RecordType subrecordType,
+            RecordType countType,
+            int finalPos,
+            BinaryOverlay.SpanFactory<T> getter,
+            bool skipHeader = true)
+        {
+            var mem = stream.RemainingMemory;
+            var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+            var recType = initialHeader.Header.RecordType;
+            if (recType == countType)
+            {
+                var count = countLength switch
+                {
+                    1 => initialHeader.Content[0],
+                    2 => BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                    4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
+                    _ => throw new NotImplementedException(),
+                };
+                var countLen = initialHeader.TotalLength;
+                var contentLen = checked((int)((itemLength + package.MetaData.Constants.SubConstants.HeaderLength) * count));
+                stream.Position += countLen + contentLen;
+                return FactoryByCount(
+                    mem.Slice(countLen, contentLen),
+                    package: package,
+                    itemLength: itemLength,
+                    subrecordType: subrecordType,
+                    count: count,
+                    getter: getter,
+                    skipHeader: skipHeader);
+            }
+            else
+            {
+                return FactoryByArray(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    getter: getter,
+                    locs: BinaryOverlay.ParseRecordLocations(
+                        stream: stream,
+                        finalPos: finalPos,
+                        constants: package.MetaData.Constants.SubConstants,
+                        trigger: subrecordType,
+                        skipHeader: true));
+            }
+        }
+
+        public static IReadOnlyList<T> FactoryByCount(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             ICollectionGetter<RecordType> subrecordType,

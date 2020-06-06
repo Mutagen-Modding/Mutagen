@@ -1394,8 +1394,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ConstructibleObjectXmlWriteTranslation);
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
-        public static readonly RecordType COCT_HEADER = new RecordType("COCT");
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
+        public static readonly RecordType COCT_HEADER = new RecordType("COCT");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
@@ -2653,13 +2653,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case 0x4F544E43: // CNTO
                 case 0x54434F43: // COCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Items = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: ConstructibleObject_Registration.COCT_HEADER,
                             triggeringRecord: ConstructibleObject_Registration.CNTO_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ContainerEntry listSubItem, RecordTypeConverter? conv) =>
@@ -2868,20 +2869,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case 0x4F544E43: // CNTO
                 case 0x54434F43: // COCT
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByArray(
-                        mem: stream.RemainingMemory,
+                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
+                        countLength: 4,
+                        subrecordType: ConstructibleObject_Registration.CNTO_HEADER,
+                        countType: ConstructibleObject_Registration.COCT_HEADER,
+                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
-                        locs: ParseRecordLocationsByCount(
-                            stream: stream,
-                            count: count,
-                            trigger: ConstructibleObject_Registration.CNTO_HEADER,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        skipHeader: false);
                     return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Items);
                 }
                 case 0x41445443: // CTDA

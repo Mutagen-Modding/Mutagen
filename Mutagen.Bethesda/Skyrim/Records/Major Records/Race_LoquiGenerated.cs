@@ -10909,13 +10909,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
+                case 0x4F4C5053: // SPLO
                 case 0x54435053: // SPCT
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.ActorEffect = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Race_Registration.SPCT_HEADER,
                             triggeringRecord: Race_Registration.SPLO_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -10935,13 +10936,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyTemplate);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
-                            amount: amount,
+                            countLengthLength: 4,
+                            countRecord: Race_Registration.KSIZ_HEADER,
                             triggeringRecord: Race_Registration.KWDA_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
@@ -11847,18 +11849,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
+                case 0x4F4C5053: // SPLO
                 case 0x54435053: // SPCT
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subLen = checked((int)((4 + _package.MetaData.Constants.SubConstants.HeaderLength) * count));
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                        stream: stream,
                         package: _package,
                         itemLength: 0x4,
+                        countLength: 4,
+                        countType: Race_Registration.SPCT_HEADER,
+                        finalPos: finalPos,
                         subrecordType: Race_Registration.SPLO_HEADER,
-                        count: count,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
                 }
                 case 0x4D414E57: // WNAM
@@ -11871,18 +11873,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyTemplate);
                 }
+                case 0x4144574B: // KWDA
                 case 0x5A49534B: // KSIZ
                 {
-                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.MetaData.Constants.ReadSubrecordFrame(stream).Content);
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
-                    var subLen = subMeta.ContentLength;
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        stream: stream,
                         package: _package,
                         itemLength: 0x4,
-                        count: count,
+                        countLength: 4,
+                        countType: Race_Registration.KSIZ_HEADER,
+                        subrecordType: Race_Registration.KWDA_HEADER,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
                 }
                 case 0x41544144: // DATA

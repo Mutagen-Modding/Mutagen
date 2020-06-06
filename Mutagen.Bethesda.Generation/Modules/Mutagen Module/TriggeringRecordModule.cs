@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Generation
                 if (field.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
                     && counterObj is string counterTypeStr)
                 {
-                    data.TriggeringRecordTypes.Clear();
+                    //data.TriggeringRecordTypes.Clear();
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
                     data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
                 }
