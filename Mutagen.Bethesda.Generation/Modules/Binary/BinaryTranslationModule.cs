@@ -2239,6 +2239,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (await obj.IsMajorRecord())
                         {
+                            if (objData.CustomBinaryEnd != CustomEnd.Off)
+                            {
+                                fg.AppendLine("var origStream = stream;");
+                            }
                             fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
@@ -2610,7 +2614,14 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 "ret.CustomEnd"))
                             {
-                                args.AddPassArg("stream");
+                                if (obj.GetObjectType() == ObjectType.Record)
+                                {
+                                    args.Add("stream: origStream");
+                                }
+                                else
+                                {
+                                    args.AddPassArg("stream");
+                                }
                                 args.Add("finalPos: stream.Length");
                                 args.AddPassArg("offset");
                             }

@@ -5126,6 +5126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            var origStream = stream;
             stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
             var ret = new CellBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
@@ -5144,7 +5145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
             ret.CustomEnd(
-                stream: stream,
+                stream: origStream,
                 finalPos: stream.Length,
                 offset: offset);
             return ret;

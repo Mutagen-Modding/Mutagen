@@ -423,12 +423,13 @@ namespace Mutagen.Bethesda.Skyrim
                 BinaryOverlayFactoryPackage package,
                 bool insideWorldspace)
             {
+                var origStream = stream;
                 stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
                 var ret = new CellBinaryOverlay(
                     bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                     package: package)
                 {
-                    InsideWorldspace = true
+                    InsideWorldspace = insideWorldspace
                 };
                 var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
                 int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
@@ -444,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
                     recordTypeConverter: null,
                     fill: ret.FillRecordType);
                 ret.CustomEnd(
-                    stream: stream,
+                    stream: origStream,
                     finalPos: stream.Length,
                     offset: offset);
                 return ret;
@@ -470,6 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
                 stream = new BinaryMemoryReadStream(this._grupData.Value);
+                finalPos = stream.Length;
                 stream.Position += groupMeta.HeaderLength;
                 while (!stream.Complete)
                 {
