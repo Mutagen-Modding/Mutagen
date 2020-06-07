@@ -353,9 +353,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<ILeveledItemGetter> IPlacedObjectGetter.LeveledItemBaseObject => this.LeveledItemBaseObject;
         #endregion
         #region LevelModifier
-        public LevelModifier? LevelModifier { get; set; }
+        public Level? LevelModifier { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        LevelModifier? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
+        Level? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region PersistentLocation
         public FormLinkNullable<Location> PersistentLocation { get; set; } = new FormLinkNullable<Location>();
@@ -3308,7 +3308,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<PlacedObject> SpawnContainer { get; set; }
         new ActivateParents? ActivateParents { get; set; }
         new FormLinkNullable<LeveledItem> LeveledItemBaseObject { get; set; }
-        new LevelModifier? LevelModifier { get; set; }
+        new Level? LevelModifier { get; set; }
         new FormLinkNullable<Location> PersistentLocation { get; set; }
         new UInt32? CollisionLayer { get; set; }
         new LockData? Lock { get; set; }
@@ -3390,7 +3390,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; }
         IActivateParentsGetter? ActivateParents { get; }
         IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; }
-        LevelModifier? LevelModifier { get; }
+        Level? LevelModifier { get; }
         IFormLinkNullable<ILocationGetter> PersistentLocation { get; }
         UInt32? CollisionLayer { get; }
         ILockDataGetter? Lock { get; }
@@ -4512,7 +4512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.LeveledItemBaseObject:
                     return typeof(FormLinkNullable<LeveledItem>);
                 case PlacedObject_FieldIndex.LevelModifier:
-                    return typeof(LevelModifier);
+                    return typeof(Level);
                 case PlacedObject_FieldIndex.PersistentLocation:
                     return typeof(FormLinkNullable<Location>);
                 case PlacedObject_FieldIndex.CollisionLayer:
@@ -7475,7 +7475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.LevelModifier != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
             {
-                EnumXmlTranslation<LevelModifier>.Instance.Write(
+                EnumXmlTranslation<Level>.Instance.Write(
                     node: node,
                     name: nameof(item.LevelModifier),
                     item: item.LevelModifier,
@@ -8550,7 +8550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PlacedObject_FieldIndex.LevelModifier);
                     try
                     {
-                        item.LevelModifier = EnumXmlTranslation<LevelModifier>.Instance.Parse(
+                        item.LevelModifier = EnumXmlTranslation<Level>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -9320,7 +9320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LeveledItemBaseObject,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLIB_HEADER));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LevelModifier>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Level>.Instance.WriteNullable(
                 writer,
                 item.LevelModifier,
                 length: 4,
@@ -9761,7 +9761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D434C58: // XLCM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LevelModifier = EnumBinaryTranslation<LevelModifier>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LevelModifier = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 }
                 case 0x4E434C58: // XLCN
@@ -10129,7 +10129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public LevelModifier? LevelModifier => _LevelModifierLocation.HasValue ? (LevelModifier)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(LevelModifier?);
+        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;

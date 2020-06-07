@@ -501,6 +501,9 @@
   </xs:complexType>
 
   <xs:complexType name="CustomLogic">
+    <xs:sequence>
+      <xs:element name="RecordType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
     <xs:attribute name="byteLength" type="xs:byte" />
     <xs:attribute name="recordType" type="xs:string" >

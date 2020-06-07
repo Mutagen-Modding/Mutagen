@@ -964,14 +964,23 @@ namespace Mutagen.Bethesda.Generation
             ListType list = typeGen as ListType;
             if (!list.CustomData.TryGetValue(CounterByteLength, out var counterLenObj)) return;
             var len = (byte)counterLenObj;
-            if (len == 0) return;
-            if (len != 4)
+            string readStr;
+            switch (len)
             {
-                throw new NotImplementedException();
+                case 0:
+                    return;
+                case 2:
+                    readStr = $"ReadUInt16LittleEndian";
+                    break;
+                case 4:
+                    readStr = $"ReadInt32LittleEndian";
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             var subExpLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
-            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + 4;");
+            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.{readStr}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + {len};");
         }
     }
 }

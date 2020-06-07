@@ -13,7 +13,7 @@
       <ByteArray name="RagdollData" recordType="XRGD" />
       <ByteArray name="RagdollBipedData" recordType="XRGB" />
       <RefDirect name="Patrol" refName="Patrol" />
-      <Enum name="LevelModifier" enumName="LevelModifier" byteLength="4" recordType="XLCM" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
       <Int32 name="Count" recordType="XCNT" />
       <Float name="Radius" recordType="XRDS" />

@@ -1745,6 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Boolean>.Instance.Write(
                 writer: writer,
                 items: item.Data,
+                countLengthLength: 4,
                 transl: BooleanBinaryTranslation.Instance.Write);
         }
 
@@ -1795,6 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
             item.Data.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<Boolean>.Instance.Parse(
+                    amount: frame.ReadInt32(),
                     frame: frame,
                     transl: BooleanBinaryTranslation.Instance.Parse));
         }
@@ -1861,7 +1863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public IReadOnlyList<Boolean> Data => BinaryOverlayList<Boolean>.FactoryByStartIndex(_data, _package, 1, (s, p) => s[0] == 1);
+        public IReadOnlyList<Boolean> Data => BinaryOverlayList<Boolean>.FactoryByCountLength(_data, _package, 1, countLength: 4, (s, p) => s[0] == 1);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1889,6 +1891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            ret.DataEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 1 + 4;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

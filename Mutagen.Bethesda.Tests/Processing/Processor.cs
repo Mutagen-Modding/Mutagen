@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var loc = this._AlignedFileLocs[formID];
             ProcessEDID(stream, loc);
-            ProcessFormIDOverflow(stream, loc);
+            ProcessMajorRecordFormIDOverflow(stream, loc);
         }
 
         public void ProcessEDID(
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Tests
                 majorFrame.Header.FormID);
         }
 
-        public void ProcessFormIDOverflow(
+        public void ProcessMajorRecordFormIDOverflow(
             IMutagenReadStream stream,
             RangeInt64 loc)
         {
@@ -135,6 +135,18 @@ namespace Mutagen.Bethesda.Tests
             // Need to zero out master
             this._Instructions.SetSubstitution(
                 loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,
+                0);
+        }
+
+        public void ProcessFormIDOverflow(
+            IMutagenReadStream stream,
+            RangeInt64 loc)
+        {
+            var formID = new FormID(stream.ReadUInt32());
+            if (formID.ModIndex.ID <= this._NumMasters) return;
+            // Need to zero out master
+            this._Instructions.SetSubstitution(
+                loc.Min + stream.Position - 1,
                 0);
         }
 
@@ -262,6 +274,51 @@ namespace Mutagen.Bethesda.Tests
                 if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue;
                 this._Instructions.SetRemove(RangeInt64.FactoryFromLength(loc, groupMeta.HeaderLength));
             }
+        }
+
+        public int FixMissingCounters(
+            MajorRecordMemoryFrame frame,
+            RangeInt64 loc,
+            RecordType counterType,
+            RecordType containedType)
+        {
+            var pos = 0;
+            bool prevWasCounter = false;
+            int sizeChange = 0;
+            while (pos < frame.Content.Length)
+            {
+                var subRec = frame.Header.Meta.SubrecordFrame(frame.Content.Slice(pos));
+                if (subRec.Header.RecordType == counterType)
+                {
+                    prevWasCounter = true;
+                    pos += subRec.TotalLength;
+                    continue;
+                }
+                if (subRec.Header.RecordType != containedType)
+                {
+                    prevWasCounter = false;
+                    pos += subRec.TotalLength;
+                    continue;
+                }
+                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Header.Meta, containedType, out var numPassed);
+                // Found contained record
+                if (!prevWasCounter)
+                {
+                    byte[] bytes = new byte[10];
+                    BinaryPrimitives.WriteInt32LittleEndian(bytes, counterType.TypeInt);
+                    BinaryPrimitives.WriteInt16LittleEndian(bytes.AsSpan().Slice(4), 4);
+                    BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan().Slice(6), numPassed);
+                    // Add counter
+                    _Instructions.SetAddition(
+                        loc.Min + frame.Header.HeaderLength + pos,
+                        bytes);
+                    sizeChange += 10;
+
+                }
+                prevWasCounter = false;
+                pos += passedLen;
+            }
+            return sizeChange;
         }
 
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(

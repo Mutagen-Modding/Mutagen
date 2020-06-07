@@ -51,7 +51,7 @@
       <FormLink name="SpawnContainer" refName="PlacedObject" recordType="XSPC" />
       <RefDirect name="ActivateParents" refName="ActivateParents" />
       <FormLink name="LeveledItemBaseObject" refName="LeveledItem" recordType="XLIB" />
-      <Enum name="LevelModifier" enumName="LevelModifier" byteLength="4" recordType="XLCM" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
       <!-- ToDo: Upgrade to a FormLink? -->
       <UInt32 name="CollisionLayer" recordType="XTRI" />

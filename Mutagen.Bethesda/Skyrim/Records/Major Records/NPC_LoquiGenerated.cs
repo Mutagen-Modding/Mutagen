@@ -2887,6 +2887,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         INpcSpawn,
         ILockList,
+        IAliasVoiceType,
         ILoquiObjectSetter<INpcInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -2954,6 +2955,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         INpcSpawnGetter,
         ILockListGetter,
+        IAliasVoiceTypeGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

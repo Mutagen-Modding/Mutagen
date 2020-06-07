@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessPlaced(stream, formID, recType, loc);
             ProcessNavmeshes(stream, formID, recType, loc);
             ProcessDialogs(stream, formID, recType, loc);
+            ProcessQuests(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -279,6 +281,207 @@ namespace Mutagen.Bethesda.Tests
                 loc);
         }
 
+        private void ProcessQuests(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Quest_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            // Process next alias ID subrecords to align to their current contents
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var content = majorFrame.Content;
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Quest_Registration.ANAM_HEADER);
+            if (pos != null)
+            {
+                var anamFrame = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(pos.Value));
+                var next = BinaryPrimitives.ReadUInt32LittleEndian(anamFrame.Content);
+                var targets = new RecordType[]
+                {
+                    Quest_Registration.ALST_HEADER,
+                    Quest_Registration.ALLS_HEADER
+                };
+                var locs = UtilityTranslation.FindAllOfSubrecords(
+                    majorFrame.Content,
+                    stream.MetaData.Constants,
+                    targets,
+                    navigateToContent: true);
+                uint actualNext = 0;
+                if (locs.Length > 0)
+                {
+                    actualNext = locs
+                        .Select(l =>
+                        {
+                            return BinaryPrimitives.ReadUInt32LittleEndian(content.Slice(l));
+                        })
+                        .Max();
+                    actualNext++;
+                }
+                if (actualNext != next)
+                {
+                    byte[] sub = new byte[4];
+                    BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
+                    _Instructions.SetSubstitution(
+                        loc.Min + majorFrame.Header.HeaderLength + pos.Value + anamFrame.Header.HeaderLength,
+                        sub);
+                }
+            }
+
+            var sizeChange = FixMissingCounters(
+                majorFrame,
+                loc,
+                new RecordType("COCT"),
+                new RecordType("CNTO"));
+
+            ProcessSubrecordLengths(
+                stream,
+                sizeChange,
+                loc.Min,
+                formID);
+
+            FixVMADFormIDs(
+                majorFrame,
+                loc,
+                out var vmadPos,
+                out var objectFormat,
+                out var processedLen);
+            if (vmadPos != null)
+            {
+                var vmadFrame = Meta.SubrecordMemoryFrame(majorFrame.Content.Slice(vmadPos.Value));
+                stream = new MutagenInterfaceReadStream(
+                    new MutagenMemoryReadStream(vmadFrame.Content, new ParsingBundle(GameMode)),
+                    new ParsingBundle(GameMode))
+                {
+                    Position = processedLen - vmadFrame.Header.HeaderLength
+                };
+                if (stream.Complete) return;
+                // skip unknown
+                stream.Position += 1;
+                var fragCount = stream.ReadUInt16();
+                // skip name
+                var len = stream.ReadUInt16();
+                stream.Position += len;
+                for (int i = 0; i < fragCount; i++)
+                {
+                    stream.Position += 9;
+                    // skip name
+                    len = stream.ReadUInt16();
+                    stream.Position += len;
+                    // skip name
+                    len = stream.ReadUInt16();
+                    stream.Position += len;
+                }
+                var aliasCount = stream.ReadUInt16();
+                for (int i = 0; i < aliasCount; i++)
+                {
+                    FixObjectPropertyIDs(stream, loc, objectFormat);
+                    // skip version
+                    stream.Position += 2;
+                    objectFormat = stream.ReadUInt16();
+                    var numScripts = stream.ReadUInt16();
+                    for (int j = 0; j < numScripts; j++)
+                    {
+                        FixVMADScriptIDs(stream, loc, objectFormat);
+                    }
+                }
+            }
+        }
+
+        public void FixVMADFormIDs(
+            MajorRecordMemoryFrame frame,
+            RangeInt64 loc,
+            out int? vmadPos,
+            out ushort objectFormat,
+            out int processed)
+        {
+            vmadPos = UtilityTranslation.FindFirstSubrecord(frame.Content, Meta, Quest_Registration.VMAD_HEADER);
+            if (vmadPos == null)
+            {
+                processed = 0;
+                objectFormat = 0;
+                return;
+            }
+            var stream = new MutagenInterfaceReadStream(
+                new MutagenMemoryReadStream(frame.Content.Slice(vmadPos.Value), new ParsingBundle(GameMode)),
+                new ParsingBundle(GameMode));
+            stream.Position += Meta.SubConstants.HeaderLength;
+            // Skip version
+            stream.Position += 2;
+            objectFormat = stream.ReadUInt16();
+            var scriptCt = stream.ReadUInt16();
+            for (int i = 0; i < scriptCt; i++)
+            {
+                FixVMADScriptIDs(stream, loc, objectFormat);
+            }
+            processed = (int)stream.Position;
+        }
+
+        private void FixVMADScriptIDs(IMutagenReadStream stream, RangeInt64 loc, ushort objectFormat)
+        {
+            // skip name
+            var len = stream.ReadUInt16();
+            stream.Position += len;
+            // Skip flags
+            stream.Position += 1;
+            var propCount = stream.ReadUInt16();
+            for (int j = 0; j < propCount; j++)
+            {
+                // skip name
+                len = stream.ReadUInt16();
+                stream.Position += len;
+                var type = (ScriptProperty.Type)stream.ReadUInt8();
+                // skip flags
+                stream.Position += 1;
+                // Going to cheat here, and use the autogenerated records
+                ScriptProperty prop = type switch
+                {
+                    ScriptProperty.Type.None => new ScriptProperty(),
+                    ScriptProperty.Type.Object => new ScriptObjectProperty(),
+                    ScriptProperty.Type.String => new ScriptStringProperty(),
+                    ScriptProperty.Type.Int => new ScriptIntProperty(),
+                    ScriptProperty.Type.Float => new ScriptFloatProperty(),
+                    ScriptProperty.Type.Bool => new ScriptBoolProperty(),
+                    ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
+                    //ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
+                    ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
+                    ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
+                    ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
+                    _ => throw new NotImplementedException(),
+                };
+                switch (prop)
+                {
+                    case ScriptObjectProperty obj:
+                        FixObjectPropertyIDs(stream, loc, objectFormat);
+                        break;
+                    case ScriptObjectListProperty objList:
+                        throw new NotImplementedException();
+                    default:
+                        prop.CopyInFromBinary(new MutagenFrame(stream));
+                        break;
+                }
+            }
+        }
+
+        private void FixObjectPropertyIDs(IMutagenReadStream stream, RangeInt64 loc, ushort objectFormat)
+        {
+            switch (objectFormat)
+            {
+                case 2:
+                    stream.Position += 4;
+                    ProcessFormIDOverflow(stream, loc);
+                    break;
+                case 1:
+                    ProcessFormIDOverflow(stream, loc);
+                    stream.Position += 4;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         private void ProcessPlaced(
             IMutagenReadStream stream,
             FormID formID,
@@ -433,7 +636,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "REFR", "FULL" },
                     new RecordType[] { "WRLD", "FULL" },
                     new RecordType[] { "DIAL", "FULL" },
-                    new RecordType[] { "INFO", "RNAM" }
+                    new RecordType[] { "INFO", "RNAM" },
+                    new RecordType[] { "QUST", "FULL", "NNAM" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,
@@ -449,7 +653,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "ARMO", "DESC" },
                     new RecordType[] { "ALCH", "DESC" },
                     new RecordType[] { "WEAP", "DESC" },
-                    new RecordType[] { "BOOK", "DESC" }
+                    new RecordType[] { "BOOK", "DESC" },
+                    new RecordType[] { "QUST", "CNAM" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

@@ -49,6 +49,139 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestAdapter? _VirtualMachineAdapter;
+        public QuestAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IQuestGetter.Name => this.Name;
+        #endregion
+        #region Flags
+        public Quest.Flag Flags { get; set; } = default;
+        #endregion
+        #region Priority
+        public Byte Priority { get; set; } = default;
+        #endregion
+        #region QuestFormVersion
+        public Byte QuestFormVersion { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
+        #region Type
+        public Quest.TypeEnum Type { get; set; } = default;
+        #endregion
+        #region Event
+        public RecordType? Event { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        RecordType? IQuestGetter.Event => this.Event;
+        #endregion
+        #region TextDisplayGlobals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Global>> _TextDisplayGlobals = new ExtendedList<IFormLink<Global>>();
+        public ExtendedList<IFormLink<Global>> TextDisplayGlobals
+        {
+            get => this._TextDisplayGlobals;
+            protected set => this._TextDisplayGlobals = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IGlobalGetter>> IQuestGetter.TextDisplayGlobals => _TextDisplayGlobals;
+        #endregion
+
+        #endregion
+        #region ObjectWindowFilter
+        public String? ObjectWindowFilter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.ObjectWindowFilter => this.ObjectWindowFilter;
+        #endregion
+        #region DialogConditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> DialogConditions
+        {
+            get => this._DialogConditions;
+            protected set => this._DialogConditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IQuestGetter.DialogConditions => _DialogConditions;
+        #endregion
+
+        #endregion
+        #region UnusedConditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> UnusedConditions
+        {
+            get => this._UnusedConditions;
+            protected set => this._UnusedConditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IQuestGetter.UnusedConditions => _UnusedConditions;
+        #endregion
+
+        #endregion
+        #region Stages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
+        {
+            get => this._Stages;
+            protected set => this._Stages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestStageGetter> IQuestGetter.Stages => _Stages;
+        #endregion
+
+        #endregion
+        #region Objectives
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
+        public ExtendedList<QuestObjective> Objectives
+        {
+            get => this._Objectives;
+            protected set => this._Objectives = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestObjectiveGetter> IQuestGetter.Objectives => _Objectives;
+        #endregion
+
+        #endregion
+        #region Aliases
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
+        public ExtendedList<QuestAlias> Aliases
+        {
+            get => this._Aliases;
+            protected set => this._Aliases = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestAliasGetter> IQuestGetter.Aliases => _Aliases;
+        #endregion
+
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IQuestGetter.Description => this.Description;
+        #endregion
+        #region DNAMDataTypeState
+        public Quest.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +352,23 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(initialValue, new QuestAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Flags = initialValue;
+                this.Priority = initialValue;
+                this.QuestFormVersion = initialValue;
+                this.Unknown = initialValue;
+                this.Type = initialValue;
+                this.Event = initialValue;
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectWindowFilter = initialValue;
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
+                this.Description = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +377,24 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem Flags,
+                TItem Priority,
+                TItem QuestFormVersion,
+                TItem Unknown,
+                TItem Type,
+                TItem Event,
+                TItem TextDisplayGlobals,
+                TItem ObjectWindowFilter,
+                TItem DialogConditions,
+                TItem UnusedConditions,
+                TItem Stages,
+                TItem Objectives,
+                TItem Aliases,
+                TItem Description,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +403,23 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.Flags = Flags;
+                this.Priority = Priority;
+                this.QuestFormVersion = QuestFormVersion;
+                this.Unknown = Unknown;
+                this.Type = Type;
+                this.Event = Event;
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectWindowFilter = ObjectWindowFilter;
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
+                this.Description = Description;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +428,26 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, QuestAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public TItem Flags;
+            public TItem Priority;
+            public TItem QuestFormVersion;
+            public TItem Unknown;
+            public TItem Type;
+            public TItem Event;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TextDisplayGlobals;
+            public TItem ObjectWindowFilter;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? DialogConditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? UnusedConditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>? Aliases;
+            public TItem Description;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +461,45 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.QuestFormVersion, rhs.QuestFormVersion)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Event, rhs.Event)) return false;
+                if (!object.Equals(this.TextDisplayGlobals, rhs.TextDisplayGlobals)) return false;
+                if (!object.Equals(this.ObjectWindowFilter, rhs.ObjectWindowFilter)) return false;
+                if (!object.Equals(this.DialogConditions, rhs.DialogConditions)) return false;
+                if (!object.Equals(this.UnusedConditions, rhs.UnusedConditions)) return false;
+                if (!object.Equals(this.Stages, rhs.Stages)) return false;
+                if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
+                if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.Flags);
+                hash.Add(this.Priority);
+                hash.Add(this.QuestFormVersion);
+                hash.Add(this.Unknown);
+                hash.Add(this.Type);
+                hash.Add(this.Event);
+                hash.Add(this.TextDisplayGlobals);
+                hash.Add(this.ObjectWindowFilter);
+                hash.Add(this.DialogConditions);
+                hash.Add(this.UnusedConditions);
+                hash.Add(this.Stages);
+                hash.Add(this.Objectives);
+                hash.Add(this.Aliases);
+                hash.Add(this.Description);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +510,92 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Priority)) return false;
+                if (!eval(this.QuestFormVersion)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Event)) return false;
+                if (this.TextDisplayGlobals != null)
+                {
+                    if (!eval(this.TextDisplayGlobals.Overall)) return false;
+                    if (this.TextDisplayGlobals.Specific != null)
+                    {
+                        foreach (var item in this.TextDisplayGlobals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ObjectWindowFilter)) return false;
+                if (this.DialogConditions != null)
+                {
+                    if (!eval(this.DialogConditions.Overall)) return false;
+                    if (this.DialogConditions.Specific != null)
+                    {
+                        foreach (var item in this.DialogConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.UnusedConditions != null)
+                {
+                    if (!eval(this.UnusedConditions.Overall)) return false;
+                    if (this.UnusedConditions.Specific != null)
+                    {
+                        foreach (var item in this.UnusedConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (!eval(this.Stages.Overall)) return false;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (!eval(this.Objectives.Overall)) return false;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Aliases != null)
+                {
+                    if (!eval(this.Aliases.Overall)) return false;
+                    if (this.Aliases.Specific != null)
+                    {
+                        foreach (var item in this.Aliases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Description)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +604,92 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Priority)) return true;
+                if (eval(this.QuestFormVersion)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Event)) return true;
+                if (this.TextDisplayGlobals != null)
+                {
+                    if (eval(this.TextDisplayGlobals.Overall)) return true;
+                    if (this.TextDisplayGlobals.Specific != null)
+                    {
+                        foreach (var item in this.TextDisplayGlobals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ObjectWindowFilter)) return true;
+                if (this.DialogConditions != null)
+                {
+                    if (eval(this.DialogConditions.Overall)) return true;
+                    if (this.DialogConditions.Specific != null)
+                    {
+                        foreach (var item in this.DialogConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.UnusedConditions != null)
+                {
+                    if (eval(this.UnusedConditions.Overall)) return true;
+                    if (this.UnusedConditions.Specific != null)
+                    {
+                        foreach (var item in this.UnusedConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (eval(this.Stages.Overall)) return true;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (eval(this.Objectives.Overall)) return true;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Aliases != null)
+                {
+                    if (eval(this.Aliases.Overall)) return true;
+                    if (this.Aliases.Specific != null)
+                    {
+                        foreach (var item in this.Aliases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Description)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +705,106 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, QuestAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Flags = eval(this.Flags);
+                obj.Priority = eval(this.Priority);
+                obj.QuestFormVersion = eval(this.QuestFormVersion);
+                obj.Unknown = eval(this.Unknown);
+                obj.Type = eval(this.Type);
+                obj.Event = eval(this.Event);
+                if (TextDisplayGlobals != null)
+                {
+                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (TextDisplayGlobals.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.TextDisplayGlobals.Specific = l;
+                        foreach (var item in TextDisplayGlobals.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.ObjectWindowFilter = eval(this.ObjectWindowFilter);
+                if (DialogConditions != null)
+                {
+                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (DialogConditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.DialogConditions.Specific = l;
+                        foreach (var item in DialogConditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (UnusedConditions != null)
+                {
+                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (UnusedConditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.UnusedConditions.Specific = l;
+                        foreach (var item in UnusedConditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Stages != null)
+                {
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    if (Stages.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
+                        obj.Stages.Specific = l;
+                        foreach (var item in Stages.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, QuestStage.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestStage.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Objectives != null)
+                {
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjective.Mask<R>?>>());
+                    if (Objectives.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
+                        obj.Objectives.Specific = l;
+                        foreach (var item in Objectives.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, QuestObjective.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestObjective.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Aliases != null)
+                {
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestAlias.Mask<R>?>>());
+                    if (Aliases.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestAlias.Mask<R>?>>();
+                        obj.Aliases.Specific = l;
+                        foreach (var item in Aliases.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, QuestAlias.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestAlias.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Description = eval(this.Description);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -317,6 +827,188 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        fg.AppendItem(Priority, "Priority");
+                    }
+                    if (printMask?.QuestFormVersion ?? true)
+                    {
+                        fg.AppendItem(QuestFormVersion, "QuestFormVersion");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Event ?? true)
+                    {
+                        fg.AppendItem(Event, "Event");
+                    }
+                    if ((printMask?.TextDisplayGlobals?.Overall ?? true)
+                        && TextDisplayGlobals.TryGet(out var TextDisplayGlobalsItem))
+                    {
+                        fg.AppendLine("TextDisplayGlobals =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(TextDisplayGlobalsItem.Overall);
+                            if (TextDisplayGlobalsItem.Specific != null)
+                            {
+                                foreach (var subItem in TextDisplayGlobalsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ObjectWindowFilter ?? true)
+                    {
+                        fg.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
+                    }
+                    if ((printMask?.DialogConditions?.Overall ?? true)
+                        && DialogConditions.TryGet(out var DialogConditionsItem))
+                    {
+                        fg.AppendLine("DialogConditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DialogConditionsItem.Overall);
+                            if (DialogConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in DialogConditionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.UnusedConditions?.Overall ?? true)
+                        && UnusedConditions.TryGet(out var UnusedConditionsItem))
+                    {
+                        fg.AppendLine("UnusedConditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(UnusedConditionsItem.Overall);
+                            if (UnusedConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in UnusedConditionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Stages?.Overall ?? true)
+                        && Stages.TryGet(out var StagesItem))
+                    {
+                        fg.AppendLine("Stages =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(StagesItem.Overall);
+                            if (StagesItem.Specific != null)
+                            {
+                                foreach (var subItem in StagesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Objectives?.Overall ?? true)
+                        && Objectives.TryGet(out var ObjectivesItem))
+                    {
+                        fg.AppendLine("Objectives =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ObjectivesItem.Overall);
+                            if (ObjectivesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectivesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Aliases?.Overall ?? true)
+                        && Aliases.TryGet(out var AliasesItem))
+                    {
+                        fg.AppendLine("Aliases =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AliasesItem.Overall);
+                            if (AliasesItem.Specific != null)
+                            {
+                                foreach (var subItem in AliasesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +1020,66 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, QuestAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public Exception? Flags;
+            public Exception? Priority;
+            public Exception? QuestFormVersion;
+            public Exception? Unknown;
+            public Exception? Type;
+            public Exception? Event;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TextDisplayGlobals;
+            public Exception? ObjectWindowFilter;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? DialogConditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? UnusedConditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>? Aliases;
+            public Exception? Description;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Quest_FieldIndex.Name:
+                        return Name;
+                    case Quest_FieldIndex.Flags:
+                        return Flags;
+                    case Quest_FieldIndex.Priority:
+                        return Priority;
+                    case Quest_FieldIndex.QuestFormVersion:
+                        return QuestFormVersion;
+                    case Quest_FieldIndex.Unknown:
+                        return Unknown;
+                    case Quest_FieldIndex.Type:
+                        return Type;
+                    case Quest_FieldIndex.Event:
+                        return Event;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        return TextDisplayGlobals;
+                    case Quest_FieldIndex.ObjectWindowFilter:
+                        return ObjectWindowFilter;
+                    case Quest_FieldIndex.DialogConditions:
+                        return DialogConditions;
+                    case Quest_FieldIndex.UnusedConditions:
+                        return UnusedConditions;
+                    case Quest_FieldIndex.Stages:
+                        return Stages;
+                    case Quest_FieldIndex.Objectives:
+                        return Objectives;
+                    case Quest_FieldIndex.Aliases:
+                        return Aliases;
+                    case Quest_FieldIndex.Description:
+                        return Description;
+                    case Quest_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +1090,57 @@ namespace Mutagen.Bethesda.Skyrim
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, QuestAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Quest_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Quest_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case Quest_FieldIndex.QuestFormVersion:
+                        this.QuestFormVersion = ex;
+                        break;
+                    case Quest_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Quest_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Quest_FieldIndex.Event:
+                        this.Event = ex;
+                        break;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        this.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.ObjectWindowFilter:
+                        this.ObjectWindowFilter = ex;
+                        break;
+                    case Quest_FieldIndex.DialogConditions:
+                        this.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.UnusedConditions:
+                        this.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Aliases:
+                        this.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Quest_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +1152,57 @@ namespace Mutagen.Bethesda.Skyrim
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, QuestAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.QuestFormVersion:
+                        this.QuestFormVersion = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Event:
+                        this.Event = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        this.TextDisplayGlobals = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Quest_FieldIndex.ObjectWindowFilter:
+                        this.ObjectWindowFilter = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.DialogConditions:
+                        this.DialogConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.UnusedConditions:
+                        this.UnusedConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Aliases:
+                        this.Aliases = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +1212,23 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (Flags != null) return true;
+                if (Priority != null) return true;
+                if (QuestFormVersion != null) return true;
+                if (Unknown != null) return true;
+                if (Type != null) return true;
+                if (Event != null) return true;
+                if (TextDisplayGlobals != null) return true;
+                if (ObjectWindowFilter != null) return true;
+                if (DialogConditions != null) return true;
+                if (UnusedConditions != null) return true;
+                if (Stages != null) return true;
+                if (Objectives != null) return true;
+                if (Aliases != null) return true;
+                if (Description != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +1264,149 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Priority, "Priority");
+                fg.AppendItem(QuestFormVersion, "QuestFormVersion");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Event, "Event");
+                if (TextDisplayGlobals.TryGet(out var TextDisplayGlobalsItem))
+                {
+                    fg.AppendLine("TextDisplayGlobals =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(TextDisplayGlobalsItem.Overall);
+                        if (TextDisplayGlobalsItem.Specific != null)
+                        {
+                            foreach (var subItem in TextDisplayGlobalsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(ObjectWindowFilter, "ObjectWindowFilter");
+                if (DialogConditions.TryGet(out var DialogConditionsItem))
+                {
+                    fg.AppendLine("DialogConditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DialogConditionsItem.Overall);
+                        if (DialogConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in DialogConditionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (UnusedConditions.TryGet(out var UnusedConditionsItem))
+                {
+                    fg.AppendLine("UnusedConditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(UnusedConditionsItem.Overall);
+                        if (UnusedConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in UnusedConditionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Stages.TryGet(out var StagesItem))
+                {
+                    fg.AppendLine("Stages =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(StagesItem.Overall);
+                        if (StagesItem.Specific != null)
+                        {
+                            foreach (var subItem in StagesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Objectives.TryGet(out var ObjectivesItem))
+                {
+                    fg.AppendLine("Objectives =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ObjectivesItem.Overall);
+                        if (ObjectivesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectivesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Aliases.TryGet(out var AliasesItem))
+                {
+                    fg.AppendLine("Aliases =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AliasesItem.Overall);
+                        if (AliasesItem.Specific != null)
+                        {
+                            foreach (var subItem in AliasesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -407,6 +1415,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.QuestFormVersion = this.QuestFormVersion.Combine(rhs.QuestFormVersion);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Event = this.Event.Combine(rhs.Event);
+                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
+                ret.ObjectWindowFilter = this.ObjectWindowFilter.Combine(rhs.ObjectWindowFilter);
+                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
+                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +1453,83 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, QuestAdapter.TranslationMask?> VirtualMachineAdapter;
+            public bool Name;
+            public bool Flags;
+            public bool Priority;
+            public bool QuestFormVersion;
+            public bool Unknown;
+            public bool Type;
+            public bool Event;
+            public bool TextDisplayGlobals;
+            public bool ObjectWindowFilter;
+            public MaskItem<bool, Condition.TranslationMask?> DialogConditions;
+            public MaskItem<bool, Condition.TranslationMask?> UnusedConditions;
+            public MaskItem<bool, QuestStage.TranslationMask?> Stages;
+            public MaskItem<bool, QuestObjective.TranslationMask?> Objectives;
+            public MaskItem<bool, QuestAlias.TranslationMask?> Aliases;
+            public bool Description;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, QuestAdapter.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Flags = defaultOn;
+                this.Priority = defaultOn;
+                this.QuestFormVersion = defaultOn;
+                this.Unknown = defaultOn;
+                this.Type = defaultOn;
+                this.Event = defaultOn;
+                this.TextDisplayGlobals = defaultOn;
+                this.ObjectWindowFilter = defaultOn;
+                this.DialogConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.UnusedConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.Stages = new MaskItem<bool, QuestStage.TranslationMask?>(defaultOn, null);
+                this.Objectives = new MaskItem<bool, QuestObjective.TranslationMask?>(defaultOn, null);
+                this.Aliases = new MaskItem<bool, QuestAlias.TranslationMask?>(defaultOn, null);
+                this.Description = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Flags, null));
+                ret.Add((Priority, null));
+                ret.Add((QuestFormVersion, null));
+                ret.Add((Unknown, null));
+                ret.Add((Type, null));
+                ret.Add((Event, null));
+                ret.Add((TextDisplayGlobals, null));
+                ret.Add((ObjectWindowFilter, null));
+                ret.Add((DialogConditions?.Overall ?? true, DialogConditions?.Specific?.GetCrystal()));
+                ret.Add((UnusedConditions?.Overall ?? true, UnusedConditions?.Specific?.GetCrystal()));
+                ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
+                ret.Add((Objectives?.Overall ?? true, Objectives?.Specific?.GetCrystal()));
+                ret.Add((Aliases?.Overall ?? true, Aliases?.Specific?.GetCrystal()));
+                ret.Add((Description, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
         public Quest(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +1547,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +1611,26 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuest :
         IQuestGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamed,
         ILoquiObjectSetter<IQuestInternal>
     {
+        new QuestAdapter? VirtualMachineAdapter { get; set; }
+        new TranslatedString? Name { get; set; }
+        new Quest.Flag Flags { get; set; }
+        new Byte Priority { get; set; }
+        new Byte QuestFormVersion { get; set; }
+        new Int32 Unknown { get; set; }
+        new Quest.TypeEnum Type { get; set; }
+        new RecordType? Event { get; set; }
+        new ExtendedList<IFormLink<Global>> TextDisplayGlobals { get; }
+        new String? ObjectWindowFilter { get; set; }
+        new ExtendedList<Condition> DialogConditions { get; }
+        new ExtendedList<Condition> UnusedConditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestObjective> Objectives { get; }
+        new ExtendedList<QuestAlias> Aliases { get; }
+        new TranslatedString? Description { get; set; }
+        new Quest.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IQuestInternal :
@@ -531,11 +1642,30 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IQuestGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Quest_Registration.Instance;
+        IQuestAdapterGetter? VirtualMachineAdapter { get; }
+        TranslatedString? Name { get; }
+        Quest.Flag Flags { get; }
+        Byte Priority { get; }
+        Byte QuestFormVersion { get; }
+        Int32 Unknown { get; }
+        Quest.TypeEnum Type { get; }
+        RecordType? Event { get; }
+        IReadOnlyList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
+        String? ObjectWindowFilter { get; }
+        IReadOnlyList<IConditionGetter> DialogConditions { get; }
+        IReadOnlyList<IConditionGetter> UnusedConditions { get; }
+        IReadOnlyList<IQuestStageGetter> Stages { get; }
+        IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
+        IReadOnlyList<IQuestAliasGetter> Aliases { get; }
+        TranslatedString? Description { get; }
+        Quest.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -836,6 +1966,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Name = 7,
+        Flags = 8,
+        Priority = 9,
+        QuestFormVersion = 10,
+        Unknown = 11,
+        Type = 12,
+        Event = 13,
+        TextDisplayGlobals = 14,
+        ObjectWindowFilter = 15,
+        DialogConditions = 16,
+        UnusedConditions = 17,
+        Stages = 18,
+        Objectives = 19,
+        Aliases = 20,
+        Description = 21,
+        DNAMDataTypeState = 22,
     }
     #endregion
 
@@ -853,9 +2000,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "480d7a0d-3841-44f9-9a48-b53a29731f22";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -885,6 +2032,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)Quest_FieldIndex.VirtualMachineAdapter;
+                case "NAME":
+                    return (ushort)Quest_FieldIndex.Name;
+                case "FLAGS":
+                    return (ushort)Quest_FieldIndex.Flags;
+                case "PRIORITY":
+                    return (ushort)Quest_FieldIndex.Priority;
+                case "QUESTFORMVERSION":
+                    return (ushort)Quest_FieldIndex.QuestFormVersion;
+                case "UNKNOWN":
+                    return (ushort)Quest_FieldIndex.Unknown;
+                case "TYPE":
+                    return (ushort)Quest_FieldIndex.Type;
+                case "EVENT":
+                    return (ushort)Quest_FieldIndex.Event;
+                case "TEXTDISPLAYGLOBALS":
+                    return (ushort)Quest_FieldIndex.TextDisplayGlobals;
+                case "OBJECTWINDOWFILTER":
+                    return (ushort)Quest_FieldIndex.ObjectWindowFilter;
+                case "DIALOGCONDITIONS":
+                    return (ushort)Quest_FieldIndex.DialogConditions;
+                case "UNUSEDCONDITIONS":
+                    return (ushort)Quest_FieldIndex.UnusedConditions;
+                case "STAGES":
+                    return (ushort)Quest_FieldIndex.Stages;
+                case "OBJECTIVES":
+                    return (ushort)Quest_FieldIndex.Objectives;
+                case "ALIASES":
+                    return (ushort)Quest_FieldIndex.Aliases;
+                case "DESCRIPTION":
+                    return (ushort)Quest_FieldIndex.Description;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)Quest_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +2076,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.TextDisplayGlobals:
+                case Quest_FieldIndex.DialogConditions:
+                case Quest_FieldIndex.UnusedConditions:
+                case Quest_FieldIndex.Stages:
+                case Quest_FieldIndex.Objectives:
+                case Quest_FieldIndex.Aliases:
+                    return true;
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                case Quest_FieldIndex.Name:
+                case Quest_FieldIndex.Flags:
+                case Quest_FieldIndex.Priority:
+                case Quest_FieldIndex.QuestFormVersion:
+                case Quest_FieldIndex.Unknown:
+                case Quest_FieldIndex.Type:
+                case Quest_FieldIndex.Event:
+                case Quest_FieldIndex.ObjectWindowFilter:
+                case Quest_FieldIndex.Description:
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +2105,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                case Quest_FieldIndex.DialogConditions:
+                case Quest_FieldIndex.UnusedConditions:
+                case Quest_FieldIndex.Stages:
+                case Quest_FieldIndex.Objectives:
+                case Quest_FieldIndex.Aliases:
+                    return true;
+                case Quest_FieldIndex.Name:
+                case Quest_FieldIndex.Flags:
+                case Quest_FieldIndex.Priority:
+                case Quest_FieldIndex.QuestFormVersion:
+                case Quest_FieldIndex.Unknown:
+                case Quest_FieldIndex.Type:
+                case Quest_FieldIndex.Event:
+                case Quest_FieldIndex.TextDisplayGlobals:
+                case Quest_FieldIndex.ObjectWindowFilter:
+                case Quest_FieldIndex.Description:
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +2134,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                case Quest_FieldIndex.Name:
+                case Quest_FieldIndex.Flags:
+                case Quest_FieldIndex.Priority:
+                case Quest_FieldIndex.QuestFormVersion:
+                case Quest_FieldIndex.Unknown:
+                case Quest_FieldIndex.Type:
+                case Quest_FieldIndex.Event:
+                case Quest_FieldIndex.TextDisplayGlobals:
+                case Quest_FieldIndex.ObjectWindowFilter:
+                case Quest_FieldIndex.DialogConditions:
+                case Quest_FieldIndex.UnusedConditions:
+                case Quest_FieldIndex.Stages:
+                case Quest_FieldIndex.Objectives:
+                case Quest_FieldIndex.Aliases:
+                case Quest_FieldIndex.Description:
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +2162,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case Quest_FieldIndex.Name:
+                    return "Name";
+                case Quest_FieldIndex.Flags:
+                    return "Flags";
+                case Quest_FieldIndex.Priority:
+                    return "Priority";
+                case Quest_FieldIndex.QuestFormVersion:
+                    return "QuestFormVersion";
+                case Quest_FieldIndex.Unknown:
+                    return "Unknown";
+                case Quest_FieldIndex.Type:
+                    return "Type";
+                case Quest_FieldIndex.Event:
+                    return "Event";
+                case Quest_FieldIndex.TextDisplayGlobals:
+                    return "TextDisplayGlobals";
+                case Quest_FieldIndex.ObjectWindowFilter:
+                    return "ObjectWindowFilter";
+                case Quest_FieldIndex.DialogConditions:
+                    return "DialogConditions";
+                case Quest_FieldIndex.UnusedConditions:
+                    return "UnusedConditions";
+                case Quest_FieldIndex.Stages:
+                    return "Stages";
+                case Quest_FieldIndex.Objectives:
+                    return "Objectives";
+                case Quest_FieldIndex.Aliases:
+                    return "Aliases";
+                case Quest_FieldIndex.Description:
+                    return "Description";
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +2206,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                case Quest_FieldIndex.Name:
+                case Quest_FieldIndex.Flags:
+                case Quest_FieldIndex.Priority:
+                case Quest_FieldIndex.QuestFormVersion:
+                case Quest_FieldIndex.Unknown:
+                case Quest_FieldIndex.Type:
+                case Quest_FieldIndex.Event:
+                case Quest_FieldIndex.TextDisplayGlobals:
+                case Quest_FieldIndex.ObjectWindowFilter:
+                case Quest_FieldIndex.DialogConditions:
+                case Quest_FieldIndex.UnusedConditions:
+                case Quest_FieldIndex.Stages:
+                case Quest_FieldIndex.Objectives:
+                case Quest_FieldIndex.Aliases:
+                case Quest_FieldIndex.Description:
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +2234,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                case Quest_FieldIndex.Name:
+                case Quest_FieldIndex.Flags:
+                case Quest_FieldIndex.Priority:
+                case Quest_FieldIndex.QuestFormVersion:
+                case Quest_FieldIndex.Unknown:
+                case Quest_FieldIndex.Type:
+                case Quest_FieldIndex.Event:
+                case Quest_FieldIndex.TextDisplayGlobals:
+                case Quest_FieldIndex.ObjectWindowFilter:
+                case Quest_FieldIndex.DialogConditions:
+                case Quest_FieldIndex.UnusedConditions:
+                case Quest_FieldIndex.Stages:
+                case Quest_FieldIndex.Objectives:
+                case Quest_FieldIndex.Aliases:
+                case Quest_FieldIndex.Description:
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +2262,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
             {
+                case Quest_FieldIndex.VirtualMachineAdapter:
+                    return typeof(QuestAdapter);
+                case Quest_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Quest_FieldIndex.Flags:
+                    return typeof(Quest.Flag);
+                case Quest_FieldIndex.Priority:
+                    return typeof(Byte);
+                case Quest_FieldIndex.QuestFormVersion:
+                    return typeof(Byte);
+                case Quest_FieldIndex.Unknown:
+                    return typeof(Int32);
+                case Quest_FieldIndex.Type:
+                    return typeof(Quest.TypeEnum);
+                case Quest_FieldIndex.Event:
+                    return typeof(RecordType);
+                case Quest_FieldIndex.TextDisplayGlobals:
+                    return typeof(ExtendedList<IFormLink<Global>>);
+                case Quest_FieldIndex.ObjectWindowFilter:
+                    return typeof(String);
+                case Quest_FieldIndex.DialogConditions:
+                    return typeof(ExtendedList<Condition>);
+                case Quest_FieldIndex.UnusedConditions:
+                    return typeof(ExtendedList<Condition>);
+                case Quest_FieldIndex.Stages:
+                    return typeof(ExtendedList<QuestStage>);
+                case Quest_FieldIndex.Objectives:
+                    return typeof(ExtendedList<QuestObjective>);
+                case Quest_FieldIndex.Aliases:
+                    return typeof(ExtendedList<QuestAlias>);
+                case Quest_FieldIndex.Description:
+                    return typeof(TranslatedString);
+                case Quest_FieldIndex.DNAMDataTypeState:
+                    return typeof(Quest.DNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -962,6 +2303,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(QuestXmlWriteTranslation);
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType QTGL_HEADER = new RecordType("QTGL");
+        public static readonly RecordType FLTR_HEADER = new RecordType("FLTR");
+        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
+        public static readonly RecordType NEXT_HEADER = new RecordType("NEXT");
+        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
+        public static readonly RecordType QOBJ_HEADER = new RecordType("QOBJ");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType ALST_HEADER = new RecordType("ALST");
+        public static readonly RecordType ALLS_HEADER = new RecordType("ALLS");
+        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
         public static readonly RecordType TriggeringRecordType = QUST_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
@@ -1005,6 +2360,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IQuestInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.Flags = default;
+            item.Priority = default;
+            item.QuestFormVersion = default;
+            item.Unknown = default;
+            item.Type = default;
+            item.Event = default;
+            item.TextDisplayGlobals.Clear();
+            item.ObjectWindowFilter = default;
+            item.DialogConditions.Clear();
+            item.UnusedConditions.Clear();
+            item.Stages.Clear();
+            item.Objectives.Clear();
+            item.Aliases.Clear();
+            item.Description = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1162,6 +2534,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Priority = item.Priority == rhs.Priority;
+            ret.QuestFormVersion = item.QuestFormVersion == rhs.QuestFormVersion;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Type = item.Type == rhs.Type;
+            ret.Event = item.Event == rhs.Event;
+            ret.TextDisplayGlobals = item.TextDisplayGlobals.CollectionEqualsHelper(
+                rhs.TextDisplayGlobals,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectWindowFilter = string.Equals(item.ObjectWindowFilter, rhs.ObjectWindowFilter);
+            ret.DialogConditions = item.DialogConditions.CollectionEqualsHelper(
+                rhs.DialogConditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.UnusedConditions = item.UnusedConditions.CollectionEqualsHelper(
+                rhs.UnusedConditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Stages = item.Stages.CollectionEqualsHelper(
+                rhs.Stages,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objectives = item.Objectives.CollectionEqualsHelper(
+                rhs.Objectives,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Aliases = item.Aliases.CollectionEqualsHelper(
+                rhs.Aliases,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1213,12 +2624,175 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                fg.AppendItem(item.Priority, "Priority");
+            }
+            if (printMask?.QuestFormVersion ?? true)
+            {
+                fg.AppendItem(item.QuestFormVersion, "QuestFormVersion");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendItem(item.Type, "Type");
+            }
+            if ((printMask?.Event ?? true)
+                && item.Event.TryGet(out var EventItem))
+            {
+                fg.AppendItem(EventItem, "Event");
+            }
+            if (printMask?.TextDisplayGlobals?.Overall ?? true)
+            {
+                fg.AppendLine("TextDisplayGlobals =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.TextDisplayGlobals)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ObjectWindowFilter ?? true)
+                && item.ObjectWindowFilter.TryGet(out var ObjectWindowFilterItem))
+            {
+                fg.AppendItem(ObjectWindowFilterItem, "ObjectWindowFilter");
+            }
+            if (printMask?.DialogConditions?.Overall ?? true)
+            {
+                fg.AppendLine("DialogConditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.DialogConditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.UnusedConditions?.Overall ?? true)
+            {
+                fg.AppendLine("UnusedConditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.UnusedConditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Stages?.Overall ?? true)
+            {
+                fg.AppendLine("Stages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Stages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Objectives?.Overall ?? true)
+            {
+                fg.AppendLine("Objectives =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Objectives)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Aliases?.Overall ?? true)
+            {
+                fg.AppendLine("Aliases =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Aliases)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
+            {
+                fg.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IQuestGetter item,
             Quest.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Event.HasValue && checkMask.Event.Value != (item.Event != null)) return false;
+            if (checkMask.ObjectWindowFilter.HasValue && checkMask.ObjectWindowFilter.Value != (item.ObjectWindowFilter != null)) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1228,6 +2802,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestGetter item,
             Quest.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, QuestAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            mask.Flags = true;
+            mask.Priority = true;
+            mask.QuestFormVersion = true;
+            mask.Unknown = true;
+            mask.Type = true;
+            mask.Event = (item.Event != null);
+            mask.TextDisplayGlobals = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.ObjectWindowFilter = (item.ObjectWindowFilter != null);
+            var DialogConditionsItem = item.DialogConditions;
+            mask.DialogConditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, DialogConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var UnusedConditionsItem = item.UnusedConditions;
+            mask.UnusedConditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, UnusedConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var StagesItem = item.Stages;
+            mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestStage.Mask<bool>?>>?>(true, StagesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestStage.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ObjectivesItem = item.Objectives;
+            mask.Objectives = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestObjective.Mask<bool>?>>?>(true, ObjectivesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestObjective.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var AliasesItem = item.Aliases;
+            mask.Aliases = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestAlias.Mask<bool>?>>?>(true, AliasesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestAlias.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Description = (item.Description != null);
+            mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1279,6 +2876,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Priority != rhs.Priority) return false;
+            if (lhs.QuestFormVersion != rhs.QuestFormVersion) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.Event != rhs.Event) return false;
+            if (!lhs.TextDisplayGlobals.SequenceEqual(rhs.TextDisplayGlobals)) return false;
+            if (!string.Equals(lhs.ObjectWindowFilter, rhs.ObjectWindowFilter)) return false;
+            if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions)) return false;
+            if (!lhs.UnusedConditions.SequenceEqual(rhs.UnusedConditions)) return false;
+            if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
+            if (!lhs.Objectives.SequenceEqual(rhs.Objectives)) return false;
+            if (!lhs.Aliases.SequenceEqual(rhs.Aliases)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
         
@@ -1303,6 +2917,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IQuestGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Flags);
+            hash.Add(item.Priority);
+            hash.Add(item.QuestFormVersion);
+            hash.Add(item.Unknown);
+            hash.Add(item.Type);
+            if (item.Event.TryGet(out var Eventitem))
+            {
+                hash.Add(Eventitem);
+            }
+            hash.Add(item.TextDisplayGlobals);
+            if (item.ObjectWindowFilter.TryGet(out var ObjectWindowFilteritem))
+            {
+                hash.Add(ObjectWindowFilteritem);
+            }
+            hash.Add(item.DialogConditions);
+            hash.Add(item.UnusedConditions);
+            hash.Add(item.Stages);
+            hash.Add(item.Objectives);
+            hash.Add(item.Aliases);
+            if (item.Description.TryGet(out var Descriptionitem))
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1329,6 +2975,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.TextDisplayGlobals.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Stages.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Aliases.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1379,6 +3059,211 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestFormVersion) ?? true))
+            {
+                item.QuestFormVersion = rhs.QuestFormVersion;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
+            {
+                item.Event = rhs.Event;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.TextDisplayGlobals);
+                try
+                {
+                    item.TextDisplayGlobals.SetTo(
+                        rhs.TextDisplayGlobals
+                        .Select(r => (IFormLink<Global>)new FormLink<Global>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.ObjectWindowFilter) ?? true))
+            {
+                item.ObjectWindowFilter = rhs.ObjectWindowFilter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.DialogConditions);
+                try
+                {
+                    item.DialogConditions.SetTo(
+                        rhs.DialogConditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.UnusedConditions);
+                try
+                {
+                    item.UnusedConditions.SetTo(
+                        rhs.UnusedConditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
+                try
+                {
+                    item.Stages.SetTo(
+                        rhs.Stages
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Objectives);
+                try
+                {
+                    item.Objectives.SetTo(
+                        rhs.Objectives
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Aliases);
+                try
+                {
+                    item.Aliases.SetTo(
+                        rhs.Aliases
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1521,6 +3406,232 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((QuestAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)Quest_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Quest_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Quest.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Quest_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Priority),
+                    item: item.Priority,
+                    fieldIndex: (int)Quest_FieldIndex.Priority,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestFormVersion) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.QuestFormVersion),
+                    item: item.QuestFormVersion,
+                    fieldIndex: (int)Quest_FieldIndex.QuestFormVersion,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Unknown) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Quest_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<Quest.TypeEnum>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)Quest_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
+            if ((item.Event != null)
+                && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
+            {
+                RecordTypeXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Event),
+                    item: item.Event.Value,
+                    fieldIndex: (int)Quest_FieldIndex.Event,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IGlobalGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TextDisplayGlobals),
+                    item: item.TextDisplayGlobals,
+                    fieldIndex: (int)Quest_FieldIndex.TextDisplayGlobals,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.TextDisplayGlobals),
+                    transl: (XElement subNode, IFormLink<IGlobalGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.ObjectWindowFilter != null)
+                && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.ObjectWindowFilter) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ObjectWindowFilter),
+                    item: item.ObjectWindowFilter,
+                    fieldIndex: (int)Quest_FieldIndex.ObjectWindowFilter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
+            {
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DialogConditions),
+                    item: item.DialogConditions,
+                    fieldIndex: (int)Quest_FieldIndex.DialogConditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions),
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            {
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.UnusedConditions),
+                    item: item.UnusedConditions,
+                    fieldIndex: (int)Quest_FieldIndex.UnusedConditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions),
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                ListXmlTranslation<IQuestStageGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Stages),
+                    item: item.Stages,
+                    fieldIndex: (int)Quest_FieldIndex.Stages,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Stages),
+                    transl: (XElement subNode, IQuestStageGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((QuestStageXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                ListXmlTranslation<IQuestObjectiveGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Objectives),
+                    item: item.Objectives,
+                    fieldIndex: (int)Quest_FieldIndex.Objectives,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Objectives),
+                    transl: (XElement subNode, IQuestObjectiveGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((QuestObjectiveXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
+            {
+                ListXmlTranslation<IQuestAliasGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Aliases),
+                    item: item.Aliases,
+                    fieldIndex: (int)Quest_FieldIndex.Aliases,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.Aliases),
+                    transl: (XElement subNode, IQuestAliasGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((QuestAliasXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Description != null)
+                && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)Quest_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Quest.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)Quest_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1628,6 +3739,373 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<QuestAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Quest.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Priority":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Priority);
+                    try
+                    {
+                        item.Priority = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "QuestFormVersion":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.QuestFormVersion);
+                    try
+                    {
+                        item.QuestFormVersion = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Type);
+                    try
+                    {
+                        item.Type = EnumXmlTranslation<Quest.TypeEnum>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Event":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Event);
+                    try
+                    {
+                        item.Event = RecordTypeXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TextDisplayGlobals":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.TextDisplayGlobals);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Global>>.Instance.Parse(
+                            node: node,
+                            enumer: out var TextDisplayGlobalsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.TextDisplayGlobals.SetTo(TextDisplayGlobalsItem);
+                        }
+                        else
+                        {
+                            item.TextDisplayGlobals.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ObjectWindowFilter":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.ObjectWindowFilter);
+                    try
+                    {
+                        item.ObjectWindowFilter = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DialogConditions":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.DialogConditions);
+                    try
+                    {
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var DialogConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.DialogConditions.SetTo(DialogConditionsItem);
+                        }
+                        else
+                        {
+                            item.DialogConditions.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnusedConditions":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.UnusedConditions);
+                    try
+                    {
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var UnusedConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.UnusedConditions.SetTo(UnusedConditionsItem);
+                        }
+                        else
+                        {
+                            item.UnusedConditions.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Stages":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
+                    try
+                    {
+                        if (ListXmlTranslation<QuestStage>.Instance.Parse(
+                            node: node,
+                            enumer: out var StagesItem,
+                            transl: LoquiXmlTranslation<QuestStage>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Stages.SetTo(StagesItem);
+                        }
+                        else
+                        {
+                            item.Stages.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Objectives":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Objectives);
+                    try
+                    {
+                        if (ListXmlTranslation<QuestObjective>.Instance.Parse(
+                            node: node,
+                            enumer: out var ObjectivesItem,
+                            transl: LoquiXmlTranslation<QuestObjective>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Objectives.SetTo(ObjectivesItem);
+                        }
+                        else
+                        {
+                            item.Objectives.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Aliases":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Aliases);
+                    try
+                    {
+                        if (ListXmlTranslation<QuestAlias>.Instance.Parse(
+                            node: node,
+                            enumer: out var AliasesItem,
+                            transl: LoquiXmlTranslation<QuestAlias>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Aliases.SetTo(AliasesItem);
+                        }
+                        else
+                        {
+                            item.Aliases.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)Quest_FieldIndex.DNAMDataTypeState);
+                    try
+                    {
+                        item.DNAMDataTypeState = EnumXmlTranslation<Quest.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1714,6 +4192,159 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
 
+        static partial void WriteBinaryDialogConditionsCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryDialogConditions(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryDialogConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryUnusedConditionsLogicCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryUnusedConditionsLogic(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryUnusedConditionsLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryNextAliasIDCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryNextAliasID(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryNextAliasIDCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IQuestGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IQuestGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((QuestAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DNAM_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
+                writer.Write(item.Priority);
+                writer.Write(item.QuestFormVersion);
+                writer.Write(item.Unknown);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.TypeEnum>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 4);
+            }
+            Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Event,
+                header: recordTypeConverter.ConvertToCustom(Quest_Registration.ENAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Write(
+                writer: writer,
+                items: item.TextDisplayGlobals,
+                transl: (MutagenWriter subWriter, IFormLink<IGlobalGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: recordTypeConverter.ConvertToCustom(Quest_Registration.QTGL_HEADER));
+                });
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObjectWindowFilter,
+                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FLTR_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            QuestBinaryWriteTranslation.WriteBinaryDialogConditions(
+                writer: writer,
+                item: item);
+            QuestBinaryWriteTranslation.WriteBinaryUnusedConditionsLogic(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
+                writer: writer,
+                items: item.Stages,
+                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestObjectiveGetter>.Instance.Write(
+                writer: writer,
+                items: item.Objectives,
+                transl: (MutagenWriter subWriter, IQuestObjectiveGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestObjectiveBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            QuestBinaryWriteTranslation.WriteBinaryNextAliasID(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestAliasGetter>.Instance.Write(
+                writer: writer,
+                items: item.Aliases,
+                transl: (MutagenWriter subWriter, IQuestAliasGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestAliasBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(Quest_Registration.NNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+        }
+
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
@@ -1724,10 +4355,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Quest_Registration.QUST_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1783,6 +4414,166 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IQuestInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.QuestAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Priority = dataFrame.ReadUInt8();
+                    item.QuestFormVersion = dataFrame.ReadUInt8();
+                    item.Unknown = dataFrame.ReadInt32();
+                    item.Type = EnumBinaryTranslation<Quest.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Type);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Event = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Event);
+                }
+                case 0x4C475451: // QTGL
+                {
+                    item.TextDisplayGlobals.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Global>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Quest_Registration.QTGL_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.TextDisplayGlobals);
+                }
+                case 0x52544C46: // FLTR
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectWindowFilter = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.ObjectWindowFilter);
+                }
+                case 0x41445443: // CTDA
+                {
+                    QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.DialogConditions);
+                }
+                case 0x5458454E: // NEXT
+                {
+                    QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x58444E49: // INDX
+                {
+                    item.Stages.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Quest_Registration.INDX_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out QuestStage listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
+                }
+                case 0x4A424F51: // QOBJ
+                {
+                    item.Objectives.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestObjective>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Quest_Registration.QOBJ_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out QuestObjective listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<QuestObjective>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Objectives);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x54534C41: // ALST
+                case 0x534C4C41: // ALLS
+                {
+                    item.Aliases.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestAlias>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: QuestAlias_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out QuestAlias listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<QuestAlias>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Aliases);
+                }
+                case 0x4D414E4E: // NNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Description);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
+        static partial void FillBinaryDialogConditionsCustom(
+            MutagenFrame frame,
+            IQuestInternal item);
+
+        static partial void FillBinaryUnusedConditionsLogicCustom(
+            MutagenFrame frame,
+            IQuestInternal item);
+
+        static partial void FillBinaryNextAliasIDCustom(
+            MutagenFrame frame,
+            IQuestInternal item);
+
     }
 
 }
@@ -1818,6 +4609,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => QuestXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1844,6 +4641,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IQuestAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? QuestAdapterBinaryOverlay.QuestAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        private int? _DNAMLocation;
+        public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value + 0x0;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
+        #endregion
+        #region Priority
+        private int _PriorityLocation => _DNAMLocation!.Value + 0x2;
+        private bool _Priority_IsSet => _DNAMLocation.HasValue;
+        public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
+        #endregion
+        #region QuestFormVersion
+        private int _QuestFormVersionLocation => _DNAMLocation!.Value + 0x3;
+        private bool _QuestFormVersion_IsSet => _DNAMLocation.HasValue;
+        public Byte QuestFormVersion => _QuestFormVersion_IsSet ? _data.Span[_QuestFormVersionLocation] : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DNAMLocation!.Value + 0x4;
+        private bool _Unknown_IsSet => _DNAMLocation.HasValue;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _DNAMLocation!.Value + 0x8;
+        private bool _Type_IsSet => _DNAMLocation.HasValue;
+        public Quest.TypeEnum Type => _Type_IsSet ? (Quest.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        #endregion
+        #region Event
+        private int? _EventLocation;
+        public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        #endregion
+        public IReadOnlyList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; private set; } = ListExt.Empty<IFormLink<IGlobalGetter>>();
+        #region ObjectWindowFilter
+        private int? _ObjectWindowFilterLocation;
+        public String? ObjectWindowFilter => _ObjectWindowFilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectWindowFilterLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region DialogConditions
+        partial void DialogConditionsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        #region UnusedConditionsLogic
+        partial void UnusedConditionsLogicCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = ListExt.Empty<QuestStageBinaryOverlay>();
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = ListExt.Empty<QuestObjectiveBinaryOverlay>();
+        #region NextAliasID
+        partial void NextAliasIDCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = ListExt.Empty<QuestAliasBinaryOverlay>();
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1896,6 +4763,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Type);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    _EventLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Event);
+                }
+                case 0x4C475451: // QTGL
+                {
+                    this.TextDisplayGlobals = BinaryOverlayList<IFormLink<IGlobalGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IGlobalGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.TextDisplayGlobals);
+                }
+                case 0x52544C46: // FLTR
+                {
+                    _ObjectWindowFilterLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.ObjectWindowFilter);
+                }
+                case 0x41445443: // CTDA
+                {
+                    DialogConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.DialogConditions);
+                }
+                case 0x5458454E: // NEXT
+                {
+                    UnusedConditionsLogicCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x58444E49: // INDX
+                {
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: Quest_Registration.INDX_HEADER,
+                        factory:  QuestStageBinaryOverlay.QuestStageFactory);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
+                }
+                case 0x4A424F51: // QOBJ
+                {
+                    this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: Quest_Registration.QOBJ_HEADER,
+                        factory:  QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Objectives);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    NextAliasIDCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x54534C41: // ALST
+                case 0x534C4C41: // ALLS
+                {
+                    this.Aliases = this.ParseRepeatedTypelessSubrecord<QuestAliasBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: QuestAlias_Registration.TriggeringRecordTypes,
+                        factory:  QuestAliasBinaryOverlay.QuestAliasFactory);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Aliases);
+                }
+                case 0x4D414E4E: // NNAM
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Description);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

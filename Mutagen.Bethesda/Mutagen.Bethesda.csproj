@@ -59,12 +59,13 @@
     <Compile Include="Oblivion\Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Constants.cs" />
     <Compile Include="Skyrim\Enums\Agression.cs" />
     <Compile Include="Skyrim\Enums\Assistance.cs" />
     <Compile Include="Skyrim\Enums\BasicStat.cs" />
     <Compile Include="Skyrim\Enums\Confidence.cs" />
     <Compile Include="Skyrim\Enums\FavorLevel.cs" />
-    <Compile Include="Skyrim\Enums\LevelModifier.cs" />
+    <Compile Include="Skyrim\Enums\Level.cs" />
     <Compile Include="Skyrim\Enums\LockLevel.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
     <Compile Include="Common\Enums\Quadrant.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Skyrim\Interfaces\IRegionObject.cs" />
     <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
     <Compile Include="Skyrim\Interfaces\ISound.cs" />
+    <Compile Include="Skyrim\Interfaces\IAliasVoiceType.cs" />
     <Compile Include="Skyrim\Interfaces\IWeightValue.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
@@ -173,6 +175,9 @@
     <Compile Include="Skyrim\Records\Major Records\ANavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CreateReferenceToObject.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogResponse.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
@@ -184,6 +189,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FindMatchingRefNearAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedArrow.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
@@ -208,6 +216,33 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Quest.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestAdapter.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestFragmentAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestLogEntry.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestObjective.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestObjectiveTarget.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestStage.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestTarget.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
@@ -2354,6 +2389,48 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogResponseFlags_LoquiGenerated.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestAdapter_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestScriptFragment_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestAlias_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestFragmentAlias_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestStage_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestLogEntry_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestObjective_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestObjectiveTarget_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LocationAliasReference_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ExternalAliasReference_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CreateReferenceToObject_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FindMatchingRefNearAlias_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FindMatchingRefFromEvent_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\QuestTarget_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

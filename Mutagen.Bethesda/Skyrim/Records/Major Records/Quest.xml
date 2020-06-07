@@ -1,7 +1,198 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Quest" recordType="QUST" objType="Record" baseClass="SkyrimMajorRecord" GUID="480d7a0d-3841-44f9-9a48-b53a29731f22" ID="351">
+    <Interface>ITranslatedNamed</Interface>
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="QuestAdapter" recordType="VMAD" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="Quest.Flag" byteLength="2" />
+          <UInt8 name="Priority" />
+          <UInt8 name="QuestFormVersion" />
+          <Int32 name="Unknown" />
+          <Enum name="Type" enumName="Quest.TypeEnum" byteLength="4" />
+        </Fields>
+      </Data>
+      <RecordType name="Event" recordType="ENAM" />
+      <List name="TextDisplayGlobals">
+        <FormLink recordType="QTGL" refName="Global" />
+      </List>
+      <String name="ObjectWindowFilter" recordType="FLTR" />
+      <RefList name="DialogConditions" refName="Condition" binary="Custom" />
+      <CustomLogic name="UnusedConditionsLogic" recordType="NEXT" />
+      <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" />
+      <RefList name="Stages" refName="QuestStage" />
+      <RefList name="Objectives" refName="QuestObjective" />
+      <CustomLogic name="NextAliasID" recordType="ANAM" />
+      <RefList name="Aliases" refName="QuestAlias" />
+      <String name="Description" recordType="NNAM" translated="DL" />
+    </Fields>
+  </Object>
+  <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="9b79d88c-6b07-459c-959e-f6c5d1318ea8" ID="360">
+    <Fields>
+      <Break />
+      <UInt8 name="Unknown" />
+      <CustomLogic name="FragmentCount" byteLength="2" />
+      <String name="FileName" binaryType="PrependLengthUShort" binary="Custom" />
+      <RefList name="Fragments" refName="QuestScriptFragment" binary="Custom" />
+      <RefList name="Aliases" refName="QuestFragmentAlias" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="QuestScriptFragment" objType="Subrecord" GUID="346d6827-d2b6-412c-81fe-10e27c15fff6" ID="361">
+    <Fields>
+      <UInt16 name="Stage" />
+      <Int16 name="Unknown" />
+      <Int32 name="StageIndex" />
+      <Int8 name="Unknown2" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="QuestFragmentAlias" objType="Subrecord" GUID="e7dd63f2-2360-48e0-81ec-17d10b30162e" ID="362">
+    <Fields>
+      <RefDirect name="Property" refName="ScriptObjectProperty" binary="Custom" />
+      <Int16 name="Version" default="5" />
+      <UInt16 name="ObjectFormat" default="2" />
+      <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="QuestStage" objType="Subrecord" GUID="dae57571-8e38-4aa0-a556-27689280b6b6" ID="363">
+    <Fields>
+      <Data recordType="INDX" >
+        <Fields>
+          <UInt16 name="Index" />
+          <Enum name="Flags" enumName="QuestStage.Flag" byteLength="1" />
+          <UInt8 name="Unknown" />
+        </Fields>
+      </Data>
+      <RefList name="LogEntries" refName="QuestLogEntry" />
+    </Fields>
+  </Object>
+  <Object name="QuestLogEntry" objType="Subrecord" GUID="300fef8b-f34a-4baa-b6de-5859d503d5b7" ID="364">
+    <Fields>
+      <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <String name="Entry" recordType="CNAM" translated="DL" />
+      <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
+      <ByteArray name="Unknown" recordType="SCHR" />
+      <ByteArray name="Unknown2" recordType="SCTX" />
+      <ByteArray name="Unknown3" recordType="QNAM" />
+    </Fields>
+  </Object>
+  <Object name="QuestObjective" objType="Subrecord" GUID="f9edb5c0-0f4d-4d98-b7ba-462d08c9820d" ID="365">
+    <Fields>
+      <UInt16 name="Index" recordType="QOBJ" hasBeenSet="False" />
+      <Enum name="Flags" enumName="QuestObjective.Flag" recordType="FNAM" byteLength="4" />
+      <String name="DisplayText" recordType="NNAM" translated="Normal" />
+      <RefList name="Targets" refName="QuestObjectiveTarget" />
+    </Fields>
+  </Object>
+  <Object name="QuestObjectiveTarget" objType="Subrecord" GUID="cf84958d-dcfa-44fd-bf31-5d5a8024ab6d" ID="366">
+    <Fields>
+      <Data recordType="QSTA">
+        <Fields>
+          <Int32 name="AliasIndex" />
+          <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="QuestAlias" objType="Subrecord" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
+    <Fields>
+      <CustomLogic name="IDParse">
+        <RecordType>ALST</RecordType>
+        <RecordType>ALLS</RecordType>
+      </CustomLogic>
+      <UInt32 name="ID" binary="NoGeneration" />
+      <Enum name="Type" enumName="QuestAlias.TypeEnum" binary="NoGeneration" />
+      <String name="Name" recordType="ALID" />
+      <Enum name="Flags" enumName="QuestAlias.Flag" byteLength="4" recordType="FNAM" />
+      <Int32 name="AliasIndexToForceIntoWhenFilled" recordType="ALFI" />
+      <FormLink name="SpecificLocation" refName="Location" recordType="ALFL" />
+      <FormLink name="ForcedReference" objType="Record" recordType="ALFR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <FormLink name="UniqueActor" refName="Npc" recordType="ALUA" />
+      <RefDirect name="Location" refName="LocationAliasReference" />
+      <RefDirect name="External" refName="ExternalAliasReference" />
+      <RefDirect name="CreateReferenceToObject" refName="CreateReferenceToObject" />
+      <RefDirect name="FindMatchingRefNearAlias" refName="FindMatchingRefNearAlias" />
+      <RefDirect name="FindMatchingRefFromEvent" refName="FindMatchingRefFromEvent" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+      <FormLink name="SpectatorOverridePackageList" refName="FormList" recordType="SPOR" />
+      <FormLink name="ObserveDeadBodyOverridePackageList" refName="FormList" recordType="OCOR" />
+      <FormLink name="GuardWarnOverridePackageList" refName="FormList" recordType="GWOR" />
+      <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
+      <FormLink name="DisplayName" refName="Message" recordType="ALDN" />
+      <List name="Spells">
+        <FormLink recordType="ALSP" refName="Spell" />
+      </List>
+      <List name="Factions">
+        <FormLink recordType="ALFC" refName="Faction" />
+      </List>
+      <List name="PackageData">
+        <FormLink recordType="ALPC" refName="Package" />
+      </List>
+      <FormLink name="VoiceTypes" recordType="VTCK" objType="Record">
+        <Interface>IAliasVoiceType</Interface>
+      </FormLink>
+      <CustomLogic name="End" recordType="ALED" />
+    </Fields>
+  </Object>
+  <Object name="LocationAliasReference" objType="Subrecord" GUID="f2506ee5-0e90-44a0-a252-ef13849c1e03" ID="368">
+    <Fields>
+      <Int32 name="AliasIndex" recordType="ALFA" />
+      <FormLink name="Keyword" refName="Keyword" recordType="KNAM" />
+      <FormLink name="RefType" refName="LocationReferenceType" recordType="ALRT" />
+    </Fields>
+  </Object>
+  <Object name="ExternalAliasReference" objType="Subrecord" GUID="3e3c80ae-76fb-4c4a-bbd6-3ebbc337a6d7" ID="369">
+    <Fields>
+      <FormLink name="Quest" refName="Quest" recordType="ALEQ" />
+      <Int32 name="AliasIndex" recordType="ALEA" />
+    </Fields>
+  </Object>
+  <Object name="CreateReferenceToObject" objType="Subrecord" GUID="e41a23e7-3945-4c1a-b550-a51f7d5de2ba" ID="370">
+    <Fields>
+      <FormLink name="Object" refName="SkyrimMajorRecord" recordType="ALCO" hasBeenSet="False" />
+      <Data recordType="ALCA">
+        <Fields>
+          <Int16 name="AliasIndex" />
+          <Enum name="Create" enumName="CreateReferenceToObject.CreateEnum" byteLength="2" />
+        </Fields>
+      </Data>
+      <Enum name="Level" enumName="Level" byteLength="4" recordType="ALCL" hasBeenSet="False" />
+    </Fields>
+  </Object>
+  <Object name="FindMatchingRefNearAlias" objType="Subrecord" GUID="f5e4d3aa-8dc5-4459-a604-a180731efc42" ID="371">
+    <Fields>
+      <Int16 name="AliasIndex" recordType="ALNA" binary="Custom" />
+      <Enum name="Type" enumName="FindMatchingRefNearAlias.TypeEnum" byteLength="4" recordType="ALNT" />
+    </Fields>
+  </Object>
+  <Object name="FindMatchingRefFromEvent" objType="Subrecord" GUID="b0574d45-288a-48e8-97a9-556bfa90fc4a" ID="372">
+    <Fields>
+      <RecordType name="FromEvent" recordType="ALFE" />
+      <ByteArray name="EventData" recordType="ALFD" />
+    </Fields>
+  </Object>
+  <Object name="QuestTarget" objType="Subrecord" GUID="37f43515-81c6-41a2-9d11-d42e333a4ccc" ID="373">
+    <Fields>
+      <Data recordType="QSTA">
+        <Fields>
+          <FormLink name="Target" objType="Record">
+            <Interface>IPlaced</Interface>
+          </FormLink>
+          <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
     </Fields>
   </Object>
 </Loqui>

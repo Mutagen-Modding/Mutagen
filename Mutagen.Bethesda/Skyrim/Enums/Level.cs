@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum LevelModifier
+    public enum Level
     {
         Easy,
         Medium,

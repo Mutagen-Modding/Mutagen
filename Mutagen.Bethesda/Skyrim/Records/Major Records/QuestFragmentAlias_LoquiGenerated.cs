@@ -33,20 +33,25 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public abstract partial class AVirtualMachineAdapter :
-        IAVirtualMachineAdapter,
-        ILoquiObjectSetter<AVirtualMachineAdapter>,
-        IEquatable<AVirtualMachineAdapter>,
+    public partial class QuestFragmentAlias :
+        IQuestFragmentAlias,
+        ILoquiObjectSetter<QuestFragmentAlias>,
+        IEquatable<QuestFragmentAlias>,
         IEqualsMask
     {
         #region Ctor
-        public AVirtualMachineAdapter()
+        public QuestFragmentAlias()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Property
+        public ScriptObjectProperty Property { get; set; } = new ScriptObjectProperty();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptObjectPropertyGetter IQuestFragmentAliasGetter.Property => Property;
+        #endregion
         #region Version
         public readonly static Int16 _Version_Default = 5;
         public Int16 Version { get; set; } = default;
@@ -65,18 +70,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptEntryGetter> IAVirtualMachineAdapterGetter.Scripts => _Scripts;
+        IReadOnlyList<IScriptEntryGetter> IQuestFragmentAliasGetter.Scripts => _Scripts;
         #endregion
 
         #endregion
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            AVirtualMachineAdapterMixIn.ToString(
+            QuestFragmentAliasMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -86,22 +91,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAVirtualMachineAdapterGetter rhs)) return false;
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IQuestFragmentAliasGetter rhs)) return false;
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AVirtualMachineAdapter obj)
+        public bool Equals(QuestFragmentAlias obj)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => AVirtualMachineAdapterXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => QuestFragmentAliasXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -110,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AVirtualMachineAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -119,9 +124,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             XElement node,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -130,30 +135,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestFragmentAlias.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate<AVirtualMachineAdapter>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown AVirtualMachineAdapter subclass: {node.Name.LocalName}");
-            }
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new QuestFragmentAlias();
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -161,9 +163,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             string path,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,10 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -183,10 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,9 +197,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             Stream stream,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,10 +207,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,10 +219,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static AVirtualMachineAdapter CreateFromXml(
+        public static QuestFragmentAlias CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -242,16 +244,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Property = new MaskItem<TItem, ScriptObjectProperty.Mask<TItem>?>(initialValue, new ScriptObjectProperty.Mask<TItem>(initialValue));
                 this.Version = initialValue;
                 this.ObjectFormat = initialValue;
                 this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
             }
 
             public Mask(
+                TItem Property,
                 TItem Version,
                 TItem ObjectFormat,
                 TItem Scripts)
             {
+                this.Property = new MaskItem<TItem, ScriptObjectProperty.Mask<TItem>?>(Property, new ScriptObjectProperty.Mask<TItem>(Property));
                 this.Version = Version;
                 this.ObjectFormat = ObjectFormat;
                 this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(Scripts, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
@@ -266,6 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public MaskItem<TItem, ScriptObjectProperty.Mask<TItem>?>? Property { get; set; }
             public TItem Version;
             public TItem ObjectFormat;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>? Scripts;
@@ -281,6 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Property, rhs.Property)) return false;
                 if (!object.Equals(this.Version, rhs.Version)) return false;
                 if (!object.Equals(this.ObjectFormat, rhs.ObjectFormat)) return false;
                 if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
@@ -289,6 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Property);
                 hash.Add(this.Version);
                 hash.Add(this.ObjectFormat);
                 hash.Add(this.Scripts);
@@ -298,8 +306,13 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
+                if (Property != null)
+                {
+                    if (!eval(this.Property.Overall)) return false;
+                    if (this.Property.Specific != null && !this.Property.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Version)) return false;
                 if (!eval(this.ObjectFormat)) return false;
                 if (this.Scripts != null)
@@ -319,8 +332,13 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
+                if (Property != null)
+                {
+                    if (eval(this.Property.Overall)) return true;
+                    if (this.Property.Specific != null && this.Property.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Version)) return true;
                 if (eval(this.ObjectFormat)) return true;
                 if (this.Scripts != null)
@@ -342,13 +360,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AVirtualMachineAdapter.Mask<R>();
+                var ret = new QuestFragmentAlias.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Property = this.Property == null ? null : new MaskItem<R, ScriptObjectProperty.Mask<R>?>(eval(this.Property.Overall), this.Property.Specific?.Translate(eval));
                 obj.Version = eval(this.Version);
                 obj.ObjectFormat = eval(this.ObjectFormat);
                 if (Scripts != null)
@@ -375,19 +394,23 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            public string ToString(QuestFragmentAlias.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, QuestFragmentAlias.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(AVirtualMachineAdapter.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(QuestFragmentAlias.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Property?.Overall ?? true)
+                    {
+                        Property?.ToString(fg);
+                    }
                     if (printMask?.Version ?? true)
                     {
                         fg.AppendItem(Version, "Version");
@@ -444,40 +467,46 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>? Property;
             public Exception? Version;
             public Exception? ObjectFormat;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>? Scripts;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+                QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case AVirtualMachineAdapter_FieldIndex.Version:
+                    case QuestFragmentAlias_FieldIndex.Property:
+                        return Property;
+                    case QuestFragmentAlias_FieldIndex.Version:
                         return Version;
-                    case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                    case QuestFragmentAlias_FieldIndex.ObjectFormat:
                         return ObjectFormat;
-                    case AVirtualMachineAdapter_FieldIndex.Scripts:
+                    case QuestFragmentAlias_FieldIndex.Scripts:
                         return Scripts;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+                QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case AVirtualMachineAdapter_FieldIndex.Version:
+                    case QuestFragmentAlias_FieldIndex.Property:
+                        this.Property = new MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>(ex, null);
+                        break;
+                    case QuestFragmentAlias_FieldIndex.Version:
                         this.Version = ex;
                         break;
-                    case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                    case QuestFragmentAlias_FieldIndex.ObjectFormat:
                         this.ObjectFormat = ex;
                         break;
-                    case AVirtualMachineAdapter_FieldIndex.Scripts:
+                    case QuestFragmentAlias_FieldIndex.Scripts:
                         this.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -485,18 +514,21 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
-                AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+                QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case AVirtualMachineAdapter_FieldIndex.Version:
+                    case QuestFragmentAlias_FieldIndex.Property:
+                        this.Property = (MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>?)obj;
+                        break;
+                    case QuestFragmentAlias_FieldIndex.Version:
                         this.Version = (Exception?)obj;
                         break;
-                    case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                    case QuestFragmentAlias_FieldIndex.ObjectFormat:
                         this.ObjectFormat = (Exception?)obj;
                         break;
-                    case AVirtualMachineAdapter_FieldIndex.Scripts:
+                    case QuestFragmentAlias_FieldIndex.Scripts:
                         this.Scripts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -504,9 +536,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Property != null) return true;
                 if (Version != null) return true;
                 if (ObjectFormat != null) return true;
                 if (Scripts != null) return true;
@@ -522,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -542,8 +575,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(FileGeneration fg)
             {
+                Property?.ToString(fg);
                 fg.AppendItem(Version, "Version");
                 fg.AppendItem(ObjectFormat, "ObjectFormat");
                 if (Scripts.TryGet(out var ScriptsItem))
@@ -576,6 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Property = this.Property.Combine(rhs.Property, (l, r) => l.Combine(r));
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.ObjectFormat = this.ObjectFormat.Combine(rhs.ObjectFormat);
                 ret.Scripts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), ExceptionExt.Combine(this.Scripts?.Specific, rhs.Scripts?.Specific));
@@ -600,6 +635,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public MaskItem<bool, ScriptObjectProperty.TranslationMask?> Property;
             public bool Version;
             public bool ObjectFormat;
             public MaskItem<bool, ScriptEntry.TranslationMask?> Scripts;
@@ -608,6 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Property = new MaskItem<bool, ScriptObjectProperty.TranslationMask?>(defaultOn, null);
                 this.Version = defaultOn;
                 this.ObjectFormat = defaultOn;
                 this.Scripts = new MaskItem<bool, ScriptEntry.TranslationMask?>(defaultOn, null);
@@ -624,8 +661,9 @@ namespace Mutagen.Bethesda.Skyrim
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Property?.Overall ?? true, Property?.Specific?.GetCrystal()));
                 ret.Add((Version, null));
                 ret.Add((ObjectFormat, null));
                 ret.Add((Scripts?.Overall ?? true, Scripts?.Specific?.GetCrystal()));
@@ -634,61 +672,84 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => QuestFragmentAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AVirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((QuestFragmentAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        #region Binary Create
+        [DebuggerStepThrough]
+        public static QuestFragmentAlias CreateFromBinary(MutagenFrame frame)
+        {
+            return CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: null);
+        }
+
+        public static QuestFragmentAlias CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new QuestFragmentAlias();
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAVirtualMachineAdapterGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestFragmentAliasGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)this).CommonSetterInstance()!).Clear(this);
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static AVirtualMachineAdapter GetNew()
+        internal static QuestFragmentAlias GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new QuestFragmentAlias();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAVirtualMachineAdapter :
-        IAVirtualMachineAdapterGetter,
-        ILoquiObjectSetter<IAVirtualMachineAdapter>
+    public partial interface IQuestFragmentAlias :
+        IQuestFragmentAliasGetter,
+        ILoquiObjectSetter<IQuestFragmentAlias>
     {
+        new ScriptObjectProperty Property { get; set; }
         new Int16 Version { get; set; }
         new UInt16 ObjectFormat { get; set; }
         new ExtendedList<ScriptEntry> Scripts { get; }
     }
 
-    public partial interface IAVirtualMachineAdapterGetter :
+    public partial interface IQuestFragmentAliasGetter :
         ILoquiObject,
-        ILoquiObject<IAVirtualMachineAdapterGetter>,
+        ILoquiObject<IQuestFragmentAliasGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
@@ -699,7 +760,8 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => AVirtualMachineAdapter_Registration.Instance;
+        static ILoquiRegistration Registration => QuestFragmentAlias_Registration.Instance;
+        IScriptObjectPropertyGetter Property { get; }
         Int16 Version { get; }
         UInt16 ObjectFormat { get; }
         IReadOnlyList<IScriptEntryGetter> Scripts { get; }
@@ -709,42 +771,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class AVirtualMachineAdapterMixIn
+    public static partial class QuestFragmentAliasMixIn
     {
-        public static void Clear(this IAVirtualMachineAdapter item)
+        public static void Clear(this IQuestFragmentAlias item)
         {
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AVirtualMachineAdapter.Mask<bool> GetEqualsMask(
-            this IAVirtualMachineAdapterGetter item,
-            IAVirtualMachineAdapterGetter rhs,
+        public static QuestFragmentAlias.Mask<bool> GetEqualsMask(
+            this IQuestFragmentAliasGetter item,
+            IQuestFragmentAliasGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             string? name = null,
-            AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            QuestFragmentAlias.Mask<bool>? printMask = null)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).ToString(
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             FileGeneration fg,
             string? name = null,
-            AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            QuestFragmentAlias.Mask<bool>? printMask = null)
         {
-            ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).ToString(
+            ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -752,37 +814,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IAVirtualMachineAdapterGetter item,
-            AVirtualMachineAdapter.Mask<bool?> checkMask)
+            this IQuestFragmentAliasGetter item,
+            QuestFragmentAlias.Mask<bool?> checkMask)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).HasBeenSet(
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AVirtualMachineAdapter.Mask<bool> GetHasBeenSetMask(this IAVirtualMachineAdapterGetter item)
+        public static QuestFragmentAlias.Mask<bool> GetHasBeenSetMask(this IQuestFragmentAliasGetter item)
         {
-            var ret = new AVirtualMachineAdapter.Mask<bool>(false);
-            ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new QuestFragmentAlias.Mask<bool>(false);
+            ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IAVirtualMachineAdapterGetter item,
-            IAVirtualMachineAdapterGetter rhs)
+            this IQuestFragmentAliasGetter item,
+            IQuestFragmentAliasGetter rhs)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IAVirtualMachineAdapter lhs,
-            IAVirtualMachineAdapterGetter rhs)
+            this IQuestFragmentAlias lhs,
+            IQuestFragmentAliasGetter rhs)
         {
-            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -790,11 +852,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IAVirtualMachineAdapter lhs,
-            IAVirtualMachineAdapterGetter rhs,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+            this IQuestFragmentAlias lhs,
+            IQuestFragmentAliasGetter rhs,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
-            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -802,59 +864,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IAVirtualMachineAdapter lhs,
-            IAVirtualMachineAdapterGetter rhs,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+            this IQuestFragmentAlias lhs,
+            IQuestFragmentAliasGetter rhs,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestFragmentAlias.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAVirtualMachineAdapter lhs,
-            IAVirtualMachineAdapterGetter rhs,
+            this IQuestFragmentAlias lhs,
+            IQuestFragmentAliasGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static AVirtualMachineAdapter DeepCopy(
-            this IAVirtualMachineAdapterGetter item,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+        public static QuestFragmentAlias DeepCopy(
+            this IQuestFragmentAliasGetter item,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
-            return ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AVirtualMachineAdapter DeepCopy(
-            this IAVirtualMachineAdapterGetter item,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+        public static QuestFragmentAlias DeepCopy(
+            this IQuestFragmentAliasGetter item,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
-            return ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AVirtualMachineAdapter DeepCopy(
-            this IAVirtualMachineAdapterGetter item,
+        public static QuestFragmentAlias DeepCopy(
+            this IQuestFragmentAliasGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((QuestFragmentAliasSetterTranslationCommon)((IQuestFragmentAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -863,9 +925,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             XElement node,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -876,10 +938,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -887,16 +949,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestFragmentAlias.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -904,9 +966,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             string path,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -916,10 +978,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -930,10 +992,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -944,9 +1006,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             Stream stream,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -956,10 +1018,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -970,10 +1032,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -988,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -998,11 +1060,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IAVirtualMachineAdapter item,
+            this IQuestFragmentAlias item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((QuestFragmentAliasSetterCommon)((IQuestFragmentAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1018,49 +1080,50 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum AVirtualMachineAdapter_FieldIndex
+    public enum QuestFragmentAlias_FieldIndex
     {
-        Version = 0,
-        ObjectFormat = 1,
-        Scripts = 2,
+        Property = 0,
+        Version = 1,
+        ObjectFormat = 2,
+        Scripts = 3,
     }
     #endregion
 
     #region Registration
-    public partial class AVirtualMachineAdapter_Registration : ILoquiRegistration
+    public partial class QuestFragmentAlias_Registration : ILoquiRegistration
     {
-        public static readonly AVirtualMachineAdapter_Registration Instance = new AVirtualMachineAdapter_Registration();
+        public static readonly QuestFragmentAlias_Registration Instance = new QuestFragmentAlias_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 91,
+            msgID: 362,
             version: 0);
 
-        public const string GUID = "fa07e160-72ef-43d5-9f19-66c1803dfa93";
+        public const string GUID = "e7dd63f2-2360-48e0-81ec-17d10b30162e";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(AVirtualMachineAdapter.Mask<>);
+        public static readonly Type MaskType = typeof(QuestFragmentAlias.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AVirtualMachineAdapter.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(QuestFragmentAlias.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AVirtualMachineAdapter);
+        public static readonly Type ClassType = typeof(QuestFragmentAlias);
 
-        public static readonly Type GetterType = typeof(IAVirtualMachineAdapterGetter);
+        public static readonly Type GetterType = typeof(IQuestFragmentAliasGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAVirtualMachineAdapter);
+        public static readonly Type SetterType = typeof(IQuestFragmentAlias);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.AVirtualMachineAdapter";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.QuestFragmentAlias";
 
-        public const string Name = "AVirtualMachineAdapter";
+        public const string Name = "QuestFragmentAlias";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1072,12 +1135,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "PROPERTY":
+                    return (ushort)QuestFragmentAlias_FieldIndex.Property;
                 case "VERSION":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.Version;
+                    return (ushort)QuestFragmentAlias_FieldIndex.Version;
                 case "OBJECTFORMAT":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.ObjectFormat;
+                    return (ushort)QuestFragmentAlias_FieldIndex.ObjectFormat;
                 case "SCRIPTS":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.Scripts;
+                    return (ushort)QuestFragmentAlias_FieldIndex.Scripts;
                 default:
                     return null;
             }
@@ -1085,13 +1150,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return true;
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.Property:
+                case QuestFragmentAlias_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1100,13 +1166,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Property:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return true;
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1115,12 +1182,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Property:
+                case QuestFragmentAlias_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1129,14 +1197,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.Property:
+                    return "Property";
+                case QuestFragmentAlias_FieldIndex.Version:
                     return "Version";
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
                     return "ObjectFormat";
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return "Scripts";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1145,12 +1215,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Property:
+                case QuestFragmentAlias_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1159,12 +1230,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Property:
+                case QuestFragmentAlias_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1173,24 +1245,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
+            QuestFragmentAlias_FieldIndex enu = (QuestFragmentAlias_FieldIndex)index;
             switch (enu)
             {
-                case AVirtualMachineAdapter_FieldIndex.Version:
+                case QuestFragmentAlias_FieldIndex.Property:
+                    return typeof(ScriptObjectProperty);
+                case QuestFragmentAlias_FieldIndex.Version:
                     return typeof(Int16);
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
+                case QuestFragmentAlias_FieldIndex.ObjectFormat:
                     return typeof(UInt16);
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
+                case QuestFragmentAlias_FieldIndex.Scripts:
                     return typeof(ExtendedList<ScriptEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AVirtualMachineAdapterXmlWriteTranslation);
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType TriggeringRecordType = VMAD_HEADER;
-        public static readonly Type BinaryWriteTranslation = typeof(AVirtualMachineAdapterBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(QuestFragmentAliasXmlWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(QuestFragmentAliasBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1223,23 +1295,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AVirtualMachineAdapterSetterCommon
+    public partial class QuestFragmentAliasSetterCommon
     {
-        public static readonly AVirtualMachineAdapterSetterCommon Instance = new AVirtualMachineAdapterSetterCommon();
+        public static readonly QuestFragmentAliasSetterCommon Instance = new QuestFragmentAliasSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAVirtualMachineAdapter item)
+        public void Clear(IQuestFragmentAlias item)
         {
             ClearPartial();
-            item.Version = AVirtualMachineAdapter._Version_Default;
-            item.ObjectFormat = AVirtualMachineAdapter._ObjectFormat_Default;
+            item.Property.Clear();
+            item.Version = QuestFragmentAlias._Version_Default;
+            item.ObjectFormat = QuestFragmentAlias._ObjectFormat_Default;
             item.Scripts.Clear();
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IAVirtualMachineAdapter item,
+            IQuestFragmentAlias item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1248,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
+                    QuestFragmentAliasXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1267,26 +1340,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAVirtualMachineAdapter item,
+            IQuestFragmentAlias item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            UtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: QuestFragmentAliasBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class AVirtualMachineAdapterCommon
+    public partial class QuestFragmentAliasCommon
     {
-        public static readonly AVirtualMachineAdapterCommon Instance = new AVirtualMachineAdapterCommon();
+        public static readonly QuestFragmentAliasCommon Instance = new QuestFragmentAliasCommon();
 
-        public AVirtualMachineAdapter.Mask<bool> GetEqualsMask(
-            IAVirtualMachineAdapterGetter item,
-            IAVirtualMachineAdapterGetter rhs,
+        public QuestFragmentAlias.Mask<bool> GetEqualsMask(
+            IQuestFragmentAliasGetter item,
+            IQuestFragmentAliasGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AVirtualMachineAdapter.Mask<bool>(false);
-            ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new QuestFragmentAlias.Mask<bool>(false);
+            ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1295,12 +1373,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IAVirtualMachineAdapterGetter item,
-            IAVirtualMachineAdapterGetter rhs,
-            AVirtualMachineAdapter.Mask<bool> ret,
+            IQuestFragmentAliasGetter item,
+            IQuestFragmentAliasGetter rhs,
+            QuestFragmentAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Property = MaskItemExt.Factory(item.Property.GetEqualsMask(rhs.Property, include), include);
             ret.Version = item.Version == rhs.Version;
             ret.ObjectFormat = item.ObjectFormat == rhs.ObjectFormat;
             ret.Scripts = item.Scripts.CollectionEqualsHelper(
@@ -1310,9 +1389,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             string? name = null,
-            AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            QuestFragmentAlias.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1324,18 +1403,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             FileGeneration fg,
             string? name = null,
-            AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            QuestFragmentAlias.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AVirtualMachineAdapter =>");
+                fg.AppendLine($"QuestFragmentAlias =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AVirtualMachineAdapter) =>");
+                fg.AppendLine($"{name} (QuestFragmentAlias) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1349,10 +1428,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             FileGeneration fg,
-            AVirtualMachineAdapter.Mask<bool>? printMask = null)
+            QuestFragmentAlias.Mask<bool>? printMask = null)
         {
+            if (printMask?.Property?.Overall ?? true)
+            {
+                item.Property?.ToString(fg, "Property");
+            }
             if (printMask?.Version ?? true)
             {
                 fg.AppendItem(item.Version, "Version");
@@ -1382,16 +1465,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IAVirtualMachineAdapterGetter item,
-            AVirtualMachineAdapter.Mask<bool?> checkMask)
+            IQuestFragmentAliasGetter item,
+            QuestFragmentAlias.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IAVirtualMachineAdapterGetter item,
-            AVirtualMachineAdapter.Mask<bool> mask)
+            IQuestFragmentAliasGetter item,
+            QuestFragmentAlias.Mask<bool> mask)
         {
+            mask.Property = new MaskItem<bool, ScriptObjectProperty.Mask<bool>?>(true, item.Property?.GetHasBeenSetMask());
             mask.Version = true;
             mask.ObjectFormat = true;
             var ScriptsItem = item.Scripts;
@@ -1400,20 +1484,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IQuestFragmentAliasGetter? lhs,
+            IQuestFragmentAliasGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (!object.Equals(lhs.Property, rhs.Property)) return false;
             if (lhs.Version != rhs.Version) return false;
             if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
             if (!lhs.Scripts.SequenceEqual(rhs.Scripts)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IAVirtualMachineAdapterGetter item)
+        public virtual int GetHashCode(IQuestFragmentAliasGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Property);
             hash.Add(item.Version);
             hash.Add(item.ObjectFormat);
             hash.Add(item.Scripts);
@@ -1423,14 +1509,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return AVirtualMachineAdapter.GetNew();
+            return QuestFragmentAlias.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAVirtualMachineAdapterGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IQuestFragmentAliasGetter obj)
         {
+            foreach (var item in obj.Property.LinkFormKeys)
+            {
+                yield return item;
+            }
             foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainer> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
@@ -1439,32 +1529,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IAVirtualMachineAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IQuestFragmentAliasGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class AVirtualMachineAdapterSetterTranslationCommon
+    public partial class QuestFragmentAliasSetterTranslationCommon
     {
-        public static readonly AVirtualMachineAdapterSetterTranslationCommon Instance = new AVirtualMachineAdapterSetterTranslationCommon();
+        public static readonly QuestFragmentAliasSetterTranslationCommon Instance = new QuestFragmentAliasSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            IAVirtualMachineAdapter item,
-            IAVirtualMachineAdapterGetter rhs,
+        public void DeepCopyIn(
+            IQuestFragmentAlias item,
+            IQuestFragmentAliasGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+            {
+                errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.Property);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+                    {
+                        item.Property = rhs.Property.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
             }
-            if ((copyMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
             {
                 item.ObjectFormat = rhs.ObjectFormat;
             }
-            if ((copyMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
             {
-                errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.Scripts);
+                errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.Scripts);
                 try
                 {
                     item.Scripts.SetTo(
@@ -1490,23 +1602,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public AVirtualMachineAdapter DeepCopy(
-            IAVirtualMachineAdapterGetter item,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+        public QuestFragmentAlias DeepCopy(
+            IQuestFragmentAliasGetter item,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
-            AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
+            QuestFragmentAlias ret = (QuestFragmentAlias)((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public AVirtualMachineAdapter DeepCopy(
-            IAVirtualMachineAdapterGetter item,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? copyMask = null)
+        public QuestFragmentAlias DeepCopy(
+            IQuestFragmentAliasGetter item,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? copyMask = null)
         {
-            AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
+            QuestFragmentAlias ret = (QuestFragmentAlias)((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1514,12 +1626,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public AVirtualMachineAdapter DeepCopy(
-            IAVirtualMachineAdapterGetter item,
+        public QuestFragmentAlias DeepCopy(
+            IQuestFragmentAliasGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
+            QuestFragmentAlias ret = (QuestFragmentAlias)((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1534,27 +1646,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AVirtualMachineAdapter
+    public partial class QuestFragmentAlias
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AVirtualMachineAdapter_Registration.Instance;
-        public static AVirtualMachineAdapter_Registration Registration => AVirtualMachineAdapter_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
+        public static QuestFragmentAlias_Registration Registration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AVirtualMachineAdapterCommon.Instance;
+        protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return AVirtualMachineAdapterSetterCommon.Instance;
+            return QuestFragmentAliasSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AVirtualMachineAdapterSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => QuestFragmentAliasSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAVirtualMachineAdapterGetter.CommonInstance() => this.CommonInstance();
+        object IQuestFragmentAliasGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAVirtualMachineAdapterGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IQuestFragmentAliasGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IAVirtualMachineAdapterGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IQuestFragmentAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1565,43 +1677,54 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AVirtualMachineAdapterXmlWriteTranslation : IXmlWriteTranslator
+    public partial class QuestFragmentAliasXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static AVirtualMachineAdapterXmlWriteTranslation Instance = new AVirtualMachineAdapterXmlWriteTranslation();
+        public readonly static QuestFragmentAliasXmlWriteTranslation Instance = new QuestFragmentAliasXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+            {
+                var PropertyItem = item.Property;
+                ((ScriptObjectPropertyXmlWriteTranslation)((IXmlItem)PropertyItem).XmlWriteTranslator).Write(
+                    item: PropertyItem,
+                    node: node,
+                    name: nameof(item.Property),
+                    fieldIndex: (int)QuestFragmentAlias_FieldIndex.Property,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property));
+            }
+            if ((translationMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Version),
                     item: item.Version,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.Version,
+                    fieldIndex: (int)QuestFragmentAlias_FieldIndex.Version,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObjectFormat),
                     item: item.ObjectFormat,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.ObjectFormat,
+                    fieldIndex: (int)QuestFragmentAlias_FieldIndex.ObjectFormat,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
             {
                 ListXmlTranslation<IScriptEntryGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Scripts),
                     item: item.Scripts,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.Scripts,
+                    fieldIndex: (int)QuestFragmentAlias_FieldIndex.Scripts,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)AVirtualMachineAdapter_FieldIndex.Scripts),
+                    translationMask: translationMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Scripts),
                     transl: (XElement subNode, IScriptEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
@@ -1615,18 +1738,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.AVirtualMachineAdapter");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.QuestFragmentAlias");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.AVirtualMachineAdapter");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.QuestFragmentAlias");
             }
             WriteToNodeXml(
                 item: item,
@@ -1635,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1643,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IAVirtualMachineAdapterGetter)item,
+                item: (IQuestFragmentAliasGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1652,7 +1775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1662,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IAVirtualMachineAdapterGetter)item,
+                    item: (IQuestFragmentAliasGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1681,12 +1804,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AVirtualMachineAdapterXmlCreateTranslation
+    public partial class QuestFragmentAliasXmlCreateTranslation
     {
-        public readonly static AVirtualMachineAdapterXmlCreateTranslation Instance = new AVirtualMachineAdapterXmlCreateTranslation();
+        public readonly static QuestFragmentAliasXmlCreateTranslation Instance = new QuestFragmentAliasXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAVirtualMachineAdapter item,
+            IQuestFragmentAlias item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1695,7 +1818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
+                    QuestFragmentAliasXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1711,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IAVirtualMachineAdapter item,
+            IQuestFragmentAlias item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1719,8 +1842,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Property":
+                    errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.Property);
+                    try
+                    {
+                        item.Property = LoquiXmlTranslation<ScriptObjectProperty>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Version":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.Version);
+                    errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.Version);
                     try
                     {
                         item.Version = Int16XmlTranslation.Instance.Parse(
@@ -1738,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "ObjectFormat":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat);
+                    errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.ObjectFormat);
                     try
                     {
                         item.ObjectFormat = UInt16XmlTranslation.Instance.Parse(
@@ -1756,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Scripts":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.Scripts);
+                    errorMask?.PushIndex((int)QuestFragmentAlias_FieldIndex.Scripts);
                     try
                     {
                         if (ListXmlTranslation<ScriptEntry>.Instance.Parse(
@@ -1794,30 +1936,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class AVirtualMachineAdapterXmlTranslationMixIn
+    public static class QuestFragmentAliasXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestFragmentAlias.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1831,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1848,10 +1990,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
+            out QuestFragmentAlias.ErrorMask errorMask,
+            QuestFragmentAlias.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1865,7 +2007,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1882,13 +2024,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1897,12 +2039,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             XElement node,
             string? name = null,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
+            QuestFragmentAlias.TranslationMask? translationMask = null)
         {
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1911,12 +2053,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1926,12 +2068,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1950,17 +2092,30 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AVirtualMachineAdapterBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class QuestFragmentAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AVirtualMachineAdapterBinaryWriteTranslation Instance = new AVirtualMachineAdapterBinaryWriteTranslation();
+        public readonly static QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
+
+        static partial void WriteBinaryPropertyCustom(
+            MutagenWriter writer,
+            IQuestFragmentAliasGetter item);
+
+        public static void WriteBinaryProperty(
+            MutagenWriter writer,
+            IQuestFragmentAliasGetter item)
+        {
+            WriteBinaryPropertyCustom(
+                writer: writer,
+                item: item);
+        }
 
         static partial void WriteBinaryScriptsCustom(
             MutagenWriter writer,
-            IAVirtualMachineAdapterGetter item);
+            IQuestFragmentAliasGetter item);
 
         public static void WriteBinaryScripts(
             MutagenWriter writer,
-            IAVirtualMachineAdapterGetter item)
+            IQuestFragmentAliasGetter item)
         {
             WriteBinaryScriptsCustom(
                 writer: writer,
@@ -1968,63 +2123,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteEmbedded(
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             MutagenWriter writer)
         {
+            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryProperty(
+                writer: writer,
+                item: item);
             writer.Write(item.Version);
             writer.Write(item.ObjectFormat);
-            AVirtualMachineAdapterBinaryWriteTranslation.WriteBinaryScripts(
+            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryScripts(
                 writer: writer,
                 item: item);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            IAVirtualMachineAdapterGetter item,
+            IQuestFragmentAliasGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AVirtualMachineAdapter_Registration.VMAD_HEADER),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAVirtualMachineAdapterGetter)item,
+                item: (IQuestFragmentAliasGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class AVirtualMachineAdapterBinaryCreateTranslation
+    public partial class QuestFragmentAliasBinaryCreateTranslation
     {
-        public readonly static AVirtualMachineAdapterBinaryCreateTranslation Instance = new AVirtualMachineAdapterBinaryCreateTranslation();
+        public readonly static QuestFragmentAliasBinaryCreateTranslation Instance = new QuestFragmentAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IAVirtualMachineAdapter item,
+            IQuestFragmentAlias item,
             MutagenFrame frame)
         {
+            QuestFragmentAliasBinaryCreateTranslation.FillBinaryPropertyCustom(
+                frame: frame,
+                item: item);
             item.Version = frame.ReadInt16();
             item.ObjectFormat = frame.ReadUInt16();
-            AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryScriptsCustom(
+            QuestFragmentAliasBinaryCreateTranslation.FillBinaryScriptsCustom(
                 frame: frame,
                 item: item);
         }
 
+        static partial void FillBinaryPropertyCustom(
+            MutagenFrame frame,
+            IQuestFragmentAlias item);
+
         static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
-            IAVirtualMachineAdapter item);
+            IQuestFragmentAlias item);
 
     }
 
@@ -2032,13 +2191,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class AVirtualMachineAdapterBinaryTranslationMixIn
+    public static class QuestFragmentAliasBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAVirtualMachineAdapterGetter item,
+            this IQuestFragmentAliasGetter item,
             MutagenWriter writer)
         {
-            ((AVirtualMachineAdapterBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((QuestFragmentAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2051,39 +2210,39 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AVirtualMachineAdapterBinaryOverlay :
+    public partial class QuestFragmentAliasBinaryOverlay :
         BinaryOverlay,
-        IAVirtualMachineAdapterGetter
+        IQuestFragmentAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AVirtualMachineAdapter_Registration.Instance;
-        public static AVirtualMachineAdapter_Registration Registration => AVirtualMachineAdapter_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => QuestFragmentAlias_Registration.Instance;
+        public static QuestFragmentAlias_Registration Registration => QuestFragmentAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AVirtualMachineAdapterCommon.Instance;
+        protected object CommonInstance() => QuestFragmentAliasCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AVirtualMachineAdapterSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => QuestFragmentAliasSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAVirtualMachineAdapterGetter.CommonInstance() => this.CommonInstance();
+        object IQuestFragmentAliasGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IAVirtualMachineAdapterGetter.CommonSetterInstance() => null;
+        object? IQuestFragmentAliasGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IAVirtualMachineAdapterGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IQuestFragmentAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAVirtualMachineAdapterGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestFragmentAliasGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => AVirtualMachineAdapterXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => QuestFragmentAliasXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2092,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AVirtualMachineAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((QuestFragmentAliasXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2100,21 +2259,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => QuestFragmentAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AVirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((QuestFragmentAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        #region Property
+        public IScriptObjectPropertyGetter Property => GetPropertyCustom(location: 0x0);
+        protected int PropertyEndingPos;
+        partial void CustomPropertyEndPos();
+        #endregion
+        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(PropertyEndingPos, 0x2));
+        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(PropertyEndingPos + 0x2, 0x2));
         #region Scripts
         protected int ScriptsEndingPos;
         partial void CustomScriptsEndPos();
@@ -2125,7 +2289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected AVirtualMachineAdapterBinaryOverlay(
+        protected QuestFragmentAliasBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2135,14 +2299,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
+        public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new QuestFragmentAliasBinaryOverlay(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            ret.CustomPropertyEndPos();
+            ret.CustomScriptsEndPos();
+            stream.Position += ret.ScriptsEndingPos;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+        public static QuestFragmentAliasBinaryOverlay QuestFragmentAliasFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return QuestFragmentAliasFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            AVirtualMachineAdapterMixIn.ToString(
+            QuestFragmentAliasMixIn.ToString(
                 item: this,
                 name: name);
         }

@@ -61,21 +61,21 @@
   </Object>-->
   <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="55a3fbad-83ba-4d9a-bce1-c959a7226330" ID="101">
     <Fields>
-      <List name="Data">
+      <List name="Data" counterLength="4" >
         <Int32 />
       </List>
     </Fields>
   </Object>
   <Object name="ScriptFloatListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="c5545dbc-082b-409a-abeb-e10a22ac291d" ID="102">
     <Fields>
-      <List name="Data">
+      <List name="Data" counterLength="4" >
         <Float />
       </List>
     </Fields>
   </Object>
   <Object name="ScriptBoolListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="91ede102-0cc4-4302-b4be-f0e50519c453" ID="103">
     <Fields>
-      <List name="Data">
+      <List name="Data" counterLength="4" >
         <Bool />
       </List>
     </Fields>

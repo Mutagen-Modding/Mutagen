@@ -22,6 +22,11 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.Load(node, requireName);
             IsRecordType = node.GetAttribute<bool>("isUntypedRecordType", false);
+            var data = this.TryCreateFieldData();
+            foreach (var item in node.Elements(XName.Get("RecordType", LoquiGenerator.Namespace)))
+            {
+                data.TriggeringRecordTypes.Add(new RecordType(item.Value));
+            }
         }
     }
 }

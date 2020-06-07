@@ -6,6 +6,7 @@
     <Interface>IObjectId</Interface>
     <Interface>INpcSpawn</Interface>
     <Interface>ILockList</Interface>
+    <Interface>IAliasVoiceType</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />

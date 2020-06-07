@@ -520,6 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectId,
         ILockList,
+        IAliasVoiceType,
         ILoquiObjectSetter<IFormListInternal>
     {
     }
@@ -535,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectIdGetter,
         ILockListGetter,
+        IAliasVoiceTypeGetter,
         ILoquiObject<IFormListGetter>,
         IXmlItem,
         IBinaryItem

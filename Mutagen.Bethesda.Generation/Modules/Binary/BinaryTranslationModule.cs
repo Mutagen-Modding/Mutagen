@@ -2422,7 +2422,10 @@ namespace Mutagen.Bethesda.Generation
                                 if (breaks.Count > 0)
                                 {
                                     int breakIndex = 0;
-                                    await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, includeBaseClass: true))
+                                    await foreach (var lengths in IteratePassedLengths(obj, 
+                                        forOverlay: true,
+                                        includeBaseClass: true,
+                                        passedLenPrefix: "ret."))
                                     {
                                         if (lengths.Field is BreakType breakType)
                                         {

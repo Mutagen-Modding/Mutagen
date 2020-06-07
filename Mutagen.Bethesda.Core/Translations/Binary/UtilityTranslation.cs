@@ -582,6 +582,60 @@ namespace Mutagen.Bethesda
             return null;
         }
 
+        public static int[] FindAllOfSubrecord(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            RecordType recordType,
+            bool navigateToContent = false)
+        {
+            List<int> ret = new List<int>();
+            int lenParsed = 0;
+            while (data.Length > lenParsed)
+            {
+                var subMeta = meta.Subrecord(data.Slice(lenParsed));
+                if (subMeta.RecordType == recordType)
+                {
+                    if (navigateToContent)
+                    {
+                        ret.Add(subMeta.HeaderLength + lenParsed);
+                    }
+                    else
+                    {
+                        ret.Add(lenParsed);
+                    }
+                }
+                lenParsed += subMeta.TotalLength;
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] FindAllOfSubrecords(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            IReadOnlyCollection<RecordType> recordTypes,
+            bool navigateToContent = false)
+        {
+            List<int> ret = new List<int>();
+            int lenParsed = 0;
+            while (data.Length > lenParsed)
+            {
+                var subMeta = meta.Subrecord(data.Slice(lenParsed));
+                if (recordTypes.Contains(subMeta.RecordType))
+                {
+                    if (navigateToContent)
+                    {
+                        ret.Add(subMeta.HeaderLength + lenParsed);
+                    }
+                    else
+                    {
+                        ret.Add(lenParsed);
+                    }
+                }
+                lenParsed += subMeta.TotalLength;
+            }
+            return ret.ToArray();
+        }
+
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
         {
             var streams = await Task.WhenAll(inStreams).ConfigureAwait(false);
@@ -650,6 +704,20 @@ namespace Mutagen.Bethesda
             while (meta.TryReadSubrecordFrame(stream, recordType, out var _))
             {
             }
+        }
+
+        public static int SkipPastAll(ReadOnlySpan<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
+        {
+            var pos = 0;
+            numRecordsPassed = 0;
+            while (pos < data.Length)
+            {
+                var subHeader = constants.Subrecord(data.Slice(pos));
+                if (subHeader.RecordType != toSkip) break;
+                pos += subHeader.TotalLength;
+                numRecordsPassed++;
+            }
+            return pos;
         }
 
         public static RecordType GetRecordType<T>()

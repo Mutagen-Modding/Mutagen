@@ -104,9 +104,9 @@ namespace Mutagen.Bethesda.Skyrim
         IPatrolGetter? IPlacedNpcGetter.Patrol => this.Patrol;
         #endregion
         #region LevelModifier
-        public LevelModifier? LevelModifier { get; set; }
+        public Level? LevelModifier { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        LevelModifier? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
+        Level? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region MerchantContainer
         public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte[]? RagdollData { get; set; }
         new Byte[]? RagdollBipedData { get; set; }
         new Patrol? Patrol { get; set; }
-        new LevelModifier? LevelModifier { get; set; }
+        new Level? LevelModifier { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         ReadOnlyMemorySlice<Byte>? RagdollBipedData { get; }
         IPatrolGetter? Patrol { get; }
-        LevelModifier? LevelModifier { get; }
+        Level? LevelModifier { get; }
         IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
         Int32? Count { get; }
         Single? Radius { get; }
@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.Patrol:
                     return typeof(Patrol);
                 case PlacedNpc_FieldIndex.LevelModifier:
-                    return typeof(LevelModifier);
+                    return typeof(Level);
                 case PlacedNpc_FieldIndex.MerchantContainer:
                     return typeof(FormLinkNullable<PlacedObject>);
                 case PlacedNpc_FieldIndex.Count:
@@ -4183,7 +4183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.LevelModifier != null)
                 && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LevelModifier) ?? true))
             {
-                EnumXmlTranslation<LevelModifier>.Instance.Write(
+                EnumXmlTranslation<Level>.Instance.Write(
                     node: node,
                     name: nameof(item.LevelModifier),
                     item: item.LevelModifier,
@@ -4671,7 +4671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PlacedNpc_FieldIndex.LevelModifier);
                     try
                     {
-                        item.LevelModifier = EnumXmlTranslation<LevelModifier>.Instance.Parse(
+                        item.LevelModifier = EnumXmlTranslation<Level>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5257,7 +5257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LevelModifier>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Level>.Instance.WriteNullable(
                 writer,
                 item.LevelModifier,
                 length: 4,
@@ -5500,7 +5500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D434C58: // XLCM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LevelModifier = EnumBinaryTranslation<LevelModifier>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LevelModifier = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.LevelModifier);
                 }
                 case 0x43524D58: // XMRC
@@ -5761,7 +5761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPatrolGetter? Patrol { get; private set; }
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public LevelModifier? LevelModifier => _LevelModifierLocation.HasValue ? (LevelModifier)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(LevelModifier?);
+        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;

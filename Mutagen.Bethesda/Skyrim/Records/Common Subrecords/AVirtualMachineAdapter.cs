@@ -58,25 +58,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 switch (prop)
                 {
                     case ScriptObjectProperty obj:
-                        switch (objectFormat)
-                        {
-                            case 2:
-                                obj.Unused = frame.ReadUInt16();
-                                obj.Alias = frame.ReadInt16();
-                                obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                                    frame: frame,
-                                    defaultVal: FormKey.Null);
-                                break;
-                            case 1:
-                                obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                                    frame: frame,
-                                    defaultVal: FormKey.Null);
-                                obj.Alias = frame.ReadInt16();
-                                obj.Unused = frame.ReadUInt16();
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
+                        FillObject(frame, obj, objectFormat);
                         break;
                     case ScriptObjectListProperty objList:
                         throw new NotImplementedException();
@@ -87,15 +69,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Properties.Add(prop);
             }
         }
+
+        public static void FillObject(MutagenFrame frame, IScriptObjectProperty obj, ushort objectFormat)
+        {
+            switch (objectFormat)
+            {
+                case 2:
+                    obj.Unused = frame.ReadUInt16();
+                    obj.Alias = frame.ReadInt16();
+                    obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        defaultVal: FormKey.Null);
+                    break;
+                case 1:
+                    obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        defaultVal: FormKey.Null);
+                    obj.Alias = frame.ReadInt16();
+                    obj.Unused = frame.ReadUInt16();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 
     public partial class AVirtualMachineAdapterBinaryWriteTranslation
     {
-        static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
+        public static void WriteScripts(
+            MutagenWriter writer,
+            ushort objFormat, 
+            IReadOnlyList<IScriptEntryGetter> scripts)
         {
-            var scripts = item.Scripts;
             writer.Write(checked((ushort)scripts.Count));
-            foreach (var entry in item.Scripts)
+            foreach (var entry in scripts)
             {
                 writer.Write(entry.Name, StringBinaryType.PrependLengthUShort);
                 writer.Write((byte)entry.Flags);
@@ -124,21 +131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     switch (property)
                     {
                         case ScriptObjectProperty obj:
-                            switch (item.ObjectFormat)
-                            {
-                                case 2:
-                                    writer.Write(obj.Unused);
-                                    writer.Write(obj.Alias);
-                                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
-                                    break;
-                                case 1:
-                                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
-                                    writer.Write(obj.Alias);
-                                    writer.Write(obj.Unused);
-                                    break;
-                                default:
-                                    throw new NotImplementedException();
-                            }
+                            WriteObject(writer, obj, objFormat);
                             break;
                         default:
                             property.WriteToBinary(writer);
@@ -146,6 +139,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
+        }
+
+        public static void WriteObject(MutagenWriter writer, IScriptObjectPropertyGetter obj, ushort objFormat)
+        {
+            switch (objFormat)
+            {
+                case 2:
+                    writer.Write(obj.Unused);
+                    writer.Write(obj.Alias);
+                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                    break;
+                case 1:
+                    writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                    writer.Write(obj.Alias);
+                    writer.Write(obj.Unused);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
+        {
+            WriteScripts(writer, item.ObjectFormat, item.Scripts);
         }
     }
 

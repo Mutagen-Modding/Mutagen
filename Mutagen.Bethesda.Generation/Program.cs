@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "his.Entries = BinaryOverlayList<LeveledNpcEntryBinaryOverlay>.FactoryByA";
+            string testString = "if (ret._data.Length <= ScriptsEndingPos)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
