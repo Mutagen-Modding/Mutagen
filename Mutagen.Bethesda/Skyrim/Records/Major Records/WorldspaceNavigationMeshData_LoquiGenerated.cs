@@ -1898,6 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            stream.Position += ret.DoorTrianglesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1924,8 +1924,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Navmeshes
         public IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int NavmeshesEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -3453,20 +3453,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
+        #region Vertices
         public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        protected int VerticesEndingPos;
+        #endregion
+        #region Triangles
+        protected int TrianglesEndingPos;
+        partial void CustomTrianglesEndPos();
+        #endregion
+        #region EdgeLinks
         public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList<IEdgeLinkGetter>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
+        protected int EdgeLinksEndingPos;
+        #endregion
+        #region DoorTriangles
         public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList<IDoorTriangleGetter>.FactoryByCountLength(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
+        protected int DoorTrianglesEndingPos;
+        #endregion
         #region CoverTrianglesLogic
         partial void CoverTrianglesLogicCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
-        #endregion
-        protected int VerticesEndingPos;
-        protected int TrianglesEndingPos;
-        partial void CustomTrianglesEndPos();
-        protected int EdgeLinksEndingPos;
-        protected int DoorTrianglesEndingPos;
         protected int CoverTrianglesLogicEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

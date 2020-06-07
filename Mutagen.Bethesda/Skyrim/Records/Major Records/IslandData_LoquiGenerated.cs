@@ -2312,10 +2312,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public P3Float Min => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public P3Float Max => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
+        #region Triangles
         public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList<P3Int16>.FactoryByCountLength(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         protected int TrianglesEndingPos;
+        #endregion
+        #region Vertices
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         protected int VerticesEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -2025,8 +2025,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        #region Points
         public IReadOnlyList<Int16> Points => BinaryOverlayList<Int16>.FactoryByStartIndex(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

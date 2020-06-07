@@ -1968,8 +1968,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public P2Int16 Min => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
         public P2Int16 Max => P2Int16BinaryTranslation.Read(_data.Slice(0x4, 0x4));
+        #region CellData
         public ReadOnlyMemorySlice<Byte> CellData => _data.Span.Slice(0x8).ToArray();
         protected int CellDataEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

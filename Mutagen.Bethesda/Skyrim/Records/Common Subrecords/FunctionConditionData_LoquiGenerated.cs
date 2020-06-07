@@ -2625,8 +2625,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void ParameterParsingCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
-        #endregion
         protected int ParameterParsingEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

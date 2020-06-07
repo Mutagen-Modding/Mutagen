@@ -9237,6 +9237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CloudTexturesParseCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
+        protected int CloudTexturesParseEndingPos;
         #endregion
         #region Unknown
         private int? _UnknownLocation;

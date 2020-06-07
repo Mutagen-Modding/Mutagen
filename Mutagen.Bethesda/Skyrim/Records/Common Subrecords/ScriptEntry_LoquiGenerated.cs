@@ -2125,7 +2125,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x0;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

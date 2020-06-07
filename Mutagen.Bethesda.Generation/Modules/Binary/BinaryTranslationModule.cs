@@ -1878,73 +1878,37 @@ namespace Mutagen.Bethesda.Generation
                 }
 
                 fg.AppendLine();
-
-                int? passedLength = 0;
-                // Get passed length of all base classes, not including major record
-                if (obj.HasLoquiBaseObject)
-                {
-                    foreach (var field in obj.BaseClass.IterateFields(
-                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                        nonIntegrated: true,
-                        includeBaseClass: true))
-                    {
-                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
-                        var data = field.GetFieldData();
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Custom:
-                                var len = await CustomLogic.ExpectedLength(obj, field);
-                                if (len == null)
-                                {
-                                    passedLength = null;
-                                }
-                                else
-                                {
-                                    passedLength += len.Value;
-                                }
-                                continue;
-                            case BinaryGenerationType.Normal:
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (!data.HasTrigger)
-                        {
-                            var amount = await typeGen.GetPassedAmount(obj, field);
-                            if (amount == null)
-                            {
-                                passedLength = null;
-                            }
-                            else
-                            {
-                                passedLength += amount.Value;
-                            }
-                        }
-                    }
-                }
-
                 if (obj.Fields.Any(f => f is BreakType))
                 {
                     fg.AppendLine($"public {obj.ObjectName}.{VersioningModule.VersioningEnumName} {VersioningModule.VersioningFieldName} {{ get; private set; }}");
                 }
 
-                TypeGeneration lastUnknownField = null;
-                foreach (var field in obj.IterateFields(
-                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                    nonIntegrated: true))
+                int? totalPassedLength = 0;
+                await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true))
                 {
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
+                    if (totalPassedLength != null)
                     {
-                        if (!field.IntegrateField) continue;
+                        if (lengths.CurLength == null)
+                        {
+                            totalPassedLength = null;
+                        }
+                        else
+                        {
+                            totalPassedLength = lengths.CurLength;
+                        }
+                    }
+                    if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen))
+                    {
+                        if (!lengths.Field.IntegrateField) continue;
                         throw new NotImplementedException();
                     }
-                    using (new RegionWrapper(fg, field.Name)
+                    using (new RegionWrapper(fg, lengths.Field.Name)
                     {
                         AppendExtraLine = false,
                         SkipIfOnlyOneLine = true
                     })
                     {
-                        var data = field.GetFieldData();
+                        var data = lengths.Field.GetFieldData();
                         switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.NoGeneration:
@@ -1952,93 +1916,23 @@ namespace Mutagen.Bethesda.Generation
                             default:
                                 break;
                         }
-                        var passedAccessor = (passedLength ?? 0) == 0 ? null : $"0x{passedLength:X}";
-                        if (lastUnknownField != null)
-                        {
-                            passedAccessor = $"{lastUnknownField.Name}EndingPos";
-                            if (passedLength.HasValue)
-                            {
-                                passedAccessor += $" + 0x{passedLength.Value:X}";
-                            }
-                        }
                         await typeGen.GenerateWrapperFields(
                             fg,
                             obj,
-                            field,
+                            lengths.Field,
                             dataAccessor,
-                            passedLength,
-                            passedAccessor);
+                            lengths.PassedLength,
+                            lengths.PassedAccessor);
                         if (!data.HasTrigger)
                         {
-                            if (data.Length.HasValue)
+                            if (lengths.CurLength == null)
                             {
-                                passedLength += data.Length.Value;
-                            }
-                            else
-                            {
-                                var amount = await typeGen.GetPassedAmount(obj, field);
-                                if (amount == null)
-                                {
-                                    passedLength = null;
-                                    lastUnknownField = field;
-                                }
-                                else if (passedLength != null)
-                                {
-                                    passedLength += amount.Value;
-                                }
-                                else
-                                {
-                                    passedLength = amount.Value;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Get complete passed length of all fields
-                // Generate passed length markers
-                passedLength = 0;
-                foreach (var field in obj.IterateFieldIndices(
-                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                        nonIntegrated: true,
-                        includeBaseClass: false)
-                    .Where(field =>
-                    {
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var _)) return false;
-                        var data = field.Field.GetFieldData();
-                        switch (data.BinaryOverlayFallback)
-                        {
-                            case BinaryGenerationType.Normal:
-                            case BinaryGenerationType.Custom:
-                                return true;
-                            default:
-                                return false;
-                        }
-                    })
-                    .IterateMarkLast())
-                {
-                    if (!this.TryGetTypeGeneration(field.Item.Field.GetType(), out var typeGen)) continue;
-                    var data = field.Item.Field.GetFieldData();
-                    if (!data.HasTrigger)
-                    {
-                        var amount = await typeGen.GetPassedAmount(obj, field.Item.Field);
-                        if (amount == null)
-                        {
-                            passedLength = null;
-                            if (field.Last
-                                || (field.Item.InternalIndex < (obj.Fields.Count - 1)
-                                && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
-                            {
-                                fg.AppendLine($"protected int {field.Item.Field.Name}EndingPos;");
+                                fg.AppendLine($"protected int {lengths.Field.Name}EndingPos;");
                                 if (data.BinaryOverlayFallback == BinaryGenerationType.Custom)
                                 {
-                                    fg.AppendLine($"partial void Custom{field.Item.Field.Name}EndPos();");
+                                    fg.AppendLine($"partial void Custom{lengths.Field.Name}EndPos();");
                                 }
                             }
-                        }
-                        else if (passedLength != null)
-                        {
-                            passedLength += amount.Value;
                         }
                     }
                 }
@@ -2279,14 +2173,14 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.IsTypelessStruct())
                             {
                                 if (anyHasRecordTypes
-                                    || passedLength == null
-                                    || passedLength.Value == 0)
+                                    || totalPassedLength == null
+                                    || totalPassedLength.Value == 0)
                                 {
                                     args.Add($"bytes: stream.RemainingMemory");
                                 }
                                 else
                                 {
-                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, 0x{passedLength:X})");
+                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, 0x{totalPassedLength:X})");
                                 }
                             }
                             else
@@ -2346,85 +2240,65 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        // Parse ending positions
-                        lastUnknownField = null;
-                        TypeGeneration lastUnknownFieldParse = null;
-                        passedLength = 0;
-                        foreach (var field in obj.IterateFieldIndices(
-                                expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                                nonIntegrated: true,
-                                includeBaseClass: true)
-                            .Where(field =>
-                            {
-                                if (!this.TryGetTypeGeneration(field.Field.GetType(), out var _)) return false;
-                                var data = field.Field.GetFieldData();
-                                switch (data.BinaryOverlayFallback)
-                                {
-                                    case BinaryGenerationType.Normal:
-                                    case BinaryGenerationType.Custom:
-                                        return true;
-                                    default:
-                                        return false;
-                                }
-                            })
-                            .IterateMarkLast())
+                        // Parse struct section ending positions
+                        string structPassedAccessor = null;
+                        int? structPassedLen = 0;
+                        await foreach (var lengths in IteratePassedLengths(
+                            obj, 
+                            forOverlay: true, 
+                            includeBaseClass: true,
+                            passedLenPrefix: "ret."))
                         {
-                            if (!this.TryGetTypeGeneration(field.Item.Field.GetType(), out var typeGen)) continue;
-                            var data = field.Item.Field.GetFieldData();
+                            if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                            var data = lengths.Field.GetFieldData();
+                            if (lengths.Field is CustomLogic) continue;
+                            switch (data.BinaryOverlayFallback)
+                            {
+                                case BinaryGenerationType.Normal:
+                                case BinaryGenerationType.Custom:
+                                    break;
+                                default:
+                                    continue;
+                            }
                             if (!data.HasTrigger)
                             {
-                                var amount = await typeGen.GetPassedAmount(obj, field.Item.Field);
-                                if (amount == null)
-                                {
-                                    if (field.Item.Field is CustomLogic) continue;
-                                    if (field.Last
-                                        || (field.Item.InternalIndex < (obj.Fields.Count - 1)
-                                        && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger))
-                                    {
-                                        var passedAccessor = passedLength == null || passedLength.Value == 0 ? null : $"0x{passedLength:X}";
-                                        if (lastUnknownField != null)
-                                        {
-                                            passedAccessor = $"ret.{lastUnknownField.Name}EndingPos";
-                                            if (passedLength.HasValue)
-                                            {
-                                                passedAccessor += $" + 0x{passedLength:X}";
-                                            }
-                                        }
-                                        if (obj.Fields.Contains(field.Item.Field))
-                                        {
-                                            switch (data.BinaryOverlayFallback)
-                                            {
-                                                case BinaryGenerationType.Custom:
-                                                    fg.AppendLine($"ret.Custom{field.Item.Field.Name}EndPos();");
-                                                    break;
-                                                case BinaryGenerationType.NoGeneration:
-                                                    break;
-                                                case BinaryGenerationType.Normal:
-                                                    await typeGen.GenerateWrapperUnknownLengthParse(
-                                                        fg,
-                                                        obj,
-                                                        field.Item.Field,
-                                                        passedLength,
-                                                        passedAccessor);
-                                                    break;
-                                            }
-                                        }
-                                        lastUnknownFieldParse = field.Item.Field;
-                                    }
-                                    passedLength = null;
-                                    lastUnknownField = field.Item.Field;
-                                }
-                                else
-                                {
-                                    if (passedLength == null)
-                                    {
-                                        passedLength = amount.Value;
-                                    }
-                                    else
-                                    {
-                                        passedLength += amount.Value;
-                                    }
-                                }
+                                structPassedLen = lengths.CurLength;
+                                structPassedAccessor = lengths.CurAccessor;
+                            }
+                        }
+
+                        // Parse ending positions 
+                        await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+                        {
+                            if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                            var data = lengths.Field.GetFieldData();
+                            switch (data.BinaryOverlayFallback)
+                            {
+                                case BinaryGenerationType.Normal:
+                                case BinaryGenerationType.Custom:
+                                    break;
+                                default:
+                                    continue;
+                            }
+                            if (data.HasTrigger) continue;
+                            var amount = await typeGen.GetPassedAmount(obj, lengths.Field);
+                            if (amount != null) continue;
+                            if (lengths.Field is CustomLogic) continue;
+                            switch (data.BinaryOverlayFallback)
+                            {
+                                case BinaryGenerationType.Custom:
+                                    fg.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
+                                    break;
+                                case BinaryGenerationType.NoGeneration:
+                                    break;
+                                case BinaryGenerationType.Normal:
+                                    await typeGen.GenerateWrapperUnknownLengthParse(
+                                        fg,
+                                        obj,
+                                        lengths.Field,
+                                        lengths.PassedLength,
+                                        lengths.PassedAccessor);
+                                    break;
                             }
                         }
 
@@ -2433,18 +2307,18 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.GetObjectType() != ObjectType.Mod
                                 && !obj.IsTypelessStruct())
                             {
-                                if (passedLength != null)
+                                if (structPassedAccessor != null)
                                 {
                                     switch (obj.GetObjectType())
                                     {
                                         case ObjectType.Subrecord:
-                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
+                                            fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
                                             break;
                                         case ObjectType.Record:
-                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
+                                            fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
                                             break;
                                         case ObjectType.Group:
-                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
+                                            fg.AppendLine($"stream.Position += {structPassedAccessor} + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
                                             break;
                                         case ObjectType.Mod:
                                             break;
@@ -2520,16 +2394,9 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (obj.IsTypelessStruct())
                             {
-                                if (passedLength != null || lastUnknownFieldParse != null)
+                                if (structPassedAccessor != null)
                                 {
-                                    if (lastUnknownFieldParse == null)
-                                    {
-                                        fg.AppendLine($"stream.Position += 0x{passedLength:X};");
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"stream.Position += ret.{lastUnknownFieldParse.Name}EndingPos{(passedLength == null ? null : $" + 0x{passedLength:X}")};");
-                                    }
+                                    fg.AppendLine($"stream.Position += {structPassedAccessor};");
                                 }
                             }
                             else
@@ -2554,36 +2421,24 @@ namespace Mutagen.Bethesda.Generation
                                 var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
                                 if (breaks.Count > 0)
                                 {
-                                    int? passedLen = 0;
                                     int breakIndex = 0;
-                                    foreach (var field in obj.IterateFields(
-                                        nonIntegrated: true,
-                                        expandSets: SetMarkerType.ExpandSets.False,
-                                        includeBaseClass: true))
+                                    await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, includeBaseClass: true))
                                     {
-                                        if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
+                                        if (lengths.Field is BreakType breakType)
                                         {
-                                            throw new NotImplementedException();
-                                        }
-                                        if (field is BreakType breakType)
-                                        {
-                                            fg.AppendLine($"if (ret._data.Length <= 0x{passedLen.Value:X})");
+                                            fg.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
                                             using (new BraceWrapper(fg))
                                             {
                                                 fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                             }
                                         }
-                                        else if (field.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.NoGeneration)
-                                        {
-                                            passedLen += (await typeGen.ExpectedLength(obj, field)).Value;
-                                        }
                                     }
                                     // Not advancing stream position, but only because breaks only occur in situations
                                     // that stream position doesn't matter
                                 }
-                                else if (passedLength != null)
+                                else if (totalPassedLength != null)
                                 {
-                                    fg.AppendLine($"stream.Position += 0x{passedLength.Value:X}{headerAddition};");
+                                    fg.AppendLine($"stream.Position += 0x{totalPassedLength.Value:X}{headerAddition};");
                                 }
                             }
                             using (var args = new ArgsWrapper(fg,
@@ -2828,6 +2683,103 @@ namespace Mutagen.Bethesda.Generation
 
         public override void ReplaceTypeAssociation<Target, Replacement>()
         {
+        }
+
+        public class PassedLengths
+        {
+            public TypeGeneration Field;
+            public string PassedAccessor;
+            public int? PassedLength = 0;
+            public string CurAccessor;
+            public int? CurLength = 0;
+        }
+
+        public async IAsyncEnumerable<PassedLengths> IteratePassedLengths(
+            ObjectGeneration obj,
+            bool forOverlay,
+            string passedLenPrefix = null,
+            bool includeBaseClass = false)
+        {
+            var lengths = new PassedLengths();
+            TypeGeneration lastUnknownField = null;
+            foreach (var field in obj.IterateFields(
+                expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                nonIntegrated: true,
+                includeBaseClass: true))
+            {
+                lengths.Field = field;
+                if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
+                {
+                    if (!field.IntegrateField) continue;
+                    throw new NotImplementedException();
+                }
+                void processLen(int? expectedLen)
+                {
+                    lengths.PassedLength = lengths.CurLength;
+                    lengths.PassedAccessor = lengths.CurAccessor;
+                    if (expectedLen == null)
+                    {
+                        lengths.CurLength = null;
+                        lastUnknownField = field;
+                        lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos";
+                    }
+                    else
+                    {
+                        if (lengths.CurLength == null)
+                        {
+                            lengths.CurLength = expectedLen.Value;
+                        }
+                        else
+                        {
+                            lengths.CurLength += expectedLen.Value;
+                        }
+                        if (lastUnknownField == null)
+                        {
+                            lengths.CurAccessor = $"0x{ lengths.CurLength:X}";
+                        }
+                        else
+                        {
+                            lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos + 0x{lengths.CurLength:X}";
+                        }
+                    }
+                }
+
+                var data = field.GetFieldData();
+                var customType = forOverlay ? data.BinaryOverlayFallback : data.Binary;
+                switch (customType)
+                {
+                    case BinaryGenerationType.Custom:
+                        processLen(await CustomLogic.ExpectedLength(obj, field));
+                        if (includeBaseClass || obj.Fields.Contains(field))
+                        {
+                            yield return lengths;
+                        }
+                        break;
+                    case BinaryGenerationType.NoGeneration:
+                        if (includeBaseClass || obj.Fields.Contains(field))
+                        {
+                            yield return lengths;
+                        }
+                        break;
+                    default:
+                        if (!data.HasTrigger)
+                        {
+                            if (data.Length.HasValue)
+                            {
+                                processLen(data.Length.Value);
+                            }
+                            else
+                            {
+                                processLen(await typeGen.GetPassedAmount(obj, field));
+                            }
+                        }
+                        if (includeBaseClass || obj.Fields.Contains(field))
+                        {
+                            yield return lengths;
+                        }
+                        break;
+                }
+            }
         }
     }
 }

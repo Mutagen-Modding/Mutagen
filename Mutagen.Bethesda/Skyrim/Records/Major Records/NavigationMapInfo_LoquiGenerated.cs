@@ -3343,23 +3343,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
+        #region MergedTo
         public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        protected int MergedToEndingPos;
+        #endregion
+        #region PreferredMerges
         public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        protected int PreferredMergesEndingPos;
+        #endregion
+        #region LinkedDoors
         public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList<ILinkedDoorGetter>.FactoryByCountLength(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        protected int LinkedDoorsEndingPos;
+        #endregion
+        #region Island
         public IIslandDataGetter? Island => GetIslandCustom(location: LinkedDoorsEndingPos);
+        protected int IslandEndingPos;
+        partial void CustomIslandEndPos();
+        #endregion
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(IslandEndingPos, 0x4));
         public IFormLink<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
         partial void ParentParseLogicCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
-        #endregion
-        protected int MergedToEndingPos;
-        protected int PreferredMergesEndingPos;
-        protected int LinkedDoorsEndingPos;
-        protected int IslandEndingPos;
-        partial void CustomIslandEndPos();
         protected int ParentParseLogicEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -3390,7 +3398,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.MergedToEndingPos)) * 4 + 4;
             ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
             ret.CustomIslandEndPos();
-            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

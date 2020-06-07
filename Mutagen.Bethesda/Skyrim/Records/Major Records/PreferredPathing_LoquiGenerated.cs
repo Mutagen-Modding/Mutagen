@@ -2218,10 +2218,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList<INavmeshNodeGetter>.FactoryByCountLength(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
+        #region NavmeshSets
         protected int NavmeshSetsEndingPos;
         partial void CustomNavmeshSetsEndPos();
+        #endregion
+        #region NavmeshTree
+        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList<INavmeshNodeGetter>.FactoryByCountLength(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
         protected int NavmeshTreeEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

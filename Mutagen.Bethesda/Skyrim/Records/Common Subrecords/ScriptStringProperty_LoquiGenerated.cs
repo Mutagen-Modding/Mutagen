@@ -1726,8 +1726,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Data
         public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
         protected int DataEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

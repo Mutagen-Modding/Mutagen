@@ -2200,10 +2200,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
         public ScriptFragments.Flag Flags => (ScriptFragments.Flag)_data.Span.Slice(0x1, 0x1)[0];
+        #region FileName
         public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2);
-        public IReadOnlyList<IScriptFragmentGetter> Fragments => BinaryOverlayList<ScriptFragmentBinaryOverlay>.FactoryByLazyParse(_data.Slice(FileNameEndingPos), _package, (s, p) => ScriptFragmentBinaryOverlay.ScriptFragmentFactory(s, p));
         protected int FileNameEndingPos;
+        #endregion
+        #region Fragments
+        public IReadOnlyList<IScriptFragmentGetter> Fragments => BinaryOverlayList<ScriptFragmentBinaryOverlay>.FactoryByLazyParse(_data.Slice(FileNameEndingPos), _package, (s, p) => ScriptFragmentBinaryOverlay.ScriptFragmentFactory(s, p));
         protected int FragmentsEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

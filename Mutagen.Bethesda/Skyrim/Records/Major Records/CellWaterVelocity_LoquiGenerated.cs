@@ -2056,8 +2056,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Offset => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         public P3Float Angle => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
+        #region Unknown2
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x1C).ToArray();
         protected int Unknown2EndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

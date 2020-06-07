@@ -1715,7 +1715,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region LevelMult
         public Single LevelMult => GetLevelMultCustom(location: 0x0);
+        protected int LevelMultEndingPos;
+        partial void CustomLevelMultEndPos();
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1738,10 +1742,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PcLevelMultBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x4;
+            stream.Position += ret.LevelMultEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

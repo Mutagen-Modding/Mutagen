@@ -2432,7 +2432,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DateTime SunsetEnd => GetSunsetEndCustom(location: 0x3);
         public Byte Volatility => _data.Span[0x4];
         public Climate.MoonPhase Phase => GetPhaseCustom(location: 0x5);
+        #region PhaseLength
         public Byte PhaseLength => GetPhaseLengthCustom(location: 0x6);
+        protected int PhaseLengthEndingPos;
+        partial void CustomPhaseLengthEndPos();
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2459,7 +2463,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x7 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -11691,6 +11691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void ExtraNAM2CustomParse(
             BinaryMemoryReadStream stream,
             int offset);
+        protected int ExtraNAM2EndingPos;
         #endregion
         #region BehaviorGraph
         private IGenderedItemGetter<IModelGetter?>? _BehaviorGraphOverlay;

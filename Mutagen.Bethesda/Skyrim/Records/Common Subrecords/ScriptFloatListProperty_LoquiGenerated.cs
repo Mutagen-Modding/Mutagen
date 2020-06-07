@@ -1860,8 +1860,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Data
         public IReadOnlyList<Single> Data => BinaryOverlayList<Single>.FactoryByStartIndex(_data, _package, 4, (s, p) => SpanExt.GetFloat(s));
         protected int DataEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
