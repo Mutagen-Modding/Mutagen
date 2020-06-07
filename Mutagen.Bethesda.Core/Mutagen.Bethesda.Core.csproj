@@ -28,7 +28,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.7</Version>
+    <Version>0.8</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -81,7 +81,6 @@
     <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
-    <Compile Include="Load Order\LoadOrderIndex.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Persistance\IFormKeyAllocator.cs" />

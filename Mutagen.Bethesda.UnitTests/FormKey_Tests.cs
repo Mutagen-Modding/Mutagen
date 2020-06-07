@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,9 +198,9 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(0, compare.Compare(k2, k1));
         }
         #endregion
-        #region Load Order
+        #region ModKey List
         [Fact]
-        public void Comparer_LoadOrder_Typical()
+        public void Comparer_ModKeyList_Typical()
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
@@ -213,7 +214,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void Comparer_LoadOrder_TypicalGreater()
+        public void Comparer_ModKeyList_TypicalGreater()
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
@@ -227,7 +228,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void Comparer_LoadOrder_Fallback()
+        public void Comparer_ModKeyList_Fallback()
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
@@ -241,7 +242,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void Comparer_LoadOrder_FallbackGreater()
+        public void Comparer_ModKeyList_FallbackGreater()
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
@@ -255,7 +256,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void Comparer_LoadOrder_Unknown()
+        public void Comparer_ModKeyList_Unknown()
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
@@ -265,6 +266,77 @@ namespace Mutagen.Bethesda.UnitTests
             FormKey k1 = FormKey.Factory("00C51A:MyMod.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
             var compare = FormKey.LoadOrderComparer(modKeys);
+            Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
+        }
+        #endregion
+        #region LoadOrder List
+        [Fact]
+        public void Comparer_LoadOrder_Typical()
+        {
+            var loadOrder = new LoadOrder<OblivionMod>()
+            {
+                new OblivionMod(ModKey.Factory("Oblivion.esm")),
+                new OblivionMod(ModKey.Factory("Knights.esm")),
+            };
+            FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
+            FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
+            var compare = FormKey.LoadOrderComparer(loadOrder);
+            Assert.True(compare.Compare(k1, k2) < 0);
+        }
+
+        [Fact]
+        public void Comparer_LoadOrder_TypicalGreater()
+        {
+            var loadOrder = new LoadOrder<OblivionMod>()
+            {
+                new OblivionMod(ModKey.Factory("Oblivion.esm")),
+                new OblivionMod(ModKey.Factory("Knights.esm")),
+            };
+            FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
+            FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
+            var compare = FormKey.LoadOrderComparer(loadOrder);
+            Assert.True(compare.Compare(k2, k1) > 0);
+        }
+
+        [Fact]
+        public void Comparer_LoadOrder_Fallback()
+        {
+            var loadOrder = new LoadOrder<OblivionMod>()
+            {
+                new OblivionMod(ModKey.Factory("Oblivion.esm")),
+                new OblivionMod(ModKey.Factory("Knights.esm")),
+            };
+            FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
+            FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
+            var compare = FormKey.LoadOrderComparer(loadOrder);
+            Assert.True(compare.Compare(k1, k2) < 0);
+        }
+
+        [Fact]
+        public void Comparer_LoadOrder_FallbackGreater()
+        {
+            var loadOrder = new LoadOrder<OblivionMod>()
+            {
+                new OblivionMod(ModKey.Factory("Oblivion.esm")),
+                new OblivionMod(ModKey.Factory("Knights.esm")),
+            };
+            FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
+            FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
+            var compare = FormKey.LoadOrderComparer(loadOrder);
+            Assert.True(compare.Compare(k2, k1) > 0);
+        }
+
+        [Fact]
+        public void Comparer_LoadOrder_Unknown()
+        {
+            var loadOrder = new LoadOrder<OblivionMod>()
+            {
+                new OblivionMod(ModKey.Factory("Oblivion.esm")),
+                new OblivionMod(ModKey.Factory("Knights.esm")),
+            };
+            FormKey k1 = FormKey.Factory("00C51A:MyMod.esm");
+            FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
+            var compare = FormKey.LoadOrderComparer(loadOrder);
             Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
         }
         #endregion
