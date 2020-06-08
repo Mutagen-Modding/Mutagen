@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
-            public int Unknown => BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(20));
+            public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
             partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
