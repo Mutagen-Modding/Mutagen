@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.APPA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

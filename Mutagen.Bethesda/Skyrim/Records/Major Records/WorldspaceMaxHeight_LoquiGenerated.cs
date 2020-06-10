@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceMaxHeight_Registration.MHDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

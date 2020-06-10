@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedFlameGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedFlame_Registration.PFLA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

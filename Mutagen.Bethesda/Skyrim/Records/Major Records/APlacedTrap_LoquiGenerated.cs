@@ -4482,7 +4482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(APlacedTrap_Registration.XSCL_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(APlacedTrap_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(APlacedTrap_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,

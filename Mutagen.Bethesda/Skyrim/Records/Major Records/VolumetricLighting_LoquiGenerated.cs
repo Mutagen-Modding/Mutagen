@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVolumetricLightingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(VolumetricLighting_Registration.VOLI_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
                 var ret = new byte[subLen + 6];
                 MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), this._gameMode);
-                using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
+                using (HeaderExport.Subrecord(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
                 }
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     }
                     var data = new byte[subLen + 6];
                     stream = new MutagenWriter(new MemoryStream(data), this.GameMode);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }

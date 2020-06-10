@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryTrapFormCustom(MutagenWriter writer, IAPlacedTrapGetter item)
             {
-                using var header = HeaderExport.ExportSubrecordHeader(writer, APlacedTrap_Registration.NAME_HEADER);
+                using var header = HeaderExport.Subrecord(writer, APlacedTrap_Registration.NAME_HEADER);
                 switch (item)
                 {
                     case IPlacedArrowGetter arrow:

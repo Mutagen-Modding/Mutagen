@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WeaponData_Registration.DATA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

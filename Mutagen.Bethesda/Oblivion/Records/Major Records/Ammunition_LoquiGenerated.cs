@@ -2550,7 +2550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Ammunition_Registration.AMMO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

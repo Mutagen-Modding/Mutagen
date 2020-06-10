@@ -2640,7 +2640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlayerSkills_Registration.DNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

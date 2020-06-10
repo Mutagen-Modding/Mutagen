@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (item.ExportingExtraNam2)
                 {
-                    using var header = HeaderExport.ExportSubrecordHeader(writer, Race.NAM2);
+                    using var header = HeaderExport.Subrecord(writer, Race.NAM2);
                 }
             }
 
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                 {
                     var bipedObj = (BipedObject)i;
-                    using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.NAME_HEADER))
+                    using (HeaderExport.Subrecord(writer, Race_Registration.NAME_HEADER))
                     {
                         if (bipedObjs.TryGetValue(bipedObj, out var val))
                         {

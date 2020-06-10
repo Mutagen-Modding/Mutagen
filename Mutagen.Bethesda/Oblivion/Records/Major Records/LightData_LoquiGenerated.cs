@@ -2372,7 +2372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILightDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LightData_Registration.DATA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

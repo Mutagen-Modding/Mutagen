@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILayerHeaderGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LayerHeader_Registration.BTXT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -3243,7 +3243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Density);
                 writer.Write(item.MinSlope);
@@ -3282,7 +3282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGrassGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Grass_Registration.GRAS_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

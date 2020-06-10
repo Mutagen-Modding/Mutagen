@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LocationReferenceType_Registration.LCRT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

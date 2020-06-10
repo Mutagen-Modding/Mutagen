@@ -4868,7 +4868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CombatStyleData_Registration.CSTD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

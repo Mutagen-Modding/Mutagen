@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     && (obj.VisibleWhenDistant?.Count ?? 0) == 0
                     && pathGrid == null
                     && landscape == null) return;
-                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write(obj.Timestamp);
                     if (obj.Persistent?.Count > 0)
                     {
-                        using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
                         || pathGrid != null
                         || landscape != null)
                     {
-                        using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (obj.VisibleWhenDistant?.Count > 0)
                     {
-                        using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,

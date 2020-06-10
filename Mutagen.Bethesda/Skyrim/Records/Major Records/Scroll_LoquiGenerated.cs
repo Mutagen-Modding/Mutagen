@@ -4421,14 +4421,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(Scroll_Registration.ZNAM_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Weight);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.SPIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.SPIT_HEADER)))
             {
                 writer.Write(item.BaseCost);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<SpellDataFlag>.Instance.Write(
@@ -4478,7 +4478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScrollGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Scroll_Registration.SCRL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

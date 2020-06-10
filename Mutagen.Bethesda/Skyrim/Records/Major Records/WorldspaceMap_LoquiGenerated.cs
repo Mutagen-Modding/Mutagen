@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceMap_Registration.MNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

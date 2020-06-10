@@ -3371,7 +3371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFloraGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Flora_Registration.FLOR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

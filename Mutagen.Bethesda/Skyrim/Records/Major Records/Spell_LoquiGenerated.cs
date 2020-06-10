@@ -3737,7 +3737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Spell_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Spell_Registration.SPIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Spell_Registration.SPIT_HEADER)))
             {
                 writer.Write(item.BaseCost);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<SpellDataFlag>.Instance.Write(
@@ -3787,7 +3787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISpellGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Spell_Registration.SPEL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

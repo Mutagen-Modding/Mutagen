@@ -3117,7 +3117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITalkingActivatorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.TACT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

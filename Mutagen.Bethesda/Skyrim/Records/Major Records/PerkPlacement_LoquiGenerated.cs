@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkPlacementGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PerkPlacement_Registration.PRKR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

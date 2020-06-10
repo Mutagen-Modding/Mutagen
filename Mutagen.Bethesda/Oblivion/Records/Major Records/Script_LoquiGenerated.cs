@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Script_Registration.SCPT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

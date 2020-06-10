@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             bool nullable = false)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 this.Write(
                     writer,

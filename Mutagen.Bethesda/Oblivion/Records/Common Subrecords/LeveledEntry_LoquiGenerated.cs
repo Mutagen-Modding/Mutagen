@@ -1763,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LeveledEntry_Registration.LVLO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

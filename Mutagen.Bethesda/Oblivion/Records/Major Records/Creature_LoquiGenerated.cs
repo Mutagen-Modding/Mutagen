@@ -5445,7 +5445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Creature_Registration.CREA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

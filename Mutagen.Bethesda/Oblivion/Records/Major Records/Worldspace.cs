@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (subCells?.Count == 0
                     && road != null
                     && topCell != null) return;
-                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,

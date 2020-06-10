@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (phonemes[i] == null) continue;
                         var target = (Target)i;
-                        using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.PHTN_HEADER))
+                        using (HeaderExport.Subrecord(writer, Race_Registration.PHTN_HEADER))
                         {
                             writer.Write(target.GetString(lipMode), StringBinaryType.NullTerminate);
                         }
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 foreach (var slot in FaceFxPhonemesBinaryCreateTranslation.Slots)
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, Race_Registration.PHWT_HEADER))
+                    using (HeaderExport.Subrecord(writer, Race_Registration.PHWT_HEADER))
                     {
                         foreach (var target in FaceFxPhonemesBinaryCreateTranslation.Targets)
                         {

@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SigilStoneData_Registration.DATA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

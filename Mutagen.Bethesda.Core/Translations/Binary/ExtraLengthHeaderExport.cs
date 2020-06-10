@@ -30,14 +30,14 @@ namespace Mutagen.Bethesda.Binary
             _tributary.Position = 0;
             if (_tributary.Length <= ushort.MaxValue)
             {
-                using (HeaderExport.ExportSubrecordHeader(_writer, _mainRecord))
+                using (HeaderExport.Subrecord(_writer, _mainRecord))
                 {
                     _tributary.CopyTo(_writer.BaseStream);
                 }
             }
             else
             {
-                using (HeaderExport.ExportSubrecordHeader(_writer, _extraLengthRecord))
+                using (HeaderExport.Subrecord(_writer, _extraLengthRecord))
                 {
                     _writer.Write(checked((uint)_tributary.Length));
                 }

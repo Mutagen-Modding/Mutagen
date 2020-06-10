@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryAliasIndexCustom(MutagenWriter writer, IFindMatchingRefNearAliasGetter item)
             {
                 if (!item.AliasIndex.TryGet(out var index)) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, FindMatchingRefNearAlias_Registration.ALNA_HEADER))
+                using (HeaderExport.Subrecord(writer, FindMatchingRefNearAlias_Registration.ALNA_HEADER))
                 {
                     writer.Write((int)index);
                 }

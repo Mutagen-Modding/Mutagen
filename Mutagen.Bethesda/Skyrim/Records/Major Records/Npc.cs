@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryDataMarkerCustom(MutagenWriter writer, INpcGetter item)
             {
-                using var header = HeaderExport.ExportSubrecordHeader(writer, Npc_Registration.DATA_HEADER);
+                using var header = HeaderExport.Subrecord(writer, Npc_Registration.DATA_HEADER);
             }
         }
 

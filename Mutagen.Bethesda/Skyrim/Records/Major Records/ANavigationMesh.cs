@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryDataLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
-                using (var header = HeaderExport.ExportSubrecordHeader(
+                using (var header = HeaderExport.Subrecord(
                     writer, 
                     ANavigationMesh_Registration.NVNM_HEADER,
                     largeLengthRecord: ANavigationMesh_Registration.XXXX_HEADER))

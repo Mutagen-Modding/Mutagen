@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="record">RecordType of the header</param>
         /// <param name="type">ObjectType the header is for</param>
         /// <returns>Object to dispose when header's content has been written</returns>
-        public static HeaderExport ExportHeader(
+        public static HeaderExport Header(
             MutagenWriter writer,
             RecordType record,
             ObjectType type)
@@ -66,11 +66,11 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="writer">Writer to export header to</param>
         /// <param name="record">RecordType of the header</param>
         /// <returns>Object to dispose when header's content has been written</returns>
-        public static HeaderExport ExportSubrecordHeader(
+        public static HeaderExport Subrecord(
             MutagenWriter writer,
             RecordType record)
         {
-            return ExportHeader(writer, record, ObjectType.Subrecord);
+            return Header(writer, record, ObjectType.Subrecord);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="record">RecordType of the header</param>
         /// <param name="largeLengthRecord">RecordType to use for an extra preceding subrecord, if the length is too large</param>
         /// <returns>Object to dispose when header's content has been written</returns>
-        public static ExtraLengthHeaderExport ExportSubrecordHeader(
+        public static ExtraLengthHeaderExport Subrecord(
             MutagenWriter writer,
             RecordType record,
             RecordType largeLengthRecord)

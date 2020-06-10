@@ -2289,7 +2289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellSubBlockGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CellSubBlock_Registration.GRUP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))

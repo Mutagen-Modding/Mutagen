@@ -78,11 +78,11 @@ namespace Mutagen.Bethesda.Skyrim
             static void WriteMorph(MutagenWriter writer, MorphEnum e, IMorphGetter? morph)
             {
                 if (morph == null) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, AvailableMorphs_Registration.MPAI_HEADER))
+                using (HeaderExport.Subrecord(writer, AvailableMorphs_Registration.MPAI_HEADER))
                 {
                     writer.Write((int)e);
                 }
-                using (HeaderExport.ExportSubrecordHeader(writer, AvailableMorphs_Registration.MPAV_HEADER))
+                using (HeaderExport.Subrecord(writer, AvailableMorphs_Registration.MPAV_HEADER))
                 {
                     writer.Write(morph.Data);
                 }

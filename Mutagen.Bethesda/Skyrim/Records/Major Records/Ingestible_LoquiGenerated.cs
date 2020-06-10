@@ -3971,7 +3971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Weight,
                 header: recordTypeConverter.ConvertToCustom(Ingestible_Registration.DATA_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingestible_Registration.ENIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Ingestible_Registration.ENIT_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingestible.Flag>.Instance.Write(
@@ -4006,7 +4006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIngestibleGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Ingestible_Registration.ALCH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

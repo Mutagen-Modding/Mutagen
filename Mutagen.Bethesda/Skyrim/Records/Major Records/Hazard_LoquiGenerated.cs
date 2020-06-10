@@ -3193,7 +3193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ImageSpaceModifier,
                 header: recordTypeConverter.ConvertToCustom(Hazard_Registration.MNAM_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Hazard_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Hazard_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Limit);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3232,7 +3232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHazardGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Hazard_Registration.HAZD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

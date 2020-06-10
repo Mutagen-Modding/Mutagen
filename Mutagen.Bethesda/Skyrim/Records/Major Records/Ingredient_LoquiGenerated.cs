@@ -3926,14 +3926,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ZNAM_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Weight);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.ENIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.ENIT_HEADER)))
             {
                 writer.Write(item.IngredientValue);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingredient.Flag>.Instance.Write(
@@ -3959,7 +3959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIngredientGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Ingredient_Registration.INGR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

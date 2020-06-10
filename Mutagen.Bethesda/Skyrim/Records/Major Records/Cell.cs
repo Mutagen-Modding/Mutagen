@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                     && (obj.Temporary?.Count ?? 0) == 0
                     && navMeshes.Count == 0
                     && landscape == null) return;
-                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer.Write(obj.UnknownGroupData);
                     if (obj.Persistent?.Count > 0)
                     {
-                        using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Skyrim
                         || navMeshes.Count > 0
                         || landscape != null)
                     {
-                        using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,

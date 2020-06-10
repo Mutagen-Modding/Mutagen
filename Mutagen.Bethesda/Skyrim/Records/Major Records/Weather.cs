@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < cloudTex.Length; i++)
                 {
                     if (!cloudTex[i].TryGet(out var tex)) continue;
-                    using (HeaderExport.ExportSubrecordHeader(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
+                    using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
                     {
                         writer.Write(tex, StringBinaryType.NullTerminate);
                     }
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
                     || HasAny(xSpeeds))
                 {
                     // Write YSpeeds
-                    using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.RNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, Weather_Registration.RNAM_HEADER))
                     {
                         for (int i = 0; i < ySpeeds.Length; i++)
                         {
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
 
                     // Write XSpeeds
-                    using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.QNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, Weather_Registration.QNAM_HEADER))
                     {
                         for (int i = 0; i < xSpeeds.Length; i++)
                         {
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Write colors
                 if (colors.Any(a => a != null))
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.PNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, Weather_Registration.PNAM_HEADER))
                     {
                         for (int i = 0; i < colors.Length; i++)
                         {
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Write alphas
                 if (alphas.Any(a => a != null))
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.JNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, Weather_Registration.JNAM_HEADER))
                     {
                         for (int i = 0; i < alphas.Length; i++)
                         {
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!any) return;
 
-                using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.NAM1_HEADER))
+                using (HeaderExport.Subrecord(writer, Weather_Registration.NAM1_HEADER))
                 {
                     uint raw = 0;
                     uint index = 1;
@@ -357,19 +357,19 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 if (!item.DirectionalAmbientLightingColors.TryGet(out var colors)) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
                 {
                     colors.Sunrise.WriteToBinary(writer);
                 }
-                using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
                 {
                     colors.Day.WriteToBinary(writer);
                 }
-                using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
                 {
                     colors.Sunset.WriteToBinary(writer);
                 }
-                using (HeaderExport.ExportSubrecordHeader(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
                 {
                     colors.Night.WriteToBinary(writer);
                 }

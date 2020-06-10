@@ -4387,7 +4387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
+            using (HeaderExport.Subrecord(writer, Race_Registration.NAM0_HEADER)) { }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceData,
@@ -4454,7 +4454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Race_Registration.RACE_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

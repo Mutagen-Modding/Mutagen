@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorSetGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WeatherAmbientColorSet_Registration.DALC_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

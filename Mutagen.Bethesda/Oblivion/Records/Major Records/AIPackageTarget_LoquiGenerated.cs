@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AIPackageTarget_Registration.PTDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorkbenchData_Registration.WBDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

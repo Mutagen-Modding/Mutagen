@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLinkGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(NavigationDoorLink_Registration.XNDP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

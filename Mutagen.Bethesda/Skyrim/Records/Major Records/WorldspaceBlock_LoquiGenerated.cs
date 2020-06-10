@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceBlockGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceBlock_Registration.GRUP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))

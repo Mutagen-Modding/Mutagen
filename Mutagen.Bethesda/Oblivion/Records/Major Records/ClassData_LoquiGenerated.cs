@@ -2489,7 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ClassData_Registration.DATA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

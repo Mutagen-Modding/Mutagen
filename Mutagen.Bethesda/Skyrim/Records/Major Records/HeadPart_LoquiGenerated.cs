@@ -3004,7 +3004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHeadPartGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(HeadPart_Registration.HDPT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

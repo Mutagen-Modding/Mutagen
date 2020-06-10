@@ -3096,7 +3096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENIT_HEADER)))
             {
                 writer.Write(item.EnchantmentCost);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Write(
@@ -3147,7 +3147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectEffectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENCH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

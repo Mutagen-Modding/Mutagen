@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMappingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PointToReferenceMapping_Registration.PGRL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

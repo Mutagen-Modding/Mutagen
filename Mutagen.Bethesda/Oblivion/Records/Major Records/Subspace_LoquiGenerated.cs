@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspaceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Subspace_Registration.SBSP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingFlagsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ClothingFlags_Registration.BMDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
                     QuestAlias.TypeEnum.Location => QuestAlias_Registration.ALLS_HEADER,
                     _ => throw new NotImplementedException(),
                 };
-                using (HeaderExport.ExportSubrecordHeader(writer, type))
+                using (HeaderExport.Subrecord(writer, type))
                 {
                     writer.Write(item.ID);
                 }
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, QuestAlias_Registration.ALED_HEADER)) { }
+                using (HeaderExport.Subrecord(writer, QuestAlias_Registration.ALED_HEADER)) { }
             }
         }
 

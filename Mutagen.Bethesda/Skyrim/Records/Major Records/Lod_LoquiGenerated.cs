@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILodGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Lod_Registration.MNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

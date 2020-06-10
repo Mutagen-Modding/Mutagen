@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(GameSetting_Registration.GMST_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

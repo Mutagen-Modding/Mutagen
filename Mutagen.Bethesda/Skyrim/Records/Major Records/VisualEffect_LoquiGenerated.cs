@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(VisualEffect_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(VisualEffect_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVisualEffectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(VisualEffect_Registration.RFCT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

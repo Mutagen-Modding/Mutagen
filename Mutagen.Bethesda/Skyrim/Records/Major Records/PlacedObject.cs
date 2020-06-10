@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return;
                 }
-                using (HeaderExport.ExportSubrecordHeader(writer, PlacedObject_Registration.XRMR_HEADER))
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XRMR_HEADER))
                 {
                     writer.Write((byte)item.LinkedRooms.Count);
                     byte flags = 0;

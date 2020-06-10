@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferencesGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LinkedReferences_Registration.XLKR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

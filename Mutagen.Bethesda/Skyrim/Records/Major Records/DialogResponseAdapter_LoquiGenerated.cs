@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponseAdapterGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DialogResponseAdapter_Registration.VMAD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

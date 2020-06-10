@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Object,
                 header: recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCO_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCA_HEADER)))
             {
                 writer.Write(item.AliasIndex);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Write(

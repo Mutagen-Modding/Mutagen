@@ -4748,7 +4748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Projectile_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Projectile_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Projectile.Flag>.Instance.Write(
                     writer,
@@ -4851,7 +4851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IProjectileGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Projectile_Registration.PROJ_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

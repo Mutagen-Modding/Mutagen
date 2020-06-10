@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Birthsign_Registration.BSGN_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

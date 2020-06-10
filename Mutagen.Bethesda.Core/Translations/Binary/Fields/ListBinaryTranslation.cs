@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubWriteDelegate<T> transl)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
             {
                 foreach (var item in items)
                 {
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
             {
                 foreach (var item in items)
                 {
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
             {
                 switch (countLengthLength)
                 {
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             foreach (var item in items)
             {
-                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
                 {
                     transl(writer, item);
                 }
@@ -696,11 +696,11 @@ namespace Mutagen.Bethesda.Binary
             byte counterLength)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))
             {
                 writer.Write(items.Count, counterLength);
             }
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
             {
                 foreach (var item in items)
                 {
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))
             {
                 writer.Write(items.Count, counterLength);
             }
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 foreach (var item in items)
                 {
-                    using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                    using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
                     {
                         transl(writer, item, recordTypeConverter);
                     }
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                using (HeaderExport.Header(writer, recordType, ObjectType.Subrecord))
                 {
                     foreach (var item in items)
                     {
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))
             {
                 writer.Write(items.Count, counterLength);
             }

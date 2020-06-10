@@ -2587,7 +2587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILeveledNpcGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LeveledNpc_Registration.LVLN_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

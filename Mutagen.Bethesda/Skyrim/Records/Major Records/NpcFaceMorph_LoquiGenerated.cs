@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcFaceMorphGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(NpcFaceMorph_Registration.NAM9_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

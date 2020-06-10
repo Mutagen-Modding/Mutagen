@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArmorAddonGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ArmorAddon_Registration.ARMA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

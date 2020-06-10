@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)}, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) {{ }}");
+                fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
             }
 
             var subData = list.SubTypeGeneration.GetFieldData();

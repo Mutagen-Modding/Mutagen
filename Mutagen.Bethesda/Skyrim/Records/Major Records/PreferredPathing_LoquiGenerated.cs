@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPreferredPathingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PreferredPathing_Registration.NVPP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -6531,7 +6531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.Flag>.Instance.Write(
                     writer,
@@ -6685,7 +6685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.MGEF_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

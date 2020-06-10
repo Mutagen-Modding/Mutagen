@@ -2557,7 +2557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AttackData_Registration.ATKD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

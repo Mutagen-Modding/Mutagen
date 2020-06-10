@@ -1751,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapOffsetGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceMapOffset_Registration.ONAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -2268,7 +2268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ClimateData_Registration.TNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

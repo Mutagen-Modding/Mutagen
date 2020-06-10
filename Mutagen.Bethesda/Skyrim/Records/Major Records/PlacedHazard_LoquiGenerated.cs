@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedHazardGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedHazard_Registration.PHZD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

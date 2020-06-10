@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryPatrolScriptMarkerCustom(MutagenWriter writer, IPatrolGetter item)
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, Patrol_Registration.XPPA_HEADER)) { }
+                using (HeaderExport.Subrecord(writer, Patrol_Registration.XPPA_HEADER)) { }
             }
 
             static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPatrolGetter item)

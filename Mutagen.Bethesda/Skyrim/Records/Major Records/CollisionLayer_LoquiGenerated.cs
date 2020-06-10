@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICollisionLayerGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CollisionLayer_Registration.COLL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

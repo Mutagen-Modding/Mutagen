@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(EffectShader_Registration.EFSH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

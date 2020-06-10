@@ -2579,7 +2579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConstructibleObjectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ConstructibleObject_Registration.COBJ_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

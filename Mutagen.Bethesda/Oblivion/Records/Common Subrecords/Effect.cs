@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item)
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, Effect_Registration.EFID_HEADER))
+                using (HeaderExport.Subrecord(writer, Effect_Registration.EFID_HEADER))
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,

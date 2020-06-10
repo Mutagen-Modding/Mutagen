@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocationGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AIPackageLocation_Registration.PLDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Tests
                 MemoryStream memStream = new MemoryStream();
                 using (var writer = new MutagenWriter(memStream, this.GameMode))
                 {
-                    using (HeaderExport.ExportHeader(
+                    using (HeaderExport.Header(
                         writer,
                         new RecordType("ICON"),
                         ObjectType.Subrecord))

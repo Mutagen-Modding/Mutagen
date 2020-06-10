@@ -4593,7 +4593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(Armor_Registration.MODL_HEADER));
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -4617,7 +4617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArmorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Armor_Registration.ARMO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

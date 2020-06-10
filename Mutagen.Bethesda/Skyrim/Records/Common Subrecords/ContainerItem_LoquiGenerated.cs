@@ -1759,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerItemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ContainerItem_Registration.CNTO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

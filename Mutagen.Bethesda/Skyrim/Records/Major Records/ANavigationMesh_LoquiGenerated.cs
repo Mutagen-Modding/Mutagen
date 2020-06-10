@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANavigationMeshGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ANavigationMesh_Registration.NAVM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

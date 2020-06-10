@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ListGroup_Registration.GRUP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))

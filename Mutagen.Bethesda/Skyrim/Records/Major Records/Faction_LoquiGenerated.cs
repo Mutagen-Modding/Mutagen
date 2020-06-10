@@ -3971,7 +3971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (item.VendorLocation.TryGet(out var VendorLocationItem))
             {
-                using (HeaderExport.ExportHeader(writer, Faction_Registration.PLVD_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, Faction_Registration.PLVD_HEADER))
                 {
                     ((LocationTargetBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
                         item: VendorLocationItem,
@@ -3989,7 +3989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Faction_Registration.FACT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

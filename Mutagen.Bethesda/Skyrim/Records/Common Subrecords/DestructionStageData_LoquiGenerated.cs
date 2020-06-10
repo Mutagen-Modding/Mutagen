@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructionStageDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DestructionStageData_Registration.DSTD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

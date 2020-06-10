@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3500,7 +3500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoulGemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLGM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

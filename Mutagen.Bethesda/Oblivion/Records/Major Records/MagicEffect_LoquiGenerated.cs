@@ -2596,7 +2596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.MGEF_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

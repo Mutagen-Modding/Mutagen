@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalIntGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(GlobalInt_Registration.GLOB_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

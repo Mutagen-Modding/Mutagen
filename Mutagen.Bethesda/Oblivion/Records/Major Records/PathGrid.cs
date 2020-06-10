@@ -111,13 +111,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
 
-            using (HeaderExport.ExportSubrecordHeader(writer, PathGrid_Registration.DATA_HEADER))
+            using (HeaderExport.Subrecord(writer, PathGrid_Registration.DATA_HEADER))
             {
                 writer.Write((ushort)ptToPt.Count);
             }
 
             bool anyConnections = false;
-            using (HeaderExport.ExportSubrecordHeader(writer, PathGridBinaryCreateTranslation.PGRP))
+            using (HeaderExport.Subrecord(writer, PathGridBinaryCreateTranslation.PGRP))
             {
                 foreach (var pt in ptToPt)
                 {
@@ -135,14 +135,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (item.Unknown.TryGet(out var unknown))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, PathGrid_Registration.PGAG_HEADER))
+                using (HeaderExport.Subrecord(writer, PathGrid_Registration.PGAG_HEADER))
                 {
                     writer.Write(unknown);
                 }
             }
 
             if (!anyConnections) return;
-            using (HeaderExport.ExportSubrecordHeader(writer, PathGridBinaryCreateTranslation.PGRR))
+            using (HeaderExport.Subrecord(writer, PathGridBinaryCreateTranslation.PGRR))
             {
                 foreach (var pt in ptToPt)
                 {

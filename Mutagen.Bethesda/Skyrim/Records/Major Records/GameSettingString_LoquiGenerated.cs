@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingStringGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.GMST_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

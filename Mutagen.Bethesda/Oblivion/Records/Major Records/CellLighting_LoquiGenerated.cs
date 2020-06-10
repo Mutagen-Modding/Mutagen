@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLightingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

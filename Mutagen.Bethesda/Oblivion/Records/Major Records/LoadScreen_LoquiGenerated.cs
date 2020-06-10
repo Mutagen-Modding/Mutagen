@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.LSCR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

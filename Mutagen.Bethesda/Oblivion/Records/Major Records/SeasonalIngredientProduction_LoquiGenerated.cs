@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISeasonalIngredientProductionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SeasonalIngredientProduction_Registration.PFPC_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

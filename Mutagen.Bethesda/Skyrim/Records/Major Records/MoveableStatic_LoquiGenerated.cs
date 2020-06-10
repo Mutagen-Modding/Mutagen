@@ -2506,7 +2506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMoveableStaticGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(MoveableStatic_Registration.MSTT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

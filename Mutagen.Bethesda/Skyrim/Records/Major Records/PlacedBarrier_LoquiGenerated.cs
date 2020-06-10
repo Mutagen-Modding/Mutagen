@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedBarrierGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedBarrier_Registration.PBAR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

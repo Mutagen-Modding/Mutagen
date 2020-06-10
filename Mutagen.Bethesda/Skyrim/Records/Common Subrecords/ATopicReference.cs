@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var item in topics)
                 {
-                    using var header = HeaderExport.ExportSubrecordHeader(writer, ATopicReference_Registration.PDTO_HEADER);
+                    using var header = HeaderExport.Subrecord(writer, ATopicReference_Registration.PDTO_HEADER);
                     switch (item)
                     {
                         case ITopicReferenceGetter refGetter:

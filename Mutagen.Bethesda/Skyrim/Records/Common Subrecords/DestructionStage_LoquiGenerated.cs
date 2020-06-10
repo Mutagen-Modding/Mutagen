@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: DestructionStage_Registration.ModelConverter);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, DestructionStage_Registration.DSTF_HEADER)) { } // End Marker
+            using (HeaderExport.Subrecord(writer, DestructionStage_Registration.DSTF_HEADER)) { } // End Marker
         }
 
         public void Write(

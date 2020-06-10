@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructableDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DestructableData_Registration.DEST_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

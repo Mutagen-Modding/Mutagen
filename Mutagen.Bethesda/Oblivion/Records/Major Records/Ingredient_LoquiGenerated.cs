@@ -2799,7 +2799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Ingredient_Registration.INGR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

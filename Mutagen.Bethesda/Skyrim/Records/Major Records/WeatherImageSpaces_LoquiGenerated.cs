@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherImageSpacesGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WeatherImageSpaces_Registration.IMSP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

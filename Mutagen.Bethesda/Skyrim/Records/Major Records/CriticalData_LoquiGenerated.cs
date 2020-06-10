@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICriticalDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CriticalData_Registration.CRDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

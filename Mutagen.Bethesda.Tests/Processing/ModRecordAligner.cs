@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 var ret = new byte[subLen + 6];
                 MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
-                using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
+                using (HeaderExport.Subrecord(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
                 }
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     var data = new byte[subLen + 6];
                     stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     var data = new byte[subLen + 6];
                     stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }

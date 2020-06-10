@@ -8568,7 +8568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherBinaryWriteTranslation.WriteBinaryCloudAlphas(
                 writer: writer,
                 item: item);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER)))
             {
                 var SkyUpperColorItem = item.SkyUpperColor;
                 ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SkyUpperColorItem).BinaryWriteTranslator).Write(
@@ -8662,7 +8662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -8689,7 +8689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.FogDistanceNightMax);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
             {
                 PercentBinaryTranslation.Write(
                     writer: writer,
@@ -8812,7 +8812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Weather_Registration.WTHR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -2695,7 +2695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Landscape_Registration.LAND_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

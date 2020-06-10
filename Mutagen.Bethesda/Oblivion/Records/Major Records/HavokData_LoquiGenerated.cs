@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

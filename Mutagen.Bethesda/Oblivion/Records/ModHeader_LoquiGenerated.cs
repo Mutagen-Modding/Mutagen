@@ -2731,7 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModHeaderGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

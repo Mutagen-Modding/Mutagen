@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WeatherData_Registration.DATA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

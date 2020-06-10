@@ -2799,7 +2799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPotionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Potion_Registration.ALCH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

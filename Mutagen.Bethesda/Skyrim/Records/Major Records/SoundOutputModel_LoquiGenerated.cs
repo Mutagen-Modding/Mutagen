@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputModelGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SoundOutputModel_Registration.SOPM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

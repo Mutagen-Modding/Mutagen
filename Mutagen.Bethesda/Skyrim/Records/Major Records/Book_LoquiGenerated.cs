@@ -4038,7 +4038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
             {
                 BookBinaryWriteTranslation.WriteBinaryFlags(
                     writer: writer,
@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Book_Registration.BOOK_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

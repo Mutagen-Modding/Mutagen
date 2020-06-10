@@ -218,14 +218,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!item.Responses.TryGet(out var resp)
                     || resp.Count == 0)
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, DialogTopic_Registration.TIFC_HEADER))
+                    using (HeaderExport.Subrecord(writer, DialogTopic_Registration.TIFC_HEADER))
                     {
                         writer.WriteZeros(4);
                     }
                 }
                 else
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, DialogTopic_Registration.TIFC_HEADER))
+                    using (HeaderExport.Subrecord(writer, DialogTopic_Registration.TIFC_HEADER))
                     {
                         writer.Write(resp.Count);
                     }
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return;
                 }
-                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,

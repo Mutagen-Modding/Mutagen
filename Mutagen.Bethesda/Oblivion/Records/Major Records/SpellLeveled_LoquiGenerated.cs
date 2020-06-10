@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellLeveledGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SpellLeveled_Registration.LVSP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

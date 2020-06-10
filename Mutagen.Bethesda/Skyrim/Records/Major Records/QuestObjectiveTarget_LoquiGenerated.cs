@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestObjectiveTarget_Registration.QSTA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(QuestObjectiveTarget_Registration.QSTA_HEADER)))
             {
                 writer.Write(item.AliasIndex);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.TargetFlag>.Instance.Write(

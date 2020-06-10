@@ -152,14 +152,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
                 if (funcData.ParameterOneString.TryGet(out var param1))
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS1_HEADER))
+                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1_HEADER))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
                 if (funcData.ParameterTwoString.TryGet(out var param2))
                 {
-                    using (HeaderExport.ExportSubrecordHeader(writer, Condition_Registration.CIS2_HEADER))
+                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2_HEADER))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
                     }

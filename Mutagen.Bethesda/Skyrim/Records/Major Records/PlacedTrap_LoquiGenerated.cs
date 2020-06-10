@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedTrapGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedTrap_Registration.PGRE_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

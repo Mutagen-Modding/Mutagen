@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header)
         {
             if (!item) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 // Presence of marker signifies true
             }

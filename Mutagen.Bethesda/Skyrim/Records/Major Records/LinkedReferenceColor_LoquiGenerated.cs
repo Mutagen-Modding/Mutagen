@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferenceColorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LinkedReferenceColor_Registration.XCLP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

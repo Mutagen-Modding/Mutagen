@@ -9167,7 +9167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XORD_HEADER));
             if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XOCP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XOCP_HEADER))
                 {
                     ((PlacementBinaryWriteTranslation)((IBinaryItem)OcclusionPlaneItem).BinaryWriteTranslator).Write(
                         item: OcclusionPlaneItem,
@@ -9189,7 +9189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             if (item.RoomPortal.TryGet(out var RoomPortalItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XPTL_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XPTL_HEADER))
                 {
                     ((PlacementBinaryWriteTranslation)((IBinaryItem)RoomPortalItem).BinaryWriteTranslator).Write(
                         item: RoomPortalItem,
@@ -9428,7 +9428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.ONAM_HEADER));
             if (item.MapMarker.TryGet(out var MapMarkerItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XMRK_HEADER)) { }
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
                     item: MapMarkerItem,
                     writer: writer,
@@ -9442,7 +9442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DistantLodData,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLOD_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(PlacedObject_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -9458,7 +9458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedObjectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.REFR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

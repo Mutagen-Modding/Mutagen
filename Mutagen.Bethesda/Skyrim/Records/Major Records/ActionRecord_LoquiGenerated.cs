@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActionRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ActionRecord_Registration.AACT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

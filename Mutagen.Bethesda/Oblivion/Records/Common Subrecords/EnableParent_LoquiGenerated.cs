@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParentGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(EnableParent_Registration.XESP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

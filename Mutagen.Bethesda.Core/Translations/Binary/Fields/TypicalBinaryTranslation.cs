@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Binary
                 if (nullable) return;
                 throw new ArgumentException("Non optional string was null.");
             }
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 Write(writer, item);
             }

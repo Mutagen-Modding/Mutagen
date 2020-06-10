@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Sound_Registration.SOUN_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

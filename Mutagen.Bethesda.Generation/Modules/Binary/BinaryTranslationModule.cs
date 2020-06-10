@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Generation
             if (hasRecType)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"using (HeaderExport.ExportHeader",
+                    $"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Header)}",
                     ")",
                     semiColon: false))
                 {
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
                                 {
-                                    fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                     using (new BraceWrapper(fg))
                                     {
                                         bool isInRange = false;
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Generation
 
                     if (data.EndMarkerType.HasValue)
                     {
-                        fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
+                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
                     }
                 }
                 fg.AppendLine();

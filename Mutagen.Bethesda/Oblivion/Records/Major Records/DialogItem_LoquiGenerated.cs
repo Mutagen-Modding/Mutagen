@@ -3430,7 +3430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DialogItem_Registration.INFO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

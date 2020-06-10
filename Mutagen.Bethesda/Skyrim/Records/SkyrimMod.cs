@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
                     {
-                        using (HeaderExport.ExportHeader(
+                        using (HeaderExport.Header(
                             writer: writer,
                             record: Worldspace_Registration.WRLD_HEADER,
                             type: ObjectType.Record))

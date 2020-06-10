@@ -4262,7 +4262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DNAM_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
                     writer,
@@ -4350,7 +4350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Quest_Registration.QUST_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

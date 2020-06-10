@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEquipTypeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(EquipType_Registration.EQUP_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

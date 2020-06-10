@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Climate_Registration.CLMT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

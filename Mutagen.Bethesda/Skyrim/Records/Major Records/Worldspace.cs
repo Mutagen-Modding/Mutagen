@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var subCells = obj.SubCells;
                 if (subCells?.Count == 0
                     && topCell != null) return;
-                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,

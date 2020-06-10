@@ -3173,7 +3173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfoGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(NavigationMapInfo_Registration.NVMI_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

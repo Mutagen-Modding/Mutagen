@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DialogResponseData_Registration.TRDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

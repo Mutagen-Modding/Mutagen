@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Binary
             Action<MutagenWriter, T>? write = null)
         {
             write ??= this.Write;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 write(writer, item);
             }
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Binary
         {
             if (!item.HasValue) return;
             write ??= this.Write;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 write(writer, item.Value);
             }

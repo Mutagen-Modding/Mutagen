@@ -3341,7 +3341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(MiscItem_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(MiscItem_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3355,7 +3355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMiscItemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(MiscItem_Registration.MISC_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

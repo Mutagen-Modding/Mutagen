@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IATopicReferenceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ATopicReference_Registration.PDTO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

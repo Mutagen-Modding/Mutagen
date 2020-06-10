@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundDescriptorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SoundDescriptor_Registration.SNDR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -3919,7 +3919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Time);
                 writer.Write(item.Radius);
@@ -3968,7 +3968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Light_Registration.LIGH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -5367,7 +5367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.XSCL_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -5383,7 +5383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedNpcGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.ACHR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

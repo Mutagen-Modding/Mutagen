@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(EnchantmentData_Registration.ENIT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

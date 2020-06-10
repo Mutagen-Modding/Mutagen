@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Binary
         public static void Write(MutagenWriter writer, float? item, RecordType header, FloatIntegerType integerType, double multiplier)
         {
             if (item == null) return;
-            using (HeaderExport.ExportSubrecordHeader(writer, header))
+            using (HeaderExport.Subrecord(writer, header))
             {
                 Write(writer, item, integerType, multiplier);
             }

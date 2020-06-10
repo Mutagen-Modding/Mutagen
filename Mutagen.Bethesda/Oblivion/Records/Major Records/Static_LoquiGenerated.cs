@@ -1891,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IStaticGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Static_Registration.STAT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

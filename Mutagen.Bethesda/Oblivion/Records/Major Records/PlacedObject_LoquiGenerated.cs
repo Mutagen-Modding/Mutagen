@@ -4460,7 +4460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER));
             if (item.MapMarker.TryGet(out var MapMarkerItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.XMRK_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XMRK_HEADER)) { }
                 ((MapMarkerBinaryWriteTranslation)((IBinaryItem)MapMarkerItem).BinaryWriteTranslator).Write(
                     item: MapMarkerItem,
                     writer: writer,
@@ -4483,7 +4483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER));
             if (item.Location.TryGet(out var LocationItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedObject_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.DATA_HEADER))
                 {
                     ((LocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                         item: LocationItem,
@@ -4498,7 +4498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.REFR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

@@ -2042,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Eye_Registration.EYES_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

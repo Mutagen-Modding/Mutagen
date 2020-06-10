@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LightData_Registration.XLIG_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

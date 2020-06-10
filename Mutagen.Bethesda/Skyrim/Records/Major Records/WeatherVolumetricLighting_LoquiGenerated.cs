@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherVolumetricLightingGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WeatherVolumetricLighting_Registration.HNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

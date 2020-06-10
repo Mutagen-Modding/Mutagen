@@ -3802,7 +3802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WRLD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

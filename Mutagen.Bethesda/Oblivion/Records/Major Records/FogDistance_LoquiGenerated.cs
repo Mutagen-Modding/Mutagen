@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFogDistanceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(FogDistance_Registration.FNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

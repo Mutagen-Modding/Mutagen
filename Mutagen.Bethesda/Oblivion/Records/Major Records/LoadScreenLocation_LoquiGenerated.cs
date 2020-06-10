@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LoadScreenLocation_Registration.LNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

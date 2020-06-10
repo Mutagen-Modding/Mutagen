@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureAIDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CreatureAIData_Registration.AIDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

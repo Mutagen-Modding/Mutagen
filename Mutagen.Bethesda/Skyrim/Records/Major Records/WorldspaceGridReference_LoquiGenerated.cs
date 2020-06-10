@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReferenceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceGridReference_Registration.RNAM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

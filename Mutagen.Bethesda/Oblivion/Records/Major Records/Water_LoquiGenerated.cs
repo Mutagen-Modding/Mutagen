@@ -2560,7 +2560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

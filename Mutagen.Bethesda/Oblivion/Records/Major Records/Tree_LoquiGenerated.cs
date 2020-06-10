@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITreeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Tree_Registration.TREE_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

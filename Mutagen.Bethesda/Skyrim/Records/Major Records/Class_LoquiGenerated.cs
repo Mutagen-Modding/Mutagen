@@ -3086,7 +3086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Unknown);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
@@ -3115,7 +3115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Class_Registration.CLAS_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

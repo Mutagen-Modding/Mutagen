@@ -3127,7 +3127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.QNAM_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Write(
                     writer,
@@ -3156,7 +3156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogTopicGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DIAL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

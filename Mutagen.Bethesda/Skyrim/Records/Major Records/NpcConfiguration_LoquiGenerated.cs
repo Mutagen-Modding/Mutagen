@@ -2582,7 +2582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcConfigurationGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(NpcConfiguration_Registration.ACBS_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

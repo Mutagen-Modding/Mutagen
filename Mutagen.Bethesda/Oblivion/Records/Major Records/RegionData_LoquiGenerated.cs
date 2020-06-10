@@ -1697,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

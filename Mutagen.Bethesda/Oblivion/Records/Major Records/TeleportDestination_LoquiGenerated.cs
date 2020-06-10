@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(TeleportDestination_Registration.XTEL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

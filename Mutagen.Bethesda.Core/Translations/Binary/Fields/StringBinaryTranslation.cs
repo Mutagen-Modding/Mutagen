@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 writer.Write(
                     item,
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (item == null) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 writer.Write(
                     item,
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType,
             StringsSource source)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 if (writer.MetaData.StringsWriter == null)
                 {
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Binary
             StringsSource source)
         {
             if (item == null) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 if (writer.MetaData.StringsWriter == null)
                 {

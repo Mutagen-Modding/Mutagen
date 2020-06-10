@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AIPackageSchedule_Registration.PSDT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))

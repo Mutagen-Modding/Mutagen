@@ -3553,7 +3553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ammunition_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Ammunition_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3579,7 +3579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAmmunitionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Ammunition_Registration.AMMO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

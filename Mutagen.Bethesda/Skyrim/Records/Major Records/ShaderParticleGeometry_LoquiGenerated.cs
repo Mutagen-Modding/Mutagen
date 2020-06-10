@@ -2984,7 +2984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.DATA_HEADER)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3033,7 +3033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShaderParticleGeometryGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.SPGD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var conditions = item.Conditions;
                 if (conditions == null) return;
-                using (HeaderExport.ExportSubrecordHeader(writer, Faction_Registration.CITC_HEADER))
+                using (HeaderExport.Subrecord(writer, Faction_Registration.CITC_HEADER))
                 {
                     writer.Write(conditions.Count);
                 }

@@ -106,14 +106,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, Quest_Registration.NEXT_HEADER)) { }
+                using (HeaderExport.Subrecord(writer, Quest_Registration.NEXT_HEADER)) { }
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
             }
 
             static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
             {
                 var aliases = item.Aliases;
-                using (HeaderExport.ExportSubrecordHeader(writer, Quest_Registration.ANAM_HEADER))
+                using (HeaderExport.Subrecord(writer, Quest_Registration.ANAM_HEADER))
                 {
                     if (aliases.Count == 0)
                     {

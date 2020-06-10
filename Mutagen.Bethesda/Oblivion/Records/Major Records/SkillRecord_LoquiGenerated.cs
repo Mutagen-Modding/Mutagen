@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.SKIL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

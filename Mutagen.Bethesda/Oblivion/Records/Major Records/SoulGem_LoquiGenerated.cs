@@ -2650,7 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLGM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

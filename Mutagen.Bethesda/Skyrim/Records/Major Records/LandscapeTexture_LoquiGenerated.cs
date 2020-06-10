@@ -2526,7 +2526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MaterialType,
                 header: recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.MNAM_HEADER));
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.HNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.HNAM_HEADER)))
             {
                 writer.Write(item.HavokFriction);
                 writer.Write(item.HavokRestitution);
@@ -2552,7 +2552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILandscapeTextureGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.LTEX_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

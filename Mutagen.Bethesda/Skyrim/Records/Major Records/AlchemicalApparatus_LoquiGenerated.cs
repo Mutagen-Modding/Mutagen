@@ -3270,7 +3270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3284,7 +3284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlchemicalApparatusGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.APPA_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IKeyGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Key_Registration.KEYM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

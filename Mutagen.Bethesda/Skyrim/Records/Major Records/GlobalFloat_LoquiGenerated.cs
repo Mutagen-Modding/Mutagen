@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalFloatGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.GLOB_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))

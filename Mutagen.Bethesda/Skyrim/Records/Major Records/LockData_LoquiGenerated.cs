@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILockDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(LockData_Registration.XLOC_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
