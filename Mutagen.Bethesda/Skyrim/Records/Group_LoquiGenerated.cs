@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
             T_RecordType = UtilityTranslation.GetRecordType<T>();
         }
 
-        #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        #region Type
+        public GroupTypeEnum Type { get; set; } = default;
         #endregion
         #region LastModified
         public Int32 LastModified { get; set; } = default;
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IGroup<T>>
         where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        new GroupTypeEnum GroupType { get; set; }
+        new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
         new ICache<T, FormKey> RecordCache { get; }
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Group_Registration.Instance;
-        GroupTypeEnum GroupType { get; }
+        GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
         Int32 Unknown { get; }
         IReadOnlyCache<T, FormKey> RecordCache { get; }
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Group_FieldIndex
     {
-        GroupType = 0,
+        Type = 0,
         LastModified = 1,
         Unknown = 2,
         RecordCache = 3,
@@ -808,8 +808,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "GROUPTYPE":
-                    return (ushort)Group_FieldIndex.GroupType;
+                case "TYPE":
+                    return (ushort)Group_FieldIndex.Type;
                 case "LASTMODIFIED":
                     return (ushort)Group_FieldIndex.LastModified;
                 case "UNKNOWN":
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
                 case Group_FieldIndex.RecordCache:
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
                 case Group_FieldIndex.RecordCache:
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
                 case Group_FieldIndex.RecordCache:
@@ -871,8 +871,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
-                    return "GroupType";
+                case Group_FieldIndex.Type:
+                    return "Type";
                 case Group_FieldIndex.LastModified:
                     return "LastModified";
                 case Group_FieldIndex.Unknown:
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
                 case Group_FieldIndex.RecordCache:
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
                 case Group_FieldIndex.RecordCache:
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.Type:
                     return typeof(GroupTypeEnum);
                 case Group_FieldIndex.LastModified:
                     return typeof(Int32);
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IGroup<T> item)
         {
             ClearPartial();
-            item.GroupType = default;
+            item.Type = default;
             item.LastModified = default;
             item.Unknown = default;
             item.RecordCache.Clear();
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.RecordCache = EqualsMaskHelper.CacheEqualsHelper(
@@ -1138,9 +1138,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Group.Mask<bool>? printMask = null)
         {
-            if (printMask?.GroupType ?? true)
+            if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.GroupType, "GroupType");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.LastModified ?? true)
             {
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<T> item,
             Group.Mask<bool> mask)
         {
-            mask.GroupType = true;
+            mask.Type = true;
             mask.LastModified = true;
             mask.Unknown = true;
             mask.RecordCache = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, SkyrimMajorRecord.Mask<bool>?>>?>(true, item.RecordCache.Items.Select((i) => new MaskItemIndexed<FormKey, bool, SkyrimMajorRecord.Mask<bool>?>(i.FormKey, true, i.GetHasBeenSetMask())));
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
+            if (lhs.Type != rhs.Type) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.RecordCache.SequenceEqual(rhs.RecordCache)) return false;
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IGroupGetter<T> item)
         {
             var hash = new HashCode();
-            hash.Add(item.GroupType);
+            hash.Add(item.Type);
             hash.Add(item.LastModified);
             hash.Add(item.Unknown);
             hash.Add(item.RecordCache);
@@ -1288,9 +1288,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
             {
-                item.GroupType = rhs.GroupType;
+                item.Type = rhs.Type;
             }
             if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
             {
@@ -1421,13 +1421,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                     node: node,
-                    name: nameof(item.GroupType),
-                    item: item.GroupType,
-                    fieldIndex: (int)Group_FieldIndex.GroupType,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)Group_FieldIndex.Type,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
@@ -1586,11 +1586,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "GroupType":
-                    errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
+                case "Type":
+                    errorMask?.PushIndex((int)Group_FieldIndex.Type);
                     try
                     {
-                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
-                item.GroupType,
+                item.Type,
                 length: 4);
             writer.Write(item.LastModified);
             writer.Write(item.Unknown);
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
         }
@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public GroupTypeEnum Type => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
@@ -2172,19 +2172,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.GroupType = initialValue;
+                this.Type = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
                 this.RecordCache = new MaskItem<TItem, IEnumerable<MaskItemIndexed<FormKey, TItem, SkyrimMajorRecord.Mask<TItem>?>>?>(initialValue, null);
             }
         
             public Mask(
-                TItem GroupType,
+                TItem Type,
                 TItem LastModified,
                 TItem Unknown,
                 TItem RecordCache)
             {
-                this.GroupType = GroupType;
+                this.Type = Type;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
                 this.RecordCache = new MaskItem<TItem, IEnumerable<MaskItemIndexed<FormKey, TItem, SkyrimMajorRecord.Mask<TItem>?>>?>(RecordCache, null);
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
         
             #region Members
-            public TItem GroupType;
+            public TItem Type;
             public TItem LastModified;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<FormKey, TItem, SkyrimMajorRecord.Mask<TItem>?>>?>? RecordCache;
@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.RecordCache, rhs.RecordCache)) return false;
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.GroupType);
+                hash.Add(this.Type);
                 hash.Add(this.LastModified);
                 hash.Add(this.Unknown);
                 hash.Add(this.RecordCache);
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.GroupType)) return false;
+                if (!eval(this.Type)) return false;
                 if (!eval(this.LastModified)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (this.RecordCache != null)
@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.GroupType)) return true;
+                if (eval(this.Type)) return true;
                 if (eval(this.LastModified)) return true;
                 if (eval(this.Unknown)) return true;
                 if (this.RecordCache != null)
@@ -2287,7 +2287,7 @@ namespace Mutagen.Bethesda.Skyrim
         
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.GroupType = eval(this.GroupType);
+                obj.Type = eval(this.Type);
                 obj.LastModified = eval(this.LastModified);
                 obj.Unknown = eval(this.Unknown);
                 if (RecordCache != null)
@@ -2325,9 +2325,9 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.GroupType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(GroupType, "GroupType");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.LastModified ?? true)
                     {
@@ -2391,7 +2391,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? GroupType;
+            public Exception? Type;
             public Exception? LastModified;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>? RecordCache;
@@ -2403,8 +2403,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Group_FieldIndex enu = (Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.GroupType:
-                        return GroupType;
+                    case Group_FieldIndex.Type:
+                        return Type;
                     case Group_FieldIndex.LastModified:
                         return LastModified;
                     case Group_FieldIndex.Unknown:
@@ -2421,8 +2421,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Group_FieldIndex enu = (Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.GroupType:
-                        this.GroupType = ex;
+                    case Group_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     case Group_FieldIndex.LastModified:
                         this.LastModified = ex;
@@ -2443,8 +2443,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Group_FieldIndex enu = (Group_FieldIndex)index;
                 switch (enu)
                 {
-                    case Group_FieldIndex.GroupType:
-                        this.GroupType = (Exception?)obj;
+                    case Group_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     case Group_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
@@ -2463,7 +2463,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (GroupType != null) return true;
+                if (Type != null) return true;
                 if (LastModified != null) return true;
                 if (Unknown != null) return true;
                 if (RecordCache != null) return true;
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(GroupType, "GroupType");
+                fg.AppendItem(Type, "Type");
                 fg.AppendItem(LastModified, "LastModified");
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendLine("RecordCache =>");
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask<T_ErrMask>();
-                ret.GroupType = this.GroupType.Combine(rhs.GroupType);
+                ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.RecordCache = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.RecordCache?.Overall, rhs.RecordCache?.Overall), new List<MaskItem<Exception?, T_ErrMask?>>(ExceptionExt.Combine(this.RecordCache?.Specific, rhs.RecordCache?.Specific)));
@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool GroupType;
+            public bool Type;
             public bool LastModified;
             public bool Unknown;
             public MaskItem<bool, T_TranslMask?> RecordCache;
@@ -2572,7 +2572,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.GroupType = defaultOn;
+                this.Type = defaultOn;
                 this.LastModified = defaultOn;
                 this.Unknown = defaultOn;
                 this.RecordCache = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Skyrim
         
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((GroupType, null));
+                ret.Add((Type, null));
                 ret.Add((LastModified, null));
                 ret.Add((Unknown, null));
                 ret.Add((RecordCache?.Overall ?? true, RecordCache?.Specific?.GetCrystal()));

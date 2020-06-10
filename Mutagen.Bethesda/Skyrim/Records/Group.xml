@@ -6,7 +6,7 @@
     </Generic>
     <Fields>
       <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
-      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
       <Int32 name="Unknown" />
       <Dict name="RecordCache" hasBeenSet="False">
@@ -24,7 +24,7 @@
     </Generic>
     <Fields>
       <CustomLogic byteLength="4" name="ContainedRecordType" />
-      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
       <Int32 name="Unknown" />
       <List name="Records" hasBeenSet="False" binaryOverlay="NoGeneration" thread="true">

@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region CreatureType
-        public Creature.CreatureTypeEnum CreatureType { get; set; } = default;
+        #region Type
+        public Creature.Types Type { get; set; } = default;
         #endregion
         #region CombatSkill
         public Byte CombatSkill { get; set; } = default;
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.CreatureType = initialValue;
+                this.Type = initialValue;
                 this.CombatSkill = initialValue;
                 this.MagicSkill = initialValue;
                 this.StealthSkill = initialValue;
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem CreatureType,
+                TItem Type,
                 TItem CombatSkill,
                 TItem MagicSkill,
                 TItem StealthSkill,
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Personality,
                 TItem Luck)
             {
-                this.CreatureType = CreatureType;
+                this.Type = Type;
                 this.CombatSkill = CombatSkill;
                 this.MagicSkill = MagicSkill;
                 this.StealthSkill = StealthSkill;
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem CreatureType;
+            public TItem Type;
             public TItem CombatSkill;
             public TItem MagicSkill;
             public TItem StealthSkill;
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.CreatureType, rhs.CreatureType)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.CombatSkill, rhs.CombatSkill)) return false;
                 if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
                 if (!object.Equals(this.StealthSkill, rhs.StealthSkill)) return false;
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.CreatureType);
+                hash.Add(this.Type);
                 hash.Add(this.CombatSkill);
                 hash.Add(this.MagicSkill);
                 hash.Add(this.StealthSkill);
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.CreatureType)) return false;
+                if (!eval(this.Type)) return false;
                 if (!eval(this.CombatSkill)) return false;
                 if (!eval(this.MagicSkill)) return false;
                 if (!eval(this.StealthSkill)) return false;
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.CreatureType)) return true;
+                if (eval(this.Type)) return true;
                 if (eval(this.CombatSkill)) return true;
                 if (eval(this.MagicSkill)) return true;
                 if (eval(this.StealthSkill)) return true;
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.CreatureType = eval(this.CreatureType);
+                obj.Type = eval(this.Type);
                 obj.CombatSkill = eval(this.CombatSkill);
                 obj.MagicSkill = eval(this.MagicSkill);
                 obj.StealthSkill = eval(this.StealthSkill);
@@ -479,9 +479,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.CreatureType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(CreatureType, "CreatureType");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.CombatSkill ?? true)
                     {
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? CreatureType;
+            public Exception? Type;
             public Exception? CombatSkill;
             public Exception? MagicSkill;
             public Exception? StealthSkill;
@@ -587,8 +587,8 @@ namespace Mutagen.Bethesda.Oblivion
                 CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
                 switch (enu)
                 {
-                    case CreatureData_FieldIndex.CreatureType:
-                        return CreatureType;
+                    case CreatureData_FieldIndex.Type:
+                        return Type;
                     case CreatureData_FieldIndex.CombatSkill:
                         return CombatSkill;
                     case CreatureData_FieldIndex.MagicSkill:
@@ -627,8 +627,8 @@ namespace Mutagen.Bethesda.Oblivion
                 CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
                 switch (enu)
                 {
-                    case CreatureData_FieldIndex.CreatureType:
-                        this.CreatureType = ex;
+                    case CreatureData_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     case CreatureData_FieldIndex.CombatSkill:
                         this.CombatSkill = ex;
@@ -682,8 +682,8 @@ namespace Mutagen.Bethesda.Oblivion
                 CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
                 switch (enu)
                 {
-                    case CreatureData_FieldIndex.CreatureType:
-                        this.CreatureType = (Exception?)obj;
+                    case CreatureData_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     case CreatureData_FieldIndex.CombatSkill:
                         this.CombatSkill = (Exception?)obj;
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (CreatureType != null) return true;
+                if (Type != null) return true;
                 if (CombatSkill != null) return true;
                 if (MagicSkill != null) return true;
                 if (StealthSkill != null) return true;
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(CreatureType, "CreatureType");
+                fg.AppendItem(Type, "Type");
                 fg.AppendItem(CombatSkill, "CombatSkill");
                 fg.AppendItem(MagicSkill, "MagicSkill");
                 fg.AppendItem(StealthSkill, "StealthSkill");
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.CreatureType = this.CreatureType.Combine(rhs.CreatureType);
+                ret.Type = this.Type.Combine(rhs.Type);
                 ret.CombatSkill = this.CombatSkill.Combine(rhs.CombatSkill);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
                 ret.StealthSkill = this.StealthSkill.Combine(rhs.StealthSkill);
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool CreatureType;
+            public bool Type;
             public bool CombatSkill;
             public bool MagicSkill;
             public bool StealthSkill;
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.CreatureType = defaultOn;
+                this.Type = defaultOn;
                 this.CombatSkill = defaultOn;
                 this.MagicSkill = defaultOn;
                 this.StealthSkill = defaultOn;
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((CreatureType, null));
+                ret.Add((Type, null));
                 ret.Add((CombatSkill, null));
                 ret.Add((MagicSkill, null));
                 ret.Add((StealthSkill, null));
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureDataGetter,
         ILoquiObjectSetter<ICreatureData>
     {
-        new Creature.CreatureTypeEnum CreatureType { get; set; }
+        new Creature.Types Type { get; set; }
         new Byte CombatSkill { get; set; }
         new Byte MagicSkill { get; set; }
         new Byte StealthSkill { get; set; }
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => CreatureData_Registration.Instance;
-        Creature.CreatureTypeEnum CreatureType { get; }
+        Creature.Types Type { get; }
         Byte CombatSkill { get; }
         Byte MagicSkill { get; }
         Byte StealthSkill { get; }
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum CreatureData_FieldIndex
     {
-        CreatureType = 0,
+        Type = 0,
         CombatSkill = 1,
         MagicSkill = 2,
         StealthSkill = 3,
@@ -1403,8 +1403,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "CREATURETYPE":
-                    return (ushort)CreatureData_FieldIndex.CreatureType;
+                case "TYPE":
+                    return (ushort)CreatureData_FieldIndex.Type;
                 case "COMBATSKILL":
                     return (ushort)CreatureData_FieldIndex.CombatSkill;
                 case "MAGICSKILL":
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
+                case CreatureData_FieldIndex.Type:
                 case CreatureData_FieldIndex.CombatSkill:
                 case CreatureData_FieldIndex.MagicSkill:
                 case CreatureData_FieldIndex.StealthSkill:
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
+                case CreatureData_FieldIndex.Type:
                 case CreatureData_FieldIndex.CombatSkill:
                 case CreatureData_FieldIndex.MagicSkill:
                 case CreatureData_FieldIndex.StealthSkill:
@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
+                case CreatureData_FieldIndex.Type:
                 case CreatureData_FieldIndex.CombatSkill:
                 case CreatureData_FieldIndex.MagicSkill:
                 case CreatureData_FieldIndex.StealthSkill:
@@ -1521,8 +1521,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
-                    return "CreatureType";
+                case CreatureData_FieldIndex.Type:
+                    return "Type";
                 case CreatureData_FieldIndex.CombatSkill:
                     return "CombatSkill";
                 case CreatureData_FieldIndex.MagicSkill:
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
+                case CreatureData_FieldIndex.Type:
                 case CreatureData_FieldIndex.CombatSkill:
                 case CreatureData_FieldIndex.MagicSkill:
                 case CreatureData_FieldIndex.StealthSkill:
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
+                case CreatureData_FieldIndex.Type:
                 case CreatureData_FieldIndex.CombatSkill:
                 case CreatureData_FieldIndex.MagicSkill:
                 case CreatureData_FieldIndex.StealthSkill:
@@ -1613,8 +1613,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData_FieldIndex enu = (CreatureData_FieldIndex)index;
             switch (enu)
             {
-                case CreatureData_FieldIndex.CreatureType:
-                    return typeof(Creature.CreatureTypeEnum);
+                case CreatureData_FieldIndex.Type:
+                    return typeof(Creature.Types);
                 case CreatureData_FieldIndex.CombatSkill:
                     return typeof(Byte);
                 case CreatureData_FieldIndex.MagicSkill:
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ICreatureData item)
         {
             ClearPartial();
-            item.CreatureType = default;
+            item.Type = default;
             item.CombatSkill = default;
             item.MagicSkill = default;
             item.StealthSkill = default;
@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.CreatureType = item.CreatureType == rhs.CreatureType;
+            ret.Type = item.Type == rhs.Type;
             ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
             ret.StealthSkill = item.StealthSkill == rhs.StealthSkill;
@@ -1843,9 +1843,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             CreatureData.Mask<bool>? printMask = null)
         {
-            if (printMask?.CreatureType ?? true)
+            if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.CreatureType, "CreatureType");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.CombatSkill ?? true)
             {
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureDataGetter item,
             CreatureData.Mask<bool> mask)
         {
-            mask.CreatureType = true;
+            mask.Type = true;
             mask.CombatSkill = true;
             mask.MagicSkill = true;
             mask.StealthSkill = true;
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.CreatureType != rhs.CreatureType) return false;
+            if (lhs.Type != rhs.Type) return false;
             if (lhs.CombatSkill != rhs.CombatSkill) return false;
             if (lhs.MagicSkill != rhs.MagicSkill) return false;
             if (lhs.StealthSkill != rhs.StealthSkill) return false;
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ICreatureDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.CreatureType);
+            hash.Add(item.Type);
             hash.Add(item.CombatSkill);
             hash.Add(item.MagicSkill);
             hash.Add(item.StealthSkill);
@@ -2008,9 +2008,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)CreatureData_FieldIndex.CreatureType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Type) ?? true))
             {
-                item.CreatureType = rhs.CreatureType;
+                item.Type = rhs.Type;
             }
             if ((copyMask?.GetShouldTranslate((int)CreatureData_FieldIndex.CombatSkill) ?? true))
             {
@@ -2157,13 +2157,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)CreatureData_FieldIndex.CreatureType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)CreatureData_FieldIndex.Type) ?? true))
             {
-                EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
+                EnumXmlTranslation<Creature.Types>.Instance.Write(
                     node: node,
-                    name: nameof(item.CreatureType),
-                    item: item.CreatureType,
-                    fieldIndex: (int)CreatureData_FieldIndex.CreatureType,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)CreatureData_FieldIndex.Type,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)CreatureData_FieldIndex.CombatSkill) ?? true))
@@ -2398,11 +2398,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "CreatureType":
-                    errorMask?.PushIndex((int)CreatureData_FieldIndex.CreatureType);
+                case "Type":
+                    errorMask?.PushIndex((int)CreatureData_FieldIndex.Type);
                     try
                     {
-                        item.CreatureType = EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<Creature.Types>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2843,9 +2843,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.Types>.Instance.Write(
                 writer,
-                item.CreatureType,
+                item.Type,
                 length: 1);
             writer.Write(item.CombatSkill);
             writer.Write(item.MagicSkill);
@@ -2903,7 +2903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureData item,
             MutagenFrame frame)
         {
-            item.CreatureType = EnumBinaryTranslation<Creature.CreatureTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Type = EnumBinaryTranslation<Creature.Types>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.CombatSkill = frame.ReadUInt8();
             item.MagicSkill = frame.ReadUInt8();
             item.StealthSkill = frame.ReadUInt8();
@@ -3001,7 +3001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Creature.CreatureTypeEnum CreatureType => (Creature.CreatureTypeEnum)_data.Span.Slice(0x0, 0x1)[0];
+        public Creature.Types Type => (Creature.Types)_data.Span.Slice(0x0, 0x1)[0];
         public Byte CombatSkill => _data.Span[0x1];
         public Byte MagicSkill => _data.Span[0x2];
         public Byte StealthSkill => _data.Span[0x3];

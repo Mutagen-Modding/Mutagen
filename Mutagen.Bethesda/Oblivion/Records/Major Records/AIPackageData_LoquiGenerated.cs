@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Flags
         public AIPackage.Flag Flags { get; set; } = default;
         #endregion
-        #region GeneralType
-        public AIPackage.GeneralTypeEnum GeneralType { get; set; } = default;
+        #region Type
+        public AIPackage.Types Type { get; set; } = default;
         #endregion
 
         #region To String
@@ -223,15 +223,15 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
-                this.GeneralType = initialValue;
+                this.Type = initialValue;
             }
 
             public Mask(
                 TItem Flags,
-                TItem GeneralType)
+                TItem Type)
             {
                 this.Flags = Flags;
-                this.GeneralType = GeneralType;
+                this.Type = Type;
             }
 
             #pragma warning disable CS8618
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Flags;
-            public TItem GeneralType;
+            public TItem Type;
             #endregion
 
             #region Equals
@@ -258,14 +258,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.GeneralType, rhs.GeneralType)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Flags);
-                hash.Add(this.GeneralType);
+                hash.Add(this.Type);
                 return hash.ToHashCode();
             }
 
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.GeneralType)) return false;
+                if (!eval(this.Type)) return false;
                 return true;
             }
             #endregion
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Flags)) return true;
-                if (eval(this.GeneralType)) return true;
+                if (eval(this.Type)) return true;
                 return false;
             }
             #endregion
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Flags = eval(this.Flags);
-                obj.GeneralType = eval(this.GeneralType);
+                obj.Type = eval(this.Type);
             }
             #endregion
 
@@ -327,9 +327,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.GeneralType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(GeneralType, "GeneralType");
+                        fg.AppendItem(Type, "Type");
                     }
                 }
                 fg.AppendLine("]");
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
             public Exception? Flags;
-            public Exception? GeneralType;
+            public Exception? Type;
             #endregion
 
             #region IErrorMask
@@ -368,8 +368,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     case AIPackageData_FieldIndex.Flags:
                         return Flags;
-                    case AIPackageData_FieldIndex.GeneralType:
-                        return GeneralType;
+                    case AIPackageData_FieldIndex.Type:
+                        return Type;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -383,8 +383,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AIPackageData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case AIPackageData_FieldIndex.GeneralType:
-                        this.GeneralType = ex;
+                    case AIPackageData_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -399,8 +399,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AIPackageData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case AIPackageData_FieldIndex.GeneralType:
-                        this.GeneralType = (Exception?)obj;
+                    case AIPackageData_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Overall != null) return true;
                 if (Flags != null) return true;
-                if (GeneralType != null) return true;
+                if (Type != null) return true;
                 return false;
             }
             #endregion
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(GeneralType, "GeneralType");
+                fg.AppendItem(Type, "Type");
             }
             #endregion
 
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.GeneralType = this.GeneralType.Combine(rhs.GeneralType);
+                ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -480,14 +480,14 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public bool Flags;
-            public bool GeneralType;
+            public bool Type;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Flags = defaultOn;
-                this.GeneralType = defaultOn;
+                this.Type = defaultOn;
             }
 
             #endregion
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Flags, null));
-                ret.Add((GeneralType, null));
+                ret.Add((Type, null));
             }
         }
         #endregion
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageData>
     {
         new AIPackage.Flag Flags { get; set; }
-        new AIPackage.GeneralTypeEnum GeneralType { get; set; }
+        new AIPackage.Types Type { get; set; }
     }
 
     public partial interface IAIPackageDataGetter :
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageData_Registration.Instance;
         AIPackage.Flag Flags { get; }
-        AIPackage.GeneralTypeEnum GeneralType { get; }
+        AIPackage.Types Type { get; }
 
     }
 
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum AIPackageData_FieldIndex
     {
         Flags = 0,
-        GeneralType = 1,
+        Type = 1,
     }
     #endregion
 
@@ -963,8 +963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "FLAGS":
                     return (ushort)AIPackageData_FieldIndex.Flags;
-                case "GENERALTYPE":
-                    return (ushort)AIPackageData_FieldIndex.GeneralType;
+                case "TYPE":
+                    return (ushort)AIPackageData_FieldIndex.Type;
                 default:
                     return null;
             }
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageData_FieldIndex.Flags:
-                case AIPackageData_FieldIndex.GeneralType:
+                case AIPackageData_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageData_FieldIndex.Flags:
-                case AIPackageData_FieldIndex.GeneralType:
+                case AIPackageData_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageData_FieldIndex.Flags:
-                case AIPackageData_FieldIndex.GeneralType:
+                case AIPackageData_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1016,8 +1016,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case AIPackageData_FieldIndex.Flags:
                     return "Flags";
-                case AIPackageData_FieldIndex.GeneralType:
-                    return "GeneralType";
+                case AIPackageData_FieldIndex.Type:
+                    return "Type";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageData_FieldIndex.Flags:
-                case AIPackageData_FieldIndex.GeneralType:
+                case AIPackageData_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageData_FieldIndex.Flags:
-                case AIPackageData_FieldIndex.GeneralType:
+                case AIPackageData_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1056,8 +1056,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case AIPackageData_FieldIndex.Flags:
                     return typeof(AIPackage.Flag);
-                case AIPackageData_FieldIndex.GeneralType:
-                    return typeof(AIPackage.GeneralTypeEnum);
+                case AIPackageData_FieldIndex.Type:
+                    return typeof(AIPackage.Types);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Flags = default;
-            item.GeneralType = default;
+            item.Type = default;
         }
         
         #region Xml Translation
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.GeneralType = item.GeneralType == rhs.GeneralType;
+            ret.Type = item.Type == rhs.Type;
         }
         
         public string ToString(
@@ -1236,9 +1236,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.GeneralType ?? true)
+            if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.GeneralType, "GeneralType");
+                fg.AppendItem(item.Type, "Type");
             }
         }
         
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageData.Mask<bool> mask)
         {
             mask.Flags = true;
-            mask.GeneralType = true;
+            mask.Type = true;
         }
         
         #region Equals and Hash
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.GeneralType != rhs.GeneralType) return false;
+            if (lhs.Type != rhs.Type) return false;
             return true;
         }
         
@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Flags);
-            hash.Add(item.GeneralType);
+            hash.Add(item.Type);
             return hash.ToHashCode();
         }
         
@@ -1310,9 +1310,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)AIPackageData_FieldIndex.GeneralType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AIPackageData_FieldIndex.Type) ?? true))
             {
-                item.GeneralType = rhs.GeneralType;
+                item.Type = rhs.Type;
             }
         }
         
@@ -1412,13 +1412,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)AIPackageData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageData_FieldIndex.GeneralType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AIPackageData_FieldIndex.Type) ?? true))
             {
-                EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
+                EnumXmlTranslation<AIPackage.Types>.Instance.Write(
                     node: node,
-                    name: nameof(item.GeneralType),
-                    item: item.GeneralType,
-                    fieldIndex: (int)AIPackageData_FieldIndex.GeneralType,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)AIPackageData_FieldIndex.Type,
                     errorMask: errorMask);
             }
         }
@@ -1545,11 +1545,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "GeneralType":
-                    errorMask?.PushIndex((int)AIPackageData_FieldIndex.GeneralType);
+                case "Type":
+                    errorMask?.PushIndex((int)AIPackageData_FieldIndex.Type);
                     try
                     {
-                        item.GeneralType = EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<AIPackage.Types>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1747,15 +1747,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryGeneralTypeCustom(
+        static partial void WriteBinaryTypeCustom(
             MutagenWriter writer,
             IAIPackageDataGetter item);
 
-        public static void WriteBinaryGeneralType(
+        public static void WriteBinaryType(
             MutagenWriter writer,
             IAIPackageDataGetter item)
         {
-            WriteBinaryGeneralTypeCustom(
+            WriteBinaryTypeCustom(
                 writer: writer,
                 item: item);
         }
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageDataBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
                 item: item);
-            AIPackageDataBinaryWriteTranslation.WriteBinaryGeneralType(
+            AIPackageDataBinaryWriteTranslation.WriteBinaryType(
                 writer: writer,
                 item: item);
         }
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageDataBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
-            AIPackageDataBinaryCreateTranslation.FillBinaryGeneralTypeCustom(
+            AIPackageDataBinaryCreateTranslation.FillBinaryTypeCustom(
                 frame: frame,
                 item: item);
         }
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             IAIPackageData item);
 
-        static partial void FillBinaryGeneralTypeCustom(
+        static partial void FillBinaryTypeCustom(
             MutagenFrame frame,
             IAIPackageData item);
 
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackage.Flag Flags => GetFlagsCustom(location: 0x0);
-        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: 0x4);
+        public AIPackage.Types Type => GetTypeCustom(location: 0x4);
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

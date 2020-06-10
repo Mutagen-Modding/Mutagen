@@ -29,7 +29,7 @@
   </Object>
   <Object name="AIPackageTarget" objType="Subrecord" recordType="PTDT" GUID="52649554-81f8-4583-82cd-dbff72bc7bd5" ID="159">
     <Fields>
-      <Enum name="ObjectType" enumName="AIPackageTarget.ObjectTypeEnum" byteLength="4" />
+      <Enum name="ObjectType" enumName="AIPackageTarget.ObjectTypes" byteLength="4" />
       <Int32 name="Object" />
       <Int32 name="Count" />
     </Fields>
@@ -37,7 +37,7 @@
   <Object name="AIPackageData" objType="Subrecord" recordType="PKDT" GUID="b019324b-c8ae-40ae-a09c-da1bb52ddc53" ID="173">
     <Fields>
       <Enum name="Flags" enumName="AIPackage.Flag" byteLength="4" binary="Custom" />
-      <Enum name="GeneralType" enumName="AIPackage.GeneralTypeEnum" byteLength="4" binary="Custom" />
+      <Enum name="Type" enumName="AIPackage.Types" byteLength="4" binary="Custom" />
     </Fields>
   </Object>
 </Loqui>

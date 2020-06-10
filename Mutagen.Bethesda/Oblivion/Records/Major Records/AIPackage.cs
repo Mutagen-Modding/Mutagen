@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
             NoIdleAnims = 0x1000000
         }
 
-        public enum GeneralTypeEnum
+        public enum Types
         {
             Find = 0,
             Follow = 1,
@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     var span = frame.Reader.ReadSpan(8);
                     item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span));
-                    item.GeneralType = EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
+                    item.Type = EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4)));
                 }
                 else if (frame.Remaining == 4)
                 {
                     var span = frame.Reader.ReadSpan(4);
                     item.Flags = EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt16LittleEndian(span));
-                    item.GeneralType = EnumExt<AIPackage.GeneralTypeEnum>.Convert(span[2]);
+                    item.Type = EnumExt<AIPackage.Types>.Convert(span[2]);
                 }
                 else
                 {
@@ -91,16 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Types>.Instance.Write(
                     writer,
-                    item.GeneralType,
+                    item.Type,
                     length: 4);
             }
         }
 
         public partial class AIPackageDataBinaryOverlay
         {
-            public bool GetFlagsIsSetCustom() => true;
             public AIPackage.Flag GetFlagsCustom(int location)
             {
                 if (_data.Length > 4)
@@ -113,16 +112,15 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            public bool GetGeneralTypeIsSetCustom() => true;
-            public AIPackage.GeneralTypeEnum GetGeneralTypeCustom(int location)
+            public AIPackage.Types GetTypeCustom(int location)
             {
                 if (_data.Length > 4)
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4)));
+                    return EnumExt<AIPackage.Types>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4)));
                 }
                 else
                 {
-                    return EnumExt<AIPackage.GeneralTypeEnum>.Convert(_data[2]);
+                    return EnumExt<AIPackage.Types>.Convert(_data[2]);
                 }
             }
         }

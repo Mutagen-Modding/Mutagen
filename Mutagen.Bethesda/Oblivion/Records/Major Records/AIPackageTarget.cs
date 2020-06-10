@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageTarget
     {
-        public enum ObjectTypeEnum
+        public enum ObjectTypes
         {
             SpecificReference = 0,
             ObjectID = 1,

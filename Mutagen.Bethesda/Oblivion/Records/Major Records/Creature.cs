@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
             NoCorpseCheck = 0x100000
         }
 
-        public enum CreatureTypeEnum
+        public enum Types
         {
             Creature = 0,
             Daedra = 1,

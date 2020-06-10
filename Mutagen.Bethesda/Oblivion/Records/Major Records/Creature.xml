@@ -65,7 +65,7 @@
   </Object>
   <Object name="CreatureData" objType="Subrecord" recordType="DATA" GUID="20d1cf07-b67d-4565-835c-0dc6b3249a60" ID="185">
     <Fields>
-      <Enum name="CreatureType" enumName="Creature.CreatureTypeEnum" byteLength="1" />
+      <Enum name="Type" enumName="Creature.Types" byteLength="1" />
       <UInt8 name="CombatSkill" />
       <UInt8 name="MagicSkill" />
       <UInt8 name="StealthSkill" />

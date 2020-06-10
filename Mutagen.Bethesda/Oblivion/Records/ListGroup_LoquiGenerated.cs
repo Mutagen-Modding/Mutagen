@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
             T_RecordType = UtilityTranslation.GetRecordType<T>();
         }
 
-        #region GroupType
-        public GroupTypeEnum GroupType { get; set; } = default;
+        #region Type
+        public GroupTypeEnum Type { get; set; } = default;
         #endregion
         #region LastModified
         public Int32 LastModified { get; set; } = default;
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IListGroup<T>>
         where T : class, ICellBlock, IXmlItem, IBinaryItem
     {
-        new GroupTypeEnum GroupType { get; set; }
+        new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
         new ExtendedList<T> Records { get; }
     }
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ListGroup_Registration.Instance;
-        GroupTypeEnum GroupType { get; }
+        GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
         IReadOnlyList<T> Records { get; }
 
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ListGroup_FieldIndex
     {
-        GroupType = 0,
+        Type = 0,
         LastModified = 1,
         Records = 2,
     }
@@ -805,8 +805,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "GROUPTYPE":
-                    return (ushort)ListGroup_FieldIndex.GroupType;
+                case "TYPE":
+                    return (ushort)ListGroup_FieldIndex.Type;
                 case "LASTMODIFIED":
                     return (ushort)ListGroup_FieldIndex.LastModified;
                 case "RECORDS":
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ListGroup_FieldIndex.Records:
                     return true;
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                 case ListGroup_FieldIndex.LastModified:
                     return false;
                 default:
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ListGroup_FieldIndex.Records:
                     return true;
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                 case ListGroup_FieldIndex.LastModified:
                     return false;
                 default:
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                 case ListGroup_FieldIndex.LastModified:
                 case ListGroup_FieldIndex.Records:
                     return false;
@@ -865,8 +865,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
-                    return "GroupType";
+                case ListGroup_FieldIndex.Type:
+                    return "Type";
                 case ListGroup_FieldIndex.LastModified:
                     return "LastModified";
                 case ListGroup_FieldIndex.Records:
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                 case ListGroup_FieldIndex.LastModified:
                 case ListGroup_FieldIndex.Records:
                     return false;
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                 case ListGroup_FieldIndex.LastModified:
                 case ListGroup_FieldIndex.Records:
                     return false;
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
             switch (enu)
             {
-                case ListGroup_FieldIndex.GroupType:
+                case ListGroup_FieldIndex.Type:
                     return typeof(GroupTypeEnum);
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Int32);
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IListGroup<T> item)
         {
             ClearPartial();
-            item.GroupType = default;
+            item.Type = default;
             item.LastModified = default;
             item.Records.Clear();
         }
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Records = item.Records.CollectionEqualsHelper(
                 rhs.Records,
@@ -1123,9 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ListGroup.Mask<bool>? printMask = null)
         {
-            if (printMask?.GroupType ?? true)
+            if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.GroupType, "GroupType");
+                fg.AppendItem(item.Type, "Type");
             }
             if (printMask?.LastModified ?? true)
             {
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<T> item,
             ListGroup.Mask<bool> mask)
         {
-            mask.GroupType = true;
+            mask.Type = true;
             mask.LastModified = true;
             var RecordsItem = item.Records;
             mask.Records = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CellBlock.Mask<bool>?>>?>(true, RecordsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CellBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
+            if (lhs.Type != rhs.Type) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
             if (!lhs.Records.SequenceEqual(rhs.Records)) return false;
             return true;
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IListGroupGetter<T> item)
         {
             var hash = new HashCode();
-            hash.Add(item.GroupType);
+            hash.Add(item.Type);
             hash.Add(item.LastModified);
             hash.Add(item.Records);
             return hash.ToHashCode();
@@ -1265,9 +1265,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Type) ?? true))
             {
-                item.GroupType = rhs.GroupType;
+                item.Type = rhs.Type;
             }
             if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
             {
@@ -1394,13 +1394,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                     node: node,
-                    name: nameof(item.GroupType),
-                    item: item.GroupType,
-                    fieldIndex: (int)ListGroup_FieldIndex.GroupType,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)ListGroup_FieldIndex.Type,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
@@ -1536,11 +1536,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "GroupType":
-                    errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
+                case "Type":
+                    errorMask?.PushIndex((int)ListGroup_FieldIndex.Type);
                     try
                     {
-                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
-                item.GroupType,
+                item.Type,
                 length: 4);
             writer.Write(item.LastModified);
         }
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustom(
                 frame: frame,
                 item: item);
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
         }
 
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public GroupTypeEnum Type => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2122,17 +2122,17 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.GroupType = initialValue;
+                this.Type = initialValue;
                 this.LastModified = initialValue;
                 this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
             }
         
             public Mask(
-                TItem GroupType,
+                TItem Type,
                 TItem LastModified,
                 TItem Records)
             {
-                this.GroupType = GroupType;
+                this.Type = Type;
                 this.LastModified = LastModified;
                 this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(Records, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
             }
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
         
             #region Members
-            public TItem GroupType;
+            public TItem Type;
             public TItem LastModified;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>? Records;
             #endregion
@@ -2161,7 +2161,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
                 if (!object.Equals(this.Records, rhs.Records)) return false;
                 return true;
@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.GroupType);
+                hash.Add(this.Type);
                 hash.Add(this.LastModified);
                 hash.Add(this.Records);
                 return hash.ToHashCode();
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.GroupType)) return false;
+                if (!eval(this.Type)) return false;
                 if (!eval(this.LastModified)) return false;
                 if (this.Records != null)
                 {
@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.GroupType)) return true;
+                if (eval(this.Type)) return true;
                 if (eval(this.LastModified)) return true;
                 if (this.Records != null)
                 {
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion
         
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.GroupType = eval(this.GroupType);
+                obj.Type = eval(this.Type);
                 obj.LastModified = eval(this.LastModified);
                 if (Records != null)
                 {
@@ -2268,9 +2268,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.GroupType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(GroupType, "GroupType");
+                        fg.AppendItem(Type, "Type");
                     }
                     if (printMask?.LastModified ?? true)
                     {
@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? GroupType;
+            public Exception? Type;
             public Exception? LastModified;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>? Records;
             #endregion
@@ -2336,8 +2336,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case ListGroup_FieldIndex.GroupType:
-                        return GroupType;
+                    case ListGroup_FieldIndex.Type:
+                        return Type;
                     case ListGroup_FieldIndex.LastModified:
                         return LastModified;
                     case ListGroup_FieldIndex.Records:
@@ -2352,8 +2352,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case ListGroup_FieldIndex.GroupType:
-                        this.GroupType = ex;
+                    case ListGroup_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     case ListGroup_FieldIndex.LastModified:
                         this.LastModified = ex;
@@ -2371,8 +2371,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case ListGroup_FieldIndex.GroupType:
-                        this.GroupType = (Exception?)obj;
+                    case ListGroup_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     case ListGroup_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (GroupType != null) return true;
+                if (Type != null) return true;
                 if (LastModified != null) return true;
                 if (Records != null) return true;
                 return false;
@@ -2425,7 +2425,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(GroupType, "GroupType");
+                fg.AppendItem(Type, "Type");
                 fg.AppendItem(LastModified, "LastModified");
                 if (Records.TryGet(out var RecordsItem))
                 {
@@ -2457,7 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask<T_ErrMask>();
-                ret.GroupType = this.GroupType.Combine(rhs.GroupType);
+                ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
                 ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
                 return ret;
@@ -2482,7 +2482,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool GroupType;
+            public bool Type;
             public bool LastModified;
             public MaskItem<bool, T_TranslMask?> Records;
             #endregion
@@ -2490,7 +2490,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.GroupType = defaultOn;
+                this.Type = defaultOn;
                 this.LastModified = defaultOn;
                 this.Records = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
             }
@@ -2508,7 +2508,7 @@ namespace Mutagen.Bethesda.Oblivion
         
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((GroupType, null));
+                ret.Add((Type, null));
                 ret.Add((LastModified, null));
                 ret.Add((Records?.Overall ?? true, Records?.Specific?.GetCrystal()));
             }

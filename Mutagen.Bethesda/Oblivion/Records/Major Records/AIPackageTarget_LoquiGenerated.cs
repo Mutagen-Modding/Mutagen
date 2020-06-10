@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ObjectType
-        public AIPackageTarget.ObjectTypeEnum ObjectType { get; set; } = default;
+        public AIPackageTarget.ObjectTypes ObjectType { get; set; } = default;
         #endregion
         #region Object
         public Int32 Object { get; set; } = default;
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageTargetGetter,
         ILoquiObjectSetter<IAIPackageTarget>
     {
-        new AIPackageTarget.ObjectTypeEnum ObjectType { get; set; }
+        new AIPackageTarget.ObjectTypes ObjectType { get; set; }
         new Int32 Object { get; set; }
         new Int32 Count { get; set; }
     }
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageTarget_Registration.Instance;
-        AIPackageTarget.ObjectTypeEnum ObjectType { get; }
+        AIPackageTarget.ObjectTypes ObjectType { get; }
         Int32 Object { get; }
         Int32 Count { get; }
 
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AIPackageTarget_FieldIndex.ObjectType:
-                    return typeof(AIPackageTarget.ObjectTypeEnum);
+                    return typeof(AIPackageTarget.ObjectTypes);
                 case AIPackageTarget_FieldIndex.Object:
                     return typeof(Int32);
                 case AIPackageTarget_FieldIndex.Count:
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
             {
-                EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
+                EnumXmlTranslation<AIPackageTarget.ObjectTypes>.Instance.Write(
                     node: node,
                     name: nameof(item.ObjectType),
                     item: item.ObjectType,
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
                     try
                     {
-                        item.ObjectType = EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
+                        item.ObjectType = EnumXmlTranslation<AIPackageTarget.ObjectTypes>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageTarget.ObjectTypes>.Instance.Write(
                 writer,
                 item.ObjectType,
                 length: 4);
@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTarget item,
             MutagenFrame frame)
         {
-            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypes>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Object = frame.ReadInt32();
             item.Count = frame.ReadInt32();
         }
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public AIPackageTarget.ObjectTypes ObjectType => (AIPackageTarget.ObjectTypes)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
