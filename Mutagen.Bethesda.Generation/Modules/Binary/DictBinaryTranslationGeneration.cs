@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                     $"{this.Namespace}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
-                    args.Add($"items: {itemAccessor.PropertyOrDirectAccess}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
+                    args.Add($"items: {itemAccessor}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
                     if (binaryType == DictBinaryType.Trigger)
                     {
                         args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
                     default:
                         throw new NotImplementedException();
                 }
-                args.Add($"item: {itemAccessor.PropertyAccess}");
+                args.Add($"item: {itemAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
                 if (subGenTypes.Count <= 1

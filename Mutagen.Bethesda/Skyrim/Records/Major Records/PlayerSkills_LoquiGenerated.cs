@@ -263,8 +263,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.SkillValues = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
-                this.SkillOffsets = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.SkillValues = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(initialValue, null);
+                this.SkillOffsets = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(initialValue, null);
                 this.Health = initialValue;
                 this.Magicka = initialValue;
                 this.Stamina = initialValue;
@@ -285,8 +285,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem GearedUpWeapons,
                 TItem Unused2)
             {
-                this.SkillValues = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(SkillValues, null);
-                this.SkillOffsets = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(SkillOffsets, null);
+                this.SkillValues = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(SkillValues, null);
+                this.SkillOffsets = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(SkillOffsets, null);
                 this.Health = Health;
                 this.Magicka = Magicka;
                 this.Stamina = Stamina;
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? SkillValues;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? SkillOffsets;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>? SkillValues;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>? SkillOffsets;
             public TItem Health;
             public TItem Magicka;
             public TItem Stamina;
@@ -364,7 +364,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillValues.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -376,7 +375,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillOffsets.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -402,7 +400,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillValues.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -414,7 +411,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillOffsets.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -442,31 +438,27 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (SkillValues != null)
                 {
-                    obj.SkillValues = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.SkillValues.Overall), default);
+                    obj.SkillValues = new MaskItem<R, IEnumerable<KeyValuePair<Skill, R>>?>(eval(this.SkillValues.Overall), default);
                     if (SkillValues.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<Skill, R>> l = new List<KeyValuePair<Skill, R>>();
                         obj.SkillValues.Specific = l;
                         foreach (var item in SkillValues.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
                 if (SkillOffsets != null)
                 {
-                    obj.SkillOffsets = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.SkillOffsets.Overall), default);
+                    obj.SkillOffsets = new MaskItem<R, IEnumerable<KeyValuePair<Skill, R>>?>(eval(this.SkillOffsets.Overall), default);
                     if (SkillOffsets.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<Skill, R>> l = new List<KeyValuePair<Skill, R>>();
                         obj.SkillOffsets.Specific = l;
                         foreach (var item in SkillOffsets.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -630,8 +622,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? SkillValues;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? SkillOffsets;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>? SkillValues;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>? SkillOffsets;
             public Exception? Health;
             public Exception? Magicka;
             public Exception? Stamina;
@@ -676,10 +668,10 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case PlayerSkills_FieldIndex.SkillValues:
-                        this.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ex, null);
                         break;
                     case PlayerSkills_FieldIndex.SkillOffsets:
-                        this.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ex, null);
                         break;
                     case PlayerSkills_FieldIndex.Health:
                         this.Health = ex;
@@ -713,10 +705,10 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case PlayerSkills_FieldIndex.SkillValues:
-                        this.SkillValues = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.SkillValues = (MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>)obj;
                         break;
                     case PlayerSkills_FieldIndex.SkillOffsets:
-                        this.SkillOffsets = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.SkillOffsets = (MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>)obj;
                         break;
                     case PlayerSkills_FieldIndex.Health:
                         this.Health = (Exception?)obj;
@@ -877,8 +869,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.SkillValues?.Overall, rhs.SkillValues?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.SkillValues?.Specific, rhs.SkillValues?.Specific)));
-                ret.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.SkillOffsets?.Overall, rhs.SkillOffsets?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.SkillOffsets?.Specific, rhs.SkillOffsets?.Specific)));
+                ret.SkillValues = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillValues?.Overall, rhs.SkillValues?.Overall), ExceptionExt.Combine(this.SkillValues?.Specific, rhs.SkillValues?.Specific));
+                ret.SkillOffsets = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillOffsets?.Overall, rhs.SkillOffsets?.Overall), ExceptionExt.Combine(this.SkillOffsets?.Specific, rhs.SkillOffsets?.Specific));
                 ret.Health = this.Health.Combine(rhs.Health);
                 ret.Magicka = this.Magicka.Combine(rhs.Magicka);
                 ret.Stamina = this.Stamina.Combine(rhs.Stamina);
@@ -1738,14 +1730,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            {
-                var specific = item.SkillValues.SelectAgainst<KeyValuePair<Skill, Byte>, KeyValuePair<bool, bool>>(rhs.SkillValues, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.SkillValues = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
-            {
-                var specific = item.SkillOffsets.SelectAgainst<KeyValuePair<Skill, Byte>, KeyValuePair<bool, bool>>(rhs.SkillOffsets, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.SkillOffsets = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.SkillValues = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.SkillValues,
+                rhs: rhs.SkillValues,
+                include: include);
+            ret.SkillOffsets = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.SkillOffsets,
+                rhs: rhs.SkillOffsets,
+                include: include);
             ret.Health = item.Health == rhs.Health;
             ret.Magicka = item.Magicka == rhs.Magicka;
             ret.Stamina = item.Stamina == rhs.Stamina;
@@ -1880,8 +1872,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter item,
             PlayerSkills.Mask<bool> mask)
         {
-            mask.SkillValues = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.SkillValues != null, null);
-            mask.SkillOffsets = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.SkillOffsets != null, null);
+            mask.SkillValues = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillValues != null, null);
+            mask.SkillOffsets = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillOffsets != null, null);
             mask.Health = true;
             mask.Magicka = true;
             mask.Stamina = true;
@@ -1956,37 +1948,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillValues) ?? true))
             {
-                errorMask?.PushIndex((int)PlayerSkills_FieldIndex.SkillValues);
-                try
-                {
-                    item.SkillValues.SetTo(rhs.SkillValues);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkillValues.SetTo(rhs.SkillValues);
             }
             if ((copyMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillOffsets) ?? true))
             {
-                errorMask?.PushIndex((int)PlayerSkills_FieldIndex.SkillOffsets);
-                try
-                {
-                    item.SkillOffsets.SetTo(rhs.SkillOffsets);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkillOffsets.SetTo(rhs.SkillOffsets);
             }
             if ((copyMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Health) ?? true))
             {

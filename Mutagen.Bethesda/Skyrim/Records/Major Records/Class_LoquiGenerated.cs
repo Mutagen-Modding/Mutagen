@@ -277,10 +277,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.Teaches = initialValue;
                 this.MaxTrainingLevel = initialValue;
-                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(initialValue, null);
                 this.BleedoutDefault = initialValue;
                 this.VoicePoints = initialValue;
-                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(initialValue, null);
                 this.Unknown2 = initialValue;
                 this.DATADataTypeState = initialValue;
             }
@@ -318,10 +318,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = Unknown;
                 this.Teaches = Teaches;
                 this.MaxTrainingLevel = MaxTrainingLevel;
-                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(SkillWeights, null);
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>(SkillWeights, null);
                 this.BleedoutDefault = BleedoutDefault;
                 this.VoicePoints = VoicePoints;
-                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(StatWeights, null);
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(StatWeights, null);
                 this.Unknown2 = Unknown2;
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -341,10 +341,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unknown;
             public TItem Teaches;
             public TItem MaxTrainingLevel;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? SkillWeights;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<Skill, TItem>>?>? SkillWeights;
             public TItem BleedoutDefault;
             public TItem VoicePoints;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? StatWeights;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>? StatWeights;
             public TItem Unknown2;
             public TItem DATADataTypeState;
             #endregion
@@ -412,7 +412,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillWeights.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -426,7 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.StatWeights.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -454,7 +452,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.SkillWeights.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -468,7 +465,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.StatWeights.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -498,16 +494,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MaxTrainingLevel = eval(this.MaxTrainingLevel);
                 if (SkillWeights != null)
                 {
-                    obj.SkillWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.SkillWeights.Overall), default);
+                    obj.SkillWeights = new MaskItem<R, IEnumerable<KeyValuePair<Skill, R>>?>(eval(this.SkillWeights.Overall), default);
                     if (SkillWeights.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<Skill, R>> l = new List<KeyValuePair<Skill, R>>();
                         obj.SkillWeights.Specific = l;
                         foreach (var item in SkillWeights.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -515,16 +509,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.VoicePoints = eval(this.VoicePoints);
                 if (StatWeights != null)
                 {
-                    obj.StatWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.StatWeights.Overall), default);
+                    obj.StatWeights = new MaskItem<R, IEnumerable<KeyValuePair<BasicStat, R>>?>(eval(this.StatWeights.Overall), default);
                     if (StatWeights.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<BasicStat, R>> l = new List<KeyValuePair<BasicStat, R>>();
                         obj.StatWeights.Specific = l;
                         foreach (var item in StatWeights.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -688,10 +680,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unknown;
             public Exception? Teaches;
             public Exception? MaxTrainingLevel;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? SkillWeights;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>? SkillWeights;
             public Exception? BleedoutDefault;
             public Exception? VoicePoints;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? StatWeights;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>? StatWeights;
             public Exception? Unknown2;
             public Exception? DATADataTypeState;
             #endregion
@@ -755,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.MaxTrainingLevel = ex;
                         break;
                     case Class_FieldIndex.SkillWeights:
-                        this.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ex, null);
                         break;
                     case Class_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = ex;
@@ -764,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.VoicePoints = ex;
                         break;
                     case Class_FieldIndex.StatWeights:
-                        this.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ex, null);
                         break;
                     case Class_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
@@ -802,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.MaxTrainingLevel = (Exception?)obj;
                         break;
                     case Class_FieldIndex.SkillWeights:
-                        this.SkillWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.SkillWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>)obj;
                         break;
                     case Class_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = (Exception?)obj;
@@ -811,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.VoicePoints = (Exception?)obj;
                         break;
                     case Class_FieldIndex.StatWeights:
-                        this.StatWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.StatWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>)obj;
                         break;
                     case Class_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
@@ -971,10 +963,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
-                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific)));
+                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Skill, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific));
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
                 ret.VoicePoints = this.VoicePoints.Combine(rhs.VoicePoints);
-                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific)));
+                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
@@ -1978,16 +1970,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaxTrainingLevel = item.MaxTrainingLevel == rhs.MaxTrainingLevel;
-            {
-                var specific = item.SkillWeights.SelectAgainst<KeyValuePair<Skill, Byte>, KeyValuePair<bool, bool>>(rhs.SkillWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.SkillWeights = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.SkillWeights,
+                rhs: rhs.SkillWeights,
+                include: include);
             ret.BleedoutDefault = item.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault);
             ret.VoicePoints = item.VoicePoints == rhs.VoicePoints;
-            {
-                var specific = item.StatWeights.SelectAgainst<KeyValuePair<BasicStat, Byte>, KeyValuePair<bool, bool>>(rhs.StatWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.StatWeights = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.StatWeights,
+                rhs: rhs.StatWeights,
+                include: include);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2146,10 +2138,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Unknown = true;
             mask.Teaches = (item.Teaches != null);
             mask.MaxTrainingLevel = true;
-            mask.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.SkillWeights != null, null);
+            mask.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillWeights != null, null);
             mask.BleedoutDefault = true;
             mask.VoicePoints = true;
-            mask.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.StatWeights != null, null);
+            mask.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<BasicStat, bool>>?>(item.StatWeights != null, null);
             mask.Unknown2 = true;
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
@@ -2359,20 +2351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.SkillWeights);
-                try
-                {
-                    item.SkillWeights.SetTo(rhs.SkillWeights);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkillWeights.SetTo(rhs.SkillWeights);
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
             {
@@ -2384,20 +2363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.StatWeights);
-                try
-                {
-                    item.StatWeights.SetTo(rhs.StatWeights);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StatWeights.SetTo(rhs.StatWeights);
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
             {

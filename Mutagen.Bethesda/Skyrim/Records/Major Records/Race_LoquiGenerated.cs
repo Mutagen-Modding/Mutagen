@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Flags = initialValue;
-                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(initialValue, null);
                 this.BaseCarryWeight = initialValue;
                 this.BaseMass = initialValue;
                 this.AccelerationRate = initialValue;
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairBipedObject = initialValue;
                 this.InjuredHealthPercent = initialValue;
                 this.ShieldBipedObject = initialValue;
-                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(initialValue, null);
                 this.UnarmedDamage = initialValue;
                 this.UnarmedReach = initialValue;
                 this.BodyBipedObject = initialValue;
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DecapitationFX = initialValue;
                 this.OpenLootSound = initialValue;
                 this.CloseLootSound = initialValue;
-                this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<BipedObject, TItem>>?>(initialValue, null);
                 this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>());
                 this.EquipmentFlags = initialValue;
                 this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = new GenderedItem<TItem>(Height, Height);
                 this.Weight = new GenderedItem<TItem>(Weight, Weight);
                 this.Flags = Flags;
-                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Starting, null);
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(Starting, null);
                 this.BaseCarryWeight = BaseCarryWeight;
                 this.BaseMass = BaseMass;
                 this.AccelerationRate = AccelerationRate;
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairBipedObject = HairBipedObject;
                 this.InjuredHealthPercent = InjuredHealthPercent;
                 this.ShieldBipedObject = ShieldBipedObject;
-                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Regen, null);
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>(Regen, null);
                 this.UnarmedDamage = UnarmedDamage;
                 this.UnarmedReach = UnarmedReach;
                 this.BodyBipedObject = BodyBipedObject;
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DecapitationFX = DecapitationFX;
                 this.OpenLootSound = OpenLootSound;
                 this.CloseLootSound = CloseLootSound;
-                this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(BipedObjectNames, null);
+                this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<BipedObject, TItem>>?>(BipedObjectNames, null);
                 this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(MovementTypes, Enumerable.Empty<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>());
                 this.EquipmentFlags = EquipmentFlags;
                 this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EquipmentSlots, Enumerable.Empty<(int Index, TItem Value)>());
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
             public GenderedItem<TItem> Height;
             public GenderedItem<TItem> Weight;
             public TItem Flags;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Starting;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>? Starting;
             public TItem BaseCarryWeight;
             public TItem BaseMass;
             public TItem AccelerationRate;
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem HairBipedObject;
             public TItem InjuredHealthPercent;
             public TItem ShieldBipedObject;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Regen;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<BasicStat, TItem>>?>? Regen;
             public TItem UnarmedDamage;
             public TItem UnarmedReach;
             public TItem BodyBipedObject;
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DecapitationFX;
             public TItem OpenLootSound;
             public TItem CloseLootSound;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? BipedObjectNames;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<BipedObject, TItem>>?>? BipedObjectNames;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>? MovementTypes;
             public TItem EquipmentFlags;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? EquipmentSlots;
@@ -1162,7 +1162,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.Starting.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -1183,7 +1182,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.Regen.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -1278,7 +1276,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.BipedObjectNames.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (!eval(item.Value)) return false;
                         }
                     }
@@ -1407,7 +1404,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.Starting.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -1428,7 +1424,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.Regen.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -1523,7 +1518,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         foreach (var item in this.BipedObjectNames.Specific)
                         {
-                            if (!eval(item.Key)) return false;
                             if (eval(item.Value)) return true;
                         }
                     }
@@ -1632,16 +1626,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 if (Starting != null)
                 {
-                    obj.Starting = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Starting.Overall), default);
+                    obj.Starting = new MaskItem<R, IEnumerable<KeyValuePair<BasicStat, R>>?>(eval(this.Starting.Overall), default);
                     if (Starting.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<BasicStat, R>> l = new List<KeyValuePair<BasicStat, R>>();
                         obj.Starting.Specific = l;
                         foreach (var item in Starting.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -1656,16 +1648,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ShieldBipedObject = eval(this.ShieldBipedObject);
                 if (Regen != null)
                 {
-                    obj.Regen = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Regen.Overall), default);
+                    obj.Regen = new MaskItem<R, IEnumerable<KeyValuePair<BasicStat, R>>?>(eval(this.Regen.Overall), default);
                     if (Regen.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<BasicStat, R>> l = new List<KeyValuePair<BasicStat, R>>();
                         obj.Regen.Specific = l;
                         foreach (var item in Regen.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -1767,16 +1757,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.CloseLootSound = eval(this.CloseLootSound);
                 if (BipedObjectNames != null)
                 {
-                    obj.BipedObjectNames = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.BipedObjectNames.Overall), default);
+                    obj.BipedObjectNames = new MaskItem<R, IEnumerable<KeyValuePair<BipedObject, R>>?>(eval(this.BipedObjectNames.Overall), default);
                     if (BipedObjectNames.Specific != null)
                     {
-                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        List<KeyValuePair<BipedObject, R>> l = new List<KeyValuePair<BipedObject, R>>();
                         obj.BipedObjectNames.Specific = l;
                         foreach (var item in BipedObjectNames.Specific)
                         {
-                            R keyVal = eval(item.Key);
-                            R valVal = eval(item.Value);
-                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                            throw new NotImplementedException();
                         }
                     }
                 }
@@ -2415,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
             public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Starting;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>? Starting;
             public Exception? BaseCarryWeight;
             public Exception? BaseMass;
             public Exception? AccelerationRate;
@@ -2425,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? HairBipedObject;
             public Exception? InjuredHealthPercent;
             public Exception? ShieldBipedObject;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Regen;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>? Regen;
             public Exception? UnarmedDamage;
             public Exception? UnarmedReach;
             public Exception? BodyBipedObject;
@@ -2454,7 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DecapitationFX;
             public Exception? OpenLootSound;
             public Exception? CloseLootSound;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? BipedObjectNames;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>? BipedObjectNames;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>? MovementTypes;
             public Exception? EquipmentFlags;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? EquipmentSlots;
@@ -2678,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Flags = ex;
                         break;
                     case Race_FieldIndex.Starting:
-                        this.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ex, null);
                         break;
                     case Race_FieldIndex.BaseCarryWeight:
                         this.BaseCarryWeight = ex;
@@ -2708,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ShieldBipedObject = ex;
                         break;
                     case Race_FieldIndex.Regen:
-                        this.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ex, null);
                         break;
                     case Race_FieldIndex.UnarmedDamage:
                         this.UnarmedDamage = ex;
@@ -2795,7 +2783,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.CloseLootSound = ex;
                         break;
                     case Race_FieldIndex.BipedObjectNames:
-                        this.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        this.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>(ex, null);
                         break;
                     case Race_FieldIndex.MovementTypes:
                         this.MovementTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>(ex, null);
@@ -2899,7 +2887,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Flags = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Starting:
-                        this.Starting = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.Starting = (MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>)obj;
                         break;
                     case Race_FieldIndex.BaseCarryWeight:
                         this.BaseCarryWeight = (Exception?)obj;
@@ -2929,7 +2917,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.ShieldBipedObject = (Exception?)obj;
                         break;
                     case Race_FieldIndex.Regen:
-                        this.Regen = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.Regen = (MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>)obj;
                         break;
                     case Race_FieldIndex.UnarmedDamage:
                         this.UnarmedDamage = (Exception?)obj;
@@ -3016,7 +3004,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.CloseLootSound = (Exception?)obj;
                         break;
                     case Race_FieldIndex.BipedObjectNames:
-                        this.BipedObjectNames = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        this.BipedObjectNames = (MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>)obj;
                         break;
                     case Race_FieldIndex.MovementTypes:
                         this.MovementTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>)obj;
@@ -3551,7 +3539,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
                 ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific)));
+                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific));
                 ret.BaseCarryWeight = this.BaseCarryWeight.Combine(rhs.BaseCarryWeight);
                 ret.BaseMass = this.BaseMass.Combine(rhs.BaseMass);
                 ret.AccelerationRate = this.AccelerationRate.Combine(rhs.AccelerationRate);
@@ -3561,7 +3549,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HairBipedObject = this.HairBipedObject.Combine(rhs.HairBipedObject);
                 ret.InjuredHealthPercent = this.InjuredHealthPercent.Combine(rhs.InjuredHealthPercent);
                 ret.ShieldBipedObject = this.ShieldBipedObject.Combine(rhs.ShieldBipedObject);
-                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific)));
+                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<BasicStat, Exception?>>?>(ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific));
                 ret.UnarmedDamage = this.UnarmedDamage.Combine(rhs.UnarmedDamage);
                 ret.UnarmedReach = this.UnarmedReach.Combine(rhs.UnarmedReach);
                 ret.BodyBipedObject = this.BodyBipedObject.Combine(rhs.BodyBipedObject);
@@ -3590,7 +3578,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DecapitationFX = this.DecapitationFX.Combine(rhs.DecapitationFX);
                 ret.OpenLootSound = this.OpenLootSound.Combine(rhs.OpenLootSound);
                 ret.CloseLootSound = this.CloseLootSound.Combine(rhs.CloseLootSound);
-                ret.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.BipedObjectNames?.Overall, rhs.BipedObjectNames?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.BipedObjectNames?.Specific, rhs.BipedObjectNames?.Specific)));
+                ret.BipedObjectNames = new MaskItem<Exception?, IEnumerable<KeyValuePair<BipedObject, Exception?>>?>(ExceptionExt.Combine(this.BipedObjectNames?.Overall, rhs.BipedObjectNames?.Overall), ExceptionExt.Combine(this.BipedObjectNames?.Specific, rhs.BipedObjectNames?.Specific));
                 ret.MovementTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceMovementType.ErrorMask?>>?>(ExceptionExt.Combine(this.MovementTypes?.Overall, rhs.MovementTypes?.Overall), ExceptionExt.Combine(this.MovementTypes?.Specific, rhs.MovementTypes?.Specific));
                 ret.EquipmentFlags = this.EquipmentFlags.Combine(rhs.EquipmentFlags);
                 ret.EquipmentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.EquipmentSlots?.Overall, rhs.EquipmentSlots?.Overall), ExceptionExt.Combine(this.EquipmentSlots?.Specific, rhs.EquipmentSlots?.Specific));
@@ -5776,10 +5764,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
                 female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
             ret.Flags = item.Flags == rhs.Flags;
-            {
-                var specific = item.Starting.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Starting, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.Starting = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.Starting,
+                rhs: rhs.Starting,
+                include: include);
             ret.BaseCarryWeight = item.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight);
             ret.BaseMass = item.BaseMass.EqualsWithin(rhs.BaseMass);
             ret.AccelerationRate = item.AccelerationRate.EqualsWithin(rhs.AccelerationRate);
@@ -5789,10 +5777,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.HairBipedObject = item.HairBipedObject == rhs.HairBipedObject;
             ret.InjuredHealthPercent = item.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent);
             ret.ShieldBipedObject = item.ShieldBipedObject == rhs.ShieldBipedObject;
-            {
-                var specific = item.Regen.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Regen, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.Regen = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.Regen,
+                rhs: rhs.Regen,
+                include: include);
             ret.UnarmedDamage = item.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage);
             ret.UnarmedReach = item.UnarmedReach.EqualsWithin(rhs.UnarmedReach);
             ret.BodyBipedObject = item.BodyBipedObject == rhs.BodyBipedObject;
@@ -5855,10 +5843,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DecapitationFX = object.Equals(item.DecapitationFX, rhs.DecapitationFX);
             ret.OpenLootSound = object.Equals(item.OpenLootSound, rhs.OpenLootSound);
             ret.CloseLootSound = object.Equals(item.CloseLootSound, rhs.CloseLootSound);
-            {
-                var specific = item.BipedObjectNames.SelectAgainst<KeyValuePair<BipedObject, String>, KeyValuePair<bool, bool>>(rhs.BipedObjectNames, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
-                ret.BipedObjectNames = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
-            }
+            ret.BipedObjectNames = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.BipedObjectNames,
+                rhs: rhs.BipedObjectNames,
+                include: include);
             ret.MovementTypes = item.MovementTypes.CollectionEqualsHelper(
                 rhs.MovementTypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -6464,7 +6452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Height = new GenderedItem<bool>(true, true);
             mask.Weight = new GenderedItem<bool>(true, true);
             mask.Flags = true;
-            mask.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Starting != null, null);
+            mask.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<BasicStat, bool>>?>(item.Starting != null, null);
             mask.BaseCarryWeight = true;
             mask.BaseMass = true;
             mask.AccelerationRate = true;
@@ -6474,7 +6462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HairBipedObject = true;
             mask.InjuredHealthPercent = true;
             mask.ShieldBipedObject = true;
-            mask.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Regen != null, null);
+            mask.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<BasicStat, bool>>?>(item.Regen != null, null);
             mask.UnarmedDamage = true;
             mask.UnarmedReach = true;
             mask.BodyBipedObject = true;
@@ -6510,7 +6498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.DecapitationFX = (item.DecapitationFX.FormKey != null);
             mask.OpenLootSound = (item.OpenLootSound.FormKey != null);
             mask.CloseLootSound = (item.CloseLootSound.FormKey != null);
-            mask.BipedObjectNames = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.BipedObjectNames != null, null);
+            mask.BipedObjectNames = new MaskItem<bool, IEnumerable<KeyValuePair<BipedObject, bool>>?>(item.BipedObjectNames != null, null);
             var MovementTypesItem = item.MovementTypes;
             mask.MovementTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceMovementType.Mask<bool>?>>?>(true, MovementTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceMovementType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.EquipmentFlags = (item.EquipmentFlags != null);
@@ -7249,20 +7237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Starting);
-                try
-                {
-                    item.Starting.SetTo(rhs.Starting);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Starting.SetTo(rhs.Starting);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
             {
@@ -7302,20 +7277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Regen);
-                try
-                {
-                    item.Regen.SetTo(rhs.Regen);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Regen.SetTo(rhs.Regen);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
             {
@@ -7555,20 +7517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.BipedObjectNames);
-                try
-                {
-                    item.BipedObjectNames.SetTo(rhs.BipedObjectNames);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BipedObjectNames.SetTo(rhs.BipedObjectNames);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
             {
@@ -8554,7 +8503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Race_FieldIndex.CloseLootSound,
                     errorMask: errorMask);
             }
-            if (item.BipedObjectNames != null
+            if ((item.BipedObjectNames != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
                 DictXmlTranslation<BipedObject, String>.Instance.Write(
