@@ -582,6 +582,30 @@ namespace Mutagen.Bethesda
             return null;
         }
 
+        public static int? FindFirstSubrecord(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            ICollectionGetter<RecordType> recordTypes,
+            bool navigateToContent = false,
+            int? offset = null)
+        {
+            int loc = offset ?? 0;
+            while (data.Length > loc)
+            {
+                var subMeta = meta.Subrecord(data.Slice(loc));
+                if (recordTypes.Contains(subMeta.RecordType))
+                {
+                    if (navigateToContent)
+                    {
+                        loc += meta.SubConstants.HeaderLength;
+                    }
+                    return loc;
+                }
+                loc += subMeta.TotalLength;
+            }
+            return null;
+        }
+
         public static int[] FindAllOfSubrecord(
             ReadOnlySpan<byte> data,
             GameConstants meta,
@@ -612,7 +636,7 @@ namespace Mutagen.Bethesda
         public static int[] FindAllOfSubrecords(
             ReadOnlySpan<byte> data,
             GameConstants meta,
-            IReadOnlyCollection<RecordType> recordTypes,
+            ICollectionGetter<RecordType> recordTypes,
             bool navigateToContent = false)
         {
             List<int> ret = new List<int>();

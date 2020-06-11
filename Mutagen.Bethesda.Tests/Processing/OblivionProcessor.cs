@@ -73,9 +73,9 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Npc_Registration.NPC__HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width);
+            var majorFrame = stream.ReadMajorRecordMemoryFrame();
             this.DynamicMove(
-                str,
+                majorFrame,
                 loc,
                 offendingIndices: new RecordType[]
                 {
@@ -782,48 +782,6 @@ namespace Mutagen.Bethesda.Tests
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
-        private bool DynamicMove(
-            string str,
-            RangeInt64 loc,
-            IEnumerable<RecordType> offendingIndices,
-            IEnumerable<RecordType> offendingLimits,
-            IEnumerable<RecordType> locationsToMove,
-            bool enforcePast = false)
-        {
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                offendingIndices,
-                out var offender)) return false;
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                offendingLimits,
-                out var limit)) return false;
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                locationsToMove,
-                out var locToMove,
-                past: enforcePast ? offender : default(long?)))
-            {
-                locToMove = loc.Min + str.Length;
-            }
-            if (limit == locToMove) return false;
-            if (offender < limit)
-            {
-                if (locToMove < offender)
-                {
-                    throw new ArgumentException();
-                }
-                this._Instructions.SetMove(
-                    section: new RangeInt64(offender, limit - 1),
-                    loc: locToMove);
-                return true;
-            }
-            return false;
-        }
-
         private void AlignRecords(
             IMutagenReadStream stream,
             RangeInt64 loc,
@@ -873,26 +831,6 @@ namespace Mutagen.Bethesda.Tests
                     sub: data);
                 start += len;
             }
-        }
-
-        private bool LocateFirstOf(
-            string str,
-            long offset,
-            IEnumerable<RecordType> types,
-            out long loc,
-            long? past = null)
-        {
-            List<int> indices = new List<int>(types
-                .Select((r) => str.IndexOf(r.Type))
-                .Where((i) => i != -1)
-                .Where((i) => !past.HasValue || i > past));
-            if (indices.Count == 0)
-            {
-                loc = default(long);
-                return false;
-            }
-            loc = MathExt.Min(indices) + offset;
-            return true;
         }
 
         private void ProcessMisindexedRecords(

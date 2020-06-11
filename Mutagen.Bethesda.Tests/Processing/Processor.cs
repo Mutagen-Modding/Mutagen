@@ -535,5 +535,48 @@ namespace Mutagen.Bethesda.Tests
                 formID,
                 doRecordLen: false);
         }
+
+        protected bool DynamicMove(
+            MajorRecordMemoryFrame majorFrame,
+            RangeInt64 loc,
+            ICollection<RecordType> offendingIndices,
+            ICollection<RecordType> offendingLimits,
+            ICollection<RecordType> locationsToMove,
+            bool enforcePast = false)
+        {
+            var offender = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Header.Meta,
+                recordTypes: offendingIndices.ToGetter());
+            if (offender == null) return false;
+            var limit = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Header.Meta,
+                recordTypes: offendingLimits.ToGetter());
+            if (limit == null) return false;
+            long? locToMove = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
+                majorFrame.Header.Meta,
+                recordTypes: locationsToMove.ToGetter());
+            if (locToMove == null)
+            {
+                locToMove = majorFrame.TotalLength;
+            }
+            if (limit == locToMove) return false;
+            if (offender < limit)
+            {
+                if (locToMove < offender)
+                {
+                    throw new ArgumentException();
+                }
+                this._Instructions.SetMove(
+                    section: new RangeInt64(
+                        loc.Min + majorFrame.Header.HeaderLength + offender,
+                        loc.Min + majorFrame.Header.HeaderLength + limit - 1),
+                    loc: loc.Min + majorFrame.Header.HeaderLength + locToMove.Value);
+                return true;
+            }
+            return false;
+        }
     }
 }

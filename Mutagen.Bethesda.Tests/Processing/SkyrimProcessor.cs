@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Tests
                 var locs = UtilityTranslation.FindAllOfSubrecords(
                     majorFrame.Content,
                     stream.MetaData.Constants,
-                    targets,
+                    targets.ToGetter(),
                     navigateToContent: true);
                 uint actualNext = 0;
                 if (locs.Length > 0)

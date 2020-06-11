@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda
             public ISortedListGetter<long> GrupLocations => _grupLocations.Keys;
             public SortingListDictionary<long, (FormID FormID, RecordType Record)> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
-            public IReadOnlyCollection<FormID> FormIDs => _fromFormIDs.Keys;
+            public ICollectionGetter<FormID> FormIDs => new CollectionGetterWrapper<FormID>(_fromFormIDs.Keys);
 
             internal FileLocations(FileLocationConstructor constructor)
             {
