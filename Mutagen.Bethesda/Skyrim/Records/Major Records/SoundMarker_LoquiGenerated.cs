@@ -691,6 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectBounded,
         ISound,
+        IObjectId,
         ILoquiObjectSetter<ISoundMarkerInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -710,6 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ISoundGetter,
+        IObjectIdGetter,
         ILoquiObject<ISoundMarkerGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

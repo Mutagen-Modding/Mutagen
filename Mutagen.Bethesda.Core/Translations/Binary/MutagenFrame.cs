@@ -245,6 +245,11 @@ namespace Mutagen.Bethesda.Binary
                 this.Reader.Position + length);
         }
 
+        public MutagenFrame SpawnAll()
+        {
+            return new MutagenFrame(this.Reader, this.Reader.Length);
+        }
+
         /// <summary>
         /// Decompresses frame content into a new backing stream.
         /// Will read an integer to determine how large the compressed data is, and will read that amount.

@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="SkyrimMajorRecord" GUID="7d698f54-6430-49c7-ab37-7649204e689b" ID="22">
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Diffuse" recordType="TX00" />

@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda.Binary
 {
     public abstract class TypicalBinaryTranslation<T>
-        where T : class
     {
-        protected abstract T ParseBytes(byte[] bytes);
+        protected abstract T ParseBytes(MemorySlice<byte> bytes);
 
         protected abstract T ParseValue(MutagenFrame reader);
 

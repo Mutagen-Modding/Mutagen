@@ -80,6 +80,11 @@
       </List>
     </Fields>
   </Object>
+  <Object name="FragmentsAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="b6994042-d407-490d-8387-54e33396f705" ID="352">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" hasBeenSet="True" />
+    </Fields>
+  </Object>
   <Object name="ScriptFragments" objType="Subrecord" GUID="2ec19b11-bd07-4dcc-beb4-826dfc1de531" ID="353">
     <Fields>
       <Int8 name="Unknown" />

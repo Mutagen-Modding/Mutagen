@@ -80,6 +80,7 @@
     <Compile Include="Skyrim\Interfaces\IEmittance.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
     <Compile Include="Skyrim\Interfaces\IHasIcons.cs" />
+    <Compile Include="Skyrim\Interfaces\IIdleRelation.cs" />
     <Compile Include="Skyrim\Interfaces\IKeywordLinkedReference.cs" />
     <Compile Include="Skyrim\Interfaces\ILinkedReference.cs" />
     <Compile Include="Skyrim\Interfaces\ILocationReferencable.cs" />
@@ -127,6 +128,9 @@
     <Compile Include="Skyrim\Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\FragmentsAdapter.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\LocationTarget.cs">
       <DependentUpon>LocationTarget.xml</DependentUpon>
     </Compile>
@@ -160,6 +164,12 @@
     <Compile Include="Skyrim\Records\Major Records\ANavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APackageData.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APackageTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\APlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
@@ -181,9 +191,6 @@
     <Compile Include="Skyrim\Records\Major Records\DialogResponse.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\DialogResponseAdapter.cs">
-      <DependentUpon>DialogResponses.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogResponses.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
@@ -192,6 +199,45 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\FindMatchingRefNearAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IdleAnimation.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Package.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageBranch.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataInt.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataFloat.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataBool.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataLocation.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataObjectList.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataTopic.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageEvent.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageIdles.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageRoot.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedArrow.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
@@ -2363,9 +2409,6 @@
     <Compile Include="Skyrim\Records\Major Records\Quest_LoquiGenerated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\DialogResponseAdapter_LoquiGenerated.cs">
-      <DependentUpon>DialogResponses.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ScriptFragments_LoquiGenerated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -2431,6 +2474,75 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\QuestTarget_LoquiGenerated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\FragmentsAdapter_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APackageTarget_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetPlacedReference_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetObjectID_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetObjectType_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetAlias_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetUnknown_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetSelf_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetSpecificReference_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageTargetReference_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageBranch_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageRoot_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageFlagsOverride_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageEvent_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataBool_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataInt_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataFloat_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\APackageData_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataLocation_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataTarget_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataTopic_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageIdles_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PackageDataObjectList_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

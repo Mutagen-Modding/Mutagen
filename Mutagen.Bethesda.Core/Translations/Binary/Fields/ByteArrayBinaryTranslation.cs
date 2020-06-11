@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class ByteArrayBinaryTranslation : TypicalBinaryTranslation<byte[]>
+    public class ByteArrayBinaryTranslation : TypicalBinaryTranslation<MemorySlice<byte>>
     {
         public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
 
-        public override void Write(MutagenWriter writer, byte[] item)
+        public override void Write(MutagenWriter writer, MemorySlice<byte> item)
         {
             writer.Write(item);
         }
 
-        protected override Byte[] ParseValue(MutagenFrame frame)
+        protected override MemorySlice<byte> ParseValue(MutagenFrame frame)
         {
             return frame.Reader.ReadBytes(checked((int)frame.Remaining));
         }
 
-        protected override byte[] ParseBytes(byte[] bytes)
+        protected override MemorySlice<byte> ParseBytes(MemorySlice<byte> bytes)
         {
             return bytes;
         }

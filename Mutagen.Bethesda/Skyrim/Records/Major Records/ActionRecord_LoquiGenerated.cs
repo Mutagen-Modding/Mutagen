@@ -565,6 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActionRecord :
         IActionRecordGetter,
         ISkyrimMajorRecord,
+        IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>
     {
         new Color? Color { get; set; }
@@ -579,6 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActionRecordGetter :
         ISkyrimMajorRecordGetter,
+        IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
         IXmlItem,
         IBinaryItem

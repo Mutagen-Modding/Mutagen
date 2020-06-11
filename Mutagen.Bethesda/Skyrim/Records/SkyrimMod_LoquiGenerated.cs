@@ -100,6 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Worldspaces_Object = new Group<Worldspace>(this);
             _DialogTopics_Object = new Group<DialogTopic>(this);
             _Quests_Object = new Group<Quest>(this);
+            _IdleAnimations_Object = new Group<IdleAnimation>(this);
+            _Packages_Object = new Group<Package>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -511,6 +513,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IQuestGetter> ISkyrimModGetter.Quests => _Quests_Object;
         #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<IdleAnimation> _IdleAnimations_Object;
+        public Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IIdleAnimationGetter> ISkyrimModGetter.IdleAnimations => _IdleAnimations_Object;
+        #endregion
+        #region Packages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Package> _Packages_Object;
+        public Group<Package> Packages => _Packages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IPackageGetter> ISkyrimModGetter.Packages => _Packages_Object;
+        #endregion
 
         #region To String
 
@@ -739,6 +755,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -799,7 +817,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Cells,
                 TItem Worldspaces,
                 TItem DialogTopics,
-                TItem Quests)
+                TItem Quests,
+                TItem IdleAnimations,
+                TItem Packages)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -859,6 +879,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Worldspaces = new MaskItem<TItem, Group.Mask<TItem>?>(Worldspaces, new Group.Mask<TItem>(Worldspaces));
                 this.DialogTopics = new MaskItem<TItem, Group.Mask<TItem>?>(DialogTopics, new Group.Mask<TItem>(DialogTopics));
                 this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(Quests, new Group.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(IdleAnimations, new Group.Mask<TItem>(IdleAnimations));
+                this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(Packages, new Group.Mask<TItem>(Packages));
             }
 
             #pragma warning disable CS8618
@@ -928,6 +950,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Worldspaces { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? DialogTopics { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Packages { get; set; }
             #endregion
 
             #region Equals
@@ -998,6 +1022,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (!object.Equals(this.Packages, rhs.Packages)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1061,6 +1087,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Worldspaces);
                 hash.Add(this.DialogTopics);
                 hash.Add(this.Quests);
+                hash.Add(this.IdleAnimations);
+                hash.Add(this.Packages);
                 return hash.ToHashCode();
             }
 
@@ -1359,6 +1387,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Quests.Overall)) return false;
                     if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
                 }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
+                }
+                if (Packages != null)
+                {
+                    if (!eval(this.Packages.Overall)) return false;
+                    if (this.Packages.Specific != null && !this.Packages.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1656,6 +1694,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Quests.Overall)) return true;
                     if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
                 }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
+                if (Packages != null)
+                {
+                    if (eval(this.Packages.Overall)) return true;
+                    if (this.Packages.Specific != null && this.Packages.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1728,6 +1776,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
                 obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.Packages = this.Packages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1982,6 +2032,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Quests?.ToString(fg);
                     }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.ToString(fg);
+                    }
+                    if (printMask?.Packages?.Overall ?? true)
+                    {
+                        Packages?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2065,6 +2123,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
             public MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
             public MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>? Packages;
             #endregion
 
             #region IErrorMask
@@ -2189,6 +2249,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return DialogTopics;
                     case SkyrimMod_FieldIndex.Quests:
                         return Quests;
+                    case SkyrimMod_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
+                    case SkyrimMod_FieldIndex.Packages:
+                        return Packages;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2372,6 +2436,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Packages:
+                        this.Packages = new MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2557,6 +2627,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Packages:
+                        this.Packages = (MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2623,6 +2699,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Worldspaces != null) return true;
                 if (DialogTopics != null) return true;
                 if (Quests != null) return true;
+                if (IdleAnimations != null) return true;
+                if (Packages != null) return true;
                 return false;
             }
             #endregion
@@ -2715,6 +2793,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Worldspaces?.ToString(fg);
                 DialogTopics?.ToString(fg);
                 Quests?.ToString(fg);
+                IdleAnimations?.ToString(fg);
+                Packages?.ToString(fg);
             }
             #endregion
 
@@ -2781,6 +2861,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
                 ret.DialogTopics = this.DialogTopics.Combine(rhs.DialogTopics, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
+                ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2860,6 +2942,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?> Worldspaces;
             public MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?> DialogTopics;
             public MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?> Quests;
+            public MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?> IdleAnimations;
+            public MaskItem<bool, Group.TranslationMask<Package.TranslationMask>?> Packages;
             #endregion
 
             #region Ctors
@@ -2923,6 +3007,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Worldspaces = new MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?>(defaultOn, null);
                 this.DialogTopics = new MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?>(defaultOn, null);
                 this.Quests = new MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?>(defaultOn, null);
+                this.IdleAnimations = new MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?>(defaultOn, null);
+                this.Packages = new MaskItem<bool, Group.TranslationMask<Package.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2996,6 +3082,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Worldspaces?.Overall ?? true, Worldspaces?.Specific?.GetCrystal()));
                 ret.Add((DialogTopics?.Overall ?? true, DialogTopics?.Specific?.GetCrystal()));
                 ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
+                ret.Add((IdleAnimations?.Overall ?? true, IdleAnimations?.Specific?.GetCrystal()));
+                ret.Add((Packages?.Overall ?? true, Packages?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3067,6 +3155,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Worldspaces_Object = new Group<Worldspace>(this);
             _DialogTopics_Object = new Group<DialogTopic>(this);
             _Quests_Object = new Group<Quest>(this);
+            _IdleAnimations_Object = new Group<IdleAnimation>(this);
+            _Packages_Object = new Group<Package>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3302,6 +3392,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Quests ?? true)
             {
                 this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
+            }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
+            }
+            if (mask?.Packages ?? true)
+            {
+                this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
             }
         }
 
@@ -3709,6 +3807,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Quest>());
             }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.RecordCache.Set(
+                    rhs.IdleAnimations.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<IdleAnimation>());
+            }
+            if (mask?.Packages ?? true)
+            {
+                this.Packages.RecordCache.Set(
+                    rhs.Packages.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Package>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3785,6 +3897,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Worldspaces.RecordCache.Count > 0 ? 1 : 0;
             count += DialogTopics.RecordCache.Count > 0 ? 1 : 0;
             count += Quests.RecordCache.Count > 0 ? 1 : 0;
+            count += IdleAnimations.RecordCache.Count > 0 ? 1 : 0;
+            count += Packages.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4061,6 +4175,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Worldspace> Worldspaces { get; }
         new Group<DialogTopic> DialogTopics { get; }
         new Group<Quest> Quests { get; }
+        new Group<IdleAnimation> IdleAnimations { get; }
+        new Group<Package> Packages { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4136,6 +4252,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IWorldspaceGetter> Worldspaces { get; }
         IGroupGetter<IDialogTopicGetter> DialogTopics { get; }
         IGroupGetter<IQuestGetter> Quests { get; }
+        IGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
+        IGroupGetter<IPackageGetter> Packages { get; }
 
     }
 
@@ -4649,6 +4767,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Worldspaces = 55,
         DialogTopics = 56,
         Quests = 57,
+        IdleAnimations = 58,
+        Packages = 59,
     }
     #endregion
 
@@ -4666,9 +4786,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 58;
+        public const ushort AdditionalFieldCount = 60;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 60;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4814,6 +4934,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.DialogTopics;
                 case "QUESTS":
                     return (ushort)SkyrimMod_FieldIndex.Quests;
+                case "IDLEANIMATIONS":
+                    return (ushort)SkyrimMod_FieldIndex.IdleAnimations;
+                case "PACKAGES":
+                    return (ushort)SkyrimMod_FieldIndex.Packages;
                 default:
                     return null;
             }
@@ -4882,6 +5006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Worldspaces:
                 case SkyrimMod_FieldIndex.DialogTopics:
                 case SkyrimMod_FieldIndex.Quests:
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                case SkyrimMod_FieldIndex.Packages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4951,6 +5077,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Worldspaces:
                 case SkyrimMod_FieldIndex.DialogTopics:
                 case SkyrimMod_FieldIndex.Quests:
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                case SkyrimMod_FieldIndex.Packages:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5020,6 +5148,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Worldspaces:
                 case SkyrimMod_FieldIndex.DialogTopics:
                 case SkyrimMod_FieldIndex.Quests:
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                case SkyrimMod_FieldIndex.Packages:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5147,6 +5277,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "DialogTopics";
                 case SkyrimMod_FieldIndex.Quests:
                     return "Quests";
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                    return "IdleAnimations";
+                case SkyrimMod_FieldIndex.Packages:
+                    return "Packages";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5215,6 +5349,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Worldspaces:
                 case SkyrimMod_FieldIndex.DialogTopics:
                 case SkyrimMod_FieldIndex.Quests:
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                case SkyrimMod_FieldIndex.Packages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5285,6 +5421,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Worldspaces:
                 case SkyrimMod_FieldIndex.DialogTopics:
                 case SkyrimMod_FieldIndex.Quests:
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                case SkyrimMod_FieldIndex.Packages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5412,6 +5550,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<DialogTopic>);
                 case SkyrimMod_FieldIndex.Quests:
                     return typeof(Group<Quest>);
+                case SkyrimMod_FieldIndex.IdleAnimations:
+                    return typeof(Group<IdleAnimation>);
+                case SkyrimMod_FieldIndex.Packages:
+                    return typeof(Group<Package>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5476,6 +5618,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
+        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
+        public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
@@ -5575,6 +5719,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Worldspaces.Clear();
             item.DialogTopics.Clear();
             item.Quests.Clear();
+            item.IdleAnimations.Clear();
+            item.Packages.Clear();
         }
         
         #region Xml Translation
@@ -5787,6 +5933,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
             ret.DialogTopics = MaskItemExt.Factory(item.DialogTopics.GetEqualsMask(rhs.DialogTopics, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
+            ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
+            ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
         }
         
         public string ToString(
@@ -6065,6 +6213,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Quests?.ToString(fg, "Quests");
             }
+            if (printMask?.IdleAnimations?.Overall ?? true)
+            {
+                item.IdleAnimations?.ToString(fg, "IdleAnimations");
+            }
+            if (printMask?.Packages?.Overall ?? true)
+            {
+                item.Packages?.ToString(fg, "Packages");
+            }
         }
         
         public bool HasBeenSet(
@@ -6136,6 +6292,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Worldspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
             mask.DialogTopics = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
             mask.Quests = new MaskItem<bool, Group.Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
+            mask.IdleAnimations = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
+            mask.Packages = new MaskItem<bool, Group.Mask<bool>?>(true, item.Packages?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6203,6 +6361,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
             if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
             if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
+            if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+            if (!object.Equals(lhs.Packages, rhs.Packages)) return false;
             return true;
         }
         
@@ -6267,6 +6427,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Worldspaces);
             hash.Add(item.DialogTopics);
             hash.Add(item.Quests);
+            hash.Add(item.IdleAnimations);
+            hash.Add(item.Packages);
             return hash.ToHashCode();
         }
         
@@ -6568,6 +6730,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuest":
                 case "IQuestInternal":
                     return obj.Quests.RecordCache;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    return obj.IdleAnimations.RecordCache;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    return obj.Packages.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -6587,7 +6759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[57];
+            Stream[] outputStreams = new Stream[59];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -6646,6 +6818,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, outputStreams));
             toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7095,6 +7269,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.IdleAnimations is ILinkedFormKeyContainer IdleAnimationslinkCont)
+            {
+                foreach (var item in IdleAnimationslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Packages is ILinkedFormKeyContainer PackageslinkCont)
+            {
+                foreach (var item in PackageslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7326,6 +7514,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Quests.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7855,6 +8051,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuest":
                 case "IQuestInternal":
                     foreach (var item in obj.Quests.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in obj.Packages.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -9038,6 +9252,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleAnimations);
+                try
+                {
+                    item.IdleAnimations.DeepCopyIn(
+                        rhs: rhs.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleAnimations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Packages) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Packages);
+                try
+                {
+                    item.Packages.DeepCopyIn(
+                        rhs: rhs.Packages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Packages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9764,6 +10018,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Quests,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Quests));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                var IdleAnimationsItem = item.IdleAnimations;
+                ((GroupXmlWriteTranslation)((IXmlItem)IdleAnimationsItem).XmlWriteTranslator).Write<IIdleAnimationGetter>(
+                    item: IdleAnimationsItem,
+                    node: node,
+                    name: nameof(item.IdleAnimations),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.IdleAnimations,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleAnimations));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Packages) ?? true))
+            {
+                var PackagesItem = item.Packages;
+                ((GroupXmlWriteTranslation)((IXmlItem)PackagesItem).XmlWriteTranslator).Write<IPackageGetter>(
+                    item: PackagesItem,
+                    node: node,
+                    name: nameof(item.Packages),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Packages,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Packages));
             }
         }
 
@@ -10935,6 +11211,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "IdleAnimations":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleAnimations);
+                    try
+                    {
+                        item.IdleAnimations.CopyInFromXml<IdleAnimation>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Packages":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Packages);
+                    try
+                    {
+                        item.Packages.CopyInFromXml<Package>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -11161,6 +11475,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Worldspaces;
         public bool DialogTopics;
         public bool Quests;
+        public bool IdleAnimations;
+        public bool Packages;
         public GroupMask()
         {
         }
@@ -11223,6 +11539,8 @@ namespace Mutagen.Bethesda.Skyrim
             Worldspaces = defaultValue;
             DialogTopics = defaultValue;
             Quests = defaultValue;
+            IdleAnimations = defaultValue;
+            Packages = defaultValue;
         }
     }
 
@@ -11874,6 +12192,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
                         item: QuestsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                var IdleAnimationsItem = item.IdleAnimations;
+                if (IdleAnimationsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                        item: IdleAnimationsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Packages ?? true)
+            {
+                var PackagesItem = item.Packages;
+                if (PackagesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
+                        item: PackagesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -12745,6 +13085,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
                 }
+                case 0x454C4449: // IDLE
+                {
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        item.IdleAnimations.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                }
+                case 0x4B434150: // PACK
+                {
+                    if (importMask?.Packages ?? true)
+                    {
+                        item.Packages.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -13201,6 +13569,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IQuestGetter>? _Quests => _QuestsLocation.HasValue ? GroupBinaryOverlay<IQuestGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _QuestsLocation!.Value.Min, _QuestsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IQuestGetter> Quests => _Quests ?? new Group<Quest>(this);
         #endregion
+        #region IdleAnimations
+        private RangeInt64? _IdleAnimationsLocation;
+        private IGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocation.HasValue ? GroupBinaryOverlay<IIdleAnimationGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IdleAnimationsLocation!.Value.Min, _IdleAnimationsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Group<IdleAnimation>(this);
+        #endregion
+        #region Packages
+        private RangeInt64? _PackagesLocation;
+        private IGroupGetter<IPackageGetter>? _Packages => _PackagesLocation.HasValue ? GroupBinaryOverlay<IPackageGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _PackagesLocation!.Value.Min, _PackagesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IPackageGetter> Packages => _Packages ?? new Group<Package>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13580,6 +13958,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
+                }
+                case 0x454C4449: // IDLE
+                {
+                    _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                }
+                case 0x4B434150: // PACK
+                {
+                    _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

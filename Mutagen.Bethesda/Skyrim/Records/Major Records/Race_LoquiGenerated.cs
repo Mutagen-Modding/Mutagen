@@ -11863,7 +11863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.MovementTypeNames = BinaryOverlayList<String>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

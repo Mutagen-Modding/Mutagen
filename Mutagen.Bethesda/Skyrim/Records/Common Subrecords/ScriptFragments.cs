@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             OnBegin = 0x01,
             OnEnd = 0x02,
+            OnChange = 0x04,
         }
     }
 }

@@ -260,5 +260,14 @@ namespace Mutagen.Bethesda.Generation
                 await base.GenerateWrapperRecordTypeParse(fg, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
             }
         }
+
+        public override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            return dataAccessor.ToString();
+        }
     }
 }

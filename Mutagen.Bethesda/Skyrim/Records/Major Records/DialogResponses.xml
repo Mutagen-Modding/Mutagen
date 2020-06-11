@@ -3,7 +3,7 @@
   <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="39a0ccd0-da05-4f90-b32a-20fcdb7a9ea3" ID="350">
     <Interface>IDialog</Interface>
     <Fields>
-      <RefDirect name="VirtualMachineAdapter" refName="DialogResponseAdapter" recordType="VMAD" />
+      <RefDirect name="VirtualMachineAdapter" refName="FragmentsAdapter" recordType="VMAD" />
       <ByteArray name="Unknown" recordType="DATA" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
@@ -28,11 +28,6 @@
     <Fields>
       <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
       <Float name="ResetHours" binaryType="Integer" integerType="UShort" divisor="2730" />
-    </Fields>
-  </Object>
-  <Object name="DialogResponseAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="b6994042-d407-490d-8387-54e33396f705" ID="352">
-    <Fields>
-      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" hasBeenSet="True" />
     </Fields>
   </Object>
   <Object name="DialogResponse" objType="Subrecord" GUID="a48dd14d-639a-47de-b96d-4517394936b7" ID="356">

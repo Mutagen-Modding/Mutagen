@@ -7,24 +7,24 @@ namespace Mutagen.Bethesda.Skyrim
 {
     namespace Internals
     {
-        public partial class DialogResponseAdapterBinaryCreateTranslation
+        public partial class FragmentsAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IDialogResponseAdapter item)
+            static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IFragmentsAdapter item)
             {
                 item.ScriptFragments = Mutagen.Bethesda.Skyrim.ScriptFragments.CreateFromBinary(frame: frame);
             }
         }
 
-        public partial class DialogResponseAdapterBinaryWriteTranslation
+        public partial class FragmentsAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IDialogResponseAdapterGetter item)
+            static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IFragmentsAdapterGetter item)
             {
                 if (!item.ScriptFragments.TryGet(out var frags)) return;
                 frags.WriteToBinary(writer);
             }
         }
 
-        public partial class DialogResponseAdapterBinaryOverlay
+        public partial class FragmentsAdapterBinaryOverlay
         {
             IScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
             {

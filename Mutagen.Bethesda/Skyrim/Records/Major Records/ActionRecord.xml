@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ActionRecord" recordType="AACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="42c3a706-665f-49fe-95ec-97e17d8e772b" ID="20">
+    <Interface>IIdleRelation</Interface>
     <Fields>
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>

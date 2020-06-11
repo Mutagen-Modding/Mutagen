@@ -49,6 +49,62 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            protected set => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IIdleAnimationGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Filename
+        public String? Filename { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIdleAnimationGetter.Filename => this.Filename;
+        #endregion
+        #region AnimationEvent
+        public String? AnimationEvent { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIdleAnimationGetter.AnimationEvent => this.AnimationEvent;
+        #endregion
+        #region RelatedIdles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
+        public ExtendedList<IFormLink<IIdleRelation>> RelatedIdles
+        {
+            get => this._RelatedIdles;
+            protected set => this._RelatedIdles = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IIdleRelationGetter>> IIdleAnimationGetter.RelatedIdles => _RelatedIdles;
+        #endregion
+
+        #endregion
+        #region LoopingSecondsMin
+        public Byte LoopingSecondsMin { get; set; } = default;
+        #endregion
+        #region LoopingSecondsMax
+        public Byte LoopingSecondsMax { get; set; } = default;
+        #endregion
+        #region Flags
+        public IdleAnimation.Flag Flags { get; set; } = default;
+        #endregion
+        #region AnimationGroupSection
+        public Byte AnimationGroupSection { get; set; } = default;
+        #endregion
+        #region ReplayDelay
+        public UInt16 ReplayDelay { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public IdleAnimation.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +275,16 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Filename = initialValue;
+                this.AnimationEvent = initialValue;
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LoopingSecondsMin = initialValue;
+                this.LoopingSecondsMax = initialValue;
+                this.Flags = initialValue;
+                this.AnimationGroupSection = initialValue;
+                this.ReplayDelay = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +293,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Conditions,
+                TItem Filename,
+                TItem AnimationEvent,
+                TItem RelatedIdles,
+                TItem LoopingSecondsMin,
+                TItem LoopingSecondsMax,
+                TItem Flags,
+                TItem AnimationGroupSection,
+                TItem ReplayDelay,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +312,16 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Filename = Filename;
+                this.AnimationEvent = AnimationEvent;
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LoopingSecondsMin = LoopingSecondsMin;
+                this.LoopingSecondsMax = LoopingSecondsMax;
+                this.Flags = Flags;
+                this.AnimationGroupSection = AnimationGroupSection;
+                this.ReplayDelay = ReplayDelay;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +330,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem Filename;
+            public TItem AnimationEvent;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RelatedIdles;
+            public TItem LoopingSecondsMin;
+            public TItem LoopingSecondsMax;
+            public TItem Flags;
+            public TItem AnimationGroupSection;
+            public TItem ReplayDelay;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +356,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Filename, rhs.Filename)) return false;
+                if (!object.Equals(this.AnimationEvent, rhs.AnimationEvent)) return false;
+                if (!object.Equals(this.RelatedIdles, rhs.RelatedIdles)) return false;
+                if (!object.Equals(this.LoopingSecondsMin, rhs.LoopingSecondsMin)) return false;
+                if (!object.Equals(this.LoopingSecondsMax, rhs.LoopingSecondsMax)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.AnimationGroupSection, rhs.AnimationGroupSection)) return false;
+                if (!object.Equals(this.ReplayDelay, rhs.ReplayDelay)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Conditions);
+                hash.Add(this.Filename);
+                hash.Add(this.AnimationEvent);
+                hash.Add(this.RelatedIdles);
+                hash.Add(this.LoopingSecondsMin);
+                hash.Add(this.LoopingSecondsMax);
+                hash.Add(this.Flags);
+                hash.Add(this.AnimationGroupSection);
+                hash.Add(this.ReplayDelay);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +391,37 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Filename)) return false;
+                if (!eval(this.AnimationEvent)) return false;
+                if (this.RelatedIdles != null)
+                {
+                    if (!eval(this.RelatedIdles.Overall)) return false;
+                    if (this.RelatedIdles.Specific != null)
+                    {
+                        foreach (var item in this.RelatedIdles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.LoopingSecondsMin)) return false;
+                if (!eval(this.LoopingSecondsMax)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.AnimationGroupSection)) return false;
+                if (!eval(this.ReplayDelay)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +430,37 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Filename)) return true;
+                if (eval(this.AnimationEvent)) return true;
+                if (this.RelatedIdles != null)
+                {
+                    if (eval(this.RelatedIdles.Overall)) return true;
+                    if (this.RelatedIdles.Specific != null)
+                    {
+                        foreach (var item in this.RelatedIdles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.LoopingSecondsMin)) return true;
+                if (eval(this.LoopingSecondsMax)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.AnimationGroupSection)) return true;
+                if (eval(this.ReplayDelay)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +476,43 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Filename = eval(this.Filename);
+                obj.AnimationEvent = eval(this.AnimationEvent);
+                if (RelatedIdles != null)
+                {
+                    obj.RelatedIdles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RelatedIdles.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RelatedIdles.Specific = l;
+                        foreach (var item in RelatedIdles.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.LoopingSecondsMin = eval(this.LoopingSecondsMin);
+                obj.LoopingSecondsMax = eval(this.LoopingSecondsMax);
+                obj.Flags = eval(this.Flags);
+                obj.AnimationGroupSection = eval(this.AnimationGroupSection);
+                obj.ReplayDelay = eval(this.ReplayDelay);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -317,6 +535,84 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Filename ?? true)
+                    {
+                        fg.AppendItem(Filename, "Filename");
+                    }
+                    if (printMask?.AnimationEvent ?? true)
+                    {
+                        fg.AppendItem(AnimationEvent, "AnimationEvent");
+                    }
+                    if ((printMask?.RelatedIdles?.Overall ?? true)
+                        && RelatedIdles.TryGet(out var RelatedIdlesItem))
+                    {
+                        fg.AppendLine("RelatedIdles =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RelatedIdlesItem.Overall);
+                            if (RelatedIdlesItem.Specific != null)
+                            {
+                                foreach (var subItem in RelatedIdlesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.LoopingSecondsMin ?? true)
+                    {
+                        fg.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
+                    }
+                    if (printMask?.LoopingSecondsMax ?? true)
+                    {
+                        fg.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.AnimationGroupSection ?? true)
+                    {
+                        fg.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                    }
+                    if (printMask?.ReplayDelay ?? true)
+                    {
+                        fg.AppendItem(ReplayDelay, "ReplayDelay");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +624,45 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Filename;
+            public Exception? AnimationEvent;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RelatedIdles;
+            public Exception? LoopingSecondsMin;
+            public Exception? LoopingSecondsMax;
+            public Exception? Flags;
+            public Exception? AnimationGroupSection;
+            public Exception? ReplayDelay;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        return Conditions;
+                    case IdleAnimation_FieldIndex.Filename:
+                        return Filename;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        return AnimationEvent;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        return RelatedIdles;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                        return LoopingSecondsMin;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                        return LoopingSecondsMax;
+                    case IdleAnimation_FieldIndex.Flags:
+                        return Flags;
+                    case IdleAnimation_FieldIndex.AnimationGroupSection:
+                        return AnimationGroupSection;
+                    case IdleAnimation_FieldIndex.ReplayDelay:
+                        return ReplayDelay;
+                    case IdleAnimation_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +673,36 @@ namespace Mutagen.Bethesda.Skyrim
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.Filename:
+                        this.Filename = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        this.AnimationEvent = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        this.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                        this.LoopingSecondsMin = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                        this.LoopingSecondsMax = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationGroupSection:
+                        this.AnimationGroupSection = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.ReplayDelay:
+                        this.ReplayDelay = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +714,36 @@ namespace Mutagen.Bethesda.Skyrim
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.Filename:
+                        this.Filename = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationEvent:
+                        this.AnimationEvent = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdles:
+                        this.RelatedIdles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                        this.LoopingSecondsMin = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                        this.LoopingSecondsMax = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationGroupSection:
+                        this.AnimationGroupSection = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.ReplayDelay:
+                        this.ReplayDelay = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +753,16 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Conditions != null) return true;
+                if (Filename != null) return true;
+                if (AnimationEvent != null) return true;
+                if (RelatedIdles != null) return true;
+                if (LoopingSecondsMin != null) return true;
+                if (LoopingSecondsMax != null) return true;
+                if (Flags != null) return true;
+                if (AnimationGroupSection != null) return true;
+                if (ReplayDelay != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +798,58 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (Conditions.TryGet(out var ConditionsItem))
+                {
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Filename, "Filename");
+                fg.AppendItem(AnimationEvent, "AnimationEvent");
+                if (RelatedIdles.TryGet(out var RelatedIdlesItem))
+                {
+                    fg.AppendLine("RelatedIdles =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RelatedIdlesItem.Overall);
+                        if (RelatedIdlesItem.Specific != null)
+                        {
+                            foreach (var subItem in RelatedIdlesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(LoopingSecondsMin, "LoopingSecondsMin");
+                fg.AppendItem(LoopingSecondsMax, "LoopingSecondsMax");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                fg.AppendItem(ReplayDelay, "ReplayDelay");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -407,6 +858,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Filename = this.Filename.Combine(rhs.Filename);
+                ret.AnimationEvent = this.AnimationEvent.Combine(rhs.AnimationEvent);
+                ret.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RelatedIdles?.Overall, rhs.RelatedIdles?.Overall), ExceptionExt.Combine(this.RelatedIdles?.Specific, rhs.RelatedIdles?.Specific));
+                ret.LoopingSecondsMin = this.LoopingSecondsMin.Combine(rhs.LoopingSecondsMin);
+                ret.LoopingSecondsMax = this.LoopingSecondsMax.Combine(rhs.LoopingSecondsMax);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.AnimationGroupSection = this.AnimationGroupSection.Combine(rhs.AnimationGroupSection);
+                ret.ReplayDelay = this.ReplayDelay.Combine(rhs.ReplayDelay);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +889,62 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool Filename;
+            public bool AnimationEvent;
+            public bool RelatedIdles;
+            public bool LoopingSecondsMin;
+            public bool LoopingSecondsMax;
+            public bool Flags;
+            public bool AnimationGroupSection;
+            public bool ReplayDelay;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.Filename = defaultOn;
+                this.AnimationEvent = defaultOn;
+                this.RelatedIdles = defaultOn;
+                this.LoopingSecondsMin = defaultOn;
+                this.LoopingSecondsMax = defaultOn;
+                this.Flags = defaultOn;
+                this.AnimationGroupSection = defaultOn;
+                this.ReplayDelay = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Filename, null));
+                ret.Add((AnimationEvent, null));
+                ret.Add((RelatedIdles, null));
+                ret.Add((LoopingSecondsMin, null));
+                ret.Add((LoopingSecondsMax, null));
+                ret.Add((Flags, null));
+                ret.Add((AnimationGroupSection, null));
+                ret.Add((ReplayDelay, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +962,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +1026,19 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIdleAnimation :
         IIdleAnimationGetter,
         ISkyrimMajorRecord,
+        IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
+        new ExtendedList<Condition> Conditions { get; }
+        new String? Filename { get; set; }
+        new String? AnimationEvent { get; set; }
+        new ExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
+        new Byte LoopingSecondsMin { get; set; }
+        new Byte LoopingSecondsMax { get; set; }
+        new IdleAnimation.Flag Flags { get; set; }
+        new Byte AnimationGroupSection { get; set; }
+        new UInt16 ReplayDelay { get; set; }
+        new IdleAnimation.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -531,11 +1050,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIdleAnimationGetter :
         ISkyrimMajorRecordGetter,
+        IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        String? Filename { get; }
+        String? AnimationEvent { get; }
+        IReadOnlyList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
+        Byte LoopingSecondsMin { get; }
+        Byte LoopingSecondsMax { get; }
+        IdleAnimation.Flag Flags { get; }
+        Byte AnimationGroupSection { get; }
+        UInt16 ReplayDelay { get; }
+        IdleAnimation.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -836,6 +1367,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Conditions = 6,
+        Filename = 7,
+        AnimationEvent = 8,
+        RelatedIdles = 9,
+        LoopingSecondsMin = 10,
+        LoopingSecondsMax = 11,
+        Flags = 12,
+        AnimationGroupSection = 13,
+        ReplayDelay = 14,
+        DATADataTypeState = 15,
     }
     #endregion
 
@@ -853,9 +1394,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "bf69327e-265b-487b-8e17-3a2a13dd3f74";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -885,6 +1426,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "CONDITIONS":
+                    return (ushort)IdleAnimation_FieldIndex.Conditions;
+                case "FILENAME":
+                    return (ushort)IdleAnimation_FieldIndex.Filename;
+                case "ANIMATIONEVENT":
+                    return (ushort)IdleAnimation_FieldIndex.AnimationEvent;
+                case "RELATEDIDLES":
+                    return (ushort)IdleAnimation_FieldIndex.RelatedIdles;
+                case "LOOPINGSECONDSMIN":
+                    return (ushort)IdleAnimation_FieldIndex.LoopingSecondsMin;
+                case "LOOPINGSECONDSMAX":
+                    return (ushort)IdleAnimation_FieldIndex.LoopingSecondsMax;
+                case "FLAGS":
+                    return (ushort)IdleAnimation_FieldIndex.Flags;
+                case "ANIMATIONGROUPSECTION":
+                    return (ushort)IdleAnimation_FieldIndex.AnimationGroupSection;
+                case "REPLAYDELAY":
+                    return (ushort)IdleAnimation_FieldIndex.ReplayDelay;
+                case "DATADATATYPESTATE":
+                    return (ushort)IdleAnimation_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +1456,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                    return true;
+                case IdleAnimation_FieldIndex.Filename:
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                case IdleAnimation_FieldIndex.Flags:
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1478,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                    return true;
+                case IdleAnimation_FieldIndex.Filename:
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                case IdleAnimation_FieldIndex.Flags:
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1500,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                case IdleAnimation_FieldIndex.Filename:
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                case IdleAnimation_FieldIndex.Flags:
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1521,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                    return "Conditions";
+                case IdleAnimation_FieldIndex.Filename:
+                    return "Filename";
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                    return "AnimationEvent";
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                    return "RelatedIdles";
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                    return "LoopingSecondsMin";
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                    return "LoopingSecondsMax";
+                case IdleAnimation_FieldIndex.Flags:
+                    return "Flags";
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                    return "AnimationGroupSection";
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                    return "ReplayDelay";
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1551,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                case IdleAnimation_FieldIndex.Filename:
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                case IdleAnimation_FieldIndex.Flags:
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1572,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                case IdleAnimation_FieldIndex.Filename:
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                case IdleAnimation_FieldIndex.Flags:
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1593,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
             switch (enu)
             {
+                case IdleAnimation_FieldIndex.Conditions:
+                    return typeof(ExtendedList<Condition>);
+                case IdleAnimation_FieldIndex.Filename:
+                    return typeof(String);
+                case IdleAnimation_FieldIndex.AnimationEvent:
+                    return typeof(String);
+                case IdleAnimation_FieldIndex.RelatedIdles:
+                    return typeof(ExtendedList<IFormLink<IIdleRelation>>);
+                case IdleAnimation_FieldIndex.LoopingSecondsMin:
+                    return typeof(Byte);
+                case IdleAnimation_FieldIndex.LoopingSecondsMax:
+                    return typeof(Byte);
+                case IdleAnimation_FieldIndex.Flags:
+                    return typeof(IdleAnimation.Flag);
+                case IdleAnimation_FieldIndex.AnimationGroupSection:
+                    return typeof(Byte);
+                case IdleAnimation_FieldIndex.ReplayDelay:
+                    return typeof(UInt16);
+                case IdleAnimation_FieldIndex.DATADataTypeState:
+                    return typeof(IdleAnimation.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -962,6 +1620,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(IdleAnimationXmlWriteTranslation);
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
+        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
+        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = IDLE_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -1005,6 +1668,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IIdleAnimationInternal item)
         {
             ClearPartial();
+            item.Conditions.Clear();
+            item.Filename = default;
+            item.AnimationEvent = default;
+            item.RelatedIdles.Clear();
+            item.LoopingSecondsMin = default;
+            item.LoopingSecondsMax = default;
+            item.Flags = default;
+            item.AnimationGroupSection = default;
+            item.ReplayDelay = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1162,6 +1835,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Filename = string.Equals(item.Filename, rhs.Filename);
+            ret.AnimationEvent = string.Equals(item.AnimationEvent, rhs.AnimationEvent);
+            ret.RelatedIdles = item.RelatedIdles.CollectionEqualsHelper(
+                rhs.RelatedIdles,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.LoopingSecondsMin = item.LoopingSecondsMin == rhs.LoopingSecondsMin;
+            ret.LoopingSecondsMax = item.LoopingSecondsMax == rhs.LoopingSecondsMax;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.AnimationGroupSection = item.AnimationGroupSection == rhs.AnimationGroupSection;
+            ret.ReplayDelay = item.ReplayDelay == rhs.ReplayDelay;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1213,12 +1902,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Filename ?? true)
+                && item.Filename.TryGet(out var FilenameItem))
+            {
+                fg.AppendItem(FilenameItem, "Filename");
+            }
+            if ((printMask?.AnimationEvent ?? true)
+                && item.AnimationEvent.TryGet(out var AnimationEventItem))
+            {
+                fg.AppendItem(AnimationEventItem, "AnimationEvent");
+            }
+            if (printMask?.RelatedIdles?.Overall ?? true)
+            {
+                fg.AppendLine("RelatedIdles =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RelatedIdles)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.LoopingSecondsMin ?? true)
+            {
+                fg.AppendItem(item.LoopingSecondsMin, "LoopingSecondsMin");
+            }
+            if (printMask?.LoopingSecondsMax ?? true)
+            {
+                fg.AppendItem(item.LoopingSecondsMax, "LoopingSecondsMax");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.AnimationGroupSection ?? true)
+            {
+                fg.AppendItem(item.AnimationGroupSection, "AnimationGroupSection");
+            }
+            if (printMask?.ReplayDelay ?? true)
+            {
+                fg.AppendItem(item.ReplayDelay, "ReplayDelay");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IIdleAnimationGetter item,
             IdleAnimation.Mask<bool?> checkMask)
         {
+            if (checkMask.Filename.HasValue && checkMask.Filename.Value != (item.Filename != null)) return false;
+            if (checkMask.AnimationEvent.HasValue && checkMask.AnimationEvent.Value != (item.AnimationEvent != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1228,6 +1989,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIdleAnimationGetter item,
             IdleAnimation.Mask<bool> mask)
         {
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Filename = (item.Filename != null);
+            mask.AnimationEvent = (item.AnimationEvent != null);
+            mask.RelatedIdles = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.LoopingSecondsMin = true;
+            mask.LoopingSecondsMax = true;
+            mask.Flags = true;
+            mask.AnimationGroupSection = true;
+            mask.ReplayDelay = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1279,6 +2051,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
+            if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
+            if (!lhs.RelatedIdles.SequenceEqual(rhs.RelatedIdles)) return false;
+            if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
+            if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
+            if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1303,6 +2085,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IIdleAnimationGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Conditions);
+            if (item.Filename.TryGet(out var Filenameitem))
+            {
+                hash.Add(Filenameitem);
+            }
+            if (item.AnimationEvent.TryGet(out var AnimationEventitem))
+            {
+                hash.Add(AnimationEventitem);
+            }
+            hash.Add(item.RelatedIdles);
+            hash.Add(item.LoopingSecondsMin);
+            hash.Add(item.LoopingSecondsMax);
+            hash.Add(item.Flags);
+            hash.Add(item.AnimationGroupSection);
+            hash.Add(item.ReplayDelay);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1329,6 +2127,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IIdleAnimationGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RelatedIdles.Select(f => f.FormKey))
             {
                 yield return item;
             }
@@ -1379,6 +2186,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
+            {
+                item.Filename = rhs.Filename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                item.AnimationEvent = rhs.AnimationEvent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdles);
+                try
+                {
+                    item.RelatedIdles.SetTo(
+                        rhs.RelatedIdles
+                        .Select(r => (IFormLink<IIdleRelation>)new FormLink<IIdleRelation>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMin) ?? true))
+            {
+                item.LoopingSecondsMin = rhs.LoopingSecondsMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMax) ?? true))
+            {
+                item.LoopingSecondsMax = rhs.LoopingSecondsMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
+            {
+                item.AnimationGroupSection = rhs.AnimationGroupSection;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ReplayDelay) ?? true))
+            {
+                item.ReplayDelay = rhs.ReplayDelay;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1521,6 +2403,118 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions),
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Filename != null)
+                && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Filename),
+                    item: item.Filename,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.Filename,
+                    errorMask: errorMask);
+            }
+            if ((item.AnimationEvent != null)
+                && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AnimationEvent),
+                    item: item.AnimationEvent,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationEvent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IIdleRelationGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RelatedIdles),
+                    item: item.RelatedIdles,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdles,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdles),
+                    transl: (XElement subNode, IFormLink<IIdleRelationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMin) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LoopingSecondsMin),
+                    item: item.LoopingSecondsMin,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.LoopingSecondsMin,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMax) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LoopingSecondsMax),
+                    item: item.LoopingSecondsMax,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.LoopingSecondsMax,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<IdleAnimation.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AnimationGroupSection),
+                    item: item.AnimationGroupSection,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ReplayDelay) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReplayDelay),
+                    item: item.ReplayDelay,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.ReplayDelay,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<IdleAnimation.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)IdleAnimation_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1628,6 +2622,206 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Conditions":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                    try
+                    {
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Filename":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Filename);
+                    try
+                    {
+                        item.Filename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AnimationEvent":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationEvent);
+                    try
+                    {
+                        item.AnimationEvent = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RelatedIdles":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdles);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RelatedIdlesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RelatedIdles.SetTo(RelatedIdlesItem);
+                        }
+                        else
+                        {
+                            item.RelatedIdles.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LoopingSecondsMin":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.LoopingSecondsMin);
+                    try
+                    {
+                        item.LoopingSecondsMin = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LoopingSecondsMax":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.LoopingSecondsMax);
+                    try
+                    {
+                        item.LoopingSecondsMax = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<IdleAnimation.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AnimationGroupSection":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                    try
+                    {
+                        item.AnimationGroupSection = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReplayDelay":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.ReplayDelay);
+                    try
+                    {
+                        item.ReplayDelay = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<IdleAnimation.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1714,6 +2908,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
 
+        static partial void WriteBinaryConditionsCustom(
+            MutagenWriter writer,
+            IIdleAnimationGetter item);
+
+        public static void WriteBinaryConditions(
+            MutagenWriter writer,
+            IIdleAnimationGetter item)
+        {
+            WriteBinaryConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IIdleAnimationGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IIdleAnimationGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            IdleAnimationBinaryWriteTranslation.WriteBinaryConditions(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Filename,
+                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AnimationEvent,
+                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ENAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Write(
+                writer: writer,
+                items: item.RelatedIdles,
+                recordType: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER),
+                transl: (MutagenWriter subWriter, IFormLink<IIdleRelationGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.LoopingSecondsMin);
+                writer.Write(item.LoopingSecondsMax);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+                writer.Write(item.AnimationGroupSection);
+                writer.Write(item.ReplayDelay);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IIdleAnimationGetter item,
@@ -1724,10 +2985,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.IDLE_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1783,6 +3044,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IIdleAnimationInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41445443: // CTDA
+                {
+                    IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Filename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AnimationEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RelatedIdles.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.LoopingSecondsMin = dataFrame.ReadUInt8();
+                    item.LoopingSecondsMax = dataFrame.ReadUInt8();
+                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.AnimationGroupSection = dataFrame.ReadUInt8();
+                    item.ReplayDelay = dataFrame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
+        static partial void FillBinaryConditionsCustom(
+            MutagenFrame frame,
+            IIdleAnimationInternal item);
+
     }
 
 }
@@ -1818,6 +3147,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1844,6 +3179,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Conditions
+        partial void ConditionsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        #region Filename
+        private int? _FilenameLocation;
+        public String? Filename => _FilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FilenameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region AnimationEvent
+        private int? _AnimationEventLocation;
+        public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationEventLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        public IReadOnlyList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; private set; } = ListExt.Empty<IFormLink<IIdleRelationGetter>>();
+        private int? _DATALocation;
+        public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
+        #region LoopingSecondsMin
+        private int _LoopingSecondsMinLocation => _DATALocation!.Value + 0x0;
+        private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;
+        public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _data.Span[_LoopingSecondsMinLocation] : default;
+        #endregion
+        #region LoopingSecondsMax
+        private int _LoopingSecondsMaxLocation => _DATALocation!.Value + 0x1;
+        private bool _LoopingSecondsMax_IsSet => _DATALocation.HasValue;
+        public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _data.Span[_LoopingSecondsMaxLocation] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x2;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region AnimationGroupSection
+        private int _AnimationGroupSectionLocation => _DATALocation!.Value + 0x3;
+        private bool _AnimationGroupSection_IsSet => _DATALocation.HasValue;
+        public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _data.Span[_AnimationGroupSectionLocation] : default;
+        #endregion
+        #region ReplayDelay
+        private int _ReplayDelayLocation => _DATALocation!.Value + 0x4;
+        private bool _ReplayDelay_IsSet => _DATALocation.HasValue;
+        public UInt16 ReplayDelay => _ReplayDelay_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ReplayDelayLocation, 2)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1896,6 +3275,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x41445443: // CTDA
+                {
+                    ConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    _FilenameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                }
+                case 0x4D414E45: // ENAM
+                {
+                    _AnimationEventLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RelatedIdles = BinaryOverlayList<IFormLink<IIdleRelationGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IIdleRelationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

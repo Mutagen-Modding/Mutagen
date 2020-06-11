@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
+using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -30,6 +31,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessNavmeshes(stream, formID, recType, loc);
             ProcessDialogs(stream, formID, recType, loc);
             ProcessQuests(stream, formID, recType, loc);
+            ProcessPackages(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -581,6 +583,196 @@ namespace Mutagen.Bethesda.Tests
                 {
                     ProcessZeroFloat(stream);
                 }
+            }
+        }
+
+        private void ProcessPackages(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Package_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            // Reorder Idle subrecords
+
+            // Reorder data values
+            var xnamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.XNAM_HEADER);
+            if (xnamPos == null)
+            {
+                throw new ArgumentException();
+            }
+
+            var pkcuPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.PKCU_HEADER, navigateToContent: true);
+            if (!pkcuPos.HasValue)
+            {
+                throw new ArgumentException();
+            }
+            var count = BinaryPrimitives.ReadInt32LittleEndian(majorFrame.Content.Slice(pkcuPos.Value));
+
+            if (count == 0) return;
+
+            var anamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.ANAM_HEADER);
+            RecordType pldt = new RecordType("PLDT");
+            RecordType ptda = new RecordType("PTDA");
+            RecordType pdto = new RecordType("PDTO");
+            RecordType tpic = new RecordType("TPIC");
+            RecordType unam = new RecordType("UNAM");
+            RecordType bnam = new RecordType("BNAM");
+            RecordType pnam = new RecordType("PNAM");
+            // Reorder data values to be in index ordering
+            if (anamPos.HasValue && anamPos.Value < xnamPos.Value)
+            {
+                var startLoc = anamPos.Value;
+                var dataValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
+                var curLoc = startLoc;
+                while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
+                {
+                    var anamRecord = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
+                    var recs = UtilityTranslation.FindNextSubrecords(
+                        majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
+                        stream.MetaData.Constants,
+                        out var _,
+                        Package_Registration.ANAM_HEADER,
+                        Package_Registration.CNAM_HEADER,
+                        pldt,
+                        ptda,
+                        pdto,
+                        tpic);
+                    int finalLoc;
+                    if (recs[0] == null)
+                    {
+                        finalLoc = recs.NotNull().Max();
+                    }
+                    else if (recs[0] == 0)
+                    {
+                        dataValues.Add(
+                            (-1, majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength)));
+                        curLoc = anamPos.Value + anamRecord.TotalLength;
+                        anamPos = anamPos.Value + anamRecord.TotalLength;
+                        continue;
+                    }
+                    else
+                    {
+                        finalLoc = recs
+                            .NotNull()
+                            .Where(i => i < recs[0]!.Value)
+                            .Max();
+                    }
+                    var finalRec = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
+                    var dataSlice = majorFrame.Content.Slice(anamPos.Value, anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
+                    if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content) == "Bool"
+                        && recs[1] != null)
+                    {
+                        // Ensure bool value is 1 or 0
+                        var cnam = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + recs[1].Value));
+                        if (cnam.Content.Length != 1)
+                        {
+                            throw new ArgumentException();
+                        }
+                        if (cnam.Content[0] > 1)
+                        {
+                            var bytes = dataSlice.ToArray();
+                            int boolIndex = anamRecord.TotalLength + recs[1].Value + cnam.Header.HeaderLength;
+                            bytes[boolIndex] = (byte)(bytes[boolIndex] > 0 ? 1 : 0);
+                            dataSlice = bytes;
+                        }
+                    }
+                    dataValues.Add((-1, dataSlice));
+
+                    curLoc = anamPos.Value + anamRecord.TotalLength + finalLoc + finalRec.TotalLength;
+                    anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
+                }
+
+                var unamLocs = UtilityTranslation.FindRepeatingSubrecord(
+                    majorFrame.Content.Slice(curLoc),
+                    stream.MetaData.Constants,
+                    unam,
+                    out var _);
+                if (unamLocs == null
+                    || unamLocs.Length != dataValues.Count
+                    || unamLocs.Length != count)
+                {
+                    throw new ArgumentException();
+                }
+
+                for (sbyte i = 0; i < unamLocs.Length; i++)
+                {
+                    var unamRec = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(curLoc + unamLocs[i]));
+                    dataValues[i] = (
+                        (sbyte)unamRec.Content[0],
+                        dataValues[i].Data);
+                }
+
+                var subLoc = startLoc;
+                foreach (var item in dataValues.OrderBy(i => i.Index))
+                {
+                    _Instructions.SetSubstitution(
+                        loc.Min + majorFrame.Header.HeaderLength + subLoc,
+                        item.Data.ToArray());
+                    subLoc += item.Data.Length;
+                }
+                foreach (var item in dataValues.OrderBy(i => i.Index))
+                {
+                    byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
+                    bytes[6] = (byte)item.Index;
+                    _Instructions.SetSubstitution(
+                        loc.Min + majorFrame.Header.HeaderLength + subLoc,
+                        bytes.ToArray());
+                    subLoc += bytes.Length;
+                }
+            }
+
+            // Reorder inputs
+            var unamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), stream.MetaData.Constants, unam);
+            if (!unamPos.HasValue) return;
+            unamPos += xnamPos.Value;
+            var writeLoc = loc.Min + majorFrame.Header.HeaderLength + unamPos.Value;
+            var inputValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
+            while (unamPos.HasValue)
+            {
+                var unamRecord = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
+                var recs = UtilityTranslation.FindNextSubrecords(
+                    majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
+                    stream.MetaData.Constants,
+                    out var _,
+                    unam,
+                    bnam,
+                    pnam);
+                int finalLoc;
+                if (recs[0] == null)
+                {
+                    finalLoc = recs.NotNull().Max();
+                }
+                else if (recs[0] == 0)
+                {
+                    inputValues.Add(
+                        ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength)));
+                    unamPos = unamPos.Value + unamRecord.TotalLength;
+                    continue;
+                }
+                else
+                {
+                    finalLoc = recs
+                        .NotNull()
+                        .Where(i => i < recs[0]!.Value)
+                        .Max();
+                }
+                var finalRec = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength + finalLoc));
+                inputValues.Add(
+                    ((sbyte)unamRecord.Content[0], majorFrame.Content.Slice(unamPos.Value, unamRecord.TotalLength + finalLoc + finalRec.TotalLength)));
+
+                unamPos = unamPos.Value + unamRecord.TotalLength + recs[0];
+            }
+            foreach (var item in inputValues.OrderBy(i => i.Index))
+            {
+                _Instructions.SetSubstitution(
+                    writeLoc,
+                    item.Data.ToArray());
+                writeLoc += item.Data.Length;
             }
         }
 
