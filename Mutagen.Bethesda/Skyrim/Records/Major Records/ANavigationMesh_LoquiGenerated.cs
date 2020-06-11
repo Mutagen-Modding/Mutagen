@@ -49,38 +49,38 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Unknown2
+        #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown2;
-        public MemorySlice<Byte>? Unknown2
+        protected MemorySlice<Byte>? _ONAM;
+        public MemorySlice<Byte>? ONAM
         {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
+            get => this._ONAM;
+            set => this._ONAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.ONAM => this.ONAM;
         #endregion
-        #region Unknown3
+        #region PNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown3;
-        public MemorySlice<Byte>? Unknown3
+        protected MemorySlice<Byte>? _PNAM;
+        public MemorySlice<Byte>? PNAM
         {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
+            get => this._PNAM;
+            set => this._PNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.Unknown3 => this.Unknown3;
+        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.PNAM => this.PNAM;
         #endregion
-        #region Unknown4
+        #region NNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown4;
-        public MemorySlice<Byte>? Unknown4
+        protected MemorySlice<Byte>? _NNAM;
+        public MemorySlice<Byte>? NNAM
         {
-            get => this._Unknown4;
-            set => this._Unknown4 = value;
+            get => this._NNAM;
+            set => this._NNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.Unknown4 => this.Unknown4;
+        ReadOnlyMemorySlice<Byte>? IANavigationMeshGetter.NNAM => this.NNAM;
         #endregion
 
         #region To String
@@ -255,9 +255,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
+                this.ONAM = initialValue;
+                this.PNAM = initialValue;
+                this.NNAM = initialValue;
             }
 
             public Mask(
@@ -267,9 +267,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Unknown2,
-                TItem Unknown3,
-                TItem Unknown4)
+                TItem ONAM,
+                TItem PNAM,
+                TItem NNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -278,9 +278,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
+                this.ONAM = ONAM;
+                this.PNAM = PNAM;
+                this.NNAM = NNAM;
             }
 
             #pragma warning disable CS8618
@@ -292,9 +292,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Unknown2;
-            public TItem Unknown3;
-            public TItem Unknown4;
+            public TItem ONAM;
+            public TItem PNAM;
+            public TItem NNAM;
             #endregion
 
             #region Equals
@@ -308,17 +308,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.ONAM, rhs.ONAM)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
+                hash.Add(this.ONAM);
+                hash.Add(this.PNAM);
+                hash.Add(this.NNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -329,9 +329,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.ONAM)) return false;
+                if (!eval(this.PNAM)) return false;
+                if (!eval(this.NNAM)) return false;
                 return true;
             }
             #endregion
@@ -340,9 +340,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
+                if (eval(this.ONAM)) return true;
+                if (eval(this.PNAM)) return true;
+                if (eval(this.NNAM)) return true;
                 return false;
             }
             #endregion
@@ -358,9 +358,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
+                obj.ONAM = eval(this.ONAM);
+                obj.PNAM = eval(this.PNAM);
+                obj.NNAM = eval(this.NNAM);
             }
             #endregion
 
@@ -383,17 +383,17 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.ONAM ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(ONAM, "ONAM");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.PNAM ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(PNAM, "PNAM");
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if (printMask?.NNAM ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        fg.AppendItem(NNAM, "NNAM");
                     }
                 }
                 fg.AppendLine("]");
@@ -407,9 +407,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown2;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
+            public Exception? ONAM;
+            public Exception? PNAM;
+            public Exception? NNAM;
             #endregion
 
             #region IErrorMask
@@ -418,12 +418,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case ANavigationMesh_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case ANavigationMesh_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case ANavigationMesh_FieldIndex.Unknown4:
-                        return Unknown4;
+                    case ANavigationMesh_FieldIndex.ONAM:
+                        return ONAM;
+                    case ANavigationMesh_FieldIndex.PNAM:
+                        return PNAM;
+                    case ANavigationMesh_FieldIndex.NNAM:
+                        return NNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -434,14 +434,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case ANavigationMesh_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case ANavigationMesh_FieldIndex.ONAM:
+                        this.ONAM = ex;
                         break;
-                    case ANavigationMesh_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case ANavigationMesh_FieldIndex.PNAM:
+                        this.PNAM = ex;
                         break;
-                    case ANavigationMesh_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case ANavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -454,14 +454,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
                 switch (enu)
                 {
-                    case ANavigationMesh_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case ANavigationMesh_FieldIndex.ONAM:
+                        this.ONAM = (Exception?)obj;
                         break;
-                    case ANavigationMesh_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case ANavigationMesh_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
                         break;
-                    case ANavigationMesh_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case ANavigationMesh_FieldIndex.NNAM:
+                        this.NNAM = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
+                if (ONAM != null) return true;
+                if (PNAM != null) return true;
+                if (NNAM != null) return true;
                 return false;
             }
             #endregion
@@ -510,9 +510,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Unknown4, "Unknown4");
+                fg.AppendItem(ONAM, "ONAM");
+                fg.AppendItem(PNAM, "PNAM");
+                fg.AppendItem(NNAM, "NNAM");
             }
             #endregion
 
@@ -521,9 +521,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.ONAM = this.ONAM.Combine(rhs.ONAM);
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -546,18 +546,18 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool Unknown2;
-            public bool Unknown3;
-            public bool Unknown4;
+            public bool ONAM;
+            public bool PNAM;
+            public bool NNAM;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
+                this.ONAM = defaultOn;
+                this.PNAM = defaultOn;
+                this.NNAM = defaultOn;
             }
 
             #endregion
@@ -565,9 +565,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
+                ret.Add((ONAM, null));
+                ret.Add((PNAM, null));
+                ret.Add((NNAM, null));
             }
         }
         #endregion
@@ -641,9 +641,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IANavigationMeshInternal>
     {
-        new MemorySlice<Byte>? Unknown2 { get; set; }
-        new MemorySlice<Byte>? Unknown3 { get; set; }
-        new MemorySlice<Byte>? Unknown4 { get; set; }
+        new MemorySlice<Byte>? ONAM { get; set; }
+        new MemorySlice<Byte>? PNAM { get; set; }
+        new MemorySlice<Byte>? NNAM { get; set; }
         #region Mutagen
         new ANavigationMesh.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -665,9 +665,9 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => ANavigationMesh_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown4 { get; }
+        ReadOnlyMemorySlice<Byte>? ONAM { get; }
+        ReadOnlyMemorySlice<Byte>? PNAM { get; }
+        ReadOnlyMemorySlice<Byte>? NNAM { get; }
 
         #region Mutagen
         ANavigationMesh.MajorFlag MajorFlags { get; }
@@ -972,9 +972,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Unknown2 = 6,
-        Unknown3 = 7,
-        Unknown4 = 8,
+        ONAM = 6,
+        PNAM = 7,
+        NNAM = 8,
     }
     #endregion
 
@@ -1024,12 +1024,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "UNKNOWN2":
-                    return (ushort)ANavigationMesh_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)ANavigationMesh_FieldIndex.Unknown3;
-                case "UNKNOWN4":
-                    return (ushort)ANavigationMesh_FieldIndex.Unknown4;
+                case "ONAM":
+                    return (ushort)ANavigationMesh_FieldIndex.ONAM;
+                case "PNAM":
+                    return (ushort)ANavigationMesh_FieldIndex.PNAM;
+                case "NNAM":
+                    return (ushort)ANavigationMesh_FieldIndex.NNAM;
                 default:
                     return null;
             }
@@ -1040,9 +1040,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                case ANavigationMesh_FieldIndex.Unknown3:
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.ONAM:
+                case ANavigationMesh_FieldIndex.PNAM:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1054,9 +1054,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                case ANavigationMesh_FieldIndex.Unknown3:
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.ONAM:
+                case ANavigationMesh_FieldIndex.PNAM:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1068,9 +1068,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                case ANavigationMesh_FieldIndex.Unknown3:
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.ONAM:
+                case ANavigationMesh_FieldIndex.PNAM:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1082,12 +1082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case ANavigationMesh_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case ANavigationMesh_FieldIndex.Unknown4:
-                    return "Unknown4";
+                case ANavigationMesh_FieldIndex.ONAM:
+                    return "ONAM";
+                case ANavigationMesh_FieldIndex.PNAM:
+                    return "PNAM";
+                case ANavigationMesh_FieldIndex.NNAM:
+                    return "NNAM";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1098,9 +1098,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                case ANavigationMesh_FieldIndex.Unknown3:
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.ONAM:
+                case ANavigationMesh_FieldIndex.PNAM:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1112,9 +1112,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
-                case ANavigationMesh_FieldIndex.Unknown3:
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.ONAM:
+                case ANavigationMesh_FieldIndex.PNAM:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1126,11 +1126,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMesh_FieldIndex enu = (ANavigationMesh_FieldIndex)index;
             switch (enu)
             {
-                case ANavigationMesh_FieldIndex.Unknown2:
+                case ANavigationMesh_FieldIndex.ONAM:
                     return typeof(MemorySlice<Byte>);
-                case ANavigationMesh_FieldIndex.Unknown3:
+                case ANavigationMesh_FieldIndex.PNAM:
                     return typeof(MemorySlice<Byte>);
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return typeof(MemorySlice<Byte>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
@@ -1187,9 +1187,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(IANavigationMeshInternal item)
         {
             ClearPartial();
-            item.Unknown2 = default;
-            item.Unknown3 = default;
-            item.Unknown4 = default;
+            item.ONAM = default;
+            item.PNAM = default;
+            item.NNAM = default;
             base.Clear(item);
         }
         
@@ -1341,9 +1341,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
-            ret.Unknown4 = MemorySliceExt.Equal(item.Unknown4, rhs.Unknown4);
+            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
+            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
+            ret.NNAM = MemorySliceExt.Equal(item.NNAM, rhs.NNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1395,20 +1395,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.ONAM ?? true)
+                && item.ONAM.TryGet(out var ONAMItem))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
+            if ((printMask?.PNAM ?? true)
+                && item.PNAM.TryGet(out var PNAMItem))
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                fg.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
             }
-            if ((printMask?.Unknown4 ?? true)
-                && item.Unknown4.TryGet(out var Unknown4Item))
+            if ((printMask?.NNAM ?? true)
+                && item.NNAM.TryGet(out var NNAMItem))
             {
-                fg.AppendLine($"Unknown4 => {SpanExt.ToHexString(Unknown4Item)}");
+                fg.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
             }
         }
         
@@ -1416,9 +1416,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANavigationMeshGetter item,
             ANavigationMesh.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
-            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
+            if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
+            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
+            if (checkMask.NNAM.HasValue && checkMask.NNAM.Value != (item.NNAM != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1428,9 +1428,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANavigationMeshGetter item,
             ANavigationMesh.Mask<bool> mask)
         {
-            mask.Unknown2 = (item.Unknown2 != null);
-            mask.Unknown3 = (item.Unknown3 != null);
-            mask.Unknown4 = (item.Unknown4 != null);
+            mask.ONAM = (item.ONAM != null);
+            mask.PNAM = (item.PNAM != null);
+            mask.NNAM = (item.NNAM != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1482,9 +1482,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown4, rhs.Unknown4)) return false;
+            if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
             return true;
         }
         
@@ -1509,17 +1509,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IANavigationMeshGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.ONAM.TryGet(out var ONAMItem))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(ONAMItem);
             }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
+            if (item.PNAM.TryGet(out var PNAMItem))
             {
-                hash.Add(Unknown3Item);
+                hash.Add(PNAMItem);
             }
-            if (item.Unknown4.TryGet(out var Unknown4Item))
+            if (item.NNAM.TryGet(out var NNAMItem))
             {
-                hash.Add(Unknown4Item);
+                hash.Add(NNAMItem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1593,37 +1593,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.ONAM) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
+                if(rhs.ONAM.TryGet(out var ONAMrhs))
                 {
-                    item.Unknown2 = Unknown2rhs.ToArray();
+                    item.ONAM = ONAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown2 = default;
+                    item.ONAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.PNAM) ?? true))
             {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                if(rhs.PNAM.TryGet(out var PNAMrhs))
                 {
-                    item.Unknown3 = Unknown3rhs.ToArray();
+                    item.PNAM = PNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown3 = default;
+                    item.PNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.NNAM) ?? true))
             {
-                if(rhs.Unknown4.TryGet(out var Unknown4rhs))
+                if(rhs.NNAM.TryGet(out var NNAMrhs))
                 {
-                    item.Unknown4 = Unknown4rhs.ToArray();
+                    item.NNAM = NNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown4 = default;
+                    item.NNAM = default;
                 }
             }
         }
@@ -1768,34 +1768,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown2) ?? true))
+            if ((item.ONAM != null)
+                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.ONAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)ANavigationMesh_FieldIndex.Unknown2,
+                    name: nameof(item.ONAM),
+                    item: item.ONAM.Value,
+                    fieldIndex: (int)ANavigationMesh_FieldIndex.ONAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown3) ?? true))
+            if ((item.PNAM != null)
+                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.PNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)ANavigationMesh_FieldIndex.Unknown3,
+                    name: nameof(item.PNAM),
+                    item: item.PNAM.Value,
+                    fieldIndex: (int)ANavigationMesh_FieldIndex.PNAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown4 != null)
-                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.Unknown4) ?? true))
+            if ((item.NNAM != null)
+                && (translationMask?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.NNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown4),
-                    item: item.Unknown4.Value,
-                    fieldIndex: (int)ANavigationMesh_FieldIndex.Unknown4,
+                    name: nameof(item.NNAM),
+                    item: item.NNAM.Value,
+                    fieldIndex: (int)ANavigationMesh_FieldIndex.NNAM,
                     errorMask: errorMask);
             }
         }
@@ -1905,11 +1905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Unknown2":
-                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.Unknown2);
+                case "ONAM":
+                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.ONAM);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.ONAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1923,11 +1923,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.Unknown3);
+                case "PNAM":
+                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.PNAM);
                     try
                     {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.PNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1941,11 +1941,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown4":
-                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.Unknown4);
+                case "NNAM":
+                    errorMask?.PushIndex((int)ANavigationMesh_FieldIndex.NNAM);
                     try
                     {
-                        item.Unknown4 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.NNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2088,15 +2088,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.ONAM,
                 header: recordTypeConverter.ConvertToCustom(ANavigationMesh_Registration.ONAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.PNAM,
                 header: recordTypeConverter.ConvertToCustom(ANavigationMesh_Registration.PNAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown4,
+                item: item.NNAM,
                 header: recordTypeConverter.ConvertToCustom(ANavigationMesh_Registration.NNAM_HEADER));
         }
 
@@ -2187,20 +2187,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4F: // ONAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown2);
+                    item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.ONAM);
                 }
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown3);
+                    item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.PNAM);
                 }
                 case 0x4D414E4E: // NNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown4);
+                    item.NNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.NNAM);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2298,17 +2298,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ONAM
+        private int? _ONAMLocation;
+        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region PNAM
+        private int? _PNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown4
-        private int? _Unknown4Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region NNAM
+        private int? _NNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2354,18 +2354,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown2);
+                    _ONAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.ONAM);
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown3);
+                    _PNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.PNAM);
                 }
                 case 0x4D414E4E: // NNAM
                 {
-                    _Unknown4Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.Unknown4);
+                    _NNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.NNAM);
                 }
                 default:
                     return base.FillRecordType(

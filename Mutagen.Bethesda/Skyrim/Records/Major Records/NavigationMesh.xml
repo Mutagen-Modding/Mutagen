@@ -4,9 +4,9 @@
     <Fields>
       <CustomLogic name="LengthLogic" recordType="XXXX" />
       <CustomLogic name="DataLogic" recordType="NVNM" />
-      <ByteArray name="Unknown2" recordType="ONAM" />
-      <ByteArray name="Unknown3" recordType="PNAM" />
-      <ByteArray name="Unknown4" recordType="NNAM" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="NNAM" recordType="NNAM" />
     </Fields>
   </Object>
   <Object name="WorldspaceNavigationMesh" baseClass="ANavigationMesh" recordType="NAVM" objType="Record" GUID="61ff6fb6-5bd3-413b-b27c-b9e48cc8a8de" ID="318">

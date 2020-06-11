@@ -41,7 +41,7 @@
         <FormLink refName="Eye" />
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
-      <Int16 name="Unknown" recordType="SNAM" />
+      <Int16 name="SNAM" recordType="SNAM" />
     </Fields>
   </Object>
   <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="a601027e-c79b-4987-bfae-8c172c8b13e5" ID="205">

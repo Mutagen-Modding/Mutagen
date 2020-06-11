@@ -76,38 +76,38 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
         #endregion
-        #region Unknown
+        #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _SCHR;
+        public MemorySlice<Byte>? SCHR
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._SCHR;
+            set => this._SCHR = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.SCHR => this.SCHR;
         #endregion
-        #region Unknown2
+        #region SCTX
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown2;
-        public MemorySlice<Byte>? Unknown2
+        protected MemorySlice<Byte>? _SCTX;
+        public MemorySlice<Byte>? SCTX
         {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
+            get => this._SCTX;
+            set => this._SCTX = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.SCTX => this.SCTX;
         #endregion
-        #region Unknown3
+        #region QNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown3;
-        public MemorySlice<Byte>? Unknown3
+        protected MemorySlice<Byte>? _QNAM;
+        public MemorySlice<Byte>? QNAM
         {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
+            get => this._QNAM;
+            set => this._QNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.Unknown3 => this.Unknown3;
+        ReadOnlyMemorySlice<Byte>? IQuestLogEntryGetter.QNAM => this.QNAM;
         #endregion
 
         #region To String
@@ -283,9 +283,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entry = initialValue;
                 this.NextQuest = initialValue;
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.SCHR = initialValue;
+                this.SCTX = initialValue;
+                this.QNAM = initialValue;
             }
 
             public Mask(
@@ -293,17 +293,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Conditions,
                 TItem Entry,
                 TItem NextQuest,
-                TItem Unknown,
-                TItem Unknown2,
-                TItem Unknown3)
+                TItem SCHR,
+                TItem SCTX,
+                TItem QNAM)
             {
                 this.Flags = Flags;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entry = Entry;
                 this.NextQuest = NextQuest;
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.SCHR = SCHR;
+                this.SCTX = SCTX;
+                this.QNAM = QNAM;
             }
 
             #pragma warning disable CS8618
@@ -319,9 +319,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem Entry;
             public TItem NextQuest;
-            public TItem Unknown;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem SCHR;
+            public TItem SCTX;
+            public TItem QNAM;
             #endregion
 
             #region Equals
@@ -338,9 +338,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Entry, rhs.Entry)) return false;
                 if (!object.Equals(this.NextQuest, rhs.NextQuest)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.SCHR, rhs.SCHR)) return false;
+                if (!object.Equals(this.SCTX, rhs.SCTX)) return false;
+                if (!object.Equals(this.QNAM, rhs.QNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -350,9 +350,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Conditions);
                 hash.Add(this.Entry);
                 hash.Add(this.NextQuest);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.SCHR);
+                hash.Add(this.SCTX);
+                hash.Add(this.QNAM);
                 return hash.ToHashCode();
             }
 
@@ -376,9 +376,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.Entry)) return false;
                 if (!eval(this.NextQuest)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.SCHR)) return false;
+                if (!eval(this.SCTX)) return false;
+                if (!eval(this.QNAM)) return false;
                 return true;
             }
             #endregion
@@ -401,9 +401,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.Entry)) return true;
                 if (eval(this.NextQuest)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.SCHR)) return true;
+                if (eval(this.SCTX)) return true;
+                if (eval(this.QNAM)) return true;
                 return false;
             }
             #endregion
@@ -436,9 +436,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.Entry = eval(this.Entry);
                 obj.NextQuest = eval(this.NextQuest);
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.SCHR = eval(this.SCHR);
+                obj.SCTX = eval(this.SCTX);
+                obj.QNAM = eval(this.QNAM);
             }
             #endregion
 
@@ -496,17 +496,17 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(NextQuest, "NextQuest");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(SCHR, "SCHR");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.SCTX ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(SCTX, "SCTX");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.QNAM ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(QNAM, "QNAM");
                     }
                 }
                 fg.AppendLine("]");
@@ -537,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? Entry;
             public Exception? NextQuest;
-            public Exception? Unknown;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? SCHR;
+            public Exception? SCTX;
+            public Exception? QNAM;
             #endregion
 
             #region IErrorMask
@@ -556,12 +556,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return Entry;
                     case QuestLogEntry_FieldIndex.NextQuest:
                         return NextQuest;
-                    case QuestLogEntry_FieldIndex.Unknown:
-                        return Unknown;
-                    case QuestLogEntry_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case QuestLogEntry_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case QuestLogEntry_FieldIndex.SCHR:
+                        return SCHR;
+                    case QuestLogEntry_FieldIndex.SCTX:
+                        return SCTX;
+                    case QuestLogEntry_FieldIndex.QNAM:
+                        return QNAM;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -584,14 +584,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestLogEntry_FieldIndex.NextQuest:
                         this.NextQuest = ex;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case QuestLogEntry_FieldIndex.SCHR:
+                        this.SCHR = ex;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case QuestLogEntry_FieldIndex.SCTX:
+                        this.SCTX = ex;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case QuestLogEntry_FieldIndex.QNAM:
+                        this.QNAM = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -615,14 +615,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestLogEntry_FieldIndex.NextQuest:
                         this.NextQuest = (Exception?)obj;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case QuestLogEntry_FieldIndex.SCHR:
+                        this.SCHR = (Exception?)obj;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case QuestLogEntry_FieldIndex.SCTX:
+                        this.SCTX = (Exception?)obj;
                         break;
-                    case QuestLogEntry_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case QuestLogEntry_FieldIndex.QNAM:
+                        this.QNAM = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -636,9 +636,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Conditions != null) return true;
                 if (Entry != null) return true;
                 if (NextQuest != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (SCHR != null) return true;
+                if (SCTX != null) return true;
+                if (QNAM != null) return true;
                 return false;
             }
             #endregion
@@ -698,9 +698,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendItem(Entry, "Entry");
                 fg.AppendItem(NextQuest, "NextQuest");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(SCHR, "SCHR");
+                fg.AppendItem(SCTX, "SCTX");
+                fg.AppendItem(QNAM, "QNAM");
             }
             #endregion
 
@@ -713,9 +713,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Entry = this.Entry.Combine(rhs.Entry);
                 ret.NextQuest = this.NextQuest.Combine(rhs.NextQuest);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.SCHR = this.SCHR.Combine(rhs.SCHR);
+                ret.SCTX = this.SCTX.Combine(rhs.SCTX);
+                ret.QNAM = this.QNAM.Combine(rhs.QNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -741,9 +741,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Entry;
             public bool NextQuest;
-            public bool Unknown;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool SCHR;
+            public bool SCTX;
+            public bool QNAM;
             #endregion
 
             #region Ctors
@@ -753,9 +753,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Entry = defaultOn;
                 this.NextQuest = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.SCHR = defaultOn;
+                this.SCTX = defaultOn;
+                this.QNAM = defaultOn;
             }
 
             #endregion
@@ -775,9 +775,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Entry, null));
                 ret.Add((NextQuest, null));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((SCHR, null));
+                ret.Add((SCTX, null));
+                ret.Add((QNAM, null));
             }
         }
         #endregion
@@ -856,9 +856,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
         new FormLinkNullable<Quest> NextQuest { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
-        new MemorySlice<Byte>? Unknown2 { get; set; }
-        new MemorySlice<Byte>? Unknown3 { get; set; }
+        new MemorySlice<Byte>? SCHR { get; set; }
+        new MemorySlice<Byte>? SCTX { get; set; }
+        new MemorySlice<Byte>? QNAM { get; set; }
     }
 
     public partial interface IQuestLogEntryGetter :
@@ -879,9 +879,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         TranslatedString? Entry { get; }
         IFormLinkNullable<IQuestGetter> NextQuest { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
+        ReadOnlyMemorySlice<Byte>? SCHR { get; }
+        ReadOnlyMemorySlice<Byte>? SCTX { get; }
+        ReadOnlyMemorySlice<Byte>? QNAM { get; }
 
     }
 
@@ -1203,9 +1203,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Conditions = 1,
         Entry = 2,
         NextQuest = 3,
-        Unknown = 4,
-        Unknown2 = 5,
-        Unknown3 = 6,
+        SCHR = 4,
+        SCTX = 5,
+        QNAM = 6,
     }
     #endregion
 
@@ -1263,12 +1263,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)QuestLogEntry_FieldIndex.Entry;
                 case "NEXTQUEST":
                     return (ushort)QuestLogEntry_FieldIndex.NextQuest;
-                case "UNKNOWN":
-                    return (ushort)QuestLogEntry_FieldIndex.Unknown;
-                case "UNKNOWN2":
-                    return (ushort)QuestLogEntry_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)QuestLogEntry_FieldIndex.Unknown3;
+                case "SCHR":
+                    return (ushort)QuestLogEntry_FieldIndex.SCHR;
+                case "SCTX":
+                    return (ushort)QuestLogEntry_FieldIndex.SCTX;
+                case "QNAM":
+                    return (ushort)QuestLogEntry_FieldIndex.QNAM;
                 default:
                     return null;
             }
@@ -1284,9 +1284,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Flags:
                 case QuestLogEntry_FieldIndex.Entry:
                 case QuestLogEntry_FieldIndex.NextQuest:
-                case QuestLogEntry_FieldIndex.Unknown:
-                case QuestLogEntry_FieldIndex.Unknown2:
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.SCHR:
+                case QuestLogEntry_FieldIndex.SCTX:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1303,9 +1303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Flags:
                 case QuestLogEntry_FieldIndex.Entry:
                 case QuestLogEntry_FieldIndex.NextQuest:
-                case QuestLogEntry_FieldIndex.Unknown:
-                case QuestLogEntry_FieldIndex.Unknown2:
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.SCHR:
+                case QuestLogEntry_FieldIndex.SCTX:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1321,9 +1321,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Conditions:
                 case QuestLogEntry_FieldIndex.Entry:
                 case QuestLogEntry_FieldIndex.NextQuest:
-                case QuestLogEntry_FieldIndex.Unknown:
-                case QuestLogEntry_FieldIndex.Unknown2:
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.SCHR:
+                case QuestLogEntry_FieldIndex.SCTX:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1343,12 +1343,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Entry";
                 case QuestLogEntry_FieldIndex.NextQuest:
                     return "NextQuest";
-                case QuestLogEntry_FieldIndex.Unknown:
-                    return "Unknown";
-                case QuestLogEntry_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case QuestLogEntry_FieldIndex.Unknown3:
-                    return "Unknown3";
+                case QuestLogEntry_FieldIndex.SCHR:
+                    return "SCHR";
+                case QuestLogEntry_FieldIndex.SCTX:
+                    return "SCTX";
+                case QuestLogEntry_FieldIndex.QNAM:
+                    return "QNAM";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1363,9 +1363,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Conditions:
                 case QuestLogEntry_FieldIndex.Entry:
                 case QuestLogEntry_FieldIndex.NextQuest:
-                case QuestLogEntry_FieldIndex.Unknown:
-                case QuestLogEntry_FieldIndex.Unknown2:
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.SCHR:
+                case QuestLogEntry_FieldIndex.SCTX:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1381,9 +1381,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Conditions:
                 case QuestLogEntry_FieldIndex.Entry:
                 case QuestLogEntry_FieldIndex.NextQuest:
-                case QuestLogEntry_FieldIndex.Unknown:
-                case QuestLogEntry_FieldIndex.Unknown2:
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.SCHR:
+                case QuestLogEntry_FieldIndex.SCTX:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1403,11 +1403,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(TranslatedString);
                 case QuestLogEntry_FieldIndex.NextQuest:
                     return typeof(FormLinkNullable<Quest>);
-                case QuestLogEntry_FieldIndex.Unknown:
+                case QuestLogEntry_FieldIndex.SCHR:
                     return typeof(MemorySlice<Byte>);
-                case QuestLogEntry_FieldIndex.Unknown2:
+                case QuestLogEntry_FieldIndex.SCTX:
                     return typeof(MemorySlice<Byte>);
-                case QuestLogEntry_FieldIndex.Unknown3:
+                case QuestLogEntry_FieldIndex.QNAM:
                     return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1485,9 +1485,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Conditions.Clear();
             item.Entry = default;
             item.NextQuest = FormLinkNullable<Quest>.Null;
-            item.Unknown = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.SCHR = default;
+            item.SCTX = default;
+            item.QNAM = default;
         }
         
         #region Xml Translation
@@ -1567,9 +1567,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Entry = string.Equals(item.Entry, rhs.Entry);
             ret.NextQuest = object.Equals(item.NextQuest, rhs.NextQuest);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
+            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
+            ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
         }
         
         public string ToString(
@@ -1649,20 +1649,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NextQuestItem, "NextQuest");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.SCHR ?? true)
+                && item.SCHR.TryGet(out var SCHRItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.SCTX ?? true)
+                && item.SCTX.TryGet(out var SCTXItem))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
+            if ((printMask?.QNAM ?? true)
+                && item.QNAM.TryGet(out var QNAMItem))
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
         }
         
@@ -1673,9 +1673,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.Entry.HasValue && checkMask.Entry.Value != (item.Entry != null)) return false;
             if (checkMask.NextQuest.HasValue && checkMask.NextQuest.Value != (item.NextQuest.FormKey != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
+            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
+            if (checkMask.SCTX.HasValue && checkMask.SCTX.Value != (item.SCTX != null)) return false;
+            if (checkMask.QNAM.HasValue && checkMask.QNAM.Value != (item.QNAM != null)) return false;
             return true;
         }
         
@@ -1688,9 +1688,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Entry = (item.Entry != null);
             mask.NextQuest = (item.NextQuest.FormKey != null);
-            mask.Unknown = (item.Unknown != null);
-            mask.Unknown2 = (item.Unknown2 != null);
-            mask.Unknown3 = (item.Unknown3 != null);
+            mask.SCHR = (item.SCHR != null);
+            mask.SCTX = (item.SCTX != null);
+            mask.QNAM = (item.QNAM != null);
         }
         
         #region Equals and Hash
@@ -1704,9 +1704,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
             if (!lhs.NextQuest.Equals(rhs.NextQuest)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
+            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+            if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
             return true;
         }
         
@@ -1726,17 +1726,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(NextQuestitem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.SCHR.TryGet(out var SCHRItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(SCHRItem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.SCTX.TryGet(out var SCTXItem))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(SCTXItem);
             }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
+            if (item.QNAM.TryGet(out var QNAMItem))
             {
-                hash.Add(Unknown3Item);
+                hash.Add(QNAMItem);
             }
             return hash.ToHashCode();
         }
@@ -1815,37 +1815,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.NextQuest = rhs.NextQuest.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.SCHR.TryGet(out var SCHRrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.SCHR = SCHRrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.SCHR = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
+                if(rhs.SCTX.TryGet(out var SCTXrhs))
                 {
-                    item.Unknown2 = Unknown2rhs.ToArray();
+                    item.SCTX = SCTXrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown2 = default;
+                    item.SCTX = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                if(rhs.QNAM.TryGet(out var QNAMrhs))
                 {
-                    item.Unknown3 = Unknown3rhs.ToArray();
+                    item.QNAM = QNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown3 = default;
+                    item.QNAM = default;
                 }
             }
         }
@@ -1987,34 +1987,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)QuestLogEntry_FieldIndex.NextQuest,
                     errorMask: errorMask);
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown) ?? true))
+            if ((item.SCHR != null)
+                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)QuestLogEntry_FieldIndex.Unknown,
+                    name: nameof(item.SCHR),
+                    item: item.SCHR.Value,
+                    fieldIndex: (int)QuestLogEntry_FieldIndex.SCHR,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown2) ?? true))
+            if ((item.SCTX != null)
+                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCTX) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)QuestLogEntry_FieldIndex.Unknown2,
+                    name: nameof(item.SCTX),
+                    item: item.SCTX.Value,
+                    fieldIndex: (int)QuestLogEntry_FieldIndex.SCTX,
                     errorMask: errorMask);
             }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Unknown3) ?? true))
+            if ((item.QNAM != null)
+                && (translationMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.QNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)QuestLogEntry_FieldIndex.Unknown3,
+                    name: nameof(item.QNAM),
+                    item: item.QNAM.Value,
+                    fieldIndex: (int)QuestLogEntry_FieldIndex.QNAM,
                     errorMask: errorMask);
             }
         }
@@ -2205,11 +2205,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.Unknown);
+                case "SCHR":
+                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.SCHR);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2223,11 +2223,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.Unknown2);
+                case "SCTX":
+                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.SCTX);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SCTX = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2241,11 +2241,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.Unknown3);
+                case "QNAM":
+                    errorMask?.PushIndex((int)QuestLogEntry_FieldIndex.QNAM);
                     try
                     {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.QNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2468,15 +2468,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.NAM0_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.SCHR,
                 header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.SCHR_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.SCTX,
                 header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.SCTX_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.QNAM,
                 header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.QNAM_HEADER));
         }
 
@@ -2561,24 +2561,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52484353: // SCHR
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown);
+                    item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCHR);
                 }
                 case 0x58544353: // SCTX
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown2) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown2);
+                    item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCTX);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown3) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown3);
+                    item.QNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.QNAM);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -2697,17 +2697,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool NextQuest_IsSet => _NextQuestLocation.HasValue;
         public IFormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SCHR
+        private int? _SCHRLocation;
+        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SCTX
+        private int? _SCTXLocation;
+        public ReadOnlyMemorySlice<Byte>? SCTX => _SCTXLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCTXLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region QNAM
+        private int? _QNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? QNAM => _QNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2796,21 +2796,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52484353: // SCHR
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown) return TryGet<int?>.Failure;
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    _SCHRLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCHR);
                 }
                 case 0x58544353: // SCTX
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown2) return TryGet<int?>.Failure;
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown2);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return TryGet<int?>.Failure;
+                    _SCTXLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCTX);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Unknown3) return TryGet<int?>.Failure;
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Unknown3);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    _QNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.QNAM);
                 }
                 default:
                     return TryGet<int?>.Failure;

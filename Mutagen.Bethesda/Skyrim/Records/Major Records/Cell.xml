@@ -28,15 +28,15 @@
       <ByteArray name="OcclusionData" recordType="TVDT" />
       <ByteArray name="MaxHeightData" recordType="MHDT" />
       <FormLink name="LightingTemplate" refName="LightingTemplate" hasBeenSet="False" recordType="LTMP" />
-      <ByteArray name="Unknown" recordType="LNAM" />
+      <ByteArray name="LNAM" recordType="LNAM" />
       <Float name="WaterHeight" recordType="XCLW" />
       <String name="WaterNoiseTexture" recordType="XNAM" />
       <List name="Regions" recordType="XCLR">
         <FormLink refName="Region" />
       </List>
       <FormLink name="Location" refName="Location" recordType="XLCN" />
-      <ByteArray name="Unknown2" recordType="XWCN" />
-      <ByteArray name="Unknown3" recordType="XWCS" />
+      <ByteArray name="XWCN" recordType="XWCN" />
+      <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <RefDirect name="Ownership" refName="Ownership" />

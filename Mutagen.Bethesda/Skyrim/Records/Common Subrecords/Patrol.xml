@@ -5,8 +5,8 @@
       <Float name="IdleTime" recordType="XPRD" hasBeenSet="False" />
       <CustomLogic name="PatrolScriptMarker" recordType="XPPA" />
       <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" hasBeenSet="False" />
-      <ByteArray name="Unknown" recordType="SCHR" hasBeenSet="True" />
-      <ByteArray name="Unknown2" recordType="SCTX" hasBeenSet="True" />
+      <ByteArray name="SCHR" recordType="SCHR" hasBeenSet="True" />
+      <ByteArray name="SCTX" recordType="SCTX" hasBeenSet="True" />
       <RefList name="Topics" refName="ATopicReference" binary="Custom" />
     </Fields>
   </Object>

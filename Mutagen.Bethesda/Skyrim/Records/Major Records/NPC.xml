@@ -50,7 +50,7 @@
       <FormLink name="HairColor" refName="ColorRecord" recordType="HCLF" />
       <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <FormLink name="GiftFilter" refName="FormList" recordType="GNAM" />
-      <UInt16 name="Unknown" recordType="NAM5" hasBeenSet="False" default="0xFF00" />
+      <UInt16 name="NAM5" recordType="NAM5" hasBeenSet="False" default="0xFF00" />
       <Float name="Height" recordType="NAM6" hasBeenSet="False" />
       <Float name="Weight" recordType="NAM7" hasBeenSet="False" />
       <Enum name="SoundLevel" enumName="SoundLevel" recordType="NAM8" byteLength="4" hasBeenSet="False" />

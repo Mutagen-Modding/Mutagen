@@ -46,24 +46,24 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
+        #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _SCHR;
+        public MemorySlice<Byte>? SCHR
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._SCHR;
+            set => this._SCHR = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
-        #region Unknown2
-        public FormLinkNullable<SkyrimMajorRecord> Unknown2 { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
+        #region QNAM
+        public FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.Unknown2 => this.Unknown2;
+        IFormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
         #endregion
-        #region Unknown3
-        public Boolean Unknown3 { get; set; } = default;
+        #region NEXT
+        public Boolean NEXT { get; set; } = default;
         #endregion
 
         #region To String
@@ -235,19 +235,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.SCHR = initialValue;
+                this.QNAM = initialValue;
+                this.NEXT = initialValue;
             }
 
             public Mask(
-                TItem Unknown,
-                TItem Unknown2,
-                TItem Unknown3)
+                TItem SCHR,
+                TItem QNAM,
+                TItem NEXT)
             {
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.SCHR = SCHR;
+                this.QNAM = QNAM;
+                this.NEXT = NEXT;
             }
 
             #pragma warning disable CS8618
@@ -259,9 +259,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Unknown;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem SCHR;
+            public TItem QNAM;
+            public TItem NEXT;
             #endregion
 
             #region Equals
@@ -274,17 +274,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.SCHR, rhs.SCHR)) return false;
+                if (!object.Equals(this.QNAM, rhs.QNAM)) return false;
+                if (!object.Equals(this.NEXT, rhs.NEXT)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.SCHR);
+                hash.Add(this.QNAM);
+                hash.Add(this.NEXT);
                 return hash.ToHashCode();
             }
 
@@ -293,9 +293,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.SCHR)) return false;
+                if (!eval(this.QNAM)) return false;
+                if (!eval(this.NEXT)) return false;
                 return true;
             }
             #endregion
@@ -303,9 +303,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.SCHR)) return true;
+                if (eval(this.QNAM)) return true;
+                if (eval(this.NEXT)) return true;
                 return false;
             }
             #endregion
@@ -320,9 +320,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.SCHR = eval(this.SCHR);
+                obj.QNAM = eval(this.QNAM);
+                obj.NEXT = eval(this.NEXT);
             }
             #endregion
 
@@ -345,17 +345,17 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(SCHR, "SCHR");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.QNAM ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(QNAM, "QNAM");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.NEXT ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(NEXT, "NEXT");
                     }
                 }
                 fg.AppendLine("]");
@@ -382,9 +382,9 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Unknown;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? SCHR;
+            public Exception? QNAM;
+            public Exception? NEXT;
             #endregion
 
             #region IErrorMask
@@ -393,12 +393,12 @@ namespace Mutagen.Bethesda.Skyrim
                 DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesUnknownData_FieldIndex.Unknown:
-                        return Unknown;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case DialogResponsesUnknownData_FieldIndex.SCHR:
+                        return SCHR;
+                    case DialogResponsesUnknownData_FieldIndex.QNAM:
+                        return QNAM;
+                    case DialogResponsesUnknownData_FieldIndex.NEXT:
+                        return NEXT;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -409,14 +409,14 @@ namespace Mutagen.Bethesda.Skyrim
                 DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesUnknownData_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case DialogResponsesUnknownData_FieldIndex.SCHR:
+                        this.SCHR = ex;
                         break;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case DialogResponsesUnknownData_FieldIndex.QNAM:
+                        this.QNAM = ex;
                         break;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case DialogResponsesUnknownData_FieldIndex.NEXT:
+                        this.NEXT = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -428,14 +428,14 @@ namespace Mutagen.Bethesda.Skyrim
                 DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesUnknownData_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case DialogResponsesUnknownData_FieldIndex.SCHR:
+                        this.SCHR = (Exception?)obj;
                         break;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case DialogResponsesUnknownData_FieldIndex.QNAM:
+                        this.QNAM = (Exception?)obj;
                         break;
-                    case DialogResponsesUnknownData_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case DialogResponsesUnknownData_FieldIndex.NEXT:
+                        this.NEXT = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (SCHR != null) return true;
+                if (QNAM != null) return true;
+                if (NEXT != null) return true;
                 return false;
             }
             #endregion
@@ -482,9 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(SCHR, "SCHR");
+                fg.AppendItem(QNAM, "QNAM");
+                fg.AppendItem(NEXT, "NEXT");
             }
             #endregion
 
@@ -493,9 +493,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.SCHR = this.SCHR.Combine(rhs.SCHR);
+                ret.QNAM = this.QNAM.Combine(rhs.QNAM);
+                ret.NEXT = this.NEXT.Combine(rhs.NEXT);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -517,17 +517,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Unknown;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool SCHR;
+            public bool QNAM;
+            public bool NEXT;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.SCHR = defaultOn;
+                this.QNAM = defaultOn;
+                this.NEXT = defaultOn;
             }
 
             #endregion
@@ -543,9 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((SCHR, null));
+                ret.Add((QNAM, null));
+                ret.Add((NEXT, null));
             }
         }
         #endregion
@@ -620,9 +620,9 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponsesUnknownDataGetter,
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
-        new MemorySlice<Byte>? Unknown { get; set; }
-        new FormLinkNullable<SkyrimMajorRecord> Unknown2 { get; set; }
-        new Boolean Unknown3 { get; set; }
+        new MemorySlice<Byte>? SCHR { get; set; }
+        new FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; }
+        new Boolean NEXT { get; set; }
     }
 
     public partial interface IDialogResponsesUnknownDataGetter :
@@ -639,9 +639,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DialogResponsesUnknownData_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        IFormLinkNullable<ISkyrimMajorRecordGetter> Unknown2 { get; }
-        Boolean Unknown3 { get; }
+        ReadOnlyMemorySlice<Byte>? SCHR { get; }
+        IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        Boolean NEXT { get; }
 
     }
 
@@ -959,9 +959,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum DialogResponsesUnknownData_FieldIndex
     {
-        Unknown = 0,
-        Unknown2 = 1,
-        Unknown3 = 2,
+        SCHR = 0,
+        QNAM = 1,
+        NEXT = 2,
     }
     #endregion
 
@@ -1011,12 +1011,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "UNKNOWN":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.Unknown;
-                case "UNKNOWN2":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.Unknown3;
+                case "SCHR":
+                    return (ushort)DialogResponsesUnknownData_FieldIndex.SCHR;
+                case "QNAM":
+                    return (ushort)DialogResponsesUnknownData_FieldIndex.QNAM;
+                case "NEXT":
+                    return (ushort)DialogResponsesUnknownData_FieldIndex.NEXT;
                 default:
                     return null;
             }
@@ -1027,9 +1027,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1041,9 +1041,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1055,9 +1055,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1069,12 +1069,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                    return "Unknown";
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
-                    return "Unknown3";
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                    return "SCHR";
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                    return "QNAM";
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
+                    return "NEXT";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1085,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1113,11 +1113,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesUnknownData_FieldIndex.Unknown:
+                case DialogResponsesUnknownData_FieldIndex.SCHR:
                     return typeof(MemorySlice<Byte>);
-                case DialogResponsesUnknownData_FieldIndex.Unknown2:
+                case DialogResponsesUnknownData_FieldIndex.QNAM:
                     return typeof(FormLinkNullable<SkyrimMajorRecord>);
-                case DialogResponsesUnknownData_FieldIndex.Unknown3:
+                case DialogResponsesUnknownData_FieldIndex.NEXT:
                     return typeof(Boolean);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1183,9 +1183,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDialogResponsesUnknownData item)
         {
             ClearPartial();
-            item.Unknown = default;
-            item.Unknown2 = FormLinkNullable<SkyrimMajorRecord>.Null;
-            item.Unknown3 = default;
+            item.SCHR = default;
+            item.QNAM = FormLinkNullable<SkyrimMajorRecord>.Null;
+            item.NEXT = default;
         }
         
         #region Xml Translation
@@ -1258,9 +1258,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.Unknown2 = object.Equals(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
+            ret.QNAM = object.Equals(item.QNAM, rhs.QNAM);
+            ret.NEXT = item.NEXT == rhs.NEXT;
         }
         
         public string ToString(
@@ -1307,19 +1307,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.SCHR ?? true)
+                && item.SCHR.TryGet(out var SCHRItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.QNAM ?? true)
+                && item.QNAM.TryGet(out var QNAMItem))
             {
-                fg.AppendItem(Unknown2Item, "Unknown2");
+                fg.AppendItem(QNAMItem, "QNAM");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.NEXT ?? true)
             {
-                fg.AppendItem(item.Unknown3, "Unknown3");
+                fg.AppendItem(item.NEXT, "NEXT");
             }
         }
         
@@ -1327,8 +1327,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponsesUnknownDataGetter item,
             DialogResponsesUnknownData.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2.FormKey != null)) return false;
+            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
+            if (checkMask.QNAM.HasValue && checkMask.QNAM.Value != (item.QNAM.FormKey != null)) return false;
             return true;
         }
         
@@ -1336,9 +1336,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponsesUnknownDataGetter item,
             DialogResponsesUnknownData.Mask<bool> mask)
         {
-            mask.Unknown = (item.Unknown != null);
-            mask.Unknown2 = (item.Unknown2.FormKey != null);
-            mask.Unknown3 = true;
+            mask.SCHR = (item.SCHR != null);
+            mask.QNAM = (item.QNAM.FormKey != null);
+            mask.NEXT = true;
         }
         
         #region Equals and Hash
@@ -1348,24 +1348,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!lhs.Unknown2.Equals(rhs.Unknown2)) return false;
-            if (lhs.Unknown3 != rhs.Unknown3) return false;
+            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            if (!lhs.QNAM.Equals(rhs.QNAM)) return false;
+            if (lhs.NEXT != rhs.NEXT) return false;
             return true;
         }
         
         public virtual int GetHashCode(IDialogResponsesUnknownDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.SCHR.TryGet(out var SCHRItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(SCHRItem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2item))
+            if (item.QNAM.TryGet(out var QNAMitem))
             {
-                hash.Add(Unknown2item);
+                hash.Add(QNAMitem);
             }
-            hash.Add(item.Unknown3);
+            hash.Add(item.NEXT);
             return hash.ToHashCode();
         }
         
@@ -1380,9 +1380,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesUnknownDataGetter obj)
         {
-            if (obj.Unknown2.FormKey.TryGet(out var Unknown2Key))
+            if (obj.QNAM.FormKey.TryGet(out var QNAMKey))
             {
-                yield return Unknown2Key;
+                yield return QNAMKey;
             }
             yield break;
         }
@@ -1402,24 +1402,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.SCHR.TryGet(out var SCHRrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.SCHR = SCHRrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.SCHR = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2.FormKey;
+                item.QNAM = rhs.QNAM.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                item.NEXT = rhs.NEXT;
             }
         }
         
@@ -1510,33 +1510,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown) ?? true))
+            if ((item.SCHR != null)
+                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.Unknown,
+                    name: nameof(item.SCHR),
+                    item: item.SCHR.Value,
+                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.SCHR,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown2) ?? true))
+            if ((item.QNAM.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.FormKey.Value,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.Unknown2,
+                    name: nameof(item.QNAM),
+                    item: item.QNAM.FormKey.Value,
+                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.QNAM,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.Unknown3) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.Unknown3,
+                    name: nameof(item.NEXT),
+                    item: item.NEXT,
+                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.NEXT,
                     errorMask: errorMask);
             }
         }
@@ -1645,11 +1645,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Unknown":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.Unknown);
+                case "SCHR":
+                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.SCHR);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1663,11 +1663,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.Unknown2);
+                case "QNAM":
+                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.QNAM);
                     try
                     {
-                        item.Unknown2 = FormKeyXmlTranslation.Instance.Parse(
+                        item.QNAM = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1681,11 +1681,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.Unknown3);
+                case "NEXT":
+                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.NEXT);
                     try
                     {
-                        item.Unknown3 = BooleanXmlTranslation.Instance.Parse(
+                        item.NEXT = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1877,15 +1877,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.SCHR,
                 header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.SCHR_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.QNAM,
                 header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.QNAM_HEADER));
             Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.NEXT,
                 header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.NEXT_HEADER));
         }
 
@@ -1936,25 +1936,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x52484353: // SCHR
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown);
+                    item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown2) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.QNAM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown2);
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
                 }
                 case 0x5458454E: // NEXT
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown3) return TryGet<int?>.Failure;
-                    item.Unknown3 = true;
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown3);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
+                    item.NEXT = true;
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.NEXT);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -2048,18 +2048,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SCHR
+        private int? _SCHRLocation;
+        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public bool Unknown2_IsSet => _Unknown2Location.HasValue;
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2Location.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        #region QNAM
+        private int? _QNAMLocation;
+        public bool QNAM_IsSet => _QNAMLocation.HasValue;
+        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public Boolean Unknown3 => _Unknown3Location.HasValue ? true : default;
+        #region NEXT
+        private int? _NEXTLocation;
+        public Boolean NEXT => _NEXTLocation.HasValue ? true : default;
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2119,21 +2119,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x52484353: // SCHR
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown) return TryGet<int?>.Failure;
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    _SCHRLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
                 }
                 case 0x4D414E51: // QNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown2) return TryGet<int?>.Failure;
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown2);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    _QNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
                 }
                 case 0x5458454E: // NEXT
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.Unknown3) return TryGet<int?>.Failure;
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.Unknown3);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
+                    _NEXTLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.NEXT);
                 }
                 default:
                     return TryGet<int?>.Failure;

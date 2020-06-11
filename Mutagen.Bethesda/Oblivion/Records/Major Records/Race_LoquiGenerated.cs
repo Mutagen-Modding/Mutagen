@@ -182,10 +182,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFaceGenDataGetter? IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
-        #region Unknown
-        public Int16? Unknown { get; set; }
+        #region SNAM
+        public Int16? SNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int16? IRaceGetter.Unknown => this.Unknown;
+        Int16? IRaceGetter.SNAM => this.SNAM;
         #endregion
 
         #region To String
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(initialValue, new FaceGenData.Mask<TItem>(initialValue));
-                this.Unknown = initialValue;
+                this.SNAM = initialValue;
             }
 
             public Mask(
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Hairs,
                 TItem Eyes,
                 TItem FaceGenData,
-                TItem Unknown)
+                TItem SNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(FaceGenData, new FaceGenData.Mask<TItem>(FaceGenData));
-                this.Unknown = Unknown;
+                this.SNAM = SNAM;
             }
 
             #pragma warning disable CS8618
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Hairs;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Eyes;
             public MaskItem<TItem, FaceGenData.Mask<TItem>?>? FaceGenData { get; set; }
-            public TItem Unknown;
+            public TItem SNAM;
             #endregion
 
             #region Equals
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
                 if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.SNAM, rhs.SNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Hairs);
                 hash.Add(this.Eyes);
                 hash.Add(this.FaceGenData);
-                hash.Add(this.Unknown);
+                hash.Add(this.SNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.FaceGenData.Overall)) return false;
                     if (this.FaceGenData.Specific != null && !this.FaceGenData.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.SNAM)) return false;
                 return true;
             }
             #endregion
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.FaceGenData.Overall)) return true;
                     if (this.FaceGenData.Specific != null && this.FaceGenData.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.SNAM)) return true;
                 return false;
             }
             #endregion
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 obj.FaceGenData = this.FaceGenData == null ? null : new MaskItem<R, FaceGenData.Mask<R>?>(eval(this.FaceGenData.Overall), this.FaceGenData.Specific?.Translate(eval));
-                obj.Unknown = eval(this.Unknown);
+                obj.SNAM = eval(this.SNAM);
             }
             #endregion
 
@@ -985,9 +985,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         FaceGenData?.ToString(fg);
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.SNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(SNAM, "SNAM");
                     }
                 }
                 fg.AppendLine("]");
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Hairs;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
             public MaskItem<Exception?, FaceGenData.ErrorMask?>? FaceGenData;
-            public Exception? Unknown;
+            public Exception? SNAM;
             #endregion
 
             #region IErrorMask
@@ -1058,8 +1058,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Eyes;
                     case Race_FieldIndex.FaceGenData:
                         return FaceGenData;
-                    case Race_FieldIndex.Unknown:
-                        return Unknown;
+                    case Race_FieldIndex.SNAM:
+                        return SNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1118,8 +1118,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.FaceGenData:
                         this.FaceGenData = new MaskItem<Exception?, FaceGenData.ErrorMask?>(ex, null);
                         break;
-                    case Race_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Race_FieldIndex.SNAM:
+                        this.SNAM = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1180,8 +1180,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.FaceGenData:
                         this.FaceGenData = (MaskItem<Exception?, FaceGenData.ErrorMask?>?)obj;
                         break;
-                    case Race_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Race_FieldIndex.SNAM:
+                        this.SNAM = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Hairs != null) return true;
                 if (Eyes != null) return true;
                 if (FaceGenData != null) return true;
-                if (Unknown != null) return true;
+                if (SNAM != null) return true;
                 return false;
             }
             #endregion
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 FaceGenData?.ToString(fg);
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(SNAM, "SNAM");
             }
             #endregion
 
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
                 ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
                 ret.FaceGenData = this.FaceGenData.Combine(rhs.FaceGenData, (l, r) => l.Combine(r));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.SNAM = this.SNAM.Combine(rhs.SNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Hairs;
             public bool Eyes;
             public MaskItem<bool, FaceGenData.TranslationMask?> FaceGenData;
-            public bool Unknown;
+            public bool SNAM;
             #endregion
 
             #region Ctors
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Hairs = defaultOn;
                 this.Eyes = defaultOn;
                 this.FaceGenData = new MaskItem<bool, FaceGenData.TranslationMask?>(defaultOn, null);
-                this.Unknown = defaultOn;
+                this.SNAM = defaultOn;
             }
 
             #endregion
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Hairs, null));
                 ret.Add((Eyes, null));
                 ret.Add((FaceGenData?.Overall ?? true, FaceGenData?.Specific?.GetCrystal()));
-                ret.Add((Unknown, null));
+                ret.Add((SNAM, null));
             }
         }
         #endregion
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
-        new Int16? Unknown { get; set; }
+        new Int16? SNAM { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLink<IHairGetter>>? Hairs { get; }
         IReadOnlyList<IFormLink<IEyeGetter>>? Eyes { get; }
         IFaceGenDataGetter? FaceGenData { get; }
-        Int16? Unknown { get; }
+        Int16? SNAM { get; }
 
     }
 
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Hairs = 18,
         Eyes = 19,
         FaceGenData = 20,
-        Unknown = 21,
+        SNAM = 21,
     }
     #endregion
 
@@ -2034,8 +2034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Race_FieldIndex.Eyes;
                 case "FACEGENDATA":
                     return (ushort)Race_FieldIndex.FaceGenData;
-                case "UNKNOWN":
-                    return (ushort)Race_FieldIndex.Unknown;
+                case "SNAM":
+                    return (ushort)Race_FieldIndex.SNAM;
                 default:
                     return null;
             }
@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.BodyData:
                 case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.FaceGenFaceClamp:
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2164,8 +2164,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Eyes";
                 case Race_FieldIndex.FaceGenData:
                     return "FaceGenData";
-                case Race_FieldIndex.Unknown:
-                    return "Unknown";
+                case Race_FieldIndex.SNAM:
+                    return "SNAM";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -2264,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(ExtendedList<IFormLink<Eye>>);
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
-                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.SNAM:
                     return typeof(Int16);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
@@ -2356,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hairs = null;
             item.Eyes = null;
             item.FaceGenData = null;
-            item.Unknown = default;
+            item.SNAM = default;
             base.Clear(item);
         }
         
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FaceGenData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.SNAM = item.SNAM == rhs.SNAM;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2768,10 +2768,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 FaceGenDataItem?.ToString(fg, "FaceGenData");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.SNAM ?? true)
+                && item.SNAM.TryGet(out var SNAMItem))
             {
-                fg.AppendItem(UnknownItem, "Unknown");
+                fg.AppendItem(SNAMItem, "SNAM");
             }
         }
         
@@ -2794,7 +2794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Eyes?.Overall.HasValue ?? false && checkMask.Eyes!.Overall.Value != (item.Eyes != null)) return false;
             if (checkMask.FaceGenData?.Overall.HasValue ?? false && checkMask.FaceGenData.Overall.Value != (item.FaceGenData != null)) return false;
             if (checkMask.FaceGenData?.Specific != null && (item.FaceGenData == null || !item.FaceGenData.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.SNAM.HasValue && checkMask.SNAM.Value != (item.SNAM != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2828,7 +2828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Eyes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Eyes != null), default);
             var itemFaceGenData = item.FaceGenData;
             mask.FaceGenData = new MaskItem<bool, FaceGenData.Mask<bool>?>(itemFaceGenData != null, itemFaceGenData?.GetHasBeenSetMask());
-            mask.Unknown = (item.Unknown != null);
+            mask.SNAM = (item.SNAM != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2894,7 +2894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
             if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
             if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.SNAM != rhs.SNAM) return false;
             return true;
         }
         
@@ -2968,9 +2968,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(FaceGenDataitem);
             }
-            if (item.Unknown.TryGet(out var Unknownitem))
+            if (item.SNAM.TryGet(out var SNAMitem))
             {
-                hash.Add(Unknownitem);
+                hash.Add(SNAMitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3311,9 +3311,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SNAM) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.SNAM = rhs.SNAM;
             }
         }
         
@@ -3715,14 +3715,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData));
                 }
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            if ((item.SNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.SNAM) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Race_FieldIndex.Unknown,
+                    name: nameof(item.SNAM),
+                    item: item.SNAM.Value,
+                    fieldIndex: (int)Race_FieldIndex.SNAM,
                     errorMask: errorMask);
             }
         }
@@ -4192,11 +4192,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
+                case "SNAM":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SNAM);
                     try
                     {
-                        item.Unknown = Int16XmlTranslation.Instance.Parse(
+                        item.SNAM = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4445,7 +4445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown,
+                item: item.SNAM,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER));
         }
 
@@ -4678,8 +4678,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = frame.ReadInt16();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
+                    item.SNAM = frame.ReadInt16();
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.SNAM);
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4835,9 +4835,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IFormLink<IHairGetter>>? Hairs { get; private set; }
         public IReadOnlyList<IFormLink<IEyeGetter>>? Eyes { get; private set; }
         public IFaceGenDataGetter? FaceGenData { get; private set; }
-        #region Unknown
-        private int? _UnknownLocation;
-        public Int16? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #region SNAM
+        private int? _SNAMLocation;
+        public Int16? SNAM => _SNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -5035,8 +5035,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
+                    _SNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.SNAM);
                 }
                 default:
                     return base.FillRecordType(

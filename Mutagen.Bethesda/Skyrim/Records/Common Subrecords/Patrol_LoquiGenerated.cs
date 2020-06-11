@@ -55,27 +55,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
         #endregion
-        #region Unknown
+        #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _SCHR;
+        public MemorySlice<Byte>? SCHR
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._SCHR;
+            set => this._SCHR = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPatrolGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IPatrolGetter.SCHR => this.SCHR;
         #endregion
-        #region Unknown2
+        #region SCTX
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown2;
-        public MemorySlice<Byte>? Unknown2
+        protected MemorySlice<Byte>? _SCTX;
+        public MemorySlice<Byte>? SCTX
         {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
+            get => this._SCTX;
+            set => this._SCTX = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPatrolGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte>? IPatrolGetter.SCTX => this.SCTX;
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -263,22 +263,22 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.IdleTime = initialValue;
                 this.Idle = initialValue;
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
+                this.SCHR = initialValue;
+                this.SCTX = initialValue;
                 this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
             }
 
             public Mask(
                 TItem IdleTime,
                 TItem Idle,
-                TItem Unknown,
-                TItem Unknown2,
+                TItem SCHR,
+                TItem SCTX,
                 TItem Topics)
             {
                 this.IdleTime = IdleTime;
                 this.Idle = Idle;
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
+                this.SCHR = SCHR;
+                this.SCTX = SCTX;
                 this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(Topics, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
             }
 
@@ -293,8 +293,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem IdleTime;
             public TItem Idle;
-            public TItem Unknown;
-            public TItem Unknown2;
+            public TItem SCHR;
+            public TItem SCTX;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>? Topics;
             #endregion
 
@@ -310,8 +310,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!object.Equals(this.IdleTime, rhs.IdleTime)) return false;
                 if (!object.Equals(this.Idle, rhs.Idle)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.SCHR, rhs.SCHR)) return false;
+                if (!object.Equals(this.SCTX, rhs.SCTX)) return false;
                 if (!object.Equals(this.Topics, rhs.Topics)) return false;
                 return true;
             }
@@ -320,8 +320,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.IdleTime);
                 hash.Add(this.Idle);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
+                hash.Add(this.SCHR);
+                hash.Add(this.SCTX);
                 hash.Add(this.Topics);
                 return hash.ToHashCode();
             }
@@ -333,8 +333,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!eval(this.IdleTime)) return false;
                 if (!eval(this.Idle)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.SCHR)) return false;
+                if (!eval(this.SCTX)) return false;
                 if (this.Topics != null)
                 {
                     if (!eval(this.Topics.Overall)) return false;
@@ -356,8 +356,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (eval(this.IdleTime)) return true;
                 if (eval(this.Idle)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.SCHR)) return true;
+                if (eval(this.SCTX)) return true;
                 if (this.Topics != null)
                 {
                     if (eval(this.Topics.Overall)) return true;
@@ -386,8 +386,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 obj.IdleTime = eval(this.IdleTime);
                 obj.Idle = eval(this.Idle);
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.SCHR = eval(this.SCHR);
+                obj.SCTX = eval(this.SCTX);
                 if (Topics != null)
                 {
                     obj.Topics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ATopicReference.Mask<R>?>>?>(eval(this.Topics.Overall), Enumerable.Empty<MaskItemIndexed<R, ATopicReference.Mask<R>?>>());
@@ -433,13 +433,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Idle, "Idle");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(SCHR, "SCHR");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.SCTX ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(SCTX, "SCTX");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
                         && Topics.TryGet(out var TopicsItem))
@@ -491,8 +491,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public Exception? IdleTime;
             public Exception? Idle;
-            public Exception? Unknown;
-            public Exception? Unknown2;
+            public Exception? SCHR;
+            public Exception? SCTX;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>? Topics;
             #endregion
 
@@ -506,10 +506,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return IdleTime;
                     case Patrol_FieldIndex.Idle:
                         return Idle;
-                    case Patrol_FieldIndex.Unknown:
-                        return Unknown;
-                    case Patrol_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case Patrol_FieldIndex.SCHR:
+                        return SCHR;
+                    case Patrol_FieldIndex.SCTX:
+                        return SCTX;
                     case Patrol_FieldIndex.Topics:
                         return Topics;
                     default:
@@ -528,11 +528,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Patrol_FieldIndex.Idle:
                         this.Idle = ex;
                         break;
-                    case Patrol_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Patrol_FieldIndex.SCHR:
+                        this.SCHR = ex;
                         break;
-                    case Patrol_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case Patrol_FieldIndex.SCTX:
+                        this.SCTX = ex;
                         break;
                     case Patrol_FieldIndex.Topics:
                         this.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ex, null);
@@ -553,11 +553,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Patrol_FieldIndex.Idle:
                         this.Idle = (Exception?)obj;
                         break;
-                    case Patrol_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Patrol_FieldIndex.SCHR:
+                        this.SCHR = (Exception?)obj;
                         break;
-                    case Patrol_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case Patrol_FieldIndex.SCTX:
+                        this.SCTX = (Exception?)obj;
                         break;
                     case Patrol_FieldIndex.Topics:
                         this.Topics = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>)obj;
@@ -572,8 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (IdleTime != null) return true;
                 if (Idle != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
+                if (SCHR != null) return true;
+                if (SCTX != null) return true;
                 if (Topics != null) return true;
                 return false;
             }
@@ -611,8 +611,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 fg.AppendItem(IdleTime, "IdleTime");
                 fg.AppendItem(Idle, "Idle");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(SCHR, "SCHR");
+                fg.AppendItem(SCTX, "SCTX");
                 if (Topics.TryGet(out var TopicsItem))
                 {
                     fg.AppendLine("Topics =>");
@@ -645,8 +645,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.IdleTime = this.IdleTime.Combine(rhs.IdleTime);
                 ret.Idle = this.Idle.Combine(rhs.Idle);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.SCHR = this.SCHR.Combine(rhs.SCHR);
+                ret.SCTX = this.SCTX.Combine(rhs.SCTX);
                 ret.Topics = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ATopicReference.ErrorMask?>>?>(ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 return ret;
             }
@@ -671,8 +671,8 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public bool IdleTime;
             public bool Idle;
-            public bool Unknown;
-            public bool Unknown2;
+            public bool SCHR;
+            public bool SCTX;
             public MaskItem<bool, ATopicReference.TranslationMask?> Topics;
             #endregion
 
@@ -681,8 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.IdleTime = defaultOn;
                 this.Idle = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.SCHR = defaultOn;
+                this.SCTX = defaultOn;
                 this.Topics = new MaskItem<bool, ATopicReference.TranslationMask?>(defaultOn, null);
             }
 
@@ -701,8 +701,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((IdleTime, null));
                 ret.Add((Idle, null));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
+                ret.Add((SCHR, null));
+                ret.Add((SCTX, null));
                 ret.Add((Topics?.Overall ?? true, Topics?.Specific?.GetCrystal()));
             }
         }
@@ -781,8 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single IdleTime { get; set; }
         new FormLink<IdleAnimation> Idle { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
-        new MemorySlice<Byte>? Unknown2 { get; set; }
+        new MemorySlice<Byte>? SCHR { get; set; }
+        new MemorySlice<Byte>? SCTX { get; set; }
         new ExtendedList<ATopicReference> Topics { get; }
     }
 
@@ -802,8 +802,8 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Patrol_Registration.Instance;
         Single IdleTime { get; }
         IFormLink<IIdleAnimationGetter> Idle { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
+        ReadOnlyMemorySlice<Byte>? SCHR { get; }
+        ReadOnlyMemorySlice<Byte>? SCTX { get; }
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
 
     }
@@ -1124,8 +1124,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         IdleTime = 0,
         Idle = 1,
-        Unknown = 2,
-        Unknown2 = 3,
+        SCHR = 2,
+        SCTX = 3,
         Topics = 4,
     }
     #endregion
@@ -1180,10 +1180,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Patrol_FieldIndex.IdleTime;
                 case "IDLE":
                     return (ushort)Patrol_FieldIndex.Idle;
-                case "UNKNOWN":
-                    return (ushort)Patrol_FieldIndex.Unknown;
-                case "UNKNOWN2":
-                    return (ushort)Patrol_FieldIndex.Unknown2;
+                case "SCHR":
+                    return (ushort)Patrol_FieldIndex.SCHR;
+                case "SCTX":
+                    return (ushort)Patrol_FieldIndex.SCTX;
                 case "TOPICS":
                     return (ushort)Patrol_FieldIndex.Topics;
                 default:
@@ -1200,8 +1200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Patrol_FieldIndex.IdleTime:
                 case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.Unknown:
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCHR:
+                case Patrol_FieldIndex.SCTX:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1217,8 +1217,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Patrol_FieldIndex.IdleTime:
                 case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.Unknown:
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCHR:
+                case Patrol_FieldIndex.SCTX:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1232,8 +1232,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Patrol_FieldIndex.IdleTime:
                 case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.Unknown:
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCHR:
+                case Patrol_FieldIndex.SCTX:
                 case Patrol_FieldIndex.Topics:
                     return false;
                 default:
@@ -1250,10 +1250,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "IdleTime";
                 case Patrol_FieldIndex.Idle:
                     return "Idle";
-                case Patrol_FieldIndex.Unknown:
-                    return "Unknown";
-                case Patrol_FieldIndex.Unknown2:
-                    return "Unknown2";
+                case Patrol_FieldIndex.SCHR:
+                    return "SCHR";
+                case Patrol_FieldIndex.SCTX:
+                    return "SCTX";
                 case Patrol_FieldIndex.Topics:
                     return "Topics";
                 default:
@@ -1268,8 +1268,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Patrol_FieldIndex.IdleTime:
                 case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.Unknown:
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCHR:
+                case Patrol_FieldIndex.SCTX:
                 case Patrol_FieldIndex.Topics:
                     return false;
                 default:
@@ -1284,8 +1284,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Patrol_FieldIndex.IdleTime:
                 case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.Unknown:
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCHR:
+                case Patrol_FieldIndex.SCTX:
                 case Patrol_FieldIndex.Topics:
                     return false;
                 default:
@@ -1302,9 +1302,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Patrol_FieldIndex.Idle:
                     return typeof(FormLink<IdleAnimation>);
-                case Patrol_FieldIndex.Unknown:
+                case Patrol_FieldIndex.SCHR:
                     return typeof(MemorySlice<Byte>);
-                case Patrol_FieldIndex.Unknown2:
+                case Patrol_FieldIndex.SCTX:
                     return typeof(MemorySlice<Byte>);
                 case Patrol_FieldIndex.Topics:
                     return typeof(ExtendedList<ATopicReference>);
@@ -1365,8 +1365,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.IdleTime = default;
             item.Idle = FormLink<IdleAnimation>.Null;
-            item.Unknown = default;
-            item.Unknown2 = default;
+            item.SCHR = default;
+            item.SCTX = default;
             item.Topics.Clear();
         }
         
@@ -1442,8 +1442,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
             ret.Idle = object.Equals(item.Idle, rhs.Idle);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
+            ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
+            ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1502,15 +1502,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Idle, "Idle");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.SCHR ?? true)
+                && item.SCHR.TryGet(out var SCHRItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.SCTX ?? true)
+                && item.SCTX.TryGet(out var SCTXItem))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
             }
             if (printMask?.Topics?.Overall ?? true)
             {
@@ -1536,8 +1536,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPatrolGetter item,
             Patrol.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
+            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
+            if (checkMask.SCTX.HasValue && checkMask.SCTX.Value != (item.SCTX != null)) return false;
             return true;
         }
         
@@ -1547,8 +1547,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.IdleTime = true;
             mask.Idle = true;
-            mask.Unknown = (item.Unknown != null);
-            mask.Unknown2 = (item.Unknown2 != null);
+            mask.SCHR = (item.SCHR != null);
+            mask.SCTX = (item.SCTX != null);
             var TopicsItem = item.Topics;
             mask.Topics = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ATopicReference.Mask<bool>?>>?>(true, TopicsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ATopicReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
@@ -1562,8 +1562,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.IdleTime.EqualsWithin(rhs.IdleTime)) return false;
             if (!lhs.Idle.Equals(rhs.Idle)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
+            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
             if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
             return true;
         }
@@ -1573,13 +1573,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.IdleTime);
             hash.Add(item.Idle);
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.SCHR.TryGet(out var SCHRItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(SCHRItem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.SCTX.TryGet(out var SCTXItem))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(SCTXItem);
             }
             hash.Add(item.Topics);
             return hash.ToHashCode();
@@ -1628,26 +1628,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Idle = rhs.Idle.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.SCHR.TryGet(out var SCHRrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.SCHR = SCHRrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.SCHR = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
+                if(rhs.SCTX.TryGet(out var SCTXrhs))
                 {
-                    item.Unknown2 = Unknown2rhs.ToArray();
+                    item.SCTX = SCTXrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown2 = default;
+                    item.SCTX = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
@@ -1781,24 +1781,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Patrol_FieldIndex.Idle,
                     errorMask: errorMask);
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.Unknown) ?? true))
+            if ((item.SCHR != null)
+                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Patrol_FieldIndex.Unknown,
+                    name: nameof(item.SCHR),
+                    item: item.SCHR.Value,
+                    fieldIndex: (int)Patrol_FieldIndex.SCHR,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.Unknown2) ?? true))
+            if ((item.SCTX != null)
+                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)Patrol_FieldIndex.Unknown2,
+                    name: nameof(item.SCTX),
+                    item: item.SCTX.Value,
+                    fieldIndex: (int)Patrol_FieldIndex.SCTX,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
@@ -1963,11 +1963,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.Unknown);
+                case "SCHR":
+                    errorMask?.PushIndex((int)Patrol_FieldIndex.SCHR);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1981,11 +1981,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.Unknown2);
+                case "SCTX":
+                    errorMask?.PushIndex((int)Patrol_FieldIndex.SCTX);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SCTX = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2242,11 +2242,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Patrol_Registration.INAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.SCHR,
                 header: recordTypeConverter.ConvertToCustom(Patrol_Registration.SCHR_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.SCTX,
                 header: recordTypeConverter.ConvertToCustom(Patrol_Registration.SCTX_HEADER));
             PatrolBinaryWriteTranslation.WriteBinaryTopics(
                 writer: writer,
@@ -2323,14 +2323,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x52484353: // SCHR
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown);
+                    item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
                 }
                 case 0x58544353: // SCTX
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown2);
+                    item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
                 }
                 case 0x4F544450: // PDTO
                 {
@@ -2453,13 +2453,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Idle_IsSet => _IdleLocation.HasValue;
         public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SCHR
+        private int? _SCHRLocation;
+        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SCTX
+        private int? _SCTXLocation;
+        public ReadOnlyMemorySlice<Byte>? SCTX => _SCTXLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCTXLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Topics
         partial void TopicsCustomParse(
@@ -2545,13 +2545,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x52484353: // SCHR
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown);
+                    _SCHRLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
                 }
                 case 0x58544353: // SCTX
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Unknown2);
+                    _SCTXLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
                 }
                 case 0x4F544450: // PDTO
                 {

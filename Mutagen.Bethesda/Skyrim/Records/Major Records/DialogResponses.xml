@@ -4,7 +4,7 @@
     <Interface>IDialog</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="FragmentsAdapter" recordType="VMAD" />
-      <ByteArray name="Unknown" recordType="DATA" />
+      <ByteArray name="DATA" recordType="DATA" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
       <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
@@ -53,9 +53,9 @@
   </Object>
   <Object name="DialogResponsesUnknownData" objType="Subrecord" GUID="17054176-0068-49c7-be25-be4e156505d0" ID="357">
     <Fields>
-      <ByteArray name="Unknown" recordType="SCHR" />
-      <FormLink name="Unknown2" recordType="QNAM" refName="SkyrimMajorRecord" />
-      <Bool name="Unknown3" boolAsMarker="NEXT" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <FormLink name="QNAM" recordType="QNAM" refName="SkyrimMajorRecord" />
+      <Bool name="NEXT" boolAsMarker="NEXT" />
     </Fields>
   </Object>
 </Loqui>

@@ -81,16 +81,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPlacedPrimitiveGetter? IPlacedObjectGetter.Primitive => this.Primitive;
         #endregion
-        #region Unknown
+        #region XORD
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _XORD;
+        public MemorySlice<Byte>? XORD
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._XORD;
+            set => this._XORD = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XORD => this.XORD;
         #endregion
         #region OcclusionPlane
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPlacementGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
         #endregion
-        #region Unknown2
-        public Int16 Unknown2 { get; set; } = default;
+        #region Unknown
+        public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
         public FormLinkNullable<Light> LightingTemplate { get; set; } = new FormLinkNullable<Light>();
@@ -261,27 +261,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
         #endregion
-        #region Unknown3
+        #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown3;
-        public MemorySlice<Byte>? Unknown3
+        protected MemorySlice<Byte>? _XWCN;
+        public MemorySlice<Byte>? XWCN
         {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
+            get => this._XWCN;
+            set => this._XWCN = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown3 => this.Unknown3;
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XWCN => this.XWCN;
         #endregion
-        #region Unknown4
+        #region XWCS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown4;
-        public MemorySlice<Byte>? Unknown4
+        protected MemorySlice<Byte>? _XWCS;
+        public MemorySlice<Byte>? XWCS
         {
-            get => this._Unknown4;
-            set => this._Unknown4 = value;
+            get => this._XWCS;
+            set => this._XWCS = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown4 => this.Unknown4;
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XWCS => this.XWCS;
         #endregion
         #region WaterVelocity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -294,37 +294,37 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWaterVelocityGetter? IPlacedObjectGetter.WaterVelocity => this.WaterVelocity;
         #endregion
-        #region Unknown5
+        #region XCVL
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown5;
-        public MemorySlice<Byte>? Unknown5
+        protected MemorySlice<Byte>? _XCVL;
+        public MemorySlice<Byte>? XCVL
         {
-            get => this._Unknown5;
-            set => this._Unknown5 = value;
+            get => this._XCVL;
+            set => this._XCVL = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown5 => this.Unknown5;
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
-        #region Unknown6
-        public FormLinkNullable<ILinkedReference> Unknown6 { get; set; } = new FormLinkNullable<ILinkedReference>();
+        #region XCZR
+        public FormLinkNullable<ILinkedReference> XCZR { get; set; } = new FormLinkNullable<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILinkedReferenceGetter> IPlacedObjectGetter.Unknown6 => this.Unknown6;
+        IFormLinkNullable<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR;
         #endregion
-        #region Unknown7
+        #region XCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown7;
-        public MemorySlice<Byte>? Unknown7
+        protected MemorySlice<Byte>? _XCZA;
+        public MemorySlice<Byte>? XCZA
         {
-            get => this._Unknown7;
-            set => this._Unknown7 = value;
+            get => this._XCZA;
+            set => this._XCZA = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.Unknown7 => this.Unknown7;
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
         #endregion
-        #region Unknown8
-        public FormLinkNullable<Cell> Unknown8 { get; set; } = new FormLinkNullable<Cell>();
+        #region XCZC
+        public FormLinkNullable<Cell> XCZC { get; set; } = new FormLinkNullable<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ICellGetter> IPlacedObjectGetter.Unknown8 => this.Unknown8;
+        IFormLinkNullable<ICellGetter> IPlacedObjectGetter.XCZC => this.XCZC;
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -701,11 +701,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Base = initialValue;
                 this.BoundHalfExtents = initialValue;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
-                this.Unknown = initialValue;
+                this.XORD = initialValue;
                 this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
                 this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
                 this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
-                this.Unknown2 = initialValue;
+                this.Unknown = initialValue;
                 this.LightingTemplate = initialValue;
                 this.ImageSpace = initialValue;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -721,13 +721,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
                 this.TeleportMessageBox = initialValue;
                 this.MultiboundReference = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
+                this.XWCN = initialValue;
+                this.XWCS = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(initialValue, new WaterVelocity.Mask<TItem>(initialValue));
-                this.Unknown5 = initialValue;
-                this.Unknown6 = initialValue;
-                this.Unknown7 = initialValue;
-                this.Unknown8 = initialValue;
+                this.XCVL = initialValue;
+                this.XCZR = initialValue;
+                this.XCZA = initialValue;
+                this.XCZC = initialValue;
                 this.Scale = initialValue;
                 this.SpawnContainer = initialValue;
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(initialValue, new ActivateParents.Mask<TItem>(initialValue));
@@ -770,11 +770,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Base,
                 TItem BoundHalfExtents,
                 TItem Primitive,
-                TItem Unknown,
+                TItem XORD,
                 TItem OcclusionPlane,
                 TItem Portals,
                 TItem RoomPortal,
-                TItem Unknown2,
+                TItem Unknown,
                 TItem LightingTemplate,
                 TItem ImageSpace,
                 TItem LinkedRooms,
@@ -790,13 +790,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TeleportDestination,
                 TItem TeleportMessageBox,
                 TItem MultiboundReference,
-                TItem Unknown3,
-                TItem Unknown4,
+                TItem XWCN,
+                TItem XWCS,
                 TItem WaterVelocity,
-                TItem Unknown5,
-                TItem Unknown6,
-                TItem Unknown7,
-                TItem Unknown8,
+                TItem XCVL,
+                TItem XCZR,
+                TItem XCZA,
+                TItem XCZC,
                 TItem Scale,
                 TItem SpawnContainer,
                 TItem ActivateParents,
@@ -838,11 +838,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Base = Base;
                 this.BoundHalfExtents = BoundHalfExtents;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
-                this.Unknown = Unknown;
+                this.XORD = XORD;
                 this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(OcclusionPlane, new Placement.Mask<TItem>(OcclusionPlane));
                 this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
                 this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(RoomPortal, new Placement.Mask<TItem>(RoomPortal));
-                this.Unknown2 = Unknown2;
+                this.Unknown = Unknown;
                 this.LightingTemplate = LightingTemplate;
                 this.ImageSpace = ImageSpace;
                 this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
@@ -858,13 +858,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
                 this.TeleportMessageBox = TeleportMessageBox;
                 this.MultiboundReference = MultiboundReference;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
+                this.XWCN = XWCN;
+                this.XWCS = XWCS;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(WaterVelocity, new WaterVelocity.Mask<TItem>(WaterVelocity));
-                this.Unknown5 = Unknown5;
-                this.Unknown6 = Unknown6;
-                this.Unknown7 = Unknown7;
-                this.Unknown8 = Unknown8;
+                this.XCVL = XCVL;
+                this.XCZR = XCZR;
+                this.XCZA = XCZA;
+                this.XCZC = XCZC;
                 this.Scale = Scale;
                 this.SpawnContainer = SpawnContainer;
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(ActivateParents, new ActivateParents.Mask<TItem>(ActivateParents));
@@ -909,11 +909,11 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Base;
             public TItem BoundHalfExtents;
             public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
-            public TItem Unknown;
+            public TItem XORD;
             public MaskItem<TItem, Placement.Mask<TItem>?>? OcclusionPlane { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>? Portals;
             public MaskItem<TItem, Placement.Mask<TItem>?>? RoomPortal { get; set; }
-            public TItem Unknown2;
+            public TItem Unknown;
             public TItem LightingTemplate;
             public TItem ImageSpace;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkedRooms;
@@ -929,13 +929,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
             public TItem TeleportMessageBox;
             public TItem MultiboundReference;
-            public TItem Unknown3;
-            public TItem Unknown4;
+            public TItem XWCN;
+            public TItem XWCS;
             public MaskItem<TItem, WaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
-            public TItem Unknown5;
-            public TItem Unknown6;
-            public TItem Unknown7;
-            public TItem Unknown8;
+            public TItem XCVL;
+            public TItem XCZR;
+            public TItem XCZA;
+            public TItem XCZC;
             public TItem Scale;
             public TItem SpawnContainer;
             public MaskItem<TItem, ActivateParents.Mask<TItem>?>? ActivateParents { get; set; }
@@ -982,11 +982,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Base, rhs.Base)) return false;
                 if (!object.Equals(this.BoundHalfExtents, rhs.BoundHalfExtents)) return false;
                 if (!object.Equals(this.Primitive, rhs.Primitive)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.XORD, rhs.XORD)) return false;
                 if (!object.Equals(this.OcclusionPlane, rhs.OcclusionPlane)) return false;
                 if (!object.Equals(this.Portals, rhs.Portals)) return false;
                 if (!object.Equals(this.RoomPortal, rhs.RoomPortal)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
                 if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
                 if (!object.Equals(this.LinkedRooms, rhs.LinkedRooms)) return false;
@@ -1002,13 +1002,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
                 if (!object.Equals(this.TeleportMessageBox, rhs.TeleportMessageBox)) return false;
                 if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
+                if (!object.Equals(this.XWCS, rhs.XWCS)) return false;
                 if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
-                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
-                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
-                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
-                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
+                if (!object.Equals(this.XCVL, rhs.XCVL)) return false;
+                if (!object.Equals(this.XCZR, rhs.XCZR)) return false;
+                if (!object.Equals(this.XCZA, rhs.XCZA)) return false;
+                if (!object.Equals(this.XCZC, rhs.XCZC)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.SpawnContainer, rhs.SpawnContainer)) return false;
                 if (!object.Equals(this.ActivateParents, rhs.ActivateParents)) return false;
@@ -1047,11 +1047,11 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Base);
                 hash.Add(this.BoundHalfExtents);
                 hash.Add(this.Primitive);
-                hash.Add(this.Unknown);
+                hash.Add(this.XORD);
                 hash.Add(this.OcclusionPlane);
                 hash.Add(this.Portals);
                 hash.Add(this.RoomPortal);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Unknown);
                 hash.Add(this.LightingTemplate);
                 hash.Add(this.ImageSpace);
                 hash.Add(this.LinkedRooms);
@@ -1067,13 +1067,13 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.TeleportDestination);
                 hash.Add(this.TeleportMessageBox);
                 hash.Add(this.MultiboundReference);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
+                hash.Add(this.XWCN);
+                hash.Add(this.XWCS);
                 hash.Add(this.WaterVelocity);
-                hash.Add(this.Unknown5);
-                hash.Add(this.Unknown6);
-                hash.Add(this.Unknown7);
-                hash.Add(this.Unknown8);
+                hash.Add(this.XCVL);
+                hash.Add(this.XCZR);
+                hash.Add(this.XCZA);
+                hash.Add(this.XCZC);
                 hash.Add(this.Scale);
                 hash.Add(this.SpawnContainer);
                 hash.Add(this.ActivateParents);
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Primitive.Overall)) return false;
                     if (this.Primitive.Specific != null && !this.Primitive.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.XORD)) return false;
                 if (OcclusionPlane != null)
                 {
                     if (!eval(this.OcclusionPlane.Overall)) return false;
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.RoomPortal.Overall)) return false;
                     if (this.RoomPortal.Specific != null && !this.RoomPortal.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.LightingTemplate)) return false;
                 if (!eval(this.ImageSpace)) return false;
                 if (this.LinkedRooms != null)
@@ -1207,17 +1207,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.TeleportMessageBox)) return false;
                 if (!eval(this.MultiboundReference)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.XWCN)) return false;
+                if (!eval(this.XWCS)) return false;
                 if (WaterVelocity != null)
                 {
                     if (!eval(this.WaterVelocity.Overall)) return false;
                     if (this.WaterVelocity.Specific != null && !this.WaterVelocity.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown5)) return false;
-                if (!eval(this.Unknown6)) return false;
-                if (!eval(this.Unknown7)) return false;
-                if (!eval(this.Unknown8)) return false;
+                if (!eval(this.XCVL)) return false;
+                if (!eval(this.XCZR)) return false;
+                if (!eval(this.XCZA)) return false;
+                if (!eval(this.XCZC)) return false;
                 if (!eval(this.Scale)) return false;
                 if (!eval(this.SpawnContainer)) return false;
                 if (ActivateParents != null)
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Primitive.Overall)) return true;
                     if (this.Primitive.Specific != null && this.Primitive.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.XORD)) return true;
                 if (OcclusionPlane != null)
                 {
                     if (eval(this.OcclusionPlane.Overall)) return true;
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.RoomPortal.Overall)) return true;
                     if (this.RoomPortal.Specific != null && this.RoomPortal.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.LightingTemplate)) return true;
                 if (eval(this.ImageSpace)) return true;
                 if (this.LinkedRooms != null)
@@ -1398,17 +1398,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.TeleportMessageBox)) return true;
                 if (eval(this.MultiboundReference)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
+                if (eval(this.XWCN)) return true;
+                if (eval(this.XWCS)) return true;
                 if (WaterVelocity != null)
                 {
                     if (eval(this.WaterVelocity.Overall)) return true;
                     if (this.WaterVelocity.Specific != null && this.WaterVelocity.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown5)) return true;
-                if (eval(this.Unknown6)) return true;
-                if (eval(this.Unknown7)) return true;
-                if (eval(this.Unknown8)) return true;
+                if (eval(this.XCVL)) return true;
+                if (eval(this.XCZR)) return true;
+                if (eval(this.XCZA)) return true;
+                if (eval(this.XCZC)) return true;
                 if (eval(this.Scale)) return true;
                 if (eval(this.SpawnContainer)) return true;
                 if (ActivateParents != null)
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Base = eval(this.Base);
                 obj.BoundHalfExtents = eval(this.BoundHalfExtents);
                 obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
-                obj.Unknown = eval(this.Unknown);
+                obj.XORD = eval(this.XORD);
                 obj.OcclusionPlane = this.OcclusionPlane == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.OcclusionPlane.Overall), this.OcclusionPlane.Specific?.Translate(eval));
                 if (Portals != null)
                 {
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.RoomPortal = this.RoomPortal == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.RoomPortal.Overall), this.RoomPortal.Specific?.Translate(eval));
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.Unknown = eval(this.Unknown);
                 obj.LightingTemplate = eval(this.LightingTemplate);
                 obj.ImageSpace = eval(this.ImageSpace);
                 if (LinkedRooms != null)
@@ -1580,13 +1580,13 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TeleportDestination = this.TeleportDestination == null ? null : new MaskItem<R, TeleportDestination.Mask<R>?>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
                 obj.TeleportMessageBox = eval(this.TeleportMessageBox);
                 obj.MultiboundReference = eval(this.MultiboundReference);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
+                obj.XWCN = eval(this.XWCN);
+                obj.XWCS = eval(this.XWCS);
                 obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, WaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
-                obj.Unknown5 = eval(this.Unknown5);
-                obj.Unknown6 = eval(this.Unknown6);
-                obj.Unknown7 = eval(this.Unknown7);
-                obj.Unknown8 = eval(this.Unknown8);
+                obj.XCVL = eval(this.XCVL);
+                obj.XCZR = eval(this.XCZR);
+                obj.XCZA = eval(this.XCZA);
+                obj.XCZC = eval(this.XCZC);
                 obj.Scale = eval(this.Scale);
                 obj.SpawnContainer = eval(this.SpawnContainer);
                 obj.ActivateParents = this.ActivateParents == null ? null : new MaskItem<R, ActivateParents.Mask<R>?>(eval(this.ActivateParents.Overall), this.ActivateParents.Specific?.Translate(eval));
@@ -1681,9 +1681,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Primitive?.ToString(fg);
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.XORD ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(XORD, "XORD");
                     }
                     if (printMask?.OcclusionPlane?.Overall ?? true)
                     {
@@ -1716,9 +1716,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         RoomPortal?.ToString(fg);
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.LightingTemplate ?? true)
                     {
@@ -1837,33 +1837,33 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(MultiboundReference, "MultiboundReference");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.XWCN ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(XWCN, "XWCN");
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if (printMask?.XWCS ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        fg.AppendItem(XWCS, "XWCS");
                     }
                     if (printMask?.WaterVelocity?.Overall ?? true)
                     {
                         WaterVelocity?.ToString(fg);
                     }
-                    if (printMask?.Unknown5 ?? true)
+                    if (printMask?.XCVL ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        fg.AppendItem(XCVL, "XCVL");
                     }
-                    if (printMask?.Unknown6 ?? true)
+                    if (printMask?.XCZR ?? true)
                     {
-                        fg.AppendItem(Unknown6, "Unknown6");
+                        fg.AppendItem(XCZR, "XCZR");
                     }
-                    if (printMask?.Unknown7 ?? true)
+                    if (printMask?.XCZA ?? true)
                     {
-                        fg.AppendItem(Unknown7, "Unknown7");
+                        fg.AppendItem(XCZA, "XCZA");
                     }
-                    if (printMask?.Unknown8 ?? true)
+                    if (printMask?.XCZC ?? true)
                     {
-                        fg.AppendItem(Unknown8, "Unknown8");
+                        fg.AppendItem(XCZC, "XCZC");
                     }
                     if (printMask?.Scale ?? true)
                     {
@@ -2035,11 +2035,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Base;
             public Exception? BoundHalfExtents;
             public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
-            public Exception? Unknown;
+            public Exception? XORD;
             public MaskItem<Exception?, Placement.ErrorMask?>? OcclusionPlane;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>? Portals;
             public MaskItem<Exception?, Placement.ErrorMask?>? RoomPortal;
-            public Exception? Unknown2;
+            public Exception? Unknown;
             public Exception? LightingTemplate;
             public Exception? ImageSpace;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkedRooms;
@@ -2055,13 +2055,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
             public Exception? TeleportMessageBox;
             public Exception? MultiboundReference;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
+            public Exception? XWCN;
+            public Exception? XWCS;
             public MaskItem<Exception?, WaterVelocity.ErrorMask?>? WaterVelocity;
-            public Exception? Unknown5;
-            public Exception? Unknown6;
-            public Exception? Unknown7;
-            public Exception? Unknown8;
+            public Exception? XCVL;
+            public Exception? XCZR;
+            public Exception? XCZA;
+            public Exception? XCZC;
             public Exception? Scale;
             public Exception? SpawnContainer;
             public MaskItem<Exception?, ActivateParents.ErrorMask?>? ActivateParents;
@@ -2107,16 +2107,16 @@ namespace Mutagen.Bethesda.Skyrim
                         return BoundHalfExtents;
                     case PlacedObject_FieldIndex.Primitive:
                         return Primitive;
-                    case PlacedObject_FieldIndex.Unknown:
-                        return Unknown;
+                    case PlacedObject_FieldIndex.XORD:
+                        return XORD;
                     case PlacedObject_FieldIndex.OcclusionPlane:
                         return OcclusionPlane;
                     case PlacedObject_FieldIndex.Portals:
                         return Portals;
                     case PlacedObject_FieldIndex.RoomPortal:
                         return RoomPortal;
-                    case PlacedObject_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case PlacedObject_FieldIndex.Unknown:
+                        return Unknown;
                     case PlacedObject_FieldIndex.LightingTemplate:
                         return LightingTemplate;
                     case PlacedObject_FieldIndex.ImageSpace:
@@ -2147,20 +2147,20 @@ namespace Mutagen.Bethesda.Skyrim
                         return TeleportMessageBox;
                     case PlacedObject_FieldIndex.MultiboundReference:
                         return MultiboundReference;
-                    case PlacedObject_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case PlacedObject_FieldIndex.Unknown4:
-                        return Unknown4;
+                    case PlacedObject_FieldIndex.XWCN:
+                        return XWCN;
+                    case PlacedObject_FieldIndex.XWCS:
+                        return XWCS;
                     case PlacedObject_FieldIndex.WaterVelocity:
                         return WaterVelocity;
-                    case PlacedObject_FieldIndex.Unknown5:
-                        return Unknown5;
-                    case PlacedObject_FieldIndex.Unknown6:
-                        return Unknown6;
-                    case PlacedObject_FieldIndex.Unknown7:
-                        return Unknown7;
-                    case PlacedObject_FieldIndex.Unknown8:
-                        return Unknown8;
+                    case PlacedObject_FieldIndex.XCVL:
+                        return XCVL;
+                    case PlacedObject_FieldIndex.XCZR:
+                        return XCZR;
+                    case PlacedObject_FieldIndex.XCZA:
+                        return XCZA;
+                    case PlacedObject_FieldIndex.XCZC:
+                        return XCZC;
                     case PlacedObject_FieldIndex.Scale:
                         return Scale;
                     case PlacedObject_FieldIndex.SpawnContainer:
@@ -2241,8 +2241,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = new MaskItem<Exception?, PlacedPrimitive.ErrorMask?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case PlacedObject_FieldIndex.XORD:
+                        this.XORD = ex;
                         break;
                     case PlacedObject_FieldIndex.OcclusionPlane:
                         this.OcclusionPlane = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
@@ -2253,8 +2253,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.RoomPortal:
                         this.RoomPortal = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case PlacedObject_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case PlacedObject_FieldIndex.LightingTemplate:
                         this.LightingTemplate = ex;
@@ -2301,26 +2301,26 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.MultiboundReference:
                         this.MultiboundReference = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case PlacedObject_FieldIndex.XWCN:
+                        this.XWCN = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case PlacedObject_FieldIndex.XWCS:
+                        this.XWCS = ex;
                         break;
                     case PlacedObject_FieldIndex.WaterVelocity:
                         this.WaterVelocity = new MaskItem<Exception?, WaterVelocity.ErrorMask?>(ex, null);
                         break;
-                    case PlacedObject_FieldIndex.Unknown5:
-                        this.Unknown5 = ex;
+                    case PlacedObject_FieldIndex.XCVL:
+                        this.XCVL = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown6:
-                        this.Unknown6 = ex;
+                    case PlacedObject_FieldIndex.XCZR:
+                        this.XCZR = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown7:
-                        this.Unknown7 = ex;
+                    case PlacedObject_FieldIndex.XCZA:
+                        this.XCZA = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown8:
-                        this.Unknown8 = ex;
+                    case PlacedObject_FieldIndex.XCZC:
+                        this.XCZC = ex;
                         break;
                     case PlacedObject_FieldIndex.Scale:
                         this.Scale = ex;
@@ -2432,8 +2432,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.Primitive:
                         this.Primitive = (MaskItem<Exception?, PlacedPrimitive.ErrorMask?>?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XORD:
+                        this.XORD = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.OcclusionPlane:
                         this.OcclusionPlane = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
@@ -2444,8 +2444,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.RoomPortal:
                         this.RoomPortal = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.LightingTemplate:
                         this.LightingTemplate = (Exception?)obj;
@@ -2492,26 +2492,26 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.MultiboundReference:
                         this.MultiboundReference = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XWCN:
+                        this.XWCN = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XWCS:
+                        this.XWCS = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.WaterVelocity:
                         this.WaterVelocity = (MaskItem<Exception?, WaterVelocity.ErrorMask?>?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XCVL:
+                        this.XCVL = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown6:
-                        this.Unknown6 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XCZR:
+                        this.XCZR = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown7:
-                        this.Unknown7 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XCZA:
+                        this.XCZA = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown8:
-                        this.Unknown8 = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XCZC:
+                        this.XCZC = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
@@ -2613,11 +2613,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Base != null) return true;
                 if (BoundHalfExtents != null) return true;
                 if (Primitive != null) return true;
-                if (Unknown != null) return true;
+                if (XORD != null) return true;
                 if (OcclusionPlane != null) return true;
                 if (Portals != null) return true;
                 if (RoomPortal != null) return true;
-                if (Unknown2 != null) return true;
+                if (Unknown != null) return true;
                 if (LightingTemplate != null) return true;
                 if (ImageSpace != null) return true;
                 if (LinkedRooms != null) return true;
@@ -2633,13 +2633,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (TeleportDestination != null) return true;
                 if (TeleportMessageBox != null) return true;
                 if (MultiboundReference != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
+                if (XWCN != null) return true;
+                if (XWCS != null) return true;
                 if (WaterVelocity != null) return true;
-                if (Unknown5 != null) return true;
-                if (Unknown6 != null) return true;
-                if (Unknown7 != null) return true;
-                if (Unknown8 != null) return true;
+                if (XCVL != null) return true;
+                if (XCZR != null) return true;
+                if (XCZA != null) return true;
+                if (XCZC != null) return true;
                 if (Scale != null) return true;
                 if (SpawnContainer != null) return true;
                 if (ActivateParents != null) return true;
@@ -2708,7 +2708,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Base, "Base");
                 fg.AppendItem(BoundHalfExtents, "BoundHalfExtents");
                 Primitive?.ToString(fg);
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(XORD, "XORD");
                 OcclusionPlane?.ToString(fg);
                 if (Portals.TryGet(out var PortalsItem))
                 {
@@ -2733,7 +2733,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 RoomPortal?.ToString(fg);
-                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(LightingTemplate, "LightingTemplate");
                 fg.AppendItem(ImageSpace, "ImageSpace");
                 if (LinkedRooms.TryGet(out var LinkedRoomsItem))
@@ -2812,13 +2812,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TeleportDestination?.ToString(fg);
                 fg.AppendItem(TeleportMessageBox, "TeleportMessageBox");
                 fg.AppendItem(MultiboundReference, "MultiboundReference");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Unknown4, "Unknown4");
+                fg.AppendItem(XWCN, "XWCN");
+                fg.AppendItem(XWCS, "XWCS");
                 WaterVelocity?.ToString(fg);
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(Unknown6, "Unknown6");
-                fg.AppendItem(Unknown7, "Unknown7");
-                fg.AppendItem(Unknown8, "Unknown8");
+                fg.AppendItem(XCVL, "XCVL");
+                fg.AppendItem(XCZR, "XCZR");
+                fg.AppendItem(XCZA, "XCZA");
+                fg.AppendItem(XCZC, "XCZC");
                 fg.AppendItem(Scale, "Scale");
                 fg.AppendItem(SpawnContainer, "SpawnContainer");
                 ActivateParents?.ToString(fg);
@@ -2902,11 +2902,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Base = this.Base.Combine(rhs.Base);
                 ret.BoundHalfExtents = this.BoundHalfExtents.Combine(rhs.BoundHalfExtents);
                 ret.Primitive = this.Primitive.Combine(rhs.Primitive, (l, r) => l.Combine(r));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.XORD = this.XORD.Combine(rhs.XORD);
                 ret.OcclusionPlane = this.OcclusionPlane.Combine(rhs.OcclusionPlane, (l, r) => l.Combine(r));
                 ret.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ExceptionExt.Combine(this.Portals?.Overall, rhs.Portals?.Overall), ExceptionExt.Combine(this.Portals?.Specific, rhs.Portals?.Specific));
                 ret.RoomPortal = this.RoomPortal.Combine(rhs.RoomPortal, (l, r) => l.Combine(r));
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.LinkedRooms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LinkedRooms?.Overall, rhs.LinkedRooms?.Overall), ExceptionExt.Combine(this.LinkedRooms?.Specific, rhs.LinkedRooms?.Specific));
@@ -2922,13 +2922,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
                 ret.TeleportMessageBox = this.TeleportMessageBox.Combine(rhs.TeleportMessageBox);
                 ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.XWCN = this.XWCN.Combine(rhs.XWCN);
+                ret.XWCS = this.XWCS.Combine(rhs.XWCS);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
-                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
-                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
-                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
-                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
+                ret.XCVL = this.XCVL.Combine(rhs.XCVL);
+                ret.XCZR = this.XCZR.Combine(rhs.XCZR);
+                ret.XCZA = this.XCZA.Combine(rhs.XCZA);
+                ret.XCZC = this.XCZC.Combine(rhs.XCZC);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.SpawnContainer = this.SpawnContainer.Combine(rhs.SpawnContainer);
                 ret.ActivateParents = this.ActivateParents.Combine(rhs.ActivateParents, (l, r) => l.Combine(r));
@@ -2984,11 +2984,11 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Base;
             public bool BoundHalfExtents;
             public MaskItem<bool, PlacedPrimitive.TranslationMask?> Primitive;
-            public bool Unknown;
+            public bool XORD;
             public MaskItem<bool, Placement.TranslationMask?> OcclusionPlane;
             public MaskItem<bool, Portal.TranslationMask?> Portals;
             public MaskItem<bool, Placement.TranslationMask?> RoomPortal;
-            public bool Unknown2;
+            public bool Unknown;
             public bool LightingTemplate;
             public bool ImageSpace;
             public bool LinkedRooms;
@@ -3004,13 +3004,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, TeleportDestination.TranslationMask?> TeleportDestination;
             public bool TeleportMessageBox;
             public bool MultiboundReference;
-            public bool Unknown3;
-            public bool Unknown4;
+            public bool XWCN;
+            public bool XWCS;
             public MaskItem<bool, WaterVelocity.TranslationMask?> WaterVelocity;
-            public bool Unknown5;
-            public bool Unknown6;
-            public bool Unknown7;
-            public bool Unknown8;
+            public bool XCVL;
+            public bool XCZR;
+            public bool XCZA;
+            public bool XCZC;
             public bool Scale;
             public bool SpawnContainer;
             public MaskItem<bool, ActivateParents.TranslationMask?> ActivateParents;
@@ -3050,11 +3050,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Base = defaultOn;
                 this.BoundHalfExtents = defaultOn;
                 this.Primitive = new MaskItem<bool, PlacedPrimitive.TranslationMask?>(defaultOn, null);
-                this.Unknown = defaultOn;
+                this.XORD = defaultOn;
                 this.OcclusionPlane = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
                 this.Portals = new MaskItem<bool, Portal.TranslationMask?>(defaultOn, null);
                 this.RoomPortal = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
-                this.Unknown2 = defaultOn;
+                this.Unknown = defaultOn;
                 this.LightingTemplate = defaultOn;
                 this.ImageSpace = defaultOn;
                 this.LinkedRooms = defaultOn;
@@ -3070,13 +3070,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TeleportDestination = new MaskItem<bool, TeleportDestination.TranslationMask?>(defaultOn, null);
                 this.TeleportMessageBox = defaultOn;
                 this.MultiboundReference = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
+                this.XWCN = defaultOn;
+                this.XWCS = defaultOn;
                 this.WaterVelocity = new MaskItem<bool, WaterVelocity.TranslationMask?>(defaultOn, null);
-                this.Unknown5 = defaultOn;
-                this.Unknown6 = defaultOn;
-                this.Unknown7 = defaultOn;
-                this.Unknown8 = defaultOn;
+                this.XCVL = defaultOn;
+                this.XCZR = defaultOn;
+                this.XCZA = defaultOn;
+                this.XCZC = defaultOn;
                 this.Scale = defaultOn;
                 this.SpawnContainer = defaultOn;
                 this.ActivateParents = new MaskItem<bool, ActivateParents.TranslationMask?>(defaultOn, null);
@@ -3117,11 +3117,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Base, null));
                 ret.Add((BoundHalfExtents, null));
                 ret.Add((Primitive?.Overall ?? true, Primitive?.Specific?.GetCrystal()));
-                ret.Add((Unknown, null));
+                ret.Add((XORD, null));
                 ret.Add((OcclusionPlane?.Overall ?? true, OcclusionPlane?.Specific?.GetCrystal()));
                 ret.Add((Portals?.Overall ?? true, Portals?.Specific?.GetCrystal()));
                 ret.Add((RoomPortal?.Overall ?? true, RoomPortal?.Specific?.GetCrystal()));
-                ret.Add((Unknown2, null));
+                ret.Add((Unknown, null));
                 ret.Add((LightingTemplate, null));
                 ret.Add((ImageSpace, null));
                 ret.Add((LinkedRooms, null));
@@ -3137,13 +3137,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
                 ret.Add((TeleportMessageBox, null));
                 ret.Add((MultiboundReference, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
+                ret.Add((XWCN, null));
+                ret.Add((XWCS, null));
                 ret.Add((WaterVelocity?.Overall ?? true, WaterVelocity?.Specific?.GetCrystal()));
-                ret.Add((Unknown5, null));
-                ret.Add((Unknown6, null));
-                ret.Add((Unknown7, null));
-                ret.Add((Unknown8, null));
+                ret.Add((XCVL, null));
+                ret.Add((XCZR, null));
+                ret.Add((XCZA, null));
+                ret.Add((XCZC, null));
                 ret.Add((Scale, null));
                 ret.Add((SpawnContainer, null));
                 ret.Add((ActivateParents?.Overall ?? true, ActivateParents?.Specific?.GetCrystal()));
@@ -3277,11 +3277,11 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SkyrimMajorRecord> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? XORD { get; set; }
         new Placement? OcclusionPlane { get; set; }
         new ExtendedList<Portal>? Portals { get; set; }
         new Placement? RoomPortal { get; set; }
-        new Int16 Unknown2 { get; set; }
+        new Int16 Unknown { get; set; }
         new FormLinkNullable<Light> LightingTemplate { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new ExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
@@ -3297,13 +3297,13 @@ namespace Mutagen.Bethesda.Skyrim
         new TeleportDestination? TeleportDestination { get; set; }
         new FormLinkNullable<Message> TeleportMessageBox { get; set; }
         new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
-        new MemorySlice<Byte>? Unknown3 { get; set; }
-        new MemorySlice<Byte>? Unknown4 { get; set; }
+        new MemorySlice<Byte>? XWCN { get; set; }
+        new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
-        new MemorySlice<Byte>? Unknown5 { get; set; }
-        new FormLinkNullable<ILinkedReference> Unknown6 { get; set; }
-        new MemorySlice<Byte>? Unknown7 { get; set; }
-        new FormLinkNullable<Cell> Unknown8 { get; set; }
+        new MemorySlice<Byte>? XCVL { get; set; }
+        new FormLinkNullable<ILinkedReference> XCZR { get; set; }
+        new MemorySlice<Byte>? XCZA { get; set; }
+        new FormLinkNullable<Cell> XCZC { get; set; }
         new Single? Scale { get; set; }
         new FormLinkNullable<PlacedObject> SpawnContainer { get; set; }
         new ActivateParents? ActivateParents { get; set; }
@@ -3359,11 +3359,11 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; }
         P3Float? BoundHalfExtents { get; }
         IPlacedPrimitiveGetter? Primitive { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? XORD { get; }
         IPlacementGetter? OcclusionPlane { get; }
         IReadOnlyList<IPortalGetter>? Portals { get; }
         IPlacementGetter? RoomPortal { get; }
-        Int16 Unknown2 { get; }
+        Int16 Unknown { get; }
         IFormLinkNullable<ILightGetter> LightingTemplate { get; }
         IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
         IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; }
@@ -3379,13 +3379,13 @@ namespace Mutagen.Bethesda.Skyrim
         ITeleportDestinationGetter? TeleportDestination { get; }
         IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; }
         IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown4 { get; }
+        ReadOnlyMemorySlice<Byte>? XWCN { get; }
+        ReadOnlyMemorySlice<Byte>? XWCS { get; }
         IWaterVelocityGetter? WaterVelocity { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown5 { get; }
-        IFormLinkNullable<ILinkedReferenceGetter> Unknown6 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown7 { get; }
-        IFormLinkNullable<ICellGetter> Unknown8 { get; }
+        ReadOnlyMemorySlice<Byte>? XCVL { get; }
+        IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; }
+        ReadOnlyMemorySlice<Byte>? XCZA { get; }
+        IFormLinkNullable<ICellGetter> XCZC { get; }
         Single? Scale { get; }
         IFormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; }
         IActivateParentsGetter? ActivateParents { get; }
@@ -3719,11 +3719,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Base = 7,
         BoundHalfExtents = 8,
         Primitive = 9,
-        Unknown = 10,
+        XORD = 10,
         OcclusionPlane = 11,
         Portals = 12,
         RoomPortal = 13,
-        Unknown2 = 14,
+        Unknown = 14,
         LightingTemplate = 15,
         ImageSpace = 16,
         LinkedRooms = 17,
@@ -3739,13 +3739,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         TeleportDestination = 27,
         TeleportMessageBox = 28,
         MultiboundReference = 29,
-        Unknown3 = 30,
-        Unknown4 = 31,
+        XWCN = 30,
+        XWCS = 31,
         WaterVelocity = 32,
-        Unknown5 = 33,
-        Unknown6 = 34,
-        Unknown7 = 35,
-        Unknown8 = 36,
+        XCVL = 33,
+        XCZR = 34,
+        XCZA = 35,
+        XCZC = 36,
         Scale = 37,
         SpawnContainer = 38,
         ActivateParents = 39,
@@ -3832,16 +3832,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)PlacedObject_FieldIndex.BoundHalfExtents;
                 case "PRIMITIVE":
                     return (ushort)PlacedObject_FieldIndex.Primitive;
-                case "UNKNOWN":
-                    return (ushort)PlacedObject_FieldIndex.Unknown;
+                case "XORD":
+                    return (ushort)PlacedObject_FieldIndex.XORD;
                 case "OCCLUSIONPLANE":
                     return (ushort)PlacedObject_FieldIndex.OcclusionPlane;
                 case "PORTALS":
                     return (ushort)PlacedObject_FieldIndex.Portals;
                 case "ROOMPORTAL":
                     return (ushort)PlacedObject_FieldIndex.RoomPortal;
-                case "UNKNOWN2":
-                    return (ushort)PlacedObject_FieldIndex.Unknown2;
+                case "UNKNOWN":
+                    return (ushort)PlacedObject_FieldIndex.Unknown;
                 case "LIGHTINGTEMPLATE":
                     return (ushort)PlacedObject_FieldIndex.LightingTemplate;
                 case "IMAGESPACE":
@@ -3872,20 +3872,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)PlacedObject_FieldIndex.TeleportMessageBox;
                 case "MULTIBOUNDREFERENCE":
                     return (ushort)PlacedObject_FieldIndex.MultiboundReference;
-                case "UNKNOWN3":
-                    return (ushort)PlacedObject_FieldIndex.Unknown3;
-                case "UNKNOWN4":
-                    return (ushort)PlacedObject_FieldIndex.Unknown4;
+                case "XWCN":
+                    return (ushort)PlacedObject_FieldIndex.XWCN;
+                case "XWCS":
+                    return (ushort)PlacedObject_FieldIndex.XWCS;
                 case "WATERVELOCITY":
                     return (ushort)PlacedObject_FieldIndex.WaterVelocity;
-                case "UNKNOWN5":
-                    return (ushort)PlacedObject_FieldIndex.Unknown5;
-                case "UNKNOWN6":
-                    return (ushort)PlacedObject_FieldIndex.Unknown6;
-                case "UNKNOWN7":
-                    return (ushort)PlacedObject_FieldIndex.Unknown7;
-                case "UNKNOWN8":
-                    return (ushort)PlacedObject_FieldIndex.Unknown8;
+                case "XCVL":
+                    return (ushort)PlacedObject_FieldIndex.XCVL;
+                case "XCZR":
+                    return (ushort)PlacedObject_FieldIndex.XCZR;
+                case "XCZA":
+                    return (ushort)PlacedObject_FieldIndex.XCZA;
+                case "XCZC":
+                    return (ushort)PlacedObject_FieldIndex.XCZC;
                 case "SCALE":
                     return (ushort)PlacedObject_FieldIndex.Scale;
                 case "SPAWNCONTAINER":
@@ -3965,10 +3965,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
                 case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XORD:
                 case PlacedObject_FieldIndex.OcclusionPlane:
                 case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.Unknown:
                 case PlacedObject_FieldIndex.LightingTemplate:
                 case PlacedObject_FieldIndex.ImageSpace:
                 case PlacedObject_FieldIndex.MultiBoundPrimitive:
@@ -3981,13 +3981,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.TeleportMessageBox:
                 case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.Unknown3:
-                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.XWCN:
+                case PlacedObject_FieldIndex.XWCS:
                 case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.Unknown5:
-                case PlacedObject_FieldIndex.Unknown6:
-                case PlacedObject_FieldIndex.Unknown7:
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XCVL:
+                case PlacedObject_FieldIndex.XCZR:
+                case PlacedObject_FieldIndex.XCZA:
+                case PlacedObject_FieldIndex.XCZC:
                 case PlacedObject_FieldIndex.Scale:
                 case PlacedObject_FieldIndex.SpawnContainer:
                 case PlacedObject_FieldIndex.ActivateParents:
@@ -4047,8 +4047,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
+                case PlacedObject_FieldIndex.XORD:
                 case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.Unknown2:
                 case PlacedObject_FieldIndex.LightingTemplate:
                 case PlacedObject_FieldIndex.ImageSpace:
                 case PlacedObject_FieldIndex.LinkedRooms:
@@ -4060,12 +4060,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Emittance:
                 case PlacedObject_FieldIndex.TeleportMessageBox:
                 case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.Unknown3:
-                case PlacedObject_FieldIndex.Unknown4:
-                case PlacedObject_FieldIndex.Unknown5:
-                case PlacedObject_FieldIndex.Unknown6:
-                case PlacedObject_FieldIndex.Unknown7:
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XWCN:
+                case PlacedObject_FieldIndex.XWCS:
+                case PlacedObject_FieldIndex.XCVL:
+                case PlacedObject_FieldIndex.XCZR:
+                case PlacedObject_FieldIndex.XCZA:
+                case PlacedObject_FieldIndex.XCZC:
                 case PlacedObject_FieldIndex.Scale:
                 case PlacedObject_FieldIndex.SpawnContainer:
                 case PlacedObject_FieldIndex.LeveledItemBaseObject:
@@ -4102,11 +4102,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
                 case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XORD:
                 case PlacedObject_FieldIndex.OcclusionPlane:
                 case PlacedObject_FieldIndex.Portals:
                 case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.Unknown:
                 case PlacedObject_FieldIndex.LightingTemplate:
                 case PlacedObject_FieldIndex.ImageSpace:
                 case PlacedObject_FieldIndex.LinkedRooms:
@@ -4122,13 +4122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.TeleportMessageBox:
                 case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.Unknown3:
-                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.XWCN:
+                case PlacedObject_FieldIndex.XWCS:
                 case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.Unknown5:
-                case PlacedObject_FieldIndex.Unknown6:
-                case PlacedObject_FieldIndex.Unknown7:
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XCVL:
+                case PlacedObject_FieldIndex.XCZR:
+                case PlacedObject_FieldIndex.XCZA:
+                case PlacedObject_FieldIndex.XCZC:
                 case PlacedObject_FieldIndex.Scale:
                 case PlacedObject_FieldIndex.SpawnContainer:
                 case PlacedObject_FieldIndex.ActivateParents:
@@ -4177,16 +4177,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BoundHalfExtents";
                 case PlacedObject_FieldIndex.Primitive:
                     return "Primitive";
-                case PlacedObject_FieldIndex.Unknown:
-                    return "Unknown";
+                case PlacedObject_FieldIndex.XORD:
+                    return "XORD";
                 case PlacedObject_FieldIndex.OcclusionPlane:
                     return "OcclusionPlane";
                 case PlacedObject_FieldIndex.Portals:
                     return "Portals";
                 case PlacedObject_FieldIndex.RoomPortal:
                     return "RoomPortal";
-                case PlacedObject_FieldIndex.Unknown2:
-                    return "Unknown2";
+                case PlacedObject_FieldIndex.Unknown:
+                    return "Unknown";
                 case PlacedObject_FieldIndex.LightingTemplate:
                     return "LightingTemplate";
                 case PlacedObject_FieldIndex.ImageSpace:
@@ -4217,20 +4217,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "TeleportMessageBox";
                 case PlacedObject_FieldIndex.MultiboundReference:
                     return "MultiboundReference";
-                case PlacedObject_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case PlacedObject_FieldIndex.Unknown4:
-                    return "Unknown4";
+                case PlacedObject_FieldIndex.XWCN:
+                    return "XWCN";
+                case PlacedObject_FieldIndex.XWCS:
+                    return "XWCS";
                 case PlacedObject_FieldIndex.WaterVelocity:
                     return "WaterVelocity";
-                case PlacedObject_FieldIndex.Unknown5:
-                    return "Unknown5";
-                case PlacedObject_FieldIndex.Unknown6:
-                    return "Unknown6";
-                case PlacedObject_FieldIndex.Unknown7:
-                    return "Unknown7";
-                case PlacedObject_FieldIndex.Unknown8:
-                    return "Unknown8";
+                case PlacedObject_FieldIndex.XCVL:
+                    return "XCVL";
+                case PlacedObject_FieldIndex.XCZR:
+                    return "XCZR";
+                case PlacedObject_FieldIndex.XCZA:
+                    return "XCZA";
+                case PlacedObject_FieldIndex.XCZC:
+                    return "XCZC";
                 case PlacedObject_FieldIndex.Scale:
                     return "Scale";
                 case PlacedObject_FieldIndex.SpawnContainer:
@@ -4303,11 +4303,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
                 case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XORD:
                 case PlacedObject_FieldIndex.OcclusionPlane:
                 case PlacedObject_FieldIndex.Portals:
                 case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.Unknown:
                 case PlacedObject_FieldIndex.LightingTemplate:
                 case PlacedObject_FieldIndex.ImageSpace:
                 case PlacedObject_FieldIndex.LinkedRooms:
@@ -4323,13 +4323,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.TeleportMessageBox:
                 case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.Unknown3:
-                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.XWCN:
+                case PlacedObject_FieldIndex.XWCS:
                 case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.Unknown5:
-                case PlacedObject_FieldIndex.Unknown6:
-                case PlacedObject_FieldIndex.Unknown7:
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XCVL:
+                case PlacedObject_FieldIndex.XCZR:
+                case PlacedObject_FieldIndex.XCZA:
+                case PlacedObject_FieldIndex.XCZC:
                 case PlacedObject_FieldIndex.Scale:
                 case PlacedObject_FieldIndex.SpawnContainer:
                 case PlacedObject_FieldIndex.ActivateParents:
@@ -4374,11 +4374,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
                 case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XORD:
                 case PlacedObject_FieldIndex.OcclusionPlane:
                 case PlacedObject_FieldIndex.Portals:
                 case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.Unknown:
                 case PlacedObject_FieldIndex.LightingTemplate:
                 case PlacedObject_FieldIndex.ImageSpace:
                 case PlacedObject_FieldIndex.LinkedRooms:
@@ -4394,13 +4394,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.TeleportMessageBox:
                 case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.Unknown3:
-                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.XWCN:
+                case PlacedObject_FieldIndex.XWCS:
                 case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.Unknown5:
-                case PlacedObject_FieldIndex.Unknown6:
-                case PlacedObject_FieldIndex.Unknown7:
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XCVL:
+                case PlacedObject_FieldIndex.XCZR:
+                case PlacedObject_FieldIndex.XCZA:
+                case PlacedObject_FieldIndex.XCZC:
                 case PlacedObject_FieldIndex.Scale:
                 case PlacedObject_FieldIndex.SpawnContainer:
                 case PlacedObject_FieldIndex.ActivateParents:
@@ -4449,7 +4449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(P3Float);
                 case PlacedObject_FieldIndex.Primitive:
                     return typeof(PlacedPrimitive);
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XORD:
                     return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.OcclusionPlane:
                     return typeof(Placement);
@@ -4457,7 +4457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<Portal>);
                 case PlacedObject_FieldIndex.RoomPortal:
                     return typeof(Placement);
-                case PlacedObject_FieldIndex.Unknown2:
+                case PlacedObject_FieldIndex.Unknown:
                     return typeof(Int16);
                 case PlacedObject_FieldIndex.LightingTemplate:
                     return typeof(FormLinkNullable<Light>);
@@ -4489,19 +4489,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<Message>);
                 case PlacedObject_FieldIndex.MultiboundReference:
                     return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedObject_FieldIndex.Unknown3:
+                case PlacedObject_FieldIndex.XWCN:
                     return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Unknown4:
+                case PlacedObject_FieldIndex.XWCS:
                     return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.WaterVelocity:
                     return typeof(WaterVelocity);
-                case PlacedObject_FieldIndex.Unknown5:
+                case PlacedObject_FieldIndex.XCVL:
                     return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Unknown6:
+                case PlacedObject_FieldIndex.XCZR:
                     return typeof(FormLinkNullable<ILinkedReference>);
-                case PlacedObject_FieldIndex.Unknown7:
+                case PlacedObject_FieldIndex.XCZA:
                     return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Unknown8:
+                case PlacedObject_FieldIndex.XCZC:
                     return typeof(FormLinkNullable<Cell>);
                 case PlacedObject_FieldIndex.Scale:
                     return typeof(Single);
@@ -4674,11 +4674,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Base = FormLinkNullable<SkyrimMajorRecord>.Null;
             item.BoundHalfExtents = default;
             item.Primitive = null;
-            item.Unknown = default;
+            item.XORD = default;
             item.OcclusionPlane = null;
             item.Portals = null;
             item.RoomPortal = null;
-            item.Unknown2 = default;
+            item.Unknown = default;
             item.LightingTemplate = FormLinkNullable<Light>.Null;
             item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
             item.LinkedRooms.Clear();
@@ -4694,13 +4694,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TeleportDestination = null;
             item.TeleportMessageBox = FormLinkNullable<Message>.Null;
             item.MultiboundReference = FormLinkNullable<PlacedObject>.Null;
-            item.Unknown3 = default;
-            item.Unknown4 = default;
+            item.XWCN = default;
+            item.XWCS = default;
             item.WaterVelocity = null;
-            item.Unknown5 = default;
-            item.Unknown6 = FormLinkNullable<ILinkedReference>.Null;
-            item.Unknown7 = default;
-            item.Unknown8 = FormLinkNullable<Cell>.Null;
+            item.XCVL = default;
+            item.XCZR = FormLinkNullable<ILinkedReference>.Null;
+            item.XCZA = default;
+            item.XCZC = FormLinkNullable<Cell>.Null;
             item.Scale = default;
             item.SpawnContainer = FormLinkNullable<PlacedObject>.Null;
             item.ActivateParents = null;
@@ -4899,7 +4899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Primitive,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.XORD = MemorySliceExt.Equal(item.XORD, rhs.XORD);
             ret.OcclusionPlane = EqualsMaskHelper.EqualsHelper(
                 item.OcclusionPlane,
                 rhs.OcclusionPlane,
@@ -4914,7 +4914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.RoomPortal,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.LightingTemplate = object.Equals(item.LightingTemplate, rhs.LightingTemplate);
             ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
             ret.LinkedRooms = item.LinkedRooms.CollectionEqualsHelper(
@@ -4951,17 +4951,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.TeleportMessageBox = object.Equals(item.TeleportMessageBox, rhs.TeleportMessageBox);
             ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
-            ret.Unknown4 = MemorySliceExt.Equal(item.Unknown4, rhs.Unknown4);
+            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
+            ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown5 = MemorySliceExt.Equal(item.Unknown5, rhs.Unknown5);
-            ret.Unknown6 = object.Equals(item.Unknown6, rhs.Unknown6);
-            ret.Unknown7 = MemorySliceExt.Equal(item.Unknown7, rhs.Unknown7);
-            ret.Unknown8 = object.Equals(item.Unknown8, rhs.Unknown8);
+            ret.XCVL = MemorySliceExt.Equal(item.XCVL, rhs.XCVL);
+            ret.XCZR = object.Equals(item.XCZR, rhs.XCZR);
+            ret.XCZA = MemorySliceExt.Equal(item.XCZA, rhs.XCZA);
+            ret.XCZC = object.Equals(item.XCZC, rhs.XCZC);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.SpawnContainer = object.Equals(item.SpawnContainer, rhs.SpawnContainer);
             ret.ActivateParents = EqualsMaskHelper.EqualsHelper(
@@ -5096,10 +5096,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 PrimitiveItem?.ToString(fg, "Primitive");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.XORD ?? true)
+                && item.XORD.TryGet(out var XORDItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"XORD => {SpanExt.ToHexString(XORDItem)}");
             }
             if ((printMask?.OcclusionPlane?.Overall ?? true)
                 && item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
@@ -5130,9 +5130,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 RoomPortalItem?.ToString(fg, "RoomPortal");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.LightingTemplate ?? true)
                 && item.LightingTemplate.TryGet(out var LightingTemplateItem))
@@ -5247,40 +5247,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(MultiboundReferenceItem, "MultiboundReference");
             }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
+            if ((printMask?.XWCN ?? true)
+                && item.XWCN.TryGet(out var XWCNItem))
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                fg.AppendLine($"XWCN => {SpanExt.ToHexString(XWCNItem)}");
             }
-            if ((printMask?.Unknown4 ?? true)
-                && item.Unknown4.TryGet(out var Unknown4Item))
+            if ((printMask?.XWCS ?? true)
+                && item.XWCS.TryGet(out var XWCSItem))
             {
-                fg.AppendLine($"Unknown4 => {SpanExt.ToHexString(Unknown4Item)}");
+                fg.AppendLine($"XWCS => {SpanExt.ToHexString(XWCSItem)}");
             }
             if ((printMask?.WaterVelocity?.Overall ?? true)
                 && item.WaterVelocity.TryGet(out var WaterVelocityItem))
             {
                 WaterVelocityItem?.ToString(fg, "WaterVelocity");
             }
-            if ((printMask?.Unknown5 ?? true)
-                && item.Unknown5.TryGet(out var Unknown5Item))
+            if ((printMask?.XCVL ?? true)
+                && item.XCVL.TryGet(out var XCVLItem))
             {
-                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(Unknown5Item)}");
+                fg.AppendLine($"XCVL => {SpanExt.ToHexString(XCVLItem)}");
             }
-            if ((printMask?.Unknown6 ?? true)
-                && item.Unknown6.TryGet(out var Unknown6Item))
+            if ((printMask?.XCZR ?? true)
+                && item.XCZR.TryGet(out var XCZRItem))
             {
-                fg.AppendItem(Unknown6Item, "Unknown6");
+                fg.AppendItem(XCZRItem, "XCZR");
             }
-            if ((printMask?.Unknown7 ?? true)
-                && item.Unknown7.TryGet(out var Unknown7Item))
+            if ((printMask?.XCZA ?? true)
+                && item.XCZA.TryGet(out var XCZAItem))
             {
-                fg.AppendLine($"Unknown7 => {SpanExt.ToHexString(Unknown7Item)}");
+                fg.AppendLine($"XCZA => {SpanExt.ToHexString(XCZAItem)}");
             }
-            if ((printMask?.Unknown8 ?? true)
-                && item.Unknown8.TryGet(out var Unknown8Item))
+            if ((printMask?.XCZC ?? true)
+                && item.XCZC.TryGet(out var XCZCItem))
             {
-                fg.AppendItem(Unknown8Item, "Unknown8");
+                fg.AppendItem(XCZCItem, "XCZC");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale.TryGet(out var ScaleItem))
@@ -5461,7 +5461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.BoundHalfExtents.HasValue && checkMask.BoundHalfExtents.Value != (item.BoundHalfExtents != null)) return false;
             if (checkMask.Primitive?.Overall.HasValue ?? false && checkMask.Primitive.Overall.Value != (item.Primitive != null)) return false;
             if (checkMask.Primitive?.Specific != null && (item.Primitive == null || !item.Primitive.HasBeenSet(checkMask.Primitive.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.XORD.HasValue && checkMask.XORD.Value != (item.XORD != null)) return false;
             if (checkMask.OcclusionPlane?.Overall.HasValue ?? false && checkMask.OcclusionPlane.Overall.Value != (item.OcclusionPlane != null)) return false;
             if (checkMask.OcclusionPlane?.Specific != null && (item.OcclusionPlane == null || !item.OcclusionPlane.HasBeenSet(checkMask.OcclusionPlane.Specific))) return false;
             if (checkMask.Portals?.Overall.HasValue ?? false && checkMask.Portals!.Overall.Value != (item.Portals != null)) return false;
@@ -5481,14 +5481,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.TeleportDestination?.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
             if (checkMask.TeleportMessageBox.HasValue && checkMask.TeleportMessageBox.Value != (item.TeleportMessageBox.FormKey != null)) return false;
             if (checkMask.MultiboundReference.HasValue && checkMask.MultiboundReference.Value != (item.MultiboundReference.FormKey != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
-            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
+            if (checkMask.XWCN.HasValue && checkMask.XWCN.Value != (item.XWCN != null)) return false;
+            if (checkMask.XWCS.HasValue && checkMask.XWCS.Value != (item.XWCS != null)) return false;
             if (checkMask.WaterVelocity?.Overall.HasValue ?? false && checkMask.WaterVelocity.Overall.Value != (item.WaterVelocity != null)) return false;
             if (checkMask.WaterVelocity?.Specific != null && (item.WaterVelocity == null || !item.WaterVelocity.HasBeenSet(checkMask.WaterVelocity.Specific))) return false;
-            if (checkMask.Unknown5.HasValue && checkMask.Unknown5.Value != (item.Unknown5 != null)) return false;
-            if (checkMask.Unknown6.HasValue && checkMask.Unknown6.Value != (item.Unknown6.FormKey != null)) return false;
-            if (checkMask.Unknown7.HasValue && checkMask.Unknown7.Value != (item.Unknown7 != null)) return false;
-            if (checkMask.Unknown8.HasValue && checkMask.Unknown8.Value != (item.Unknown8.FormKey != null)) return false;
+            if (checkMask.XCVL.HasValue && checkMask.XCVL.Value != (item.XCVL != null)) return false;
+            if (checkMask.XCZR.HasValue && checkMask.XCZR.Value != (item.XCZR.FormKey != null)) return false;
+            if (checkMask.XCZA.HasValue && checkMask.XCZA.Value != (item.XCZA != null)) return false;
+            if (checkMask.XCZC.HasValue && checkMask.XCZC.Value != (item.XCZC.FormKey != null)) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
             if (checkMask.SpawnContainer.HasValue && checkMask.SpawnContainer.Value != (item.SpawnContainer.FormKey != null)) return false;
             if (checkMask.ActivateParents?.Overall.HasValue ?? false && checkMask.ActivateParents.Overall.Value != (item.ActivateParents != null)) return false;
@@ -5534,7 +5534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.BoundHalfExtents = (item.BoundHalfExtents != null);
             var itemPrimitive = item.Primitive;
             mask.Primitive = new MaskItem<bool, PlacedPrimitive.Mask<bool>?>(itemPrimitive != null, itemPrimitive?.GetHasBeenSetMask());
-            mask.Unknown = (item.Unknown != null);
+            mask.XORD = (item.XORD != null);
             var itemOcclusionPlane = item.OcclusionPlane;
             mask.OcclusionPlane = new MaskItem<bool, Placement.Mask<bool>?>(itemOcclusionPlane != null, itemOcclusionPlane?.GetHasBeenSetMask());
             if (item.Portals.TryGet(out var PortalsItem))
@@ -5543,7 +5543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             var itemRoomPortal = item.RoomPortal;
             mask.RoomPortal = new MaskItem<bool, Placement.Mask<bool>?>(itemRoomPortal != null, itemRoomPortal?.GetHasBeenSetMask());
-            mask.Unknown2 = true;
+            mask.Unknown = true;
             mask.LightingTemplate = (item.LightingTemplate.FormKey != null);
             mask.ImageSpace = (item.ImageSpace.FormKey != null);
             mask.LinkedRooms = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
@@ -5563,14 +5563,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.TeleportDestination = new MaskItem<bool, TeleportDestination.Mask<bool>?>(itemTeleportDestination != null, itemTeleportDestination?.GetHasBeenSetMask());
             mask.TeleportMessageBox = (item.TeleportMessageBox.FormKey != null);
             mask.MultiboundReference = (item.MultiboundReference.FormKey != null);
-            mask.Unknown3 = (item.Unknown3 != null);
-            mask.Unknown4 = (item.Unknown4 != null);
+            mask.XWCN = (item.XWCN != null);
+            mask.XWCS = (item.XWCS != null);
             var itemWaterVelocity = item.WaterVelocity;
             mask.WaterVelocity = new MaskItem<bool, WaterVelocity.Mask<bool>?>(itemWaterVelocity != null, itemWaterVelocity?.GetHasBeenSetMask());
-            mask.Unknown5 = (item.Unknown5 != null);
-            mask.Unknown6 = (item.Unknown6.FormKey != null);
-            mask.Unknown7 = (item.Unknown7 != null);
-            mask.Unknown8 = (item.Unknown8.FormKey != null);
+            mask.XCVL = (item.XCVL != null);
+            mask.XCZR = (item.XCZR.FormKey != null);
+            mask.XCZA = (item.XCZA != null);
+            mask.XCZC = (item.XCZC.FormKey != null);
             mask.Scale = (item.Scale != null);
             mask.SpawnContainer = (item.SpawnContainer.FormKey != null);
             var itemActivateParents = item.ActivateParents;
@@ -5663,11 +5663,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.BoundHalfExtents.Equals(rhs.BoundHalfExtents)) return false;
             if (!object.Equals(lhs.Primitive, rhs.Primitive)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.XORD, rhs.XORD)) return false;
             if (!object.Equals(lhs.OcclusionPlane, rhs.OcclusionPlane)) return false;
             if (!lhs.Portals.SequenceEqual(rhs.Portals)) return false;
             if (!object.Equals(lhs.RoomPortal, rhs.RoomPortal)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
             if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
             if (!lhs.LinkedRooms.SequenceEqual(rhs.LinkedRooms)) return false;
@@ -5683,13 +5683,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
             if (!lhs.TeleportMessageBox.Equals(rhs.TeleportMessageBox)) return false;
             if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown4, rhs.Unknown4)) return false;
+            if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+            if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
             if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown5, rhs.Unknown5)) return false;
-            if (!lhs.Unknown6.Equals(rhs.Unknown6)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown7, rhs.Unknown7)) return false;
-            if (!lhs.Unknown8.Equals(rhs.Unknown8)) return false;
+            if (!MemorySliceExt.Equal(lhs.XCVL, rhs.XCVL)) return false;
+            if (!lhs.XCZR.Equals(rhs.XCZR)) return false;
+            if (!MemorySliceExt.Equal(lhs.XCZA, rhs.XCZA)) return false;
+            if (!lhs.XCZC.Equals(rhs.XCZC)) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!lhs.SpawnContainer.Equals(rhs.SpawnContainer)) return false;
             if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
@@ -5759,9 +5759,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Primitiveitem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.XORD.TryGet(out var XORDItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(XORDItem);
             }
             if (item.OcclusionPlane.TryGet(out var OcclusionPlaneitem))
             {
@@ -5772,7 +5772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(RoomPortalitem);
             }
-            hash.Add(item.Unknown2);
+            hash.Add(item.Unknown);
             if (item.LightingTemplate.TryGet(out var LightingTemplateitem))
             {
                 hash.Add(LightingTemplateitem);
@@ -5821,33 +5821,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(MultiboundReferenceitem);
             }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
+            if (item.XWCN.TryGet(out var XWCNItem))
             {
-                hash.Add(Unknown3Item);
+                hash.Add(XWCNItem);
             }
-            if (item.Unknown4.TryGet(out var Unknown4Item))
+            if (item.XWCS.TryGet(out var XWCSItem))
             {
-                hash.Add(Unknown4Item);
+                hash.Add(XWCSItem);
             }
             if (item.WaterVelocity.TryGet(out var WaterVelocityitem))
             {
                 hash.Add(WaterVelocityitem);
             }
-            if (item.Unknown5.TryGet(out var Unknown5Item))
+            if (item.XCVL.TryGet(out var XCVLItem))
             {
-                hash.Add(Unknown5Item);
+                hash.Add(XCVLItem);
             }
-            if (item.Unknown6.TryGet(out var Unknown6item))
+            if (item.XCZR.TryGet(out var XCZRitem))
             {
-                hash.Add(Unknown6item);
+                hash.Add(XCZRitem);
             }
-            if (item.Unknown7.TryGet(out var Unknown7Item))
+            if (item.XCZA.TryGet(out var XCZAItem))
             {
-                hash.Add(Unknown7Item);
+                hash.Add(XCZAItem);
             }
-            if (item.Unknown8.TryGet(out var Unknown8item))
+            if (item.XCZC.TryGet(out var XCZCitem))
             {
-                hash.Add(Unknown8item);
+                hash.Add(XCZCitem);
             }
             if (item.Scale.TryGet(out var Scaleitem))
             {
@@ -6030,13 +6030,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return MultiboundReferenceKey;
             }
-            if (obj.Unknown6.FormKey.TryGet(out var Unknown6Key))
+            if (obj.XCZR.FormKey.TryGet(out var XCZRKey))
             {
-                yield return Unknown6Key;
+                yield return XCZRKey;
             }
-            if (obj.Unknown8.FormKey.TryGet(out var Unknown8Key))
+            if (obj.XCZC.FormKey.TryGet(out var XCZCKey))
             {
-                yield return Unknown8Key;
+                yield return XCZCKey;
             }
             if (obj.SpawnContainer.FormKey.TryGet(out var SpawnContainerKey))
             {
@@ -6222,15 +6222,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.XORD.TryGet(out var XORDrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.XORD = XORDrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.XORD = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
@@ -6317,9 +6317,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
             {
@@ -6511,26 +6511,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MultiboundReference = rhs.MultiboundReference.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                if(rhs.XWCN.TryGet(out var XWCNrhs))
                 {
-                    item.Unknown3 = Unknown3rhs.ToArray();
+                    item.XWCN = XWCNrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown3 = default;
+                    item.XWCN = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
             {
-                if(rhs.Unknown4.TryGet(out var Unknown4rhs))
+                if(rhs.XWCS.TryGet(out var XWCSrhs))
                 {
-                    item.Unknown4 = Unknown4rhs.ToArray();
+                    item.XWCS = XWCSrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown4 = default;
+                    item.XWCS = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
@@ -6559,35 +6559,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
-                if(rhs.Unknown5.TryGet(out var Unknown5rhs))
+                if(rhs.XCVL.TryGet(out var XCVLrhs))
                 {
-                    item.Unknown5 = Unknown5rhs.ToArray();
+                    item.XCVL = XCVLrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown5 = default;
+                    item.XCVL = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown6) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
-                item.Unknown6 = rhs.Unknown6.FormKey;
+                item.XCZR = rhs.XCZR.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown7) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
-                if(rhs.Unknown7.TryGet(out var Unknown7rhs))
+                if(rhs.XCZA.TryGet(out var XCZArhs))
                 {
-                    item.Unknown7 = Unknown7rhs.ToArray();
+                    item.XCZA = XCZArhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown7 = default;
+                    item.XCZA = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown8) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
-                item.Unknown8 = rhs.Unknown8.FormKey;
+                item.XCZC = rhs.XCZC.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
             {
@@ -7099,14 +7099,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive));
                 }
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            if ((item.XORD != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
+                    name: nameof(item.XORD),
+                    item: item.XORD.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XORD,
                     errorMask: errorMask);
             }
             if ((item.OcclusionPlane != null)
@@ -7158,13 +7158,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal));
                 }
             }
-            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown2) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown2,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((item.LightingTemplate.FormKey != null)
@@ -7354,24 +7354,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.MultiboundReference,
                     errorMask: errorMask);
             }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown3) ?? true))
+            if ((item.XWCN != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown3,
+                    name: nameof(item.XWCN),
+                    item: item.XWCN.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XWCN,
                     errorMask: errorMask);
             }
-            if ((item.Unknown4 != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown4) ?? true))
+            if ((item.XWCS != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCS) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown4),
-                    item: item.Unknown4.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown4,
+                    name: nameof(item.XWCS),
+                    item: item.XWCS.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XWCS,
                     errorMask: errorMask);
             }
             if ((item.WaterVelocity != null)
@@ -7388,44 +7388,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity));
                 }
             }
-            if ((item.Unknown5 != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown5) ?? true))
+            if ((item.XCVL != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown5),
-                    item: item.Unknown5.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown5,
+                    name: nameof(item.XCVL),
+                    item: item.XCVL.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XCVL,
                     errorMask: errorMask);
             }
-            if ((item.Unknown6.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown6) ?? true))
+            if ((item.XCZR.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown6),
-                    item: item.Unknown6.FormKey.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown6,
+                    name: nameof(item.XCZR),
+                    item: item.XCZR.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XCZR,
                     errorMask: errorMask);
             }
-            if ((item.Unknown7 != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown7) ?? true))
+            if ((item.XCZA != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown7),
-                    item: item.Unknown7.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown7,
+                    name: nameof(item.XCZA),
+                    item: item.XCZA.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XCZA,
                     errorMask: errorMask);
             }
-            if ((item.Unknown8.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown8) ?? true))
+            if ((item.XCZC.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown8),
-                    item: item.Unknown8.FormKey.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown8,
+                    name: nameof(item.XCZC),
+                    item: item.XCZC.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XCZC,
                     errorMask: errorMask);
             }
             if ((item.Scale != null)
@@ -7941,11 +7941,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
+                case "XORD":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XORD);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XORD = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8025,11 +8025,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown2);
+                case "Unknown":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown2 = Int16XmlTranslation.Instance.Parse(
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8346,11 +8346,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown3);
+                case "XWCN":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XWCN);
                     try
                     {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XWCN = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8364,11 +8364,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown4":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown4);
+                case "XWCS":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XWCS);
                     try
                     {
-                        item.Unknown4 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XWCS = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8401,11 +8401,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown5":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown5);
+                case "XCVL":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XCVL);
                     try
                     {
-                        item.Unknown5 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XCVL = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8419,11 +8419,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown6":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown6);
+                case "XCZR":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XCZR);
                     try
                     {
-                        item.Unknown6 = FormKeyXmlTranslation.Instance.Parse(
+                        item.XCZR = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8437,11 +8437,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown7":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown7);
+                case "XCZA":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XCZA);
                     try
                     {
-                        item.Unknown7 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XCZA = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8455,11 +8455,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown8":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown8);
+                case "XCZC":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XCZC);
                     try
                     {
-                        item.Unknown8 = FormKeyXmlTranslation.Instance.Parse(
+                        item.XCZC = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -9163,7 +9163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.XORD,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XORD_HEADER));
             if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
             {
@@ -9272,11 +9272,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XMBR_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.XWCN,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XWCN_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown4,
+                item: item.XWCS,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XWCS_HEADER));
             if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
             {
@@ -9287,19 +9287,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown5,
+                item: item.XCVL,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCVL_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown6,
+                item: item.XCZR,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZR_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown7,
+                item: item.XCZA,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZA_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown8,
+                item: item.XCZC,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCZC_HEADER));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -9559,8 +9559,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x44524F58: // XORD
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                    item.XORD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XORD);
                 }
                 case 0x50434F58: // XOCP
                 {
@@ -9687,14 +9687,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E435758: // XWCN
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
+                    item.XWCN = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCN);
                 }
                 case 0x53435758: // XWCS
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
+                    item.XWCS = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCS);
                 }
                 case 0x55435758: // XWCU
                 {
@@ -9704,30 +9704,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C564358: // XCVL
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
+                    item.XCVL = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCVL);
                 }
                 case 0x525A4358: // XCZR
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown6 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.XCZR = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZR);
                 }
                 case 0x415A4358: // XCZA
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown7 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
+                    item.XCZA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZA);
                 }
                 case 0x435A4358: // XCZC
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown8 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.XCZC = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZC);
                 }
                 case 0x4C435358: // XSCL
                 {
@@ -10021,9 +10021,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(new BinaryMemoryReadStream(_data.Slice(_PrimitiveLocation!.Value.Min)), _package) : default;
         public bool Primitive_IsSet => _PrimitiveLocation.HasValue;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XORD
+        private int? _XORDLocation;
+        public ReadOnlyMemorySlice<Byte>? XORD => _XORDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XORDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IPlacementGetter? OcclusionPlane { get; private set; }
         public IReadOnlyList<IPortalGetter>? Portals { get; private set; }
@@ -10081,36 +10081,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool MultiboundReference_IsSet => _MultiboundReferenceLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference => _MultiboundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MultiboundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XWCN
+        private int? _XWCNLocation;
+        public ReadOnlyMemorySlice<Byte>? XWCN => _XWCNLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XWCNLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown4
-        private int? _Unknown4Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XWCS
+        private int? _XWCSLocation;
+        public ReadOnlyMemorySlice<Byte>? XWCS => _XWCSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XWCSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
         public IWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? WaterVelocityBinaryOverlay.WaterVelocityFactory(new BinaryMemoryReadStream(_data.Slice(_WaterVelocityLocation!.Value.Min)), _package) : default;
         public bool WaterVelocity_IsSet => _WaterVelocityLocation.HasValue;
         #endregion
-        #region Unknown5
-        private int? _Unknown5Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown5 => _Unknown5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown5Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XCVL
+        private int? _XCVLLocation;
+        public ReadOnlyMemorySlice<Byte>? XCVL => _XCVLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XCVLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown6
-        private int? _Unknown6Location;
-        public bool Unknown6_IsSet => _Unknown6Location.HasValue;
-        public IFormLinkNullable<ILinkedReferenceGetter> Unknown6 => _Unknown6Location.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown6Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
+        #region XCZR
+        private int? _XCZRLocation;
+        public bool XCZR_IsSet => _XCZRLocation.HasValue;
+        public IFormLinkNullable<ILinkedReferenceGetter> XCZR => _XCZRLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _XCZRLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
         #endregion
-        #region Unknown7
-        private int? _Unknown7Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown7 => _Unknown7Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown7Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XCZA
+        private int? _XCZALocation;
+        public ReadOnlyMemorySlice<Byte>? XCZA => _XCZALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XCZALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown8
-        private int? _Unknown8Location;
-        public bool Unknown8_IsSet => _Unknown8Location.HasValue;
-        public IFormLinkNullable<ICellGetter> Unknown8 => _Unknown8Location.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown8Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        #region XCZC
+        private int? _XCZCLocation;
+        public bool XCZC_IsSet => _XCZCLocation.HasValue;
+        public IFormLinkNullable<ICellGetter> XCZC => _XCZCLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _XCZCLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
         #endregion
         #region Scale
         private int? _ScaleLocation;
@@ -10304,8 +10304,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x44524F58: // XORD
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                    _XORDLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XORD);
                 }
                 case 0x50434F58: // XOCP
                 {
@@ -10426,13 +10426,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E435758: // XWCN
                 {
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown3);
+                    _XWCNLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCN);
                 }
                 case 0x53435758: // XWCS
                 {
-                    _Unknown4Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown4);
+                    _XWCSLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCS);
                 }
                 case 0x55435758: // XWCU
                 {
@@ -10441,23 +10441,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C564358: // XCVL
                 {
-                    _Unknown5Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown5);
+                    _XCVLLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCVL);
                 }
                 case 0x525A4358: // XCZR
                 {
-                    _Unknown6Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown6);
+                    _XCZRLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZR);
                 }
                 case 0x415A4358: // XCZA
                 {
-                    _Unknown7Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown7);
+                    _XCZALocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZA);
                 }
                 case 0x435A4358: // XCZC
                 {
-                    _Unknown8Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown8);
+                    _XCZCLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZC);
                 }
                 case 0x4C435358: // XSCL
                 {

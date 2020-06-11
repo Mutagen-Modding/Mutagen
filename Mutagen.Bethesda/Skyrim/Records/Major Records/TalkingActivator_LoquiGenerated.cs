@@ -106,20 +106,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Unknown
-        public Int32? Unknown { get; set; }
+        #region PNAM
+        public Int32? PNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? ITalkingActivatorGetter.Unknown => this.Unknown;
+        Int32? ITalkingActivatorGetter.PNAM => this.PNAM;
         #endregion
         #region LoopingSound
         public FormLinkNullable<SoundMarker> LoopingSound { get; set; } = new FormLinkNullable<SoundMarker>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound;
         #endregion
-        #region Unknown2
-        public Int16? Unknown2 { get; set; }
+        #region FNAM
+        public Int16? FNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int16? ITalkingActivatorGetter.Unknown2 => this.Unknown2;
+        Int16? ITalkingActivatorGetter.FNAM => this.FNAM;
         #endregion
         #region VoiceType
         public FormLinkNullable<VoiceType> VoiceType { get; set; } = new FormLinkNullable<VoiceType>();
@@ -302,9 +302,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = initialValue;
+                this.PNAM = initialValue;
                 this.LoopingSound = initialValue;
-                this.Unknown2 = initialValue;
+                this.FNAM = initialValue;
                 this.VoiceType = initialValue;
             }
 
@@ -321,9 +321,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model,
                 TItem Destructible,
                 TItem Keywords,
-                TItem Unknown,
+                TItem PNAM,
                 TItem LoopingSound,
-                TItem Unknown2,
+                TItem FNAM,
                 TItem VoiceType)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -339,9 +339,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = Unknown;
+                this.PNAM = PNAM;
                 this.LoopingSound = LoopingSound;
-                this.Unknown2 = Unknown2;
+                this.FNAM = FNAM;
                 this.VoiceType = VoiceType;
             }
 
@@ -360,9 +360,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem Unknown;
+            public TItem PNAM;
             public TItem LoopingSound;
-            public TItem Unknown2;
+            public TItem FNAM;
             public TItem VoiceType;
             #endregion
 
@@ -383,9 +383,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
                 if (!object.Equals(this.VoiceType, rhs.VoiceType)) return false;
                 return true;
             }
@@ -398,9 +398,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
-                hash.Add(this.Unknown);
+                hash.Add(this.PNAM);
                 hash.Add(this.LoopingSound);
-                hash.Add(this.Unknown2);
+                hash.Add(this.FNAM);
                 hash.Add(this.VoiceType);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.PNAM)) return false;
                 if (!eval(this.LoopingSound)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.FNAM)) return false;
                 if (!eval(this.VoiceType)) return false;
                 return true;
             }
@@ -488,9 +488,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.PNAM)) return true;
                 if (eval(this.LoopingSound)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.FNAM)) return true;
                 if (eval(this.VoiceType)) return true;
                 return false;
             }
@@ -526,9 +526,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Unknown = eval(this.Unknown);
+                obj.PNAM = eval(this.PNAM);
                 obj.LoopingSound = eval(this.LoopingSound);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.FNAM = eval(this.FNAM);
                 obj.VoiceType = eval(this.VoiceType);
             }
             #endregion
@@ -595,17 +595,17 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.PNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(PNAM, "PNAM");
                     }
                     if (printMask?.LoopingSound ?? true)
                     {
                         fg.AppendItem(LoopingSound, "LoopingSound");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(FNAM, "FNAM");
                     }
                     if (printMask?.VoiceType ?? true)
                     {
@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? Unknown;
+            public Exception? PNAM;
             public Exception? LoopingSound;
-            public Exception? Unknown2;
+            public Exception? FNAM;
             public Exception? VoiceType;
             #endregion
 
@@ -653,12 +653,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return Destructible;
                     case TalkingActivator_FieldIndex.Keywords:
                         return Keywords;
-                    case TalkingActivator_FieldIndex.Unknown:
-                        return Unknown;
+                    case TalkingActivator_FieldIndex.PNAM:
+                        return PNAM;
                     case TalkingActivator_FieldIndex.LoopingSound:
                         return LoopingSound;
-                    case TalkingActivator_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case TalkingActivator_FieldIndex.FNAM:
+                        return FNAM;
                     case TalkingActivator_FieldIndex.VoiceType:
                         return VoiceType;
                     default:
@@ -689,14 +689,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case TalkingActivator_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case TalkingActivator_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case TalkingActivator_FieldIndex.PNAM:
+                        this.PNAM = ex;
                         break;
                     case TalkingActivator_FieldIndex.LoopingSound:
                         this.LoopingSound = ex;
                         break;
-                    case TalkingActivator_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case TalkingActivator_FieldIndex.FNAM:
+                        this.FNAM = ex;
                         break;
                     case TalkingActivator_FieldIndex.VoiceType:
                         this.VoiceType = ex;
@@ -730,14 +730,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case TalkingActivator_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case TalkingActivator_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case TalkingActivator_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
                         break;
                     case TalkingActivator_FieldIndex.LoopingSound:
                         this.LoopingSound = (Exception?)obj;
                         break;
-                    case TalkingActivator_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case TalkingActivator_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
                         break;
                     case TalkingActivator_FieldIndex.VoiceType:
                         this.VoiceType = (Exception?)obj;
@@ -757,9 +757,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Model != null) return true;
                 if (Destructible != null) return true;
                 if (Keywords != null) return true;
-                if (Unknown != null) return true;
+                if (PNAM != null) return true;
                 if (LoopingSound != null) return true;
-                if (Unknown2 != null) return true;
+                if (FNAM != null) return true;
                 if (VoiceType != null) return true;
                 return false;
             }
@@ -823,9 +823,9 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(PNAM, "PNAM");
                 fg.AppendItem(LoopingSound, "LoopingSound");
-                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(FNAM, "FNAM");
                 fg.AppendItem(VoiceType, "VoiceType");
             }
             #endregion
@@ -841,9 +841,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 ret.VoiceType = this.VoiceType.Combine(rhs.VoiceType);
                 return ret;
             }
@@ -873,9 +873,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Model.TranslationMask?> Model;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool Keywords;
-            public bool Unknown;
+            public bool PNAM;
             public bool LoopingSound;
-            public bool Unknown2;
+            public bool FNAM;
             public bool VoiceType;
             #endregion
 
@@ -889,9 +889,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
-                this.Unknown = defaultOn;
+                this.PNAM = defaultOn;
                 this.LoopingSound = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.FNAM = defaultOn;
                 this.VoiceType = defaultOn;
             }
 
@@ -906,9 +906,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Unknown, null));
+                ret.Add((PNAM, null));
                 ret.Add((LoopingSound, null));
-                ret.Add((Unknown2, null));
+                ret.Add((FNAM, null));
                 ret.Add((VoiceType, null));
             }
         }
@@ -1015,9 +1015,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new Int32? Unknown { get; set; }
+        new Int32? PNAM { get; set; }
         new FormLinkNullable<SoundMarker> LoopingSound { get; set; }
-        new Int16? Unknown2 { get; set; }
+        new Int16? FNAM { get; set; }
         new FormLinkNullable<VoiceType> VoiceType { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
@@ -1049,9 +1049,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        Int32? Unknown { get; }
+        Int32? PNAM { get; }
         IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; }
-        Int16? Unknown2 { get; }
+        Int16? FNAM { get; }
         IFormLinkNullable<IVoiceTypeGetter> VoiceType { get; }
 
         #region Mutagen
@@ -1363,9 +1363,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Model = 9,
         Destructible = 10,
         Keywords = 11,
-        Unknown = 12,
+        PNAM = 12,
         LoopingSound = 13,
-        Unknown2 = 14,
+        FNAM = 14,
         VoiceType = 15,
     }
     #endregion
@@ -1428,12 +1428,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)TalkingActivator_FieldIndex.Destructible;
                 case "KEYWORDS":
                     return (ushort)TalkingActivator_FieldIndex.Keywords;
-                case "UNKNOWN":
-                    return (ushort)TalkingActivator_FieldIndex.Unknown;
+                case "PNAM":
+                    return (ushort)TalkingActivator_FieldIndex.PNAM;
                 case "LOOPINGSOUND":
                     return (ushort)TalkingActivator_FieldIndex.LoopingSound;
-                case "UNKNOWN2":
-                    return (ushort)TalkingActivator_FieldIndex.Unknown2;
+                case "FNAM":
+                    return (ushort)TalkingActivator_FieldIndex.FNAM;
                 case "VOICETYPE":
                     return (ushort)TalkingActivator_FieldIndex.VoiceType;
                 default:
@@ -1453,9 +1453,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Name:
                 case TalkingActivator_FieldIndex.Model:
                 case TalkingActivator_FieldIndex.Destructible:
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                 case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                 case TalkingActivator_FieldIndex.VoiceType:
                     return false;
                 default:
@@ -1475,9 +1475,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case TalkingActivator_FieldIndex.Name:
                 case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                 case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                 case TalkingActivator_FieldIndex.VoiceType:
                     return false;
                 default:
@@ -1496,9 +1496,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Model:
                 case TalkingActivator_FieldIndex.Destructible:
                 case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                 case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                 case TalkingActivator_FieldIndex.VoiceType:
                     return false;
                 default:
@@ -1523,12 +1523,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Destructible";
                 case TalkingActivator_FieldIndex.Keywords:
                     return "Keywords";
-                case TalkingActivator_FieldIndex.Unknown:
-                    return "Unknown";
+                case TalkingActivator_FieldIndex.PNAM:
+                    return "PNAM";
                 case TalkingActivator_FieldIndex.LoopingSound:
                     return "LoopingSound";
-                case TalkingActivator_FieldIndex.Unknown2:
-                    return "Unknown2";
+                case TalkingActivator_FieldIndex.FNAM:
+                    return "FNAM";
                 case TalkingActivator_FieldIndex.VoiceType:
                     return "VoiceType";
                 default:
@@ -1547,9 +1547,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Model:
                 case TalkingActivator_FieldIndex.Destructible:
                 case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                 case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                 case TalkingActivator_FieldIndex.VoiceType:
                     return false;
                 default:
@@ -1568,9 +1568,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Model:
                 case TalkingActivator_FieldIndex.Destructible:
                 case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                 case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                 case TalkingActivator_FieldIndex.VoiceType:
                     return false;
                 default:
@@ -1595,11 +1595,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Destructible);
                 case TalkingActivator_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case TalkingActivator_FieldIndex.Unknown:
+                case TalkingActivator_FieldIndex.PNAM:
                     return typeof(Int32);
                 case TalkingActivator_FieldIndex.LoopingSound:
                     return typeof(FormLinkNullable<SoundMarker>);
-                case TalkingActivator_FieldIndex.Unknown2:
+                case TalkingActivator_FieldIndex.FNAM:
                     return typeof(Int16);
                 case TalkingActivator_FieldIndex.VoiceType:
                     return typeof(FormLinkNullable<VoiceType>);
@@ -1672,9 +1672,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Keywords = null;
-            item.Unknown = default;
+            item.PNAM = default;
             item.LoopingSound = FormLinkNullable<SoundMarker>.Null;
-            item.Unknown2 = default;
+            item.FNAM = default;
             item.VoiceType = FormLinkNullable<VoiceType>.Null;
             base.Clear(item);
         }
@@ -1854,9 +1854,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.PNAM = item.PNAM == rhs.PNAM;
             ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.FNAM = item.FNAM == rhs.FNAM;
             ret.VoiceType = object.Equals(item.VoiceType, rhs.VoiceType);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1952,20 +1952,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.PNAM ?? true)
+                && item.PNAM.TryGet(out var PNAMItem))
             {
-                fg.AppendItem(UnknownItem, "Unknown");
+                fg.AppendItem(PNAMItem, "PNAM");
             }
             if ((printMask?.LoopingSound ?? true)
                 && item.LoopingSound.TryGet(out var LoopingSoundItem))
             {
                 fg.AppendItem(LoopingSoundItem, "LoopingSound");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM.TryGet(out var FNAMItem))
             {
-                fg.AppendItem(Unknown2Item, "Unknown2");
+                fg.AppendItem(FNAMItem, "FNAM");
             }
             if ((printMask?.VoiceType ?? true)
                 && item.VoiceType.TryGet(out var VoiceTypeItem))
@@ -1986,9 +1986,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
             if (checkMask.LoopingSound.HasValue && checkMask.LoopingSound.Value != (item.LoopingSound.FormKey != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
+            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
             if (checkMask.VoiceType.HasValue && checkMask.VoiceType.Value != (item.VoiceType.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -2008,9 +2008,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Unknown = (item.Unknown != null);
+            mask.PNAM = (item.PNAM != null);
             mask.LoopingSound = (item.LoopingSound.FormKey != null);
-            mask.Unknown2 = (item.Unknown2 != null);
+            mask.FNAM = (item.FNAM != null);
             mask.VoiceType = (item.VoiceType.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
@@ -2069,9 +2069,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.PNAM != rhs.PNAM) return false;
             if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (lhs.FNAM != rhs.FNAM) return false;
             if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
             return true;
         }
@@ -2115,17 +2115,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.Keywords);
-            if (item.Unknown.TryGet(out var Unknownitem))
+            if (item.PNAM.TryGet(out var PNAMitem))
             {
-                hash.Add(Unknownitem);
+                hash.Add(PNAMitem);
             }
             if (item.LoopingSound.TryGet(out var LoopingSounditem))
             {
                 hash.Add(LoopingSounditem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2item))
+            if (item.FNAM.TryGet(out var FNAMitem))
             {
-                hash.Add(Unknown2item);
+                hash.Add(FNAMitem);
             }
             if (item.VoiceType.TryGet(out var VoiceTypeitem))
             {
@@ -2374,17 +2374,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.PNAM) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.PNAM = rhs.PNAM;
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
                 item.LoopingSound = rhs.LoopingSound.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.FNAM = rhs.FNAM;
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
@@ -2614,14 +2614,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown) ?? true))
+            if ((item.PNAM != null)
+                && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.PNAM) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)TalkingActivator_FieldIndex.Unknown,
+                    name: nameof(item.PNAM),
+                    item: item.PNAM.Value,
+                    fieldIndex: (int)TalkingActivator_FieldIndex.PNAM,
                     errorMask: errorMask);
             }
             if ((item.LoopingSound.FormKey != null)
@@ -2634,14 +2634,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)TalkingActivator_FieldIndex.LoopingSound,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown2) ?? true))
+            if ((item.FNAM != null)
+                && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)TalkingActivator_FieldIndex.Unknown2,
+                    name: nameof(item.FNAM),
+                    item: item.FNAM.Value,
+                    fieldIndex: (int)TalkingActivator_FieldIndex.FNAM,
                     errorMask: errorMask);
             }
             if ((item.VoiceType.FormKey != null)
@@ -2883,11 +2883,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)TalkingActivator_FieldIndex.Unknown);
+                case "PNAM":
+                    errorMask?.PushIndex((int)TalkingActivator_FieldIndex.PNAM);
                     try
                     {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
+                        item.PNAM = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2919,11 +2919,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)TalkingActivator_FieldIndex.Unknown2);
+                case "FNAM":
+                    errorMask?.PushIndex((int)TalkingActivator_FieldIndex.FNAM);
                     try
                     {
-                        item.Unknown2 = Int16XmlTranslation.Instance.Parse(
+                        item.FNAM = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3096,7 +3096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown,
+                item: item.PNAM,
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.PNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3104,7 +3104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.SNDR_HEADER));
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.FNAM,
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.FNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3243,8 +3243,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown);
+                    item.PNAM = frame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.PNAM);
                 }
                 case 0x52444E53: // SNDR
                 {
@@ -3257,8 +3257,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = frame.ReadInt16();
-                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown2);
+                    item.FNAM = frame.ReadInt16();
+                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.FNAM);
                 }
                 case 0x4D414E56: // VNAM
                 {
@@ -3363,18 +3363,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        #region Unknown
-        private int? _UnknownLocation;
-        public Int32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region PNAM
+        private int? _PNAMLocation;
+        public Int32? PNAM => _PNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
         public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
         public IFormLinkNullable<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public Int16? Unknown2 => _Unknown2Location.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants)) : default(Int16?);
+        #region FNAM
+        private int? _FNAMLocation;
+        public Int16? FNAM => _FNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;
@@ -3492,8 +3492,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown);
+                    _PNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.PNAM);
                 }
                 case 0x52444E53: // SNDR
                 {
@@ -3502,8 +3502,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown2);
+                    _FNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.FNAM);
                 }
                 case 0x4D414E56: // VNAM
                 {

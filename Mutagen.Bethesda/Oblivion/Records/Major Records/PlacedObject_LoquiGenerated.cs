@@ -160,10 +160,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
-        #region Unknown
-        public FormLinkNullable<OblivionMajorRecord> Unknown { get; set; } = new FormLinkNullable<OblivionMajorRecord>();
+        #region XRTM
+        public FormLinkNullable<OblivionMajorRecord> XRTM { get; set; } = new FormLinkNullable<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IOblivionMajorRecordGetter> IPlacedObjectGetter.Unknown => this.Unknown;
+        IFormLinkNullable<IOblivionMajorRecordGetter> IPlacedObjectGetter.XRTM => this.XRTM;
         #endregion
         #region ActionFlags
         public PlacedObject.ActionFlag? ActionFlags { get; set; }
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Charge = initialValue;
                 this.Health = initialValue;
                 this.LevelModifier = initialValue;
-                this.Unknown = initialValue;
+                this.XRTM = initialValue;
                 this.ActionFlags = initialValue;
                 this.Count = initialValue;
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(initialValue, new MapMarker.Mask<TItem>(initialValue));
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Charge,
                 TItem Health,
                 TItem LevelModifier,
-                TItem Unknown,
+                TItem XRTM,
                 TItem ActionFlags,
                 TItem Count,
                 TItem MapMarker,
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Charge = Charge;
                 this.Health = Health;
                 this.LevelModifier = LevelModifier;
-                this.Unknown = Unknown;
+                this.XRTM = XRTM;
                 this.ActionFlags = ActionFlags;
                 this.Count = Count;
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(MapMarker, new MapMarker.Mask<TItem>(MapMarker));
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Charge;
             public TItem Health;
             public TItem LevelModifier;
-            public TItem Unknown;
+            public TItem XRTM;
             public TItem ActionFlags;
             public TItem Count;
             public MaskItem<TItem, MapMarker.Mask<TItem>?>? MapMarker { get; set; }
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Charge, rhs.Charge)) return false;
                 if (!object.Equals(this.Health, rhs.Health)) return false;
                 if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.XRTM, rhs.XRTM)) return false;
                 if (!object.Equals(this.ActionFlags, rhs.ActionFlags)) return false;
                 if (!object.Equals(this.Count, rhs.Count)) return false;
                 if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Charge);
                 hash.Add(this.Health);
                 hash.Add(this.LevelModifier);
-                hash.Add(this.Unknown);
+                hash.Add(this.XRTM);
                 hash.Add(this.ActionFlags);
                 hash.Add(this.Count);
                 hash.Add(this.MapMarker);
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Charge)) return false;
                 if (!eval(this.Health)) return false;
                 if (!eval(this.LevelModifier)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.XRTM)) return false;
                 if (!eval(this.ActionFlags)) return false;
                 if (!eval(this.Count)) return false;
                 if (MapMarker != null)
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Charge)) return true;
                 if (eval(this.Health)) return true;
                 if (eval(this.LevelModifier)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.XRTM)) return true;
                 if (eval(this.ActionFlags)) return true;
                 if (eval(this.Count)) return true;
                 if (MapMarker != null)
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Charge = eval(this.Charge);
                 obj.Health = eval(this.Health);
                 obj.LevelModifier = eval(this.LevelModifier);
-                obj.Unknown = eval(this.Unknown);
+                obj.XRTM = eval(this.XRTM);
                 obj.ActionFlags = eval(this.ActionFlags);
                 obj.Count = eval(this.Count);
                 obj.MapMarker = this.MapMarker == null ? null : new MaskItem<R, MapMarker.Mask<R>?>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
@@ -814,9 +814,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(LevelModifier, "LevelModifier");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.XRTM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(XRTM, "XRTM");
                     }
                     if (printMask?.ActionFlags ?? true)
                     {
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Charge;
             public Exception? Health;
             public Exception? LevelModifier;
-            public Exception? Unknown;
+            public Exception? XRTM;
             public Exception? ActionFlags;
             public Exception? Count;
             public MaskItem<Exception?, MapMarker.ErrorMask?>? MapMarker;
@@ -924,8 +924,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Health;
                     case PlacedObject_FieldIndex.LevelModifier:
                         return LevelModifier;
-                    case PlacedObject_FieldIndex.Unknown:
-                        return Unknown;
+                    case PlacedObject_FieldIndex.XRTM:
+                        return XRTM;
                     case PlacedObject_FieldIndex.ActionFlags:
                         return ActionFlags;
                     case PlacedObject_FieldIndex.Count:
@@ -997,8 +997,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedObject_FieldIndex.LevelModifier:
                         this.LevelModifier = ex;
                         break;
-                    case PlacedObject_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case PlacedObject_FieldIndex.XRTM:
+                        this.XRTM = ex;
                         break;
                     case PlacedObject_FieldIndex.ActionFlags:
                         this.ActionFlags = ex;
@@ -1080,8 +1080,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedObject_FieldIndex.LevelModifier:
                         this.LevelModifier = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case PlacedObject_FieldIndex.XRTM:
+                        this.XRTM = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.ActionFlags:
                         this.ActionFlags = (Exception?)obj;
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Charge != null) return true;
                 if (Health != null) return true;
                 if (LevelModifier != null) return true;
-                if (Unknown != null) return true;
+                if (XRTM != null) return true;
                 if (ActionFlags != null) return true;
                 if (Count != null) return true;
                 if (MapMarker != null) return true;
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Charge, "Charge");
                 fg.AppendItem(Health, "Health");
                 fg.AppendItem(LevelModifier, "LevelModifier");
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(XRTM, "XRTM");
                 fg.AppendItem(ActionFlags, "ActionFlags");
                 fg.AppendItem(Count, "Count");
                 MapMarker?.ToString(fg);
@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Charge = this.Charge.Combine(rhs.Charge);
                 ret.Health = this.Health.Combine(rhs.Health);
                 ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.XRTM = this.XRTM.Combine(rhs.XRTM);
                 ret.ActionFlags = this.ActionFlags.Combine(rhs.ActionFlags);
                 ret.Count = this.Count.Combine(rhs.Count);
                 ret.MapMarker = this.MapMarker.Combine(rhs.MapMarker, (l, r) => l.Combine(r));
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Charge;
             public bool Health;
             public bool LevelModifier;
-            public bool Unknown;
+            public bool XRTM;
             public bool ActionFlags;
             public bool Count;
             public MaskItem<bool, MapMarker.TranslationMask?> MapMarker;
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Charge = defaultOn;
                 this.Health = defaultOn;
                 this.LevelModifier = defaultOn;
-                this.Unknown = defaultOn;
+                this.XRTM = defaultOn;
                 this.ActionFlags = defaultOn;
                 this.Count = defaultOn;
                 this.MapMarker = new MaskItem<bool, MapMarker.TranslationMask?>(defaultOn, null);
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Charge, null));
                 ret.Add((Health, null));
                 ret.Add((LevelModifier, null));
-                ret.Add((Unknown, null));
+                ret.Add((XRTM, null));
                 ret.Add((ActionFlags, null));
                 ret.Add((Count, null));
                 ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Single? Charge { get; set; }
         new Int32? Health { get; set; }
         new Int32? LevelModifier { get; set; }
-        new FormLinkNullable<OblivionMajorRecord> Unknown { get; set; }
+        new FormLinkNullable<OblivionMajorRecord> XRTM { get; set; }
         new PlacedObject.ActionFlag? ActionFlags { get; set; }
         new Int32? Count { get; set; }
         new MapMarker? MapMarker { get; set; }
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion
         Single? Charge { get; }
         Int32? Health { get; }
         Int32? LevelModifier { get; }
-        IFormLinkNullable<IOblivionMajorRecordGetter> Unknown { get; }
+        IFormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; }
         PlacedObject.ActionFlag? ActionFlags { get; }
         Int32? Count { get; }
         IMapMarkerGetter? MapMarker { get; }
@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Charge = 17,
         Health = 18,
         LevelModifier = 19,
-        Unknown = 20,
+        XRTM = 20,
         ActionFlags = 21,
         Count = 22,
         MapMarker = 23,
@@ -1898,8 +1898,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)PlacedObject_FieldIndex.Health;
                 case "LEVELMODIFIER":
                     return (ushort)PlacedObject_FieldIndex.LevelModifier;
-                case "UNKNOWN":
-                    return (ushort)PlacedObject_FieldIndex.Unknown;
+                case "XRTM":
+                    return (ushort)PlacedObject_FieldIndex.XRTM;
                 case "ACTIONFLAGS":
                     return (ushort)PlacedObject_FieldIndex.ActionFlags;
                 case "COUNT":
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.MapMarker:
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.OpenByDefault:
@@ -2012,7 +2012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.MapMarker:
@@ -2062,8 +2062,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Health";
                 case PlacedObject_FieldIndex.LevelModifier:
                     return "LevelModifier";
-                case PlacedObject_FieldIndex.Unknown:
-                    return "Unknown";
+                case PlacedObject_FieldIndex.XRTM:
+                    return "XRTM";
                 case PlacedObject_FieldIndex.ActionFlags:
                     return "ActionFlags";
                 case PlacedObject_FieldIndex.Count:
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.MapMarker:
@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.MapMarker:
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Int32);
                 case PlacedObject_FieldIndex.LevelModifier:
                     return typeof(Int32);
-                case PlacedObject_FieldIndex.Unknown:
+                case PlacedObject_FieldIndex.XRTM:
                     return typeof(FormLinkNullable<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.ActionFlags:
                     return typeof(PlacedObject.ActionFlag);
@@ -2297,7 +2297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Charge = default;
             item.Health = default;
             item.LevelModifier = default;
-            item.Unknown = FormLinkNullable<OblivionMajorRecord>.Null;
+            item.XRTM = FormLinkNullable<OblivionMajorRecord>.Null;
             item.ActionFlags = default;
             item.Count = default;
             item.MapMarker = null;
@@ -2494,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
             ret.Health = item.Health == rhs.Health;
             ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
-            ret.Unknown = object.Equals(item.Unknown, rhs.Unknown);
+            ret.XRTM = object.Equals(item.XRTM, rhs.XRTM);
             ret.ActionFlags = item.ActionFlags == rhs.ActionFlags;
             ret.Count = item.Count == rhs.Count;
             ret.MapMarker = EqualsMaskHelper.EqualsHelper(
@@ -2637,10 +2637,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(LevelModifierItem, "LevelModifier");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.XRTM ?? true)
+                && item.XRTM.TryGet(out var XRTMItem))
             {
-                fg.AppendItem(UnknownItem, "Unknown");
+                fg.AppendItem(XRTMItem, "XRTM");
             }
             if ((printMask?.ActionFlags ?? true)
                 && item.ActionFlags.TryGet(out var ActionFlagsItem))
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Charge.HasValue && checkMask.Charge.Value != (item.Charge != null)) return false;
             if (checkMask.Health.HasValue && checkMask.Health.Value != (item.Health != null)) return false;
             if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != (item.LevelModifier != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown.FormKey != null)) return false;
+            if (checkMask.XRTM.HasValue && checkMask.XRTM.Value != (item.XRTM.FormKey != null)) return false;
             if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != (item.ActionFlags != null)) return false;
             if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
             if (checkMask.MapMarker?.Overall.HasValue ?? false && checkMask.MapMarker.Overall.Value != (item.MapMarker != null)) return false;
@@ -2744,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Charge = (item.Charge != null);
             mask.Health = (item.Health != null);
             mask.LevelModifier = (item.LevelModifier != null);
-            mask.Unknown = (item.Unknown.FormKey != null);
+            mask.XRTM = (item.XRTM.FormKey != null);
             mask.ActionFlags = (item.ActionFlags != null);
             mask.Count = (item.Count != null);
             var itemMapMarker = item.MapMarker;
@@ -2819,7 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
             if (lhs.Health != rhs.Health) return false;
             if (lhs.LevelModifier != rhs.LevelModifier) return false;
-            if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
+            if (!lhs.XRTM.Equals(rhs.XRTM)) return false;
             if (lhs.ActionFlags != rhs.ActionFlags) return false;
             if (lhs.Count != rhs.Count) return false;
             if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
@@ -2912,9 +2912,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(LevelModifieritem);
             }
-            if (item.Unknown.TryGet(out var Unknownitem))
+            if (item.XRTM.TryGet(out var XRTMitem))
             {
-                hash.Add(Unknownitem);
+                hash.Add(XRTMitem);
             }
             if (item.ActionFlags.TryGet(out var ActionFlagsitem))
             {
@@ -3011,9 +3011,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return TargetKey;
             }
-            if (obj.Unknown.FormKey.TryGet(out var UnknownKey))
+            if (obj.XRTM.FormKey.TryGet(out var XRTMKey))
             {
-                yield return UnknownKey;
+                yield return XRTMKey;
             }
             if (obj.ContainedSoul.FormKey.TryGet(out var ContainedSoulKey))
             {
@@ -3228,9 +3228,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.LevelModifier = rhs.LevelModifier;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
             {
-                item.Unknown = rhs.Unknown.FormKey;
+                item.XRTM = rhs.XRTM.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
             {
@@ -3623,14 +3623,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
                     errorMask: errorMask);
             }
-            if ((item.Unknown.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            if ((item.XRTM.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.FormKey.Value,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
+                    name: nameof(item.XRTM),
+                    item: item.XRTM.FormKey.Value,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XRTM,
                     errorMask: errorMask);
             }
             if ((item.ActionFlags != null)
@@ -4101,11 +4101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
+                case "XRTM":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.XRTM);
                     try
                     {
-                        item.Unknown = FormKeyXmlTranslation.Instance.Parse(
+                        item.XRTM = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4447,7 +4447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown,
+                item: item.XRTM,
                 header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.WriteNullable(
                 writer,
@@ -4669,10 +4669,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D545258: // XRTM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.XRTM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XRTM);
                 }
                 case 0x54434158: // XACT
                 {
@@ -4876,10 +4876,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _LevelModifierLocation;
         public Int32? LevelModifier => _LevelModifierLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LevelModifierLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public bool Unknown_IsSet => _UnknownLocation.HasValue;
-        public IFormLinkNullable<IOblivionMajorRecordGetter> Unknown => _UnknownLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+        #region XRTM
+        private int? _XRTMLocation;
+        public bool XRTM_IsSet => _XRTMLocation.HasValue;
+        public IFormLinkNullable<IOblivionMajorRecordGetter> XRTM => _XRTMLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _XRTMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
@@ -5051,8 +5051,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D545258: // XRTM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
+                    _XRTMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XRTM);
                 }
                 case 0x54434158: // XACT
                 {

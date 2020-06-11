@@ -79,16 +79,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPreferredPathingGetter? INavigationMeshInfoMapGetter.PreferredPathing => this.PreferredPathing;
         #endregion
-        #region Unknown
+        #region NVSI
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _NVSI;
+        public MemorySlice<Byte>? NVSI
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._NVSI;
+            set => this._NVSI = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshInfoMapGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? INavigationMeshInfoMapGetter.NVSI => this.NVSI;
         #endregion
 
         #region To String
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavMeshVersion = initialValue;
                 this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
                 this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(initialValue, new PreferredPathing.Mask<TItem>(initialValue));
-                this.Unknown = initialValue;
+                this.NVSI = initialValue;
             }
 
             public Mask(
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NavMeshVersion,
                 TItem MapInfos,
                 TItem PreferredPathing,
-                TItem Unknown)
+                TItem NVSI)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavMeshVersion = NavMeshVersion;
                 this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(MapInfos, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
                 this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(PreferredPathing, new PreferredPathing.Mask<TItem>(PreferredPathing));
-                this.Unknown = Unknown;
+                this.NVSI = NVSI;
             }
 
             #pragma warning disable CS8618
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem NavMeshVersion;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>? MapInfos;
             public MaskItem<TItem, PreferredPathing.Mask<TItem>?>? PreferredPathing { get; set; }
-            public TItem Unknown;
+            public TItem NVSI;
             #endregion
 
             #region Equals
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.NavMeshVersion, rhs.NavMeshVersion)) return false;
                 if (!object.Equals(this.MapInfos, rhs.MapInfos)) return false;
                 if (!object.Equals(this.PreferredPathing, rhs.PreferredPathing)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.NVSI, rhs.NVSI)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.NavMeshVersion);
                 hash.Add(this.MapInfos);
                 hash.Add(this.PreferredPathing);
-                hash.Add(this.Unknown);
+                hash.Add(this.NVSI);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.PreferredPathing.Overall)) return false;
                     if (this.PreferredPathing.Specific != null && !this.PreferredPathing.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.NVSI)) return false;
                 return true;
             }
             #endregion
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.PreferredPathing.Overall)) return true;
                     if (this.PreferredPathing.Specific != null && this.PreferredPathing.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.NVSI)) return true;
                 return false;
             }
             #endregion
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.PreferredPathing = this.PreferredPathing == null ? null : new MaskItem<R, PreferredPathing.Mask<R>?>(eval(this.PreferredPathing.Overall), this.PreferredPathing.Specific?.Translate(eval));
-                obj.Unknown = eval(this.Unknown);
+                obj.NVSI = eval(this.NVSI);
             }
             #endregion
 
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         PreferredPathing?.ToString(fg);
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.NVSI ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(NVSI, "NVSI");
                     }
                 }
                 fg.AppendLine("]");
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? NavMeshVersion;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>? MapInfos;
             public MaskItem<Exception?, PreferredPathing.ErrorMask?>? PreferredPathing;
-            public Exception? Unknown;
+            public Exception? NVSI;
             #endregion
 
             #region IErrorMask
@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return MapInfos;
                     case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                         return PreferredPathing;
-                    case NavigationMeshInfoMap_FieldIndex.Unknown:
-                        return Unknown;
+                    case NavigationMeshInfoMap_FieldIndex.NVSI:
+                        return NVSI;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -527,8 +527,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                         this.PreferredPathing = new MaskItem<Exception?, PreferredPathing.ErrorMask?>(ex, null);
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case NavigationMeshInfoMap_FieldIndex.NVSI:
+                        this.NVSI = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -550,8 +550,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                         this.PreferredPathing = (MaskItem<Exception?, PreferredPathing.ErrorMask?>?)obj;
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case NavigationMeshInfoMap_FieldIndex.NVSI:
+                        this.NVSI = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (NavMeshVersion != null) return true;
                 if (MapInfos != null) return true;
                 if (PreferredPathing != null) return true;
-                if (Unknown != null) return true;
+                if (NVSI != null) return true;
                 return false;
             }
             #endregion
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 PreferredPathing?.ToString(fg);
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(NVSI, "NVSI");
             }
             #endregion
 
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NavMeshVersion = this.NavMeshVersion.Combine(rhs.NavMeshVersion);
                 ret.MapInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(ExceptionExt.Combine(this.MapInfos?.Overall, rhs.MapInfos?.Overall), ExceptionExt.Combine(this.MapInfos?.Specific, rhs.MapInfos?.Specific));
                 ret.PreferredPathing = this.PreferredPathing.Combine(rhs.PreferredPathing, (l, r) => l.Combine(r));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.NVSI = this.NVSI.Combine(rhs.NVSI);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool NavMeshVersion;
             public MaskItem<bool, NavigationMapInfo.TranslationMask?> MapInfos;
             public MaskItem<bool, PreferredPathing.TranslationMask?> PreferredPathing;
-            public bool Unknown;
+            public bool NVSI;
             #endregion
 
             #region Ctors
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavMeshVersion = defaultOn;
                 this.MapInfos = new MaskItem<bool, NavigationMapInfo.TranslationMask?>(defaultOn, null);
                 this.PreferredPathing = new MaskItem<bool, PreferredPathing.TranslationMask?>(defaultOn, null);
-                this.Unknown = defaultOn;
+                this.NVSI = defaultOn;
             }
 
             #endregion
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavMeshVersion, null));
                 ret.Add((MapInfos?.Overall ?? true, MapInfos?.Specific?.GetCrystal()));
                 ret.Add((PreferredPathing?.Overall ?? true, PreferredPathing?.Specific?.GetCrystal()));
-                ret.Add((Unknown, null));
+                ret.Add((NVSI, null));
             }
         }
         #endregion
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? NavMeshVersion { get; set; }
         new ExtendedList<NavigationMapInfo> MapInfos { get; }
         new PreferredPathing? PreferredPathing { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? NVSI { get; set; }
     }
 
     public partial interface INavigationMeshInfoMapInternal :
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? NavMeshVersion { get; }
         IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
         IPreferredPathingGetter? PreferredPathing { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? NVSI { get; }
 
     }
 
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         NavMeshVersion = 6,
         MapInfos = 7,
         PreferredPathing = 8,
-        Unknown = 9,
+        NVSI = 9,
     }
     #endregion
 
@@ -1160,8 +1160,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)NavigationMeshInfoMap_FieldIndex.MapInfos;
                 case "PREFERREDPATHING":
                     return (ushort)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
-                case "UNKNOWN":
-                    return (ushort)NavigationMeshInfoMap_FieldIndex.Unknown;
+                case "NVSI":
+                    return (ushort)NavigationMeshInfoMap_FieldIndex.NVSI;
                 default:
                     return null;
             }
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return true;
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                 case NavigationMeshInfoMap_FieldIndex.MapInfos:
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1225,8 +1225,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MapInfos";
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return "PreferredPathing";
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
-                    return "Unknown";
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
+                    return "NVSI";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                 case NavigationMeshInfoMap_FieldIndex.MapInfos:
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                 case NavigationMeshInfoMap_FieldIndex.MapInfos:
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<NavigationMapInfo>);
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return typeof(PreferredPathing);
-                case NavigationMeshInfoMap_FieldIndex.Unknown:
+                case NavigationMeshInfoMap_FieldIndex.NVSI:
                     return typeof(MemorySlice<Byte>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavMeshVersion = default;
             item.MapInfos.Clear();
             item.PreferredPathing = null;
-            item.Unknown = default;
+            item.NVSI = default;
             base.Clear(item);
         }
         
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.PreferredPathing,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.NVSI = MemorySliceExt.Equal(item.NVSI, rhs.NVSI);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1580,10 +1580,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 PreferredPathingItem?.ToString(fg, "PreferredPathing");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.NVSI ?? true)
+                && item.NVSI.TryGet(out var NVSIItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"NVSI => {SpanExt.ToHexString(NVSIItem)}");
             }
         }
         
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.NavMeshVersion.HasValue && checkMask.NavMeshVersion.Value != (item.NavMeshVersion != null)) return false;
             if (checkMask.PreferredPathing?.Overall.HasValue ?? false && checkMask.PreferredPathing.Overall.Value != (item.PreferredPathing != null)) return false;
             if (checkMask.PreferredPathing?.Specific != null && (item.PreferredPathing == null || !item.PreferredPathing.HasBeenSet(checkMask.PreferredPathing.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.NVSI.HasValue && checkMask.NVSI.Value != (item.NVSI != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1609,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MapInfos = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NavigationMapInfo.Mask<bool>?>>?>(true, MapInfosItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NavigationMapInfo.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemPreferredPathing = item.PreferredPathing;
             mask.PreferredPathing = new MaskItem<bool, PreferredPathing.Mask<bool>?>(itemPreferredPathing != null, itemPreferredPathing?.GetHasBeenSetMask());
-            mask.Unknown = (item.Unknown != null);
+            mask.NVSI = (item.NVSI != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
             if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos)) return false;
             if (!object.Equals(lhs.PreferredPathing, rhs.PreferredPathing)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.NVSI, rhs.NVSI)) return false;
             return true;
         }
         
@@ -1698,9 +1698,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(PreferredPathingitem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.NVSI.TryGet(out var NVSIItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(NVSIItem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1843,15 +1843,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.NVSI.TryGet(out var NVSIrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.NVSI = NVSIrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.NVSI = default;
                 }
             }
         }
@@ -2040,14 +2040,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing));
                 }
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Unknown) ?? true))
+            if ((item.NVSI != null)
+                && (translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.Unknown,
+                    name: nameof(item.NVSI),
+                    item: item.NVSI.Value,
+                    fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.NVSI,
                     errorMask: errorMask);
             }
         }
@@ -2222,11 +2222,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.Unknown);
+                case "NVSI":
+                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.NVSI);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.NVSI = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2359,7 +2359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.NVSI,
                 header: recordTypeConverter.ConvertToCustom(NavigationMeshInfoMap_Registration.NVSI_HEADER));
         }
 
@@ -2472,8 +2472,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4953564E: // NVSI
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.Unknown);
+                    item.NVSI = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2562,9 +2562,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new BinaryMemoryReadStream(_data.Slice(_PreferredPathingLocation!.Value.Min)), _package) : default;
         public bool PreferredPathing_IsSet => _PreferredPathingLocation.HasValue;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region NVSI
+        private int? _NVSILocation;
+        public ReadOnlyMemorySlice<Byte>? NVSI => _NVSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NVSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2656,8 +2656,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4953564E: // NVSI
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.Unknown);
+                    _NVSILocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
                 }
                 default:
                     return base.FillRecordType(

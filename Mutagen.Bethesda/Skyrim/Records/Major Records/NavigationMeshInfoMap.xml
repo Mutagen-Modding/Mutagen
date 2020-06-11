@@ -5,7 +5,7 @@
       <UInt32 name="NavMeshVersion" recordType="NVER" />
       <RefList name="MapInfos" refName="NavigationMapInfo" />
       <RefDirect name="PreferredPathing" refName="PreferredPathing" />
-      <ByteArray name="Unknown" recordType="NVSI" />
+      <ByteArray name="NVSI" recordType="NVSI" />
     </Fields>
   </Object>
   <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI" GUID="cad666d1-81b5-4a7c-91e7-cecba3dbb3c2" ID="274">

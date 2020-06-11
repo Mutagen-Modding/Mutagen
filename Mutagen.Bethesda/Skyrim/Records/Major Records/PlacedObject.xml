@@ -11,12 +11,12 @@
       <FormLink name="Base" refName="SkyrimMajorRecord" recordType="NAME" />
       <P3Float name="BoundHalfExtents" recordType="XMBO" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
-      <ByteArray name="Unknown" recordType="XORD" />
+      <ByteArray name="XORD" recordType="XORD" />
       <RefDirect name="OcclusionPlane" refName="Placement" recordType="XOCP" />
       <RefList name="Portals" refName="Portal" recordType="XPOD" />
       <RefDirect name="RoomPortal" refName="Placement" recordType="XPTL" />
       <CustomLogic name="BoundData" recordType="XRMR" />
-      <Int16 name="Unknown2" binary="NoGeneration" />
+      <Int16 name="Unknown" binary="NoGeneration" />
       <FormLink name="LightingTemplate" recordType="LNAM" refName="Light" binary="NoGeneration" />
       <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="INAM" binary="NoGeneration" />
       <List name="LinkedRooms" binary="NoGeneration">
@@ -38,15 +38,15 @@
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <FormLink name="TeleportMessageBox" refName="Message" recordType="XTNM" />
       <FormLink name="MultiboundReference" refName="PlacedObject" recordType="XMBR" />
-      <ByteArray name="Unknown3" recordType="XWCN" />
-      <ByteArray name="Unknown4" recordType="XWCS" />
+      <ByteArray name="XWCN" recordType="XWCN" />
+      <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="WaterVelocity" />
-      <ByteArray name="Unknown5" recordType="XCVL" />
-      <FormLink name="Unknown6" recordType="XCZR" objType="Record">
+      <ByteArray name="XCVL" recordType="XCVL" />
+      <FormLink name="XCZR" recordType="XCZR" objType="Record">
         <Interface>ILinkedReference</Interface>
       </FormLink>
-      <ByteArray name="Unknown7" recordType="XCZA" />
-      <FormLink name="Unknown8" refName="Cell" recordType="XCZC" />
+      <ByteArray name="XCZA" recordType="XCZA" />
+      <FormLink name="XCZC" refName="Cell" recordType="XCZC" />
       <Float name="Scale" recordType="XSCL" />
       <FormLink name="SpawnContainer" refName="PlacedObject" recordType="XSPC" />
       <RefDirect name="ActivateParents" refName="ActivateParents" />

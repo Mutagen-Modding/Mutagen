@@ -240,9 +240,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Unknown2,
-                TItem Unknown3,
-                TItem Unknown4,
+                TItem ONAM,
+                TItem PNAM,
+                TItem NNAM,
                 TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -251,9 +251,9 @@ namespace Mutagen.Bethesda.Skyrim
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
-                Unknown2: Unknown2,
-                Unknown3: Unknown3,
-                Unknown4: Unknown4)
+                ONAM: ONAM,
+                PNAM: PNAM,
+                NNAM: NNAM)
             {
                 this.Data = new MaskItem<TItem, CellNavigationMeshData.Mask<TItem>?>(Data, new CellNavigationMeshData.Mask<TItem>(Data));
             }
@@ -911,9 +911,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Unknown2 = 6,
-        Unknown3 = 7,
-        Unknown4 = 8,
+        ONAM = 6,
+        PNAM = 7,
+        NNAM = 8,
         Data = 9,
     }
     #endregion
@@ -1388,11 +1388,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (CellNavigationMesh_FieldIndex)((int)index);
                 case ANavigationMesh_FieldIndex.Version2:
                     return (CellNavigationMesh_FieldIndex)((int)index);
-                case ANavigationMesh_FieldIndex.Unknown2:
+                case ANavigationMesh_FieldIndex.ONAM:
                     return (CellNavigationMesh_FieldIndex)((int)index);
-                case ANavigationMesh_FieldIndex.Unknown3:
+                case ANavigationMesh_FieldIndex.PNAM:
                     return (CellNavigationMesh_FieldIndex)((int)index);
-                case ANavigationMesh_FieldIndex.Unknown4:
+                case ANavigationMesh_FieldIndex.NNAM:
                     return (CellNavigationMesh_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

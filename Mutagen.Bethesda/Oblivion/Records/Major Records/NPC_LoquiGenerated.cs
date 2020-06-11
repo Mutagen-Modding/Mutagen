@@ -256,16 +256,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? INpcGetter.FaceGenTextureSymmetric => this.FaceGenTextureSymmetric;
         #endregion
-        #region Unknown
+        #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._FNAM;
+            set => this._FNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INpcGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? INpcGetter.FNAM => this.FNAM;
         #endregion
 
         #region To String
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometrySymmetric = initialValue;
                 this.FaceGenGeometryAsymmetric = initialValue;
                 this.FaceGenTextureSymmetric = initialValue;
-                this.Unknown = initialValue;
+                this.FNAM = initialValue;
             }
 
             public Mask(
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem FaceGenGeometrySymmetric,
                 TItem FaceGenGeometryAsymmetric,
                 TItem FaceGenTextureSymmetric,
-                TItem Unknown)
+                TItem FNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometrySymmetric = FaceGenGeometrySymmetric;
                 this.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetric;
                 this.FaceGenTextureSymmetric = FaceGenTextureSymmetric;
-                this.Unknown = Unknown;
+                this.FNAM = FNAM;
             }
 
             #pragma warning disable CS8618
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem FaceGenGeometrySymmetric;
             public TItem FaceGenGeometryAsymmetric;
             public TItem FaceGenTextureSymmetric;
-            public TItem Unknown;
+            public TItem FNAM;
             #endregion
 
             #region Equals
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
                 if (!object.Equals(this.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
                 if (!object.Equals(this.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.FaceGenGeometrySymmetric);
                 hash.Add(this.FaceGenGeometryAsymmetric);
                 hash.Add(this.FaceGenTextureSymmetric);
-                hash.Add(this.Unknown);
+                hash.Add(this.FNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.FaceGenGeometrySymmetric)) return false;
                 if (!eval(this.FaceGenGeometryAsymmetric)) return false;
                 if (!eval(this.FaceGenTextureSymmetric)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.FNAM)) return false;
                 return true;
             }
             #endregion
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.FaceGenGeometrySymmetric)) return true;
                 if (eval(this.FaceGenGeometryAsymmetric)) return true;
                 if (eval(this.FaceGenTextureSymmetric)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.FNAM)) return true;
                 return false;
             }
             #endregion
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.FaceGenGeometrySymmetric = eval(this.FaceGenGeometrySymmetric);
                 obj.FaceGenGeometryAsymmetric = eval(this.FaceGenGeometryAsymmetric);
                 obj.FaceGenTextureSymmetric = eval(this.FaceGenTextureSymmetric);
-                obj.Unknown = eval(this.Unknown);
+                obj.FNAM = eval(this.FNAM);
             }
             #endregion
 
@@ -1181,9 +1181,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(FaceGenTextureSymmetric, "FaceGenTextureSymmetric");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(FNAM, "FNAM");
                     }
                 }
                 fg.AppendLine("]");
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? FaceGenGeometrySymmetric;
             public Exception? FaceGenGeometryAsymmetric;
             public Exception? FaceGenTextureSymmetric;
-            public Exception? Unknown;
+            public Exception? FNAM;
             #endregion
 
             #region IErrorMask
@@ -1272,8 +1272,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return FaceGenGeometryAsymmetric;
                     case Npc_FieldIndex.FaceGenTextureSymmetric:
                         return FaceGenTextureSymmetric;
-                    case Npc_FieldIndex.Unknown:
-                        return Unknown;
+                    case Npc_FieldIndex.FNAM:
+                        return FNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1350,8 +1350,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.FaceGenTextureSymmetric:
                         this.FaceGenTextureSymmetric = ex;
                         break;
-                    case Npc_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Npc_FieldIndex.FNAM:
+                        this.FNAM = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1430,8 +1430,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.FaceGenTextureSymmetric:
                         this.FaceGenTextureSymmetric = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Npc_FieldIndex.FNAM:
+                        this.FNAM = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (FaceGenGeometrySymmetric != null) return true;
                 if (FaceGenGeometryAsymmetric != null) return true;
                 if (FaceGenTextureSymmetric != null) return true;
-                if (Unknown != null) return true;
+                if (FNAM != null) return true;
                 return false;
             }
             #endregion
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(FaceGenGeometrySymmetric, "FaceGenGeometrySymmetric");
                 fg.AppendItem(FaceGenGeometryAsymmetric, "FaceGenGeometryAsymmetric");
                 fg.AppendItem(FaceGenTextureSymmetric, "FaceGenTextureSymmetric");
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(FNAM, "FNAM");
             }
             #endregion
 
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.FaceGenGeometrySymmetric = this.FaceGenGeometrySymmetric.Combine(rhs.FaceGenGeometrySymmetric);
                 ret.FaceGenGeometryAsymmetric = this.FaceGenGeometryAsymmetric.Combine(rhs.FaceGenGeometryAsymmetric);
                 ret.FaceGenTextureSymmetric = this.FaceGenTextureSymmetric.Combine(rhs.FaceGenTextureSymmetric);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool FaceGenGeometrySymmetric;
             public bool FaceGenGeometryAsymmetric;
             public bool FaceGenTextureSymmetric;
-            public bool Unknown;
+            public bool FNAM;
             #endregion
 
             #region Ctors
@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometrySymmetric = defaultOn;
                 this.FaceGenGeometryAsymmetric = defaultOn;
                 this.FaceGenTextureSymmetric = defaultOn;
-                this.Unknown = defaultOn;
+                this.FNAM = defaultOn;
             }
 
             #endregion
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FaceGenGeometrySymmetric, null));
                 ret.Add((FaceGenGeometryAsymmetric, null));
                 ret.Add((FaceGenTextureSymmetric, null));
-                ret.Add((Unknown, null));
+                ret.Add((FNAM, null));
             }
         }
         #endregion
@@ -1899,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? FaceGenGeometrySymmetric { get; set; }
         new MemorySlice<Byte>? FaceGenGeometryAsymmetric { get; set; }
         new MemorySlice<Byte>? FaceGenTextureSymmetric { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? FNAM { get; set; }
     }
 
     public partial interface INpcInternal :
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? FaceGenGeometrySymmetric { get; }
         ReadOnlyMemorySlice<Byte>? FaceGenGeometryAsymmetric { get; }
         ReadOnlyMemorySlice<Byte>? FaceGenTextureSymmetric { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? FNAM { get; }
 
     }
 
@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         FaceGenGeometrySymmetric = 24,
         FaceGenGeometryAsymmetric = 25,
         FaceGenTextureSymmetric = 26,
-        Unknown = 27,
+        FNAM = 27,
     }
     #endregion
 
@@ -2357,8 +2357,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Npc_FieldIndex.FaceGenGeometryAsymmetric;
                 case "FACEGENTEXTURESYMMETRIC":
                     return (ushort)Npc_FieldIndex.FaceGenTextureSymmetric;
-                case "UNKNOWN":
-                    return (ushort)Npc_FieldIndex.Unknown;
+                case "FNAM":
+                    return (ushort)Npc_FieldIndex.FNAM;
                 default:
                     return null;
             }
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsEnumerable(index);
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsLoqui(index);
@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsSingleton(index);
@@ -2517,8 +2517,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "FaceGenGeometryAsymmetric";
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                     return "FaceGenTextureSymmetric";
-                case Npc_FieldIndex.Unknown:
-                    return "Unknown";
+                case Npc_FieldIndex.FNAM:
+                    return "FNAM";
                 default:
                     return ANpc_Registration.GetNthName(index);
             }
@@ -2551,7 +2551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return false;
                 default:
                     return ANpc_Registration.IsNthDerivative(index);
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return false;
                 default:
                     return ANpc_Registration.IsProtected(index);
@@ -2641,7 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(MemorySlice<Byte>);
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                     return typeof(MemorySlice<Byte>);
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.FNAM:
                     return typeof(MemorySlice<Byte>);
                 default:
                     return ANpc_Registration.GetNthType(index);
@@ -2738,7 +2738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FaceGenGeometrySymmetric = default;
             item.FaceGenGeometryAsymmetric = default;
             item.FaceGenTextureSymmetric = default;
-            item.Unknown = default;
+            item.FNAM = default;
             base.Clear(item);
         }
         
@@ -3010,7 +3010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenGeometrySymmetric = MemorySliceExt.Equal(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
             ret.FaceGenGeometryAsymmetric = MemorySliceExt.Equal(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = MemorySliceExt.Equal(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3252,10 +3252,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"FaceGenTextureSymmetric => {SpanExt.ToHexString(FaceGenTextureSymmetricItem)}");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.FNAM ?? true)
+                && item.FNAM.TryGet(out var FNAMItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
         }
         
@@ -3285,7 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.FaceGenGeometrySymmetric.HasValue && checkMask.FaceGenGeometrySymmetric.Value != (item.FaceGenGeometrySymmetric != null)) return false;
             if (checkMask.FaceGenGeometryAsymmetric.HasValue && checkMask.FaceGenGeometryAsymmetric.Value != (item.FaceGenGeometryAsymmetric != null)) return false;
             if (checkMask.FaceGenTextureSymmetric.HasValue && checkMask.FaceGenTextureSymmetric.Value != (item.FaceGenTextureSymmetric != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3323,7 +3323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FaceGenGeometrySymmetric = (item.FaceGenGeometrySymmetric != null);
             mask.FaceGenGeometryAsymmetric = (item.FaceGenGeometryAsymmetric != null);
             mask.FaceGenTextureSymmetric = (item.FaceGenTextureSymmetric != null);
-            mask.Unknown = (item.Unknown != null);
+            mask.FNAM = (item.FNAM != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3433,7 +3433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemorySliceExt.Equal(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
             if (!MemorySliceExt.Equal(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
             if (!MemorySliceExt.Equal(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
             return true;
         }
         
@@ -3546,9 +3546,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(FaceGenTextureSymmetricItem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.FNAM.TryGet(out var FNAMItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(FNAMItem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3995,15 +3995,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FaceGenTextureSymmetric = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.FNAM.TryGet(out var FNAMrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.FNAM = FNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.FNAM = default;
                 }
             }
         }
@@ -4490,14 +4490,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Npc_FieldIndex.FaceGenTextureSymmetric,
                     errorMask: errorMask);
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((item.FNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.FNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Npc_FieldIndex.Unknown,
+                    name: nameof(item.FNAM),
+                    item: item.FNAM.Value,
+                    fieldIndex: (int)Npc_FieldIndex.FNAM,
                     errorMask: errorMask);
             }
         }
@@ -5097,11 +5097,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Unknown);
+                case "FNAM":
+                    errorMask?.PushIndex((int)Npc_FieldIndex.FNAM);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.FNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5346,7 +5346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.FGTS_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.FNAM,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.FNAM_HEADER));
         }
 
@@ -5641,8 +5641,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
+                    item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FNAM);
                 }
                 default:
                     return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5797,9 +5797,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _FaceGenTextureSymmetricLocation;
         public ReadOnlyMemorySlice<Byte>? FaceGenTextureSymmetric => _FaceGenTextureSymmetricLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenTextureSymmetricLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region FNAM
+        private int? _FNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -6032,8 +6032,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
+                    _FNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FNAM);
                 }
                 default:
                     return base.FillRecordType(

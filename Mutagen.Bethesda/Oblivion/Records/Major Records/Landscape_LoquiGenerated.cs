@@ -49,16 +49,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Unknown
+        #region DATA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._DATA;
+            set => this._DATA = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.DATA => this.DATA;
         #endregion
         #region VertexNormals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown = initialValue;
+                this.DATA = initialValue;
                 this.VertexNormals = initialValue;
                 this.VertexHeightMap = initialValue;
                 this.VertexColors = initialValue;
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Version,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
-                TItem Unknown,
+                TItem DATA,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
                 TItem VertexColors,
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Unknown = Unknown;
+                this.DATA = DATA;
                 this.VertexNormals = VertexNormals;
                 this.VertexHeightMap = VertexHeightMap;
                 this.VertexColors = VertexColors;
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem Unknown;
+            public TItem DATA;
             public TItem VertexNormals;
             public TItem VertexHeightMap;
             public TItem VertexColors;
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.VertexNormals, rhs.VertexNormals)) return false;
                 if (!object.Equals(this.VertexHeightMap, rhs.VertexHeightMap)) return false;
                 if (!object.Equals(this.VertexColors, rhs.VertexColors)) return false;
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown);
+                hash.Add(this.DATA);
                 hash.Add(this.VertexNormals);
                 hash.Add(this.VertexHeightMap);
                 hash.Add(this.VertexColors);
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.DATA)) return false;
                 if (!eval(this.VertexNormals)) return false;
                 if (!eval(this.VertexHeightMap)) return false;
                 if (!eval(this.VertexColors)) return false;
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.DATA)) return true;
                 if (eval(this.VertexNormals)) return true;
                 if (eval(this.VertexHeightMap)) return true;
                 if (eval(this.VertexColors)) return true;
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown = eval(this.Unknown);
+                obj.DATA = eval(this.DATA);
                 obj.VertexNormals = eval(this.VertexNormals);
                 obj.VertexHeightMap = eval(this.VertexHeightMap);
                 obj.VertexColors = eval(this.VertexColors);
@@ -513,9 +513,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.DATA ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(DATA, "DATA");
                     }
                     if (printMask?.VertexNormals ?? true)
                     {
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown;
+            public Exception? DATA;
             public Exception? VertexNormals;
             public Exception? VertexHeightMap;
             public Exception? VertexColors;
@@ -601,8 +601,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.Unknown:
-                        return Unknown;
+                    case Landscape_FieldIndex.DATA:
+                        return DATA;
                     case Landscape_FieldIndex.VertexNormals:
                         return VertexNormals;
                     case Landscape_FieldIndex.VertexHeightMap:
@@ -623,8 +623,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Landscape_FieldIndex.DATA:
+                        this.DATA = ex;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
                         this.VertexNormals = ex;
@@ -652,8 +652,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Landscape_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
                         this.VertexNormals = (Exception?)obj;
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown != null) return true;
+                if (DATA != null) return true;
                 if (VertexNormals != null) return true;
                 if (VertexHeightMap != null) return true;
                 if (VertexColors != null) return true;
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(DATA, "DATA");
                 fg.AppendItem(VertexNormals, "VertexNormals");
                 fg.AppendItem(VertexHeightMap, "VertexHeightMap");
                 fg.AppendItem(VertexColors, "VertexColors");
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
                 ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public bool Unknown;
+            public bool DATA;
             public bool VertexNormals;
             public bool VertexHeightMap;
             public bool VertexColors;
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Unknown = defaultOn;
+                this.DATA = defaultOn;
                 this.VertexNormals = defaultOn;
                 this.VertexHeightMap = defaultOn;
                 this.VertexColors = defaultOn;
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown, null));
+                ret.Add((DATA, null));
                 ret.Add((VertexNormals, null));
                 ret.Add((VertexHeightMap, null));
                 ret.Add((VertexColors, null));
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         ILoquiObjectSetter<ILandscapeInternal>
     {
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         static ILoquiRegistration Registration => Landscape_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
         ReadOnlyMemorySlice<Byte>? VertexColors { get; }
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Version = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
-        Unknown = 5,
+        DATA = 5,
         VertexNormals = 6,
         VertexHeightMap = 7,
         VertexColors = 8,
@@ -1311,8 +1311,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "UNKNOWN":
-                    return (ushort)Landscape_FieldIndex.Unknown;
+                case "DATA":
+                    return (ushort)Landscape_FieldIndex.DATA;
                 case "VERTEXNORMALS":
                     return (ushort)Landscape_FieldIndex.VertexNormals;
                 case "VERTEXHEIGHTMAP":
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.Layers:
                 case Landscape_FieldIndex.Textures:
                     return true;
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Landscape_FieldIndex.Layers:
                     return true;
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
@@ -1369,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
             {
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
@@ -1386,8 +1386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
             {
-                case Landscape_FieldIndex.Unknown:
-                    return "Unknown";
+                case Landscape_FieldIndex.DATA:
+                    return "DATA";
                 case Landscape_FieldIndex.VertexNormals:
                     return "VertexNormals";
                 case Landscape_FieldIndex.VertexHeightMap:
@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
             {
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
             {
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                 case Landscape_FieldIndex.VertexNormals:
                 case Landscape_FieldIndex.VertexHeightMap:
                 case Landscape_FieldIndex.VertexColors:
@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
             {
-                case Landscape_FieldIndex.Unknown:
+                case Landscape_FieldIndex.DATA:
                     return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.VertexNormals:
                     return typeof(MemorySlice<Byte>);
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILandscapeInternal item)
         {
             ClearPartial();
-            item.Unknown = default;
+            item.DATA = default;
             item.VertexNormals = default;
             item.VertexHeightMap = default;
             item.VertexColors = default;
@@ -1674,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
             ret.VertexNormals = MemorySliceExt.Equal(item.VertexNormals, rhs.VertexNormals);
             ret.VertexHeightMap = MemorySliceExt.Equal(item.VertexHeightMap, rhs.VertexHeightMap);
             ret.VertexColors = MemorySliceExt.Equal(item.VertexColors, rhs.VertexColors);
@@ -1737,10 +1737,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.DATA ?? true)
+                && item.DATA.TryGet(out var DATAItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.VertexNormals ?? true)
                 && item.VertexNormals.TryGet(out var VertexNormalsItem))
@@ -1800,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             Landscape.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.DATA.HasValue && checkMask.DATA.Value != (item.DATA != null)) return false;
             if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != (item.VertexNormals != null)) return false;
             if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != (item.VertexHeightMap != null)) return false;
             if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != (item.VertexColors != null)) return false;
@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             Landscape.Mask<bool> mask)
         {
-            mask.Unknown = (item.Unknown != null);
+            mask.DATA = (item.DATA != null);
             mask.VertexNormals = (item.VertexNormals != null);
             mask.VertexHeightMap = (item.VertexHeightMap != null);
             mask.VertexColors = (item.VertexColors != null);
@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
@@ -1900,9 +1900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ILandscapeGetter item)
         {
             var hash = new HashCode();
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.DATA.TryGet(out var DATAItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(DATAItem);
             }
             if (item.VertexNormals.TryGet(out var VertexNormalsItem))
             {
@@ -2005,15 +2005,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.DATA.TryGet(out var DATArhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.DATA = DATArhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.DATA = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
@@ -2242,14 +2242,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
+            if ((item.DATA != null)
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Landscape_FieldIndex.Unknown,
+                    name: nameof(item.DATA),
+                    item: item.DATA.Value,
+                    fieldIndex: (int)Landscape_FieldIndex.DATA,
                     errorMask: errorMask);
             }
             if ((item.VertexNormals != null)
@@ -2428,11 +2428,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Unknown":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
+                case "DATA":
+                    errorMask?.PushIndex((int)Landscape_FieldIndex.DATA);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.DATA = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2772,8 +2772,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                    item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
                 }
                 case 0x4C4D4E56: // VNML
                 {
@@ -2909,9 +2909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region VertexNormals
         private int? _VertexNormalsLocation;
@@ -2992,8 +2992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x41544144: // DATA
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                    _DATALocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
                 }
                 case 0x4C4D4E56: // VNML
                 {

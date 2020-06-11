@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 var roomCount = header.Content[0];
                 var flags = header.Content[1];
-                item.Unknown2 = BinaryPrimitives.ReadInt16LittleEndian(header.Content.Slice(2));
+                item.Unknown = BinaryPrimitives.ReadInt16LittleEndian(header.Content.Slice(2));
                 while (frame.Reader.TryReadSubrecord(out var subHeader))
                 {
                     switch (subHeader.RecordTypeInt)
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var lightingTemplate = item.LightingTemplate;
                 var imageSpace = item.ImageSpace;
                 var linkedRooms = item.LinkedRooms;
-                var unknown2 = item.Unknown2;
+                var unknown2 = item.Unknown;
                 if (lightingTemplate.FormKey == null
                     && imageSpace.FormKey == null
                     && linkedRooms.Count == 0
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             int? _boundDataLoc;
 
-            public short Unknown2 => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_boundDataLoc.Value + 8)) : default(short);
+            public short Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_boundDataLoc.Value + 8)) : default(short);
 
             public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
 

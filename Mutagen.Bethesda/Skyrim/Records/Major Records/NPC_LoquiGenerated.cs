@@ -295,9 +295,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
         #endregion
-        #region Unknown
-        public readonly static UInt16 _Unknown_Default = 0xFF00;
-        public UInt16 Unknown { get; set; } = default;
+        #region NAM5
+        public readonly static UInt16 _NAM5_Default = 0xFF00;
+        public UInt16 NAM5 { get; set; } = default;
         #endregion
         #region Height
         public Single Height { get; set; } = default;
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairColor = initialValue;
                 this.CombatStyle = initialValue;
                 this.GiftFilter = initialValue;
-                this.Unknown = initialValue;
+                this.NAM5 = initialValue;
                 this.Height = initialValue;
                 this.Weight = initialValue;
                 this.SoundLevel = initialValue;
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem HairColor,
                 TItem CombatStyle,
                 TItem GiftFilter,
-                TItem Unknown,
+                TItem NAM5,
                 TItem Height,
                 TItem Weight,
                 TItem SoundLevel,
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairColor = HairColor;
                 this.CombatStyle = CombatStyle;
                 this.GiftFilter = GiftFilter;
-                this.Unknown = Unknown;
+                this.NAM5 = NAM5;
                 this.Height = Height;
                 this.Weight = Weight;
                 this.SoundLevel = SoundLevel;
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem HairColor;
             public TItem CombatStyle;
             public TItem GiftFilter;
-            public TItem Unknown;
+            public TItem NAM5;
             public TItem Height;
             public TItem Weight;
             public TItem SoundLevel;
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.HairColor, rhs.HairColor)) return false;
                 if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
                 if (!object.Equals(this.GiftFilter, rhs.GiftFilter)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.NAM5, rhs.NAM5)) return false;
                 if (!object.Equals(this.Height, rhs.Height)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.HairColor);
                 hash.Add(this.CombatStyle);
                 hash.Add(this.GiftFilter);
-                hash.Add(this.Unknown);
+                hash.Add(this.NAM5);
                 hash.Add(this.Height);
                 hash.Add(this.Weight);
                 hash.Add(this.SoundLevel);
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.HairColor)) return false;
                 if (!eval(this.CombatStyle)) return false;
                 if (!eval(this.GiftFilter)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.NAM5)) return false;
                 if (!eval(this.Height)) return false;
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.SoundLevel)) return false;
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.HairColor)) return true;
                 if (eval(this.CombatStyle)) return true;
                 if (eval(this.GiftFilter)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.NAM5)) return true;
                 if (eval(this.Height)) return true;
                 if (eval(this.Weight)) return true;
                 if (eval(this.SoundLevel)) return true;
@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.HairColor = eval(this.HairColor);
                 obj.CombatStyle = eval(this.CombatStyle);
                 obj.GiftFilter = eval(this.GiftFilter);
-                obj.Unknown = eval(this.Unknown);
+                obj.NAM5 = eval(this.NAM5);
                 obj.Height = eval(this.Height);
                 obj.Weight = eval(this.Weight);
                 obj.SoundLevel = eval(this.SoundLevel);
@@ -1721,9 +1721,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(GiftFilter, "GiftFilter");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.NAM5 ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(NAM5, "NAM5");
                     }
                     if (printMask?.Height ?? true)
                     {
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? HairColor;
             public Exception? CombatStyle;
             public Exception? GiftFilter;
-            public Exception? Unknown;
+            public Exception? NAM5;
             public Exception? Height;
             public Exception? Weight;
             public Exception? SoundLevel;
@@ -1923,8 +1923,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return CombatStyle;
                     case Npc_FieldIndex.GiftFilter:
                         return GiftFilter;
-                    case Npc_FieldIndex.Unknown:
-                        return Unknown;
+                    case Npc_FieldIndex.NAM5:
+                        return NAM5;
                     case Npc_FieldIndex.Height:
                         return Height;
                     case Npc_FieldIndex.Weight:
@@ -2054,8 +2054,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Npc_FieldIndex.GiftFilter:
                         this.GiftFilter = ex;
                         break;
-                    case Npc_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Npc_FieldIndex.NAM5:
+                        this.NAM5 = ex;
                         break;
                     case Npc_FieldIndex.Height:
                         this.Height = ex;
@@ -2200,8 +2200,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Npc_FieldIndex.GiftFilter:
                         this.GiftFilter = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Npc_FieldIndex.NAM5:
+                        this.NAM5 = (Exception?)obj;
                         break;
                     case Npc_FieldIndex.Height:
                         this.Height = (Exception?)obj;
@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (HairColor != null) return true;
                 if (CombatStyle != null) return true;
                 if (GiftFilter != null) return true;
-                if (Unknown != null) return true;
+                if (NAM5 != null) return true;
                 if (Height != null) return true;
                 if (Weight != null) return true;
                 if (SoundLevel != null) return true;
@@ -2530,7 +2530,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HairColor, "HairColor");
                 fg.AppendItem(CombatStyle, "CombatStyle");
                 fg.AppendItem(GiftFilter, "GiftFilter");
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(NAM5, "NAM5");
                 fg.AppendItem(Height, "Height");
                 fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(SoundLevel, "SoundLevel");
@@ -2604,7 +2604,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HairColor = this.HairColor.Combine(rhs.HairColor);
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
                 ret.GiftFilter = this.GiftFilter.Combine(rhs.GiftFilter);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.NAM5 = this.NAM5.Combine(rhs.NAM5);
                 ret.Height = this.Height.Combine(rhs.Height);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
@@ -2671,7 +2671,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HairColor;
             public bool CombatStyle;
             public bool GiftFilter;
-            public bool Unknown;
+            public bool NAM5;
             public bool Height;
             public bool Weight;
             public bool SoundLevel;
@@ -2722,7 +2722,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairColor = defaultOn;
                 this.CombatStyle = defaultOn;
                 this.GiftFilter = defaultOn;
-                this.Unknown = defaultOn;
+                this.NAM5 = defaultOn;
                 this.Height = defaultOn;
                 this.Weight = defaultOn;
                 this.SoundLevel = defaultOn;
@@ -2774,7 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HairColor, null));
                 ret.Add((CombatStyle, null));
                 ret.Add((GiftFilter, null));
-                ret.Add((Unknown, null));
+                ret.Add((NAM5, null));
                 ret.Add((Height, null));
                 ret.Add((Weight, null));
                 ret.Add((SoundLevel, null));
@@ -2921,7 +2921,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<ColorRecord> HairColor { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
         new FormLinkNullable<FormList> GiftFilter { get; set; }
-        new UInt16 Unknown { get; set; }
+        new UInt16 NAM5 { get; set; }
         new Single Height { get; set; }
         new Single Weight { get; set; }
         new SoundLevel SoundLevel { get; set; }
@@ -2993,7 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IColorRecordGetter> HairColor { get; }
         IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
         IFormLinkNullable<IFormListGetter> GiftFilter { get; }
-        UInt16 Unknown { get; }
+        UInt16 NAM5 { get; }
         Single Height { get; }
         Single Weight { get; }
         SoundLevel SoundLevel { get; }
@@ -3342,7 +3342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         HairColor = 34,
         CombatStyle = 35,
         GiftFilter = 36,
-        Unknown = 37,
+        NAM5 = 37,
         Height = 38,
         Weight = 39,
         SoundLevel = 40,
@@ -3467,8 +3467,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Npc_FieldIndex.CombatStyle;
                 case "GIFTFILTER":
                     return (ushort)Npc_FieldIndex.GiftFilter;
-                case "UNKNOWN":
-                    return (ushort)Npc_FieldIndex.Unknown;
+                case "NAM5":
+                    return (ushort)Npc_FieldIndex.NAM5;
                 case "HEIGHT":
                     return (ushort)Npc_FieldIndex.Height;
                 case "WEIGHT":
@@ -3538,7 +3538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.HairColor:
                 case Npc_FieldIndex.CombatStyle:
                 case Npc_FieldIndex.GiftFilter:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                 case Npc_FieldIndex.Height:
                 case Npc_FieldIndex.Weight:
                 case Npc_FieldIndex.SoundLevel:
@@ -3598,7 +3598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.HairColor:
                 case Npc_FieldIndex.CombatStyle:
                 case Npc_FieldIndex.GiftFilter:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                 case Npc_FieldIndex.Height:
                 case Npc_FieldIndex.Weight:
                 case Npc_FieldIndex.SoundLevel:
@@ -3650,7 +3650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.HairColor:
                 case Npc_FieldIndex.CombatStyle:
                 case Npc_FieldIndex.GiftFilter:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                 case Npc_FieldIndex.Height:
                 case Npc_FieldIndex.Weight:
                 case Npc_FieldIndex.SoundLevel:
@@ -3737,8 +3737,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "CombatStyle";
                 case Npc_FieldIndex.GiftFilter:
                     return "GiftFilter";
-                case Npc_FieldIndex.Unknown:
-                    return "Unknown";
+                case Npc_FieldIndex.NAM5:
+                    return "NAM5";
                 case Npc_FieldIndex.Height:
                     return "Height";
                 case Npc_FieldIndex.Weight:
@@ -3806,7 +3806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.HairColor:
                 case Npc_FieldIndex.CombatStyle:
                 case Npc_FieldIndex.GiftFilter:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                 case Npc_FieldIndex.Height:
                 case Npc_FieldIndex.Weight:
                 case Npc_FieldIndex.SoundLevel:
@@ -3862,7 +3862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.HairColor:
                 case Npc_FieldIndex.CombatStyle:
                 case Npc_FieldIndex.GiftFilter:
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                 case Npc_FieldIndex.Height:
                 case Npc_FieldIndex.Weight:
                 case Npc_FieldIndex.SoundLevel:
@@ -3949,7 +3949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<CombatStyle>);
                 case Npc_FieldIndex.GiftFilter:
                     return typeof(FormLinkNullable<FormList>);
-                case Npc_FieldIndex.Unknown:
+                case Npc_FieldIndex.NAM5:
                     return typeof(UInt16);
                 case Npc_FieldIndex.Height:
                     return typeof(Single);
@@ -4117,7 +4117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HairColor = FormLinkNullable<ColorRecord>.Null;
             item.CombatStyle = FormLinkNullable<CombatStyle>.Null;
             item.GiftFilter = FormLinkNullable<FormList>.Null;
-            item.Unknown = Npc._Unknown_Default;
+            item.NAM5 = Npc._NAM5_Default;
             item.Height = default;
             item.Weight = default;
             item.SoundLevel = default;
@@ -4355,7 +4355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.HairColor = object.Equals(item.HairColor, rhs.HairColor);
             ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
             ret.GiftFilter = object.Equals(item.GiftFilter, rhs.GiftFilter);
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.NAM5 = item.NAM5 == rhs.NAM5;
             ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
@@ -4693,9 +4693,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(GiftFilterItem, "GiftFilter");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.NAM5 ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                fg.AppendItem(item.NAM5, "NAM5");
             }
             if (printMask?.Height ?? true)
             {
@@ -4866,7 +4866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HairColor = (item.HairColor.FormKey != null);
             mask.CombatStyle = (item.CombatStyle.FormKey != null);
             mask.GiftFilter = (item.GiftFilter.FormKey != null);
-            mask.Unknown = true;
+            mask.NAM5 = true;
             mask.Height = true;
             mask.Weight = true;
             mask.SoundLevel = true;
@@ -4966,7 +4966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.NAM5 != rhs.NAM5) return false;
             if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (lhs.SoundLevel != rhs.SoundLevel) return false;
@@ -5089,7 +5089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(GiftFilteritem);
             }
-            hash.Add(item.Unknown);
+            hash.Add(item.NAM5);
             hash.Add(item.Height);
             hash.Add(item.Weight);
             hash.Add(item.SoundLevel);
@@ -5762,9 +5762,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.GiftFilter = rhs.GiftFilter.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.NAM5 = rhs.NAM5;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
             {
@@ -6445,13 +6445,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Npc_FieldIndex.GiftFilter,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Npc_FieldIndex.Unknown,
+                    name: nameof(item.NAM5),
+                    item: item.NAM5,
+                    fieldIndex: (int)Npc_FieldIndex.NAM5,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
@@ -7354,11 +7354,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Unknown);
+                case "NAM5":
+                    errorMask?.PushIndex((int)Npc_FieldIndex.NAM5);
                     try
                     {
-                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
+                        item.NAM5 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7932,7 +7932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.GNAM_HEADER));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.NAM5,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM5_HEADER));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -8387,8 +8387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x354D414E: // NAM5
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
+                    item.NAM5 = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
                 }
                 case 0x364D414E: // NAM6
                 {
@@ -8703,9 +8703,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool GiftFilter_IsSet => _GiftFilterLocation.HasValue;
         public IFormLinkNullable<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public UInt16 Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants)) : default;
+        #region NAM5
+        private int? _NAM5Location;
+        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NAM5Location.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region Height
         private int? _HeightLocation;
@@ -9064,8 +9064,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x354D414E: // NAM5
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
+                    _NAM5Location = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
                 }
                 case 0x364D414E: // NAM6
                 {

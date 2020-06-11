@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Landscape" recordType="LAND" objType="Record" baseClass="SkyrimMajorRecord" GUID="12cbe5c3-cdb2-4514-8003-c80a6fe6305e" ID="292">
     <Fields>
-      <ByteArray name="Unknown" recordType="DATA" />
+      <ByteArray name="DATA" recordType="DATA" />
       <ByteArray name="VertexNormals" recordType="VNML" />
       <ByteArray name="VertexHeightMap" recordType="VHGT" />
       <ByteArray name="VertexColors" recordType="VCLR" />

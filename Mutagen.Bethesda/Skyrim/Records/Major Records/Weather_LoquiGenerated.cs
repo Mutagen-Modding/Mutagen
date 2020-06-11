@@ -64,60 +64,60 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Unknown
+        #region DNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _DNAM;
+        public MemorySlice<Byte>? DNAM
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._DNAM;
+            set => this._DNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.DNAM => this.DNAM;
         #endregion
-        #region Unknown2
+        #region CNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown2;
-        public MemorySlice<Byte>? Unknown2
+        protected MemorySlice<Byte>? _CNAM;
+        public MemorySlice<Byte>? CNAM
         {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
+            get => this._CNAM;
+            set => this._CNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.CNAM => this.CNAM;
         #endregion
-        #region Unknown3
+        #region ANAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown3;
-        public MemorySlice<Byte>? Unknown3
+        protected MemorySlice<Byte>? _ANAM;
+        public MemorySlice<Byte>? ANAM
         {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
+            get => this._ANAM;
+            set => this._ANAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown3 => this.Unknown3;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.ANAM => this.ANAM;
         #endregion
-        #region Unknown4
+        #region BNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown4;
-        public MemorySlice<Byte>? Unknown4
+        protected MemorySlice<Byte>? _BNAM;
+        public MemorySlice<Byte>? BNAM
         {
-            get => this._Unknown4;
-            set => this._Unknown4 = value;
+            get => this._BNAM;
+            set => this._BNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown4 => this.Unknown4;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.BNAM => this.BNAM;
         #endregion
-        #region Unknown5
+        #region LNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown5;
-        public MemorySlice<Byte>? Unknown5
+        protected MemorySlice<Byte>? _LNAM;
+        public MemorySlice<Byte>? LNAM
         {
-            get => this._Unknown5;
-            set => this._Unknown5 = value;
+            get => this._LNAM;
+            set => this._LNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown5 => this.Unknown5;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
         public FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; } = new FormLinkNullable<ShaderParticleGeometry>();
@@ -129,16 +129,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
         #endregion
-        #region Unknown6
+        #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown6;
-        public MemorySlice<Byte>? Unknown6
+        protected MemorySlice<Byte>? _ONAM;
+        public MemorySlice<Byte>? ONAM
         {
-            get => this._Unknown6;
-            set => this._Unknown6 = value;
+            get => this._ONAM;
+            set => this._ONAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown6 => this.Unknown6;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.ONAM => this.ONAM;
         #endregion
         #region Clouds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -266,8 +266,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region WindSpeed
         public Percent WindSpeed { get; set; } = default;
         #endregion
-        #region Unknown7
-        public UInt16 Unknown7 { get; set; } = default;
+        #region Unknown
+        public UInt16 Unknown { get; set; } = default;
         #endregion
         #region TransDelta
         public Single TransDelta { get; set; } = default;
@@ -364,27 +364,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWeatherAmbientColorSetGetter? IWeatherGetter.DirectionalAmbientLightingColors => this.DirectionalAmbientLightingColors;
         #endregion
-        #region Unknown8
+        #region NAM2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown8;
-        public MemorySlice<Byte>? Unknown8
+        protected MemorySlice<Byte>? _NAM2;
+        public MemorySlice<Byte>? NAM2
         {
-            get => this._Unknown8;
-            set => this._Unknown8 = value;
+            get => this._NAM2;
+            set => this._NAM2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown8 => this.Unknown8;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.NAM2 => this.NAM2;
         #endregion
-        #region Unknown9
+        #region NAM3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown9;
-        public MemorySlice<Byte>? Unknown9
+        protected MemorySlice<Byte>? _NAM3;
+        public MemorySlice<Byte>? NAM3
         {
-            get => this._Unknown9;
-            set => this._Unknown9 = value;
+            get => this._NAM3;
+            set => this._NAM3 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.Unknown9 => this.Unknown9;
+        ReadOnlyMemorySlice<Byte>? IWeatherGetter.NAM3 => this.NAM3;
         #endregion
         #region Aurora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -577,14 +577,14 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
-                this.Unknown5 = initialValue;
+                this.DNAM = initialValue;
+                this.CNAM = initialValue;
+                this.ANAM = initialValue;
+                this.BNAM = initialValue;
+                this.LNAM = initialValue;
                 this.Precipitation = initialValue;
                 this.VisualEffect = initialValue;
-                this.Unknown6 = initialValue;
+                this.ONAM = initialValue;
                 this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FogDistanceDayMax = initialValue;
                 this.FogDistanceNightMax = initialValue;
                 this.WindSpeed = initialValue;
-                this.Unknown7 = initialValue;
+                this.Unknown = initialValue;
                 this.TransDelta = initialValue;
                 this.SunGlare = initialValue;
                 this.SunDamage = initialValue;
@@ -631,8 +631,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(initialValue, new WeatherImageSpaces.Mask<TItem>(initialValue));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
-                this.Unknown8 = initialValue;
-                this.Unknown9 = initialValue;
+                this.NAM2 = initialValue;
+                this.NAM3 = initialValue;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.NAM0DataTypeState = initialValue;
                 this.FNAMDataTypeState = initialValue;
@@ -647,14 +647,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormVersion,
                 TItem Version2,
                 TItem CloudTextures,
-                TItem Unknown,
-                TItem Unknown2,
-                TItem Unknown3,
-                TItem Unknown4,
-                TItem Unknown5,
+                TItem DNAM,
+                TItem CNAM,
+                TItem ANAM,
+                TItem BNAM,
+                TItem LNAM,
                 TItem Precipitation,
                 TItem VisualEffect,
-                TItem Unknown6,
+                TItem ONAM,
                 TItem Clouds,
                 TItem SkyUpperColor,
                 TItem FogNearColor,
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FogDistanceDayMax,
                 TItem FogDistanceNightMax,
                 TItem WindSpeed,
-                TItem Unknown7,
+                TItem Unknown,
                 TItem TransDelta,
                 TItem SunGlare,
                 TItem SunDamage,
@@ -701,8 +701,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SkyStatics,
                 TItem ImageSpaces,
                 TItem DirectionalAmbientLightingColors,
-                TItem Unknown8,
-                TItem Unknown9,
+                TItem NAM2,
+                TItem NAM3,
                 TItem Aurora,
                 TItem NAM0DataTypeState,
                 TItem FNAMDataTypeState,
@@ -716,14 +716,14 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2)
             {
                 this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CloudTextures, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
-                this.Unknown5 = Unknown5;
+                this.DNAM = DNAM;
+                this.CNAM = CNAM;
+                this.ANAM = ANAM;
+                this.BNAM = BNAM;
+                this.LNAM = LNAM;
                 this.Precipitation = Precipitation;
                 this.VisualEffect = VisualEffect;
-                this.Unknown6 = Unknown6;
+                this.ONAM = ONAM;
                 this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(Clouds, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(SkyUpperColor, new WeatherColor.Mask<TItem>(SkyUpperColor));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(FogNearColor, new WeatherColor.Mask<TItem>(FogNearColor));
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FogDistanceDayMax = FogDistanceDayMax;
                 this.FogDistanceNightMax = FogDistanceNightMax;
                 this.WindSpeed = WindSpeed;
-                this.Unknown7 = Unknown7;
+                this.Unknown = Unknown;
                 this.TransDelta = TransDelta;
                 this.SunGlare = SunGlare;
                 this.SunDamage = SunDamage;
@@ -770,8 +770,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(ImageSpaces, new WeatherImageSpaces.Mask<TItem>(ImageSpaces));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
-                this.Unknown8 = Unknown8;
-                this.Unknown9 = Unknown9;
+                this.NAM2 = NAM2;
+                this.NAM3 = NAM3;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
                 this.NAM0DataTypeState = NAM0DataTypeState;
                 this.FNAMDataTypeState = FNAMDataTypeState;
@@ -788,14 +788,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CloudTextures;
-            public TItem Unknown;
-            public TItem Unknown2;
-            public TItem Unknown3;
-            public TItem Unknown4;
-            public TItem Unknown5;
+            public TItem DNAM;
+            public TItem CNAM;
+            public TItem ANAM;
+            public TItem BNAM;
+            public TItem LNAM;
             public TItem Precipitation;
             public TItem VisualEffect;
-            public TItem Unknown6;
+            public TItem ONAM;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>? Clouds;
             public MaskItem<TItem, WeatherColor.Mask<TItem>?>? SkyUpperColor { get; set; }
             public MaskItem<TItem, WeatherColor.Mask<TItem>?>? FogNearColor { get; set; }
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem FogDistanceDayMax;
             public TItem FogDistanceNightMax;
             public TItem WindSpeed;
-            public TItem Unknown7;
+            public TItem Unknown;
             public TItem TransDelta;
             public TItem SunGlare;
             public TItem SunDamage;
@@ -842,8 +842,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SkyStatics;
             public MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>? ImageSpaces { get; set; }
             public MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
-            public TItem Unknown8;
-            public TItem Unknown9;
+            public TItem NAM2;
+            public TItem NAM3;
             public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
             public TItem NAM0DataTypeState;
             public TItem FNAMDataTypeState;
@@ -862,14 +862,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.CloudTextures, rhs.CloudTextures)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
-                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
+                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.LNAM, rhs.LNAM)) return false;
                 if (!object.Equals(this.Precipitation, rhs.Precipitation)) return false;
                 if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
-                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
+                if (!object.Equals(this.ONAM, rhs.ONAM)) return false;
                 if (!object.Equals(this.Clouds, rhs.Clouds)) return false;
                 if (!object.Equals(this.SkyUpperColor, rhs.SkyUpperColor)) return false;
                 if (!object.Equals(this.FogNearColor, rhs.FogNearColor)) return false;
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.FogDistanceDayMax, rhs.FogDistanceDayMax)) return false;
                 if (!object.Equals(this.FogDistanceNightMax, rhs.FogDistanceNightMax)) return false;
                 if (!object.Equals(this.WindSpeed, rhs.WindSpeed)) return false;
-                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.TransDelta, rhs.TransDelta)) return false;
                 if (!object.Equals(this.SunGlare, rhs.SunGlare)) return false;
                 if (!object.Equals(this.SunDamage, rhs.SunDamage)) return false;
@@ -916,8 +916,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SkyStatics, rhs.SkyStatics)) return false;
                 if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
                 if (!object.Equals(this.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
-                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
-                if (!object.Equals(this.Unknown9, rhs.Unknown9)) return false;
+                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
                 if (!object.Equals(this.Aurora, rhs.Aurora)) return false;
                 if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
                 if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
@@ -928,14 +928,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.CloudTextures);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
-                hash.Add(this.Unknown5);
+                hash.Add(this.DNAM);
+                hash.Add(this.CNAM);
+                hash.Add(this.ANAM);
+                hash.Add(this.BNAM);
+                hash.Add(this.LNAM);
                 hash.Add(this.Precipitation);
                 hash.Add(this.VisualEffect);
-                hash.Add(this.Unknown6);
+                hash.Add(this.ONAM);
                 hash.Add(this.Clouds);
                 hash.Add(this.SkyUpperColor);
                 hash.Add(this.FogNearColor);
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.FogDistanceDayMax);
                 hash.Add(this.FogDistanceNightMax);
                 hash.Add(this.WindSpeed);
-                hash.Add(this.Unknown7);
+                hash.Add(this.Unknown);
                 hash.Add(this.TransDelta);
                 hash.Add(this.SunGlare);
                 hash.Add(this.SunDamage);
@@ -982,8 +982,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SkyStatics);
                 hash.Add(this.ImageSpaces);
                 hash.Add(this.DirectionalAmbientLightingColors);
-                hash.Add(this.Unknown8);
-                hash.Add(this.Unknown9);
+                hash.Add(this.NAM2);
+                hash.Add(this.NAM3);
                 hash.Add(this.Aurora);
                 hash.Add(this.NAM0DataTypeState);
                 hash.Add(this.FNAMDataTypeState);
@@ -1009,14 +1009,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
-                if (!eval(this.Unknown5)) return false;
+                if (!eval(this.DNAM)) return false;
+                if (!eval(this.CNAM)) return false;
+                if (!eval(this.ANAM)) return false;
+                if (!eval(this.BNAM)) return false;
+                if (!eval(this.LNAM)) return false;
                 if (!eval(this.Precipitation)) return false;
                 if (!eval(this.VisualEffect)) return false;
-                if (!eval(this.Unknown6)) return false;
+                if (!eval(this.ONAM)) return false;
                 if (this.Clouds != null)
                 {
                     if (!eval(this.Clouds.Overall)) return false;
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.FogDistanceDayMax)) return false;
                 if (!eval(this.FogDistanceNightMax)) return false;
                 if (!eval(this.WindSpeed)) return false;
-                if (!eval(this.Unknown7)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.TransDelta)) return false;
                 if (!eval(this.SunGlare)) return false;
                 if (!eval(this.SunDamage)) return false;
@@ -1171,8 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.DirectionalAmbientLightingColors.Overall)) return false;
                     if (this.DirectionalAmbientLightingColors.Specific != null && !this.DirectionalAmbientLightingColors.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown8)) return false;
-                if (!eval(this.Unknown9)) return false;
+                if (!eval(this.NAM2)) return false;
+                if (!eval(this.NAM3)) return false;
                 if (Aurora != null)
                 {
                     if (!eval(this.Aurora.Overall)) return false;
@@ -1200,14 +1200,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
-                if (eval(this.Unknown5)) return true;
+                if (eval(this.DNAM)) return true;
+                if (eval(this.CNAM)) return true;
+                if (eval(this.ANAM)) return true;
+                if (eval(this.BNAM)) return true;
+                if (eval(this.LNAM)) return true;
                 if (eval(this.Precipitation)) return true;
                 if (eval(this.VisualEffect)) return true;
-                if (eval(this.Unknown6)) return true;
+                if (eval(this.ONAM)) return true;
                 if (this.Clouds != null)
                 {
                     if (eval(this.Clouds.Overall)) return true;
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.FogDistanceDayMax)) return true;
                 if (eval(this.FogDistanceNightMax)) return true;
                 if (eval(this.WindSpeed)) return true;
-                if (eval(this.Unknown7)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.TransDelta)) return true;
                 if (eval(this.SunGlare)) return true;
                 if (eval(this.SunDamage)) return true;
@@ -1362,8 +1362,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.DirectionalAmbientLightingColors.Overall)) return true;
                     if (this.DirectionalAmbientLightingColors.Specific != null && this.DirectionalAmbientLightingColors.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown8)) return true;
-                if (eval(this.Unknown9)) return true;
+                if (eval(this.NAM2)) return true;
+                if (eval(this.NAM3)) return true;
                 if (Aurora != null)
                 {
                     if (eval(this.Aurora.Overall)) return true;
@@ -1401,14 +1401,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
-                obj.Unknown5 = eval(this.Unknown5);
+                obj.DNAM = eval(this.DNAM);
+                obj.CNAM = eval(this.CNAM);
+                obj.ANAM = eval(this.ANAM);
+                obj.BNAM = eval(this.BNAM);
+                obj.LNAM = eval(this.LNAM);
                 obj.Precipitation = eval(this.Precipitation);
                 obj.VisualEffect = eval(this.VisualEffect);
-                obj.Unknown6 = eval(this.Unknown6);
+                obj.ONAM = eval(this.ONAM);
                 if (Clouds != null)
                 {
                     obj.Clouds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CloudLayer.Mask<R>?>>?>(eval(this.Clouds.Overall), Enumerable.Empty<MaskItemIndexed<R, CloudLayer.Mask<R>?>>());
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FogDistanceDayMax = eval(this.FogDistanceDayMax);
                 obj.FogDistanceNightMax = eval(this.FogDistanceNightMax);
                 obj.WindSpeed = eval(this.WindSpeed);
-                obj.Unknown7 = eval(this.Unknown7);
+                obj.Unknown = eval(this.Unknown);
                 obj.TransDelta = eval(this.TransDelta);
                 obj.SunGlare = eval(this.SunGlare);
                 obj.SunDamage = eval(this.SunDamage);
@@ -1496,8 +1496,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, WeatherImageSpaces.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
                 obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColorSet.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
-                obj.Unknown8 = eval(this.Unknown8);
-                obj.Unknown9 = eval(this.Unknown9);
+                obj.NAM2 = eval(this.NAM2);
+                obj.NAM3 = eval(this.NAM3);
                 obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
                 obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
                 obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
@@ -1547,25 +1547,25 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.DNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(DNAM, "DNAM");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(CNAM, "CNAM");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.ANAM ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(ANAM, "ANAM");
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if (printMask?.BNAM ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        fg.AppendItem(BNAM, "BNAM");
                     }
-                    if (printMask?.Unknown5 ?? true)
+                    if (printMask?.LNAM ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        fg.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.Precipitation ?? true)
                     {
@@ -1575,9 +1575,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(VisualEffect, "VisualEffect");
                     }
-                    if (printMask?.Unknown6 ?? true)
+                    if (printMask?.ONAM ?? true)
                     {
-                        fg.AppendItem(Unknown6, "Unknown6");
+                        fg.AppendItem(ONAM, "ONAM");
                     }
                     if ((printMask?.Clouds?.Overall ?? true)
                         && Clouds.TryGet(out var CloudsItem))
@@ -1706,9 +1706,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(WindSpeed, "WindSpeed");
                     }
-                    if (printMask?.Unknown7 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown7, "Unknown7");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
@@ -1820,13 +1820,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         DirectionalAmbientLightingColors?.ToString(fg);
                     }
-                    if (printMask?.Unknown8 ?? true)
+                    if (printMask?.NAM2 ?? true)
                     {
-                        fg.AppendItem(Unknown8, "Unknown8");
+                        fg.AppendItem(NAM2, "NAM2");
                     }
-                    if (printMask?.Unknown9 ?? true)
+                    if (printMask?.NAM3 ?? true)
                     {
-                        fg.AppendItem(Unknown9, "Unknown9");
+                        fg.AppendItem(NAM3, "NAM3");
                     }
                     if (printMask?.Aurora?.Overall ?? true)
                     {
@@ -1857,14 +1857,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CloudTextures;
-            public Exception? Unknown;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
-            public Exception? Unknown5;
+            public Exception? DNAM;
+            public Exception? CNAM;
+            public Exception? ANAM;
+            public Exception? BNAM;
+            public Exception? LNAM;
             public Exception? Precipitation;
             public Exception? VisualEffect;
-            public Exception? Unknown6;
+            public Exception? ONAM;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>? Clouds;
             public MaskItem<Exception?, WeatherColor.ErrorMask?>? SkyUpperColor;
             public MaskItem<Exception?, WeatherColor.ErrorMask?>? FogNearColor;
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? FogDistanceDayMax;
             public Exception? FogDistanceNightMax;
             public Exception? WindSpeed;
-            public Exception? Unknown7;
+            public Exception? Unknown;
             public Exception? TransDelta;
             public Exception? SunGlare;
             public Exception? SunDamage;
@@ -1911,8 +1911,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SkyStatics;
             public MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>? ImageSpaces;
             public MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>? DirectionalAmbientLightingColors;
-            public Exception? Unknown8;
-            public Exception? Unknown9;
+            public Exception? NAM2;
+            public Exception? NAM3;
             public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
             public Exception? NAM0DataTypeState;
             public Exception? FNAMDataTypeState;
@@ -1927,22 +1927,22 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case Weather_FieldIndex.CloudTextures:
                         return CloudTextures;
-                    case Weather_FieldIndex.Unknown:
-                        return Unknown;
-                    case Weather_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case Weather_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case Weather_FieldIndex.Unknown4:
-                        return Unknown4;
-                    case Weather_FieldIndex.Unknown5:
-                        return Unknown5;
+                    case Weather_FieldIndex.DNAM:
+                        return DNAM;
+                    case Weather_FieldIndex.CNAM:
+                        return CNAM;
+                    case Weather_FieldIndex.ANAM:
+                        return ANAM;
+                    case Weather_FieldIndex.BNAM:
+                        return BNAM;
+                    case Weather_FieldIndex.LNAM:
+                        return LNAM;
                     case Weather_FieldIndex.Precipitation:
                         return Precipitation;
                     case Weather_FieldIndex.VisualEffect:
                         return VisualEffect;
-                    case Weather_FieldIndex.Unknown6:
-                        return Unknown6;
+                    case Weather_FieldIndex.ONAM:
+                        return ONAM;
                     case Weather_FieldIndex.Clouds:
                         return Clouds;
                     case Weather_FieldIndex.SkyUpperColor:
@@ -1997,8 +1997,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return FogDistanceNightMax;
                     case Weather_FieldIndex.WindSpeed:
                         return WindSpeed;
-                    case Weather_FieldIndex.Unknown7:
-                        return Unknown7;
+                    case Weather_FieldIndex.Unknown:
+                        return Unknown;
                     case Weather_FieldIndex.TransDelta:
                         return TransDelta;
                     case Weather_FieldIndex.SunGlare:
@@ -2035,10 +2035,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return ImageSpaces;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         return DirectionalAmbientLightingColors;
-                    case Weather_FieldIndex.Unknown8:
-                        return Unknown8;
-                    case Weather_FieldIndex.Unknown9:
-                        return Unknown9;
+                    case Weather_FieldIndex.NAM2:
+                        return NAM2;
+                    case Weather_FieldIndex.NAM3:
+                        return NAM3;
                     case Weather_FieldIndex.Aurora:
                         return Aurora;
                     case Weather_FieldIndex.NAM0DataTypeState:
@@ -2060,20 +2060,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.CloudTextures:
                         this.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Weather_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Weather_FieldIndex.DNAM:
+                        this.DNAM = ex;
                         break;
-                    case Weather_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case Weather_FieldIndex.CNAM:
+                        this.CNAM = ex;
                         break;
-                    case Weather_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case Weather_FieldIndex.ANAM:
+                        this.ANAM = ex;
                         break;
-                    case Weather_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case Weather_FieldIndex.BNAM:
+                        this.BNAM = ex;
                         break;
-                    case Weather_FieldIndex.Unknown5:
-                        this.Unknown5 = ex;
+                    case Weather_FieldIndex.LNAM:
+                        this.LNAM = ex;
                         break;
                     case Weather_FieldIndex.Precipitation:
                         this.Precipitation = ex;
@@ -2081,8 +2081,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.VisualEffect:
                         this.VisualEffect = ex;
                         break;
-                    case Weather_FieldIndex.Unknown6:
-                        this.Unknown6 = ex;
+                    case Weather_FieldIndex.ONAM:
+                        this.ONAM = ex;
                         break;
                     case Weather_FieldIndex.Clouds:
                         this.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(ex, null);
@@ -2165,8 +2165,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.WindSpeed:
                         this.WindSpeed = ex;
                         break;
-                    case Weather_FieldIndex.Unknown7:
-                        this.Unknown7 = ex;
+                    case Weather_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case Weather_FieldIndex.TransDelta:
                         this.TransDelta = ex;
@@ -2222,11 +2222,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.Unknown8:
-                        this.Unknown8 = ex;
+                    case Weather_FieldIndex.NAM2:
+                        this.NAM2 = ex;
                         break;
-                    case Weather_FieldIndex.Unknown9:
-                        this.Unknown9 = ex;
+                    case Weather_FieldIndex.NAM3:
+                        this.NAM3 = ex;
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -2254,20 +2254,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.CloudTextures:
                         this.CloudTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Weather_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Weather_FieldIndex.DNAM:
+                        this.DNAM = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case Weather_FieldIndex.CNAM:
+                        this.CNAM = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case Weather_FieldIndex.ANAM:
+                        this.ANAM = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case Weather_FieldIndex.BNAM:
+                        this.BNAM = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception?)obj;
+                    case Weather_FieldIndex.LNAM:
+                        this.LNAM = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Precipitation:
                         this.Precipitation = (Exception?)obj;
@@ -2275,8 +2275,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.VisualEffect:
                         this.VisualEffect = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown6:
-                        this.Unknown6 = (Exception?)obj;
+                    case Weather_FieldIndex.ONAM:
+                        this.ONAM = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Clouds:
                         this.Clouds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>)obj;
@@ -2359,8 +2359,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.WindSpeed:
                         this.WindSpeed = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown7:
-                        this.Unknown7 = (Exception?)obj;
+                    case Weather_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.TransDelta:
                         this.TransDelta = (Exception?)obj;
@@ -2416,11 +2416,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown8:
-                        this.Unknown8 = (Exception?)obj;
+                    case Weather_FieldIndex.NAM2:
+                        this.NAM2 = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.Unknown9:
-                        this.Unknown9 = (Exception?)obj;
+                    case Weather_FieldIndex.NAM3:
+                        this.NAM3 = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -2444,14 +2444,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (CloudTextures != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
-                if (Unknown5 != null) return true;
+                if (DNAM != null) return true;
+                if (CNAM != null) return true;
+                if (ANAM != null) return true;
+                if (BNAM != null) return true;
+                if (LNAM != null) return true;
                 if (Precipitation != null) return true;
                 if (VisualEffect != null) return true;
-                if (Unknown6 != null) return true;
+                if (ONAM != null) return true;
                 if (Clouds != null) return true;
                 if (SkyUpperColor != null) return true;
                 if (FogNearColor != null) return true;
@@ -2479,7 +2479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (FogDistanceDayMax != null) return true;
                 if (FogDistanceNightMax != null) return true;
                 if (WindSpeed != null) return true;
-                if (Unknown7 != null) return true;
+                if (Unknown != null) return true;
                 if (TransDelta != null) return true;
                 if (SunGlare != null) return true;
                 if (SunDamage != null) return true;
@@ -2498,8 +2498,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SkyStatics != null) return true;
                 if (ImageSpaces != null) return true;
                 if (DirectionalAmbientLightingColors != null) return true;
-                if (Unknown8 != null) return true;
-                if (Unknown9 != null) return true;
+                if (NAM2 != null) return true;
+                if (NAM3 != null) return true;
                 if (Aurora != null) return true;
                 if (NAM0DataTypeState != null) return true;
                 if (FNAMDataTypeState != null) return true;
@@ -2561,14 +2561,14 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(Unknown5, "Unknown5");
+                fg.AppendItem(DNAM, "DNAM");
+                fg.AppendItem(CNAM, "CNAM");
+                fg.AppendItem(ANAM, "ANAM");
+                fg.AppendItem(BNAM, "BNAM");
+                fg.AppendItem(LNAM, "LNAM");
                 fg.AppendItem(Precipitation, "Precipitation");
                 fg.AppendItem(VisualEffect, "VisualEffect");
-                fg.AppendItem(Unknown6, "Unknown6");
+                fg.AppendItem(ONAM, "ONAM");
                 if (Clouds.TryGet(out var CloudsItem))
                 {
                     fg.AppendLine("Clouds =>");
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
                 fg.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
                 fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(Unknown7, "Unknown7");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(TransDelta, "TransDelta");
                 fg.AppendItem(SunGlare, "SunGlare");
                 fg.AppendItem(SunDamage, "SunDamage");
@@ -2678,8 +2678,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 ImageSpaces?.ToString(fg);
                 DirectionalAmbientLightingColors?.ToString(fg);
-                fg.AppendItem(Unknown8, "Unknown8");
-                fg.AppendItem(Unknown9, "Unknown9");
+                fg.AppendItem(NAM2, "NAM2");
+                fg.AppendItem(NAM3, "NAM3");
                 Aurora?.ToString(fg);
                 fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                 fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
@@ -2693,14 +2693,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.CloudTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CloudTextures?.Overall, rhs.CloudTextures?.Overall), ExceptionExt.Combine(this.CloudTextures?.Specific, rhs.CloudTextures?.Specific));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
-                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.ANAM = this.ANAM.Combine(rhs.ANAM);
+                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
+                ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.Precipitation = this.Precipitation.Combine(rhs.Precipitation);
                 ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
-                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
+                ret.ONAM = this.ONAM.Combine(rhs.ONAM);
                 ret.Clouds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CloudLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Clouds?.Overall, rhs.Clouds?.Overall), ExceptionExt.Combine(this.Clouds?.Specific, rhs.Clouds?.Specific));
                 ret.SkyUpperColor = this.SkyUpperColor.Combine(rhs.SkyUpperColor, (l, r) => l.Combine(r));
                 ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor, (l, r) => l.Combine(r));
@@ -2728,7 +2728,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FogDistanceDayMax = this.FogDistanceDayMax.Combine(rhs.FogDistanceDayMax);
                 ret.FogDistanceNightMax = this.FogDistanceNightMax.Combine(rhs.FogDistanceNightMax);
                 ret.WindSpeed = this.WindSpeed.Combine(rhs.WindSpeed);
-                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.TransDelta = this.TransDelta.Combine(rhs.TransDelta);
                 ret.SunGlare = this.SunGlare.Combine(rhs.SunGlare);
                 ret.SunDamage = this.SunDamage.Combine(rhs.SunDamage);
@@ -2747,8 +2747,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
                 ret.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors.Combine(rhs.DirectionalAmbientLightingColors, (l, r) => l.Combine(r));
-                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
-                ret.Unknown9 = this.Unknown9.Combine(rhs.Unknown9);
+                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
+                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.Aurora = this.Aurora.Combine(rhs.Aurora, (l, r) => l.Combine(r));
                 ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
                 ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
@@ -2776,14 +2776,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool CloudTextures;
-            public bool Unknown;
-            public bool Unknown2;
-            public bool Unknown3;
-            public bool Unknown4;
-            public bool Unknown5;
+            public bool DNAM;
+            public bool CNAM;
+            public bool ANAM;
+            public bool BNAM;
+            public bool LNAM;
             public bool Precipitation;
             public bool VisualEffect;
-            public bool Unknown6;
+            public bool ONAM;
             public MaskItem<bool, CloudLayer.TranslationMask?> Clouds;
             public MaskItem<bool, WeatherColor.TranslationMask?> SkyUpperColor;
             public MaskItem<bool, WeatherColor.TranslationMask?> FogNearColor;
@@ -2811,7 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FogDistanceDayMax;
             public bool FogDistanceNightMax;
             public bool WindSpeed;
-            public bool Unknown7;
+            public bool Unknown;
             public bool TransDelta;
             public bool SunGlare;
             public bool SunDamage;
@@ -2830,8 +2830,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SkyStatics;
             public MaskItem<bool, WeatherImageSpaces.TranslationMask?> ImageSpaces;
             public MaskItem<bool, WeatherAmbientColorSet.TranslationMask?> DirectionalAmbientLightingColors;
-            public bool Unknown8;
-            public bool Unknown9;
+            public bool NAM2;
+            public bool NAM3;
             public MaskItem<bool, Model.TranslationMask?> Aurora;
             public bool NAM0DataTypeState;
             public bool FNAMDataTypeState;
@@ -2843,14 +2843,14 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.CloudTextures = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
-                this.Unknown5 = defaultOn;
+                this.DNAM = defaultOn;
+                this.CNAM = defaultOn;
+                this.ANAM = defaultOn;
+                this.BNAM = defaultOn;
+                this.LNAM = defaultOn;
                 this.Precipitation = defaultOn;
                 this.VisualEffect = defaultOn;
-                this.Unknown6 = defaultOn;
+                this.ONAM = defaultOn;
                 this.Clouds = new MaskItem<bool, CloudLayer.TranslationMask?>(defaultOn, null);
                 this.SkyUpperColor = new MaskItem<bool, WeatherColor.TranslationMask?>(defaultOn, null);
                 this.FogNearColor = new MaskItem<bool, WeatherColor.TranslationMask?>(defaultOn, null);
@@ -2878,7 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FogDistanceDayMax = defaultOn;
                 this.FogDistanceNightMax = defaultOn;
                 this.WindSpeed = defaultOn;
-                this.Unknown7 = defaultOn;
+                this.Unknown = defaultOn;
                 this.TransDelta = defaultOn;
                 this.SunGlare = defaultOn;
                 this.SunDamage = defaultOn;
@@ -2897,8 +2897,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyStatics = defaultOn;
                 this.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.TranslationMask?>(defaultOn, null);
                 this.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.TranslationMask?>(defaultOn, null);
-                this.Unknown8 = defaultOn;
-                this.Unknown9 = defaultOn;
+                this.NAM2 = defaultOn;
+                this.NAM3 = defaultOn;
                 this.Aurora = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.NAM0DataTypeState = defaultOn;
                 this.FNAMDataTypeState = defaultOn;
@@ -2911,14 +2911,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((CloudTextures, null));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
-                ret.Add((Unknown5, null));
+                ret.Add((DNAM, null));
+                ret.Add((CNAM, null));
+                ret.Add((ANAM, null));
+                ret.Add((BNAM, null));
+                ret.Add((LNAM, null));
                 ret.Add((Precipitation, null));
                 ret.Add((VisualEffect, null));
-                ret.Add((Unknown6, null));
+                ret.Add((ONAM, null));
                 ret.Add((Clouds?.Overall ?? true, Clouds?.Specific?.GetCrystal()));
                 ret.Add((SkyUpperColor?.Overall ?? true, SkyUpperColor?.Specific?.GetCrystal()));
                 ret.Add((FogNearColor?.Overall ?? true, FogNearColor?.Specific?.GetCrystal()));
@@ -2946,7 +2946,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FogDistanceDayMax, null));
                 ret.Add((FogDistanceNightMax, null));
                 ret.Add((WindSpeed, null));
-                ret.Add((Unknown7, null));
+                ret.Add((Unknown, null));
                 ret.Add((TransDelta, null));
                 ret.Add((SunGlare, null));
                 ret.Add((SunDamage, null));
@@ -2965,8 +2965,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SkyStatics, null));
                 ret.Add((ImageSpaces?.Overall ?? true, ImageSpaces?.Specific?.GetCrystal()));
                 ret.Add((DirectionalAmbientLightingColors?.Overall ?? true, DirectionalAmbientLightingColors?.Specific?.GetCrystal()));
-                ret.Add((Unknown8, null));
-                ret.Add((Unknown9, null));
+                ret.Add((NAM2, null));
+                ret.Add((NAM3, null));
                 ret.Add((Aurora?.Overall ?? true, Aurora?.Specific?.GetCrystal()));
                 ret.Add((NAM0DataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
@@ -3077,14 +3077,14 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherInternal>
     {
         new String?[] CloudTextures { get; }
-        new MemorySlice<Byte>? Unknown { get; set; }
-        new MemorySlice<Byte>? Unknown2 { get; set; }
-        new MemorySlice<Byte>? Unknown3 { get; set; }
-        new MemorySlice<Byte>? Unknown4 { get; set; }
-        new MemorySlice<Byte>? Unknown5 { get; set; }
+        new MemorySlice<Byte>? DNAM { get; set; }
+        new MemorySlice<Byte>? CNAM { get; set; }
+        new MemorySlice<Byte>? ANAM { get; set; }
+        new MemorySlice<Byte>? BNAM { get; set; }
+        new MemorySlice<Byte>? LNAM { get; set; }
         new FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; }
         new FormLink<VisualEffect> VisualEffect { get; set; }
-        new MemorySlice<Byte>? Unknown6 { get; set; }
+        new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
         new WeatherColor FogNearColor { get; set; }
@@ -3112,7 +3112,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FogDistanceDayMax { get; set; }
         new Single FogDistanceNightMax { get; set; }
         new Percent WindSpeed { get; set; }
-        new UInt16 Unknown7 { get; set; }
+        new UInt16 Unknown { get; set; }
         new Single TransDelta { get; set; }
         new Percent SunGlare { get; set; }
         new Percent SunDamage { get; set; }
@@ -3131,8 +3131,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
-        new MemorySlice<Byte>? Unknown8 { get; set; }
-        new MemorySlice<Byte>? Unknown9 { get; set; }
+        new MemorySlice<Byte>? NAM2 { get; set; }
+        new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
@@ -3155,14 +3155,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown4 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown5 { get; }
+        ReadOnlyMemorySlice<Byte>? DNAM { get; }
+        ReadOnlyMemorySlice<Byte>? CNAM { get; }
+        ReadOnlyMemorySlice<Byte>? ANAM { get; }
+        ReadOnlyMemorySlice<Byte>? BNAM { get; }
+        ReadOnlyMemorySlice<Byte>? LNAM { get; }
         IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
         IFormLink<IVisualEffectGetter> VisualEffect { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown6 { get; }
+        ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
         IWeatherColorGetter FogNearColor { get; }
@@ -3190,7 +3190,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single FogDistanceDayMax { get; }
         Single FogDistanceNightMax { get; }
         Percent WindSpeed { get; }
-        UInt16 Unknown7 { get; }
+        UInt16 Unknown { get; }
         Single TransDelta { get; }
         Percent SunGlare { get; }
         Percent SunDamage { get; }
@@ -3209,8 +3209,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown8 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown9 { get; }
+        ReadOnlyMemorySlice<Byte>? NAM2 { get; }
+        ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
@@ -3516,14 +3516,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormVersion = 4,
         Version2 = 5,
         CloudTextures = 6,
-        Unknown = 7,
-        Unknown2 = 8,
-        Unknown3 = 9,
-        Unknown4 = 10,
-        Unknown5 = 11,
+        DNAM = 7,
+        CNAM = 8,
+        ANAM = 9,
+        BNAM = 10,
+        LNAM = 11,
         Precipitation = 12,
         VisualEffect = 13,
-        Unknown6 = 14,
+        ONAM = 14,
         Clouds = 15,
         SkyUpperColor = 16,
         FogNearColor = 17,
@@ -3551,7 +3551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FogDistanceDayMax = 39,
         FogDistanceNightMax = 40,
         WindSpeed = 41,
-        Unknown7 = 42,
+        Unknown = 42,
         TransDelta = 43,
         SunGlare = 44,
         SunDamage = 45,
@@ -3570,8 +3570,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyStatics = 58,
         ImageSpaces = 59,
         DirectionalAmbientLightingColors = 60,
-        Unknown8 = 61,
-        Unknown9 = 62,
+        NAM2 = 61,
+        NAM3 = 62,
         Aurora = 63,
         NAM0DataTypeState = 64,
         FNAMDataTypeState = 65,
@@ -3627,22 +3627,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "CLOUDTEXTURES":
                     return (ushort)Weather_FieldIndex.CloudTextures;
-                case "UNKNOWN":
-                    return (ushort)Weather_FieldIndex.Unknown;
-                case "UNKNOWN2":
-                    return (ushort)Weather_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)Weather_FieldIndex.Unknown3;
-                case "UNKNOWN4":
-                    return (ushort)Weather_FieldIndex.Unknown4;
-                case "UNKNOWN5":
-                    return (ushort)Weather_FieldIndex.Unknown5;
+                case "DNAM":
+                    return (ushort)Weather_FieldIndex.DNAM;
+                case "CNAM":
+                    return (ushort)Weather_FieldIndex.CNAM;
+                case "ANAM":
+                    return (ushort)Weather_FieldIndex.ANAM;
+                case "BNAM":
+                    return (ushort)Weather_FieldIndex.BNAM;
+                case "LNAM":
+                    return (ushort)Weather_FieldIndex.LNAM;
                 case "PRECIPITATION":
                     return (ushort)Weather_FieldIndex.Precipitation;
                 case "VISUALEFFECT":
                     return (ushort)Weather_FieldIndex.VisualEffect;
-                case "UNKNOWN6":
-                    return (ushort)Weather_FieldIndex.Unknown6;
+                case "ONAM":
+                    return (ushort)Weather_FieldIndex.ONAM;
                 case "CLOUDS":
                     return (ushort)Weather_FieldIndex.Clouds;
                 case "SKYUPPERCOLOR":
@@ -3697,8 +3697,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.FogDistanceNightMax;
                 case "WINDSPEED":
                     return (ushort)Weather_FieldIndex.WindSpeed;
-                case "UNKNOWN7":
-                    return (ushort)Weather_FieldIndex.Unknown7;
+                case "UNKNOWN":
+                    return (ushort)Weather_FieldIndex.Unknown;
                 case "TRANSDELTA":
                     return (ushort)Weather_FieldIndex.TransDelta;
                 case "SUNGLARE":
@@ -3735,10 +3735,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.ImageSpaces;
                 case "DIRECTIONALAMBIENTLIGHTINGCOLORS":
                     return (ushort)Weather_FieldIndex.DirectionalAmbientLightingColors;
-                case "UNKNOWN8":
-                    return (ushort)Weather_FieldIndex.Unknown8;
-                case "UNKNOWN9":
-                    return (ushort)Weather_FieldIndex.Unknown9;
+                case "NAM2":
+                    return (ushort)Weather_FieldIndex.NAM2;
+                case "NAM3":
+                    return (ushort)Weather_FieldIndex.NAM3;
                 case "AURORA":
                     return (ushort)Weather_FieldIndex.Aurora;
                 case "NAM0DATATYPESTATE":
@@ -3762,14 +3762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                     return true;
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.Unknown2:
-                case Weather_FieldIndex.Unknown3:
-                case Weather_FieldIndex.Unknown4:
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.DNAM:
+                case Weather_FieldIndex.CNAM:
+                case Weather_FieldIndex.ANAM:
+                case Weather_FieldIndex.BNAM:
+                case Weather_FieldIndex.LNAM:
                 case Weather_FieldIndex.Precipitation:
                 case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                 case Weather_FieldIndex.SkyUpperColor:
                 case Weather_FieldIndex.FogNearColor:
                 case Weather_FieldIndex.UnknownColor:
@@ -3796,7 +3796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.FogDistanceDayMax:
                 case Weather_FieldIndex.FogDistanceNightMax:
                 case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                 case Weather_FieldIndex.TransDelta:
                 case Weather_FieldIndex.SunGlare:
                 case Weather_FieldIndex.SunDamage:
@@ -3813,8 +3813,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirectionRange:
                 case Weather_FieldIndex.ImageSpaces:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.Unknown8:
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM2:
+                case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -3854,14 +3854,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Aurora:
                     return true;
                 case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.Unknown2:
-                case Weather_FieldIndex.Unknown3:
-                case Weather_FieldIndex.Unknown4:
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.DNAM:
+                case Weather_FieldIndex.CNAM:
+                case Weather_FieldIndex.ANAM:
+                case Weather_FieldIndex.BNAM:
+                case Weather_FieldIndex.LNAM:
                 case Weather_FieldIndex.Precipitation:
                 case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                 case Weather_FieldIndex.FogDistanceDayNear:
                 case Weather_FieldIndex.FogDistanceDayFar:
                 case Weather_FieldIndex.FogDistanceNightNear:
@@ -3871,7 +3871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.FogDistanceDayMax:
                 case Weather_FieldIndex.FogDistanceNightMax:
                 case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                 case Weather_FieldIndex.TransDelta:
                 case Weather_FieldIndex.SunGlare:
                 case Weather_FieldIndex.SunDamage:
@@ -3887,8 +3887,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirection:
                 case Weather_FieldIndex.WindDirectionRange:
                 case Weather_FieldIndex.SkyStatics:
-                case Weather_FieldIndex.Unknown8:
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM2:
+                case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -3904,14 +3904,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.Unknown2:
-                case Weather_FieldIndex.Unknown3:
-                case Weather_FieldIndex.Unknown4:
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.DNAM:
+                case Weather_FieldIndex.CNAM:
+                case Weather_FieldIndex.ANAM:
+                case Weather_FieldIndex.BNAM:
+                case Weather_FieldIndex.LNAM:
                 case Weather_FieldIndex.Precipitation:
                 case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                 case Weather_FieldIndex.Clouds:
                 case Weather_FieldIndex.SkyUpperColor:
                 case Weather_FieldIndex.FogNearColor:
@@ -3939,7 +3939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.FogDistanceDayMax:
                 case Weather_FieldIndex.FogDistanceNightMax:
                 case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                 case Weather_FieldIndex.TransDelta:
                 case Weather_FieldIndex.SunGlare:
                 case Weather_FieldIndex.SunDamage:
@@ -3958,8 +3958,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.Unknown8:
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM2:
+                case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -3977,22 +3977,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Weather_FieldIndex.CloudTextures:
                     return "CloudTextures";
-                case Weather_FieldIndex.Unknown:
-                    return "Unknown";
-                case Weather_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case Weather_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case Weather_FieldIndex.Unknown4:
-                    return "Unknown4";
-                case Weather_FieldIndex.Unknown5:
-                    return "Unknown5";
+                case Weather_FieldIndex.DNAM:
+                    return "DNAM";
+                case Weather_FieldIndex.CNAM:
+                    return "CNAM";
+                case Weather_FieldIndex.ANAM:
+                    return "ANAM";
+                case Weather_FieldIndex.BNAM:
+                    return "BNAM";
+                case Weather_FieldIndex.LNAM:
+                    return "LNAM";
                 case Weather_FieldIndex.Precipitation:
                     return "Precipitation";
                 case Weather_FieldIndex.VisualEffect:
                     return "VisualEffect";
-                case Weather_FieldIndex.Unknown6:
-                    return "Unknown6";
+                case Weather_FieldIndex.ONAM:
+                    return "ONAM";
                 case Weather_FieldIndex.Clouds:
                     return "Clouds";
                 case Weather_FieldIndex.SkyUpperColor:
@@ -4047,8 +4047,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "FogDistanceNightMax";
                 case Weather_FieldIndex.WindSpeed:
                     return "WindSpeed";
-                case Weather_FieldIndex.Unknown7:
-                    return "Unknown7";
+                case Weather_FieldIndex.Unknown:
+                    return "Unknown";
                 case Weather_FieldIndex.TransDelta:
                     return "TransDelta";
                 case Weather_FieldIndex.SunGlare:
@@ -4085,10 +4085,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ImageSpaces";
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return "DirectionalAmbientLightingColors";
-                case Weather_FieldIndex.Unknown8:
-                    return "Unknown8";
-                case Weather_FieldIndex.Unknown9:
-                    return "Unknown9";
+                case Weather_FieldIndex.NAM2:
+                    return "NAM2";
+                case Weather_FieldIndex.NAM3:
+                    return "NAM3";
                 case Weather_FieldIndex.Aurora:
                     return "Aurora";
                 case Weather_FieldIndex.NAM0DataTypeState:
@@ -4108,14 +4108,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.Unknown2:
-                case Weather_FieldIndex.Unknown3:
-                case Weather_FieldIndex.Unknown4:
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.DNAM:
+                case Weather_FieldIndex.CNAM:
+                case Weather_FieldIndex.ANAM:
+                case Weather_FieldIndex.BNAM:
+                case Weather_FieldIndex.LNAM:
                 case Weather_FieldIndex.Precipitation:
                 case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                 case Weather_FieldIndex.Clouds:
                 case Weather_FieldIndex.SkyUpperColor:
                 case Weather_FieldIndex.FogNearColor:
@@ -4143,7 +4143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.FogDistanceDayMax:
                 case Weather_FieldIndex.FogDistanceNightMax:
                 case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                 case Weather_FieldIndex.TransDelta:
                 case Weather_FieldIndex.SunGlare:
                 case Weather_FieldIndex.SunDamage:
@@ -4162,8 +4162,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.Unknown8:
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM2:
+                case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4180,14 +4180,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.Unknown2:
-                case Weather_FieldIndex.Unknown3:
-                case Weather_FieldIndex.Unknown4:
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.DNAM:
+                case Weather_FieldIndex.CNAM:
+                case Weather_FieldIndex.ANAM:
+                case Weather_FieldIndex.BNAM:
+                case Weather_FieldIndex.LNAM:
                 case Weather_FieldIndex.Precipitation:
                 case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                 case Weather_FieldIndex.Clouds:
                 case Weather_FieldIndex.SkyUpperColor:
                 case Weather_FieldIndex.FogNearColor:
@@ -4215,7 +4215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.FogDistanceDayMax:
                 case Weather_FieldIndex.FogDistanceNightMax:
                 case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                 case Weather_FieldIndex.TransDelta:
                 case Weather_FieldIndex.SunGlare:
                 case Weather_FieldIndex.SunDamage:
@@ -4234,8 +4234,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.Unknown8:
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM2:
+                case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4253,21 +4253,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Weather_FieldIndex.CloudTextures:
                     return typeof(String[]);
-                case Weather_FieldIndex.Unknown:
+                case Weather_FieldIndex.DNAM:
                     return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Unknown2:
+                case Weather_FieldIndex.CNAM:
                     return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Unknown3:
+                case Weather_FieldIndex.ANAM:
                     return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Unknown4:
+                case Weather_FieldIndex.BNAM:
                     return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Unknown5:
+                case Weather_FieldIndex.LNAM:
                     return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Precipitation:
                     return typeof(FormLinkNullable<ShaderParticleGeometry>);
                 case Weather_FieldIndex.VisualEffect:
                     return typeof(FormLink<VisualEffect>);
-                case Weather_FieldIndex.Unknown6:
+                case Weather_FieldIndex.ONAM:
                     return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Clouds:
                     return typeof(CloudLayer[]);
@@ -4323,7 +4323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Weather_FieldIndex.WindSpeed:
                     return typeof(Percent);
-                case Weather_FieldIndex.Unknown7:
+                case Weather_FieldIndex.Unknown:
                     return typeof(UInt16);
                 case Weather_FieldIndex.TransDelta:
                     return typeof(Single);
@@ -4361,9 +4361,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(WeatherImageSpaces);
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return typeof(WeatherAmbientColorSet);
-                case Weather_FieldIndex.Unknown8:
+                case Weather_FieldIndex.NAM2:
                     return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Unknown9:
+                case Weather_FieldIndex.NAM3:
                     return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Aurora:
                     return typeof(Model);
@@ -4447,14 +4447,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.CloudTextures.ResetToNull();
-            item.Unknown = default;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
-            item.Unknown4 = default;
-            item.Unknown5 = default;
+            item.DNAM = default;
+            item.CNAM = default;
+            item.ANAM = default;
+            item.BNAM = default;
+            item.LNAM = default;
             item.Precipitation = FormLinkNullable<ShaderParticleGeometry>.Null;
             item.VisualEffect = FormLink<VisualEffect>.Null;
-            item.Unknown6 = default;
+            item.ONAM = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
             item.FogNearColor.Clear();
@@ -4482,7 +4482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FogDistanceDayMax = default;
             item.FogDistanceNightMax = default;
             item.WindSpeed = default;
-            item.Unknown7 = default;
+            item.Unknown = default;
             item.TransDelta = default;
             item.SunGlare = default;
             item.SunDamage = default;
@@ -4501,8 +4501,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SkyStatics.Clear();
             item.ImageSpaces = null;
             item.DirectionalAmbientLightingColors = null;
-            item.Unknown8 = default;
-            item.Unknown9 = default;
+            item.NAM2 = default;
+            item.NAM3 = default;
             item.Aurora = null;
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
@@ -4670,14 +4670,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
-            ret.Unknown4 = MemorySliceExt.Equal(item.Unknown4, rhs.Unknown4);
-            ret.Unknown5 = MemorySliceExt.Equal(item.Unknown5, rhs.Unknown5);
+            ret.DNAM = MemorySliceExt.Equal(item.DNAM, rhs.DNAM);
+            ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
+            ret.ANAM = MemorySliceExt.Equal(item.ANAM, rhs.ANAM);
+            ret.BNAM = MemorySliceExt.Equal(item.BNAM, rhs.BNAM);
+            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
             ret.Precipitation = object.Equals(item.Precipitation, rhs.Precipitation);
             ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
-            ret.Unknown6 = MemorySliceExt.Equal(item.Unknown6, rhs.Unknown6);
+            ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
             ret.Clouds = item.Clouds.SpanEqualsHelper(
                 rhs.Clouds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -4708,7 +4708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.FogDistanceDayMax = item.FogDistanceDayMax.EqualsWithin(rhs.FogDistanceDayMax);
             ret.FogDistanceNightMax = item.FogDistanceNightMax.EqualsWithin(rhs.FogDistanceNightMax);
             ret.WindSpeed = item.WindSpeed.Equals(rhs.WindSpeed);
-            ret.Unknown7 = item.Unknown7 == rhs.Unknown7;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.TransDelta = item.TransDelta.EqualsWithin(rhs.TransDelta);
             ret.SunGlare = item.SunGlare.Equals(rhs.SunGlare);
             ret.SunDamage = item.SunDamage.Equals(rhs.SunDamage);
@@ -4741,8 +4741,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.DirectionalAmbientLightingColors,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown8 = MemorySliceExt.Equal(item.Unknown8, rhs.Unknown8);
-            ret.Unknown9 = MemorySliceExt.Equal(item.Unknown9, rhs.Unknown9);
+            ret.NAM2 = MemorySliceExt.Equal(item.NAM2, rhs.NAM2);
+            ret.NAM3 = MemorySliceExt.Equal(item.NAM3, rhs.NAM3);
             ret.Aurora = EqualsMaskHelper.EqualsHelper(
                 item.Aurora,
                 rhs.Aurora,
@@ -4820,30 +4820,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.DNAM ?? true)
+                && item.DNAM.TryGet(out var DNAMItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.CNAM ?? true)
+                && item.CNAM.TryGet(out var CNAMItem))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
+            if ((printMask?.ANAM ?? true)
+                && item.ANAM.TryGet(out var ANAMItem))
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                fg.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
             }
-            if ((printMask?.Unknown4 ?? true)
-                && item.Unknown4.TryGet(out var Unknown4Item))
+            if ((printMask?.BNAM ?? true)
+                && item.BNAM.TryGet(out var BNAMItem))
             {
-                fg.AppendLine($"Unknown4 => {SpanExt.ToHexString(Unknown4Item)}");
+                fg.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
             }
-            if ((printMask?.Unknown5 ?? true)
-                && item.Unknown5.TryGet(out var Unknown5Item))
+            if ((printMask?.LNAM ?? true)
+                && item.LNAM.TryGet(out var LNAMItem))
             {
-                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(Unknown5Item)}");
+                fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if ((printMask?.Precipitation ?? true)
                 && item.Precipitation.TryGet(out var PrecipitationItem))
@@ -4854,10 +4854,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.VisualEffect, "VisualEffect");
             }
-            if ((printMask?.Unknown6 ?? true)
-                && item.Unknown6.TryGet(out var Unknown6Item))
+            if ((printMask?.ONAM ?? true)
+                && item.ONAM.TryGet(out var ONAMItem))
             {
-                fg.AppendLine($"Unknown6 => {SpanExt.ToHexString(Unknown6Item)}");
+                fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
             if (printMask?.Clouds?.Overall ?? true)
             {
@@ -4981,9 +4981,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.WindSpeed, "WindSpeed");
             }
-            if (printMask?.Unknown7 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown7, "Unknown7");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.TransDelta ?? true)
             {
@@ -5087,15 +5087,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DirectionalAmbientLightingColorsItem?.ToString(fg, "DirectionalAmbientLightingColors");
             }
-            if ((printMask?.Unknown8 ?? true)
-                && item.Unknown8.TryGet(out var Unknown8Item))
+            if ((printMask?.NAM2 ?? true)
+                && item.NAM2.TryGet(out var NAM2Item))
             {
-                fg.AppendLine($"Unknown8 => {SpanExt.ToHexString(Unknown8Item)}");
+                fg.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
             }
-            if ((printMask?.Unknown9 ?? true)
-                && item.Unknown9.TryGet(out var Unknown9Item))
+            if ((printMask?.NAM3 ?? true)
+                && item.NAM3.TryGet(out var NAM3Item))
             {
-                fg.AppendLine($"Unknown9 => {SpanExt.ToHexString(Unknown9Item)}");
+                fg.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
             }
             if ((printMask?.Aurora?.Overall ?? true)
                 && item.Aurora.TryGet(out var AuroraItem))
@@ -5120,19 +5120,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherGetter item,
             Weather.Mask<bool?> checkMask)
         {
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
-            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
-            if (checkMask.Unknown5.HasValue && checkMask.Unknown5.Value != (item.Unknown5 != null)) return false;
+            if (checkMask.DNAM.HasValue && checkMask.DNAM.Value != (item.DNAM != null)) return false;
+            if (checkMask.CNAM.HasValue && checkMask.CNAM.Value != (item.CNAM != null)) return false;
+            if (checkMask.ANAM.HasValue && checkMask.ANAM.Value != (item.ANAM != null)) return false;
+            if (checkMask.BNAM.HasValue && checkMask.BNAM.Value != (item.BNAM != null)) return false;
+            if (checkMask.LNAM.HasValue && checkMask.LNAM.Value != (item.LNAM != null)) return false;
             if (checkMask.Precipitation.HasValue && checkMask.Precipitation.Value != (item.Precipitation.FormKey != null)) return false;
-            if (checkMask.Unknown6.HasValue && checkMask.Unknown6.Value != (item.Unknown6 != null)) return false;
+            if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
             if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
             if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Specific != null && (item.DirectionalAmbientLightingColors == null || !item.DirectionalAmbientLightingColors.HasBeenSet(checkMask.DirectionalAmbientLightingColors.Specific))) return false;
-            if (checkMask.Unknown8.HasValue && checkMask.Unknown8.Value != (item.Unknown8 != null)) return false;
-            if (checkMask.Unknown9.HasValue && checkMask.Unknown9.Value != (item.Unknown9 != null)) return false;
+            if (checkMask.NAM2.HasValue && checkMask.NAM2.Value != (item.NAM2 != null)) return false;
+            if (checkMask.NAM3.HasValue && checkMask.NAM3.Value != (item.NAM3 != null)) return false;
             if (checkMask.Aurora?.Overall.HasValue ?? false && checkMask.Aurora.Overall.Value != (item.Aurora != null)) return false;
             if (checkMask.Aurora?.Specific != null && (item.Aurora == null || !item.Aurora.HasBeenSet(checkMask.Aurora.Specific))) return false;
             return base.HasBeenSet(
@@ -5145,14 +5145,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Weather.Mask<bool> mask)
         {
             mask.CloudTextures = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Unknown = (item.Unknown != null);
-            mask.Unknown2 = (item.Unknown2 != null);
-            mask.Unknown3 = (item.Unknown3 != null);
-            mask.Unknown4 = (item.Unknown4 != null);
-            mask.Unknown5 = (item.Unknown5 != null);
+            mask.DNAM = (item.DNAM != null);
+            mask.CNAM = (item.CNAM != null);
+            mask.ANAM = (item.ANAM != null);
+            mask.BNAM = (item.BNAM != null);
+            mask.LNAM = (item.LNAM != null);
             mask.Precipitation = (item.Precipitation.FormKey != null);
             mask.VisualEffect = true;
-            mask.Unknown6 = (item.Unknown6 != null);
+            mask.ONAM = (item.ONAM != null);
             var CloudsItem = item.Clouds;
             mask.Clouds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CloudLayer.Mask<bool>?>>?>(true, CloudsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CloudLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SkyUpperColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyUpperColor?.GetHasBeenSetMask());
@@ -5181,7 +5181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FogDistanceDayMax = true;
             mask.FogDistanceNightMax = true;
             mask.WindSpeed = true;
-            mask.Unknown7 = true;
+            mask.Unknown = true;
             mask.TransDelta = true;
             mask.SunGlare = true;
             mask.SunDamage = true;
@@ -5203,8 +5203,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
             var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
             mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
-            mask.Unknown8 = (item.Unknown8 != null);
-            mask.Unknown9 = (item.Unknown9 != null);
+            mask.NAM2 = (item.NAM2 != null);
+            mask.NAM3 = (item.NAM3 != null);
             var itemAurora = item.Aurora;
             mask.Aurora = new MaskItem<bool, Model.Mask<bool>?>(itemAurora != null, itemAurora?.GetHasBeenSetMask());
             mask.NAM0DataTypeState = true;
@@ -5262,14 +5262,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.CloudTextures.Span, rhs.CloudTextures.Span)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown4, rhs.Unknown4)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown5, rhs.Unknown5)) return false;
+            if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.ANAM, rhs.ANAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.BNAM, rhs.BNAM)) return false;
+            if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
             if (!lhs.Precipitation.Equals(rhs.Precipitation)) return false;
             if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown6, rhs.Unknown6)) return false;
+            if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
             if (!lhs.Clouds.SequenceEqual(rhs.Clouds)) return false;
             if (!object.Equals(lhs.SkyUpperColor, rhs.SkyUpperColor)) return false;
             if (!object.Equals(lhs.FogNearColor, rhs.FogNearColor)) return false;
@@ -5297,7 +5297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.FogDistanceDayMax.EqualsWithin(rhs.FogDistanceDayMax)) return false;
             if (!lhs.FogDistanceNightMax.EqualsWithin(rhs.FogDistanceNightMax)) return false;
             if (!lhs.WindSpeed.Equals(rhs.WindSpeed)) return false;
-            if (lhs.Unknown7 != rhs.Unknown7) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.TransDelta.EqualsWithin(rhs.TransDelta)) return false;
             if (!lhs.SunGlare.Equals(rhs.SunGlare)) return false;
             if (!lhs.SunDamage.Equals(rhs.SunDamage)) return false;
@@ -5316,8 +5316,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.SkyStatics.SequenceEqual(rhs.SkyStatics)) return false;
             if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
             if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown8, rhs.Unknown8)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown9, rhs.Unknown9)) return false;
+            if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+            if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
             if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
             if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
             if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
@@ -5347,34 +5347,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.CloudTextures);
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.DNAM.TryGet(out var DNAMItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(DNAMItem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.CNAM.TryGet(out var CNAMItem))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(CNAMItem);
             }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
+            if (item.ANAM.TryGet(out var ANAMItem))
             {
-                hash.Add(Unknown3Item);
+                hash.Add(ANAMItem);
             }
-            if (item.Unknown4.TryGet(out var Unknown4Item))
+            if (item.BNAM.TryGet(out var BNAMItem))
             {
-                hash.Add(Unknown4Item);
+                hash.Add(BNAMItem);
             }
-            if (item.Unknown5.TryGet(out var Unknown5Item))
+            if (item.LNAM.TryGet(out var LNAMItem))
             {
-                hash.Add(Unknown5Item);
+                hash.Add(LNAMItem);
             }
             if (item.Precipitation.TryGet(out var Precipitationitem))
             {
                 hash.Add(Precipitationitem);
             }
             hash.Add(item.VisualEffect);
-            if (item.Unknown6.TryGet(out var Unknown6Item))
+            if (item.ONAM.TryGet(out var ONAMItem))
             {
-                hash.Add(Unknown6Item);
+                hash.Add(ONAMItem);
             }
             hash.Add(item.Clouds);
             hash.Add(item.SkyUpperColor);
@@ -5403,7 +5403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.FogDistanceDayMax);
             hash.Add(item.FogDistanceNightMax);
             hash.Add(item.WindSpeed);
-            hash.Add(item.Unknown7);
+            hash.Add(item.Unknown);
             hash.Add(item.TransDelta);
             hash.Add(item.SunGlare);
             hash.Add(item.SunDamage);
@@ -5428,13 +5428,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(DirectionalAmbientLightingColorsitem);
             }
-            if (item.Unknown8.TryGet(out var Unknown8Item))
+            if (item.NAM2.TryGet(out var NAM2Item))
             {
-                hash.Add(Unknown8Item);
+                hash.Add(NAM2Item);
             }
-            if (item.Unknown9.TryGet(out var Unknown9Item))
+            if (item.NAM3.TryGet(out var NAM3Item))
             {
-                hash.Add(Unknown9Item);
+                hash.Add(NAM3Item);
             }
             if (item.Aurora.TryGet(out var Auroraitem))
             {
@@ -5550,59 +5550,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.CloudTextures.SetTo(rhs.CloudTextures);
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.DNAM.TryGet(out var DNAMrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.DNAM = DNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.DNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
+                if(rhs.CNAM.TryGet(out var CNAMrhs))
                 {
-                    item.Unknown2 = Unknown2rhs.ToArray();
+                    item.CNAM = CNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown2 = default;
+                    item.CNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
             {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                if(rhs.ANAM.TryGet(out var ANAMrhs))
                 {
-                    item.Unknown3 = Unknown3rhs.ToArray();
+                    item.ANAM = ANAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown3 = default;
+                    item.ANAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
             {
-                if(rhs.Unknown4.TryGet(out var Unknown4rhs))
+                if(rhs.BNAM.TryGet(out var BNAMrhs))
                 {
-                    item.Unknown4 = Unknown4rhs.ToArray();
+                    item.BNAM = BNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown4 = default;
+                    item.BNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if(rhs.Unknown5.TryGet(out var Unknown5rhs))
+                if(rhs.LNAM.TryGet(out var LNAMrhs))
                 {
-                    item.Unknown5 = Unknown5rhs.ToArray();
+                    item.LNAM = LNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown5 = default;
+                    item.LNAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
@@ -5613,15 +5613,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.VisualEffect = rhs.VisualEffect.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown6) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
-                if(rhs.Unknown6.TryGet(out var Unknown6rhs))
+                if(rhs.ONAM.TryGet(out var ONAMrhs))
                 {
-                    item.Unknown6 = Unknown6rhs.ToArray();
+                    item.ONAM = ONAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown6 = default;
+                    item.ONAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
@@ -6045,9 +6045,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.WindSpeed = rhs.WindSpeed;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown7) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown7 = rhs.Unknown7;
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
             {
@@ -6200,26 +6200,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown8) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
             {
-                if(rhs.Unknown8.TryGet(out var Unknown8rhs))
+                if(rhs.NAM2.TryGet(out var NAM2rhs))
                 {
-                    item.Unknown8 = Unknown8rhs.ToArray();
+                    item.NAM2 = NAM2rhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown8 = default;
+                    item.NAM2 = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown9) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
             {
-                if(rhs.Unknown9.TryGet(out var Unknown9rhs))
+                if(rhs.NAM3.TryGet(out var NAM3rhs))
                 {
-                    item.Unknown9 = Unknown9rhs.ToArray();
+                    item.NAM3 = NAM3rhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown9 = default;
+                    item.NAM3 = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
@@ -6420,54 +6420,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
+            if ((item.DNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown,
+                    name: nameof(item.DNAM),
+                    item: item.DNAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.DNAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown2) ?? true))
+            if ((item.CNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown2,
+                    name: nameof(item.CNAM),
+                    item: item.CNAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.CNAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown3) ?? true))
+            if ((item.ANAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown3,
+                    name: nameof(item.ANAM),
+                    item: item.ANAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.ANAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown4 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown4) ?? true))
+            if ((item.BNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown4),
-                    item: item.Unknown4.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown4,
+                    name: nameof(item.BNAM),
+                    item: item.BNAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.BNAM,
                     errorMask: errorMask);
             }
-            if ((item.Unknown5 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown5) ?? true))
+            if ((item.LNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown5),
-                    item: item.Unknown5.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown5,
+                    name: nameof(item.LNAM),
+                    item: item.LNAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.LNAM,
                     errorMask: errorMask);
             }
             if ((item.Precipitation.FormKey != null)
@@ -6489,14 +6489,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Weather_FieldIndex.VisualEffect,
                     errorMask: errorMask);
             }
-            if ((item.Unknown6 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown6) ?? true))
+            if ((item.ONAM != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown6),
-                    item: item.Unknown6.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown6,
+                    name: nameof(item.ONAM),
+                    item: item.ONAM.Value,
+                    fieldIndex: (int)Weather_FieldIndex.ONAM,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
@@ -6797,13 +6797,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Weather_FieldIndex.WindSpeed,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown7) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown7),
-                    item: item.Unknown7,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown7,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Weather_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
@@ -6998,24 +6998,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors));
                 }
             }
-            if ((item.Unknown8 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown8) ?? true))
+            if ((item.NAM2 != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown8),
-                    item: item.Unknown8.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown8,
+                    name: nameof(item.NAM2),
+                    item: item.NAM2.Value,
+                    fieldIndex: (int)Weather_FieldIndex.NAM2,
                     errorMask: errorMask);
             }
-            if ((item.Unknown9 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown9) ?? true))
+            if ((item.NAM3 != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown9),
-                    item: item.Unknown9.Value,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown9,
+                    name: nameof(item.NAM3),
+                    item: item.NAM3.Value,
+                    fieldIndex: (int)Weather_FieldIndex.NAM3,
                     errorMask: errorMask);
             }
             if ((item.Aurora != null)
@@ -7194,11 +7194,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown);
+                case "DNAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.DNAM);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.DNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7212,11 +7212,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown2);
+                case "CNAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.CNAM);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.CNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7230,11 +7230,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown3);
+                case "ANAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.ANAM);
                     try
                     {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.ANAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7248,11 +7248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown4":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown4);
+                case "BNAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.BNAM);
                     try
                     {
-                        item.Unknown4 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.BNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7266,11 +7266,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown5":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown5);
+                case "LNAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.LNAM);
                     try
                     {
-                        item.Unknown5 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.LNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7320,11 +7320,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown6":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown6);
+                case "ONAM":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.ONAM);
                     try
                     {
-                        item.Unknown6 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.ONAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7853,11 +7853,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown7":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown7);
+                case "Unknown":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown7 = UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8217,11 +8217,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown8":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown8);
+                case "NAM2":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.NAM2);
                     try
                     {
-                        item.Unknown8 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.NAM2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8235,11 +8235,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown9":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown9);
+                case "NAM3":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.NAM3);
                     try
                     {
-                        item.Unknown9 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.NAM3 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8526,23 +8526,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.DNAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.CNAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.ANAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.ANAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown4,
+                item: item.BNAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.BNAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown5,
+                item: item.LNAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.LNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -8554,7 +8554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.NNAM_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown6,
+                item: item.ONAM,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.ONAM_HEADER));
             WeatherBinaryWriteTranslation.WriteBinaryClouds(
                 writer: writer,
@@ -8695,7 +8695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.WindSpeed,
                     integerType: FloatIntegerType.Byte);
-                writer.Write(item.Unknown7);
+                writer.Write(item.Unknown);
                 FloatBinaryTranslation.Write(
                     writer: writer,
                     item: item.TransDelta,
@@ -8792,11 +8792,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown8,
+                item: item.NAM2,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM2_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown9,
+                item: item.NAM3,
                 header: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM3_HEADER));
             if (item.Aurora.TryGet(out var AuroraItem))
             {
@@ -8889,32 +8889,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E44: // DNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown);
+                    item.DNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
                 }
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown2);
+                    item.CNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
                 }
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown3);
+                    item.ANAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
                 }
                 case 0x4D414E42: // BNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown4 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown4);
+                    item.BNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
                 }
                 case 0x4D414E4C: // LNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown5);
+                    item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
                 }
                 case 0x4D414E4D: // MNAM
                 {
@@ -8935,8 +8935,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4F: // ONAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown6 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown6);
+                    item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
                 }
                 case 0x4D414E52: // RNAM
                 {
@@ -9020,7 +9020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WindSpeed = PercentBinaryTranslation.Parse(
                         frame: dataFrame,
                         integerType: FloatIntegerType.Byte);
-                    item.Unknown7 = dataFrame.ReadUInt16();
+                    item.Unknown = dataFrame.ReadUInt16();
                     item.TransDelta = FloatBinaryTranslation.Parse(
                         frame: dataFrame,
                         integerType: FloatIntegerType.Byte,
@@ -9112,14 +9112,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x324D414E: // NAM2
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown8 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown8);
+                    item.NAM2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
                 }
                 case 0x334D414E: // NAM3
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown9 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown9);
+                    item.NAM3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
                 }
                 case 0x4C444F4D: // MODL
                 {
@@ -9239,25 +9239,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         protected int CloudTexturesParseEndingPos;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region DNAM
+        private int? _DNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region CNAM
+        private int? _CNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ANAM
+        private int? _ANAMLocation;
+        public ReadOnlyMemorySlice<Byte>? ANAM => _ANAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ANAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown4
-        private int? _Unknown4Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown4 => _Unknown4Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown4Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region BNAM
+        private int? _BNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown5
-        private int? _Unknown5Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown5 => _Unknown5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown5Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region LNAM
+        private int? _LNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
@@ -9269,9 +9269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
         public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
-        #region Unknown6
-        private int? _Unknown6Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown6 => _Unknown6Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown6Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ONAM
+        private int? _ONAMLocation;
+        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Clouds
         partial void CloudsCustomParse(
@@ -9449,10 +9449,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
         public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
-        #region Unknown7
-        private int _Unknown7Location => _DATALocation!.Value + 0x1;
-        private bool _Unknown7_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown7 => _Unknown7_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown7Location, 2)) : default;
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0x1;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region TransDelta
         private int _TransDeltaLocation => _DATALocation!.Value + 0x3;
@@ -9543,13 +9543,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
         #endregion
-        #region Unknown8
-        private int? _Unknown8Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown8 => _Unknown8Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown8Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region NAM2
+        private int? _NAM2Location;
+        public ReadOnlyMemorySlice<Byte>? NAM2 => _NAM2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown9
-        private int? _Unknown9Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown9 => _Unknown9Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown9Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region NAM3
+        private int? _NAM3Location;
+        public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IModelGetter? Aurora { get; private set; }
         partial void CustomFactoryEnd(
@@ -9617,28 +9617,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E44: // DNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown);
+                    _DNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown2);
+                    _CNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
                 }
                 case 0x4D414E41: // ANAM
                 {
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown3);
+                    _ANAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _Unknown4Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown4);
+                    _BNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _Unknown5Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown5);
+                    _LNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
                 }
                 case 0x4D414E4D: // MNAM
                 {
@@ -9652,8 +9652,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    _Unknown6Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown6);
+                    _ONAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
                 }
                 case 0x4D414E52: // RNAM
                 {
@@ -9762,13 +9762,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x324D414E: // NAM2
                 {
-                    _Unknown8Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown8);
+                    _NAM2Location = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
                 }
                 case 0x334D414E: // NAM3
                 {
-                    _Unknown9Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Unknown9);
+                    _NAM3Location = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
                 }
                 case 0x4C444F4D: // MODL
                 {

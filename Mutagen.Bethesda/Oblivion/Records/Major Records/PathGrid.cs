@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                            frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false),
                            item: out var unknownBytes))
                         {
-                            item.Unknown = unknownBytes;
+                            item.PGAG = unknownBytes;
                         }
                         else
                         {
-                            item.Unknown = default;
+                            item.PGAG = default;
                         }
                         break;
                     case 0x52524750: // "PGRR":
@@ -133,11 +133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
 
-            if (item.Unknown.TryGet(out var unknown))
+            if (item.PGAG.TryGet(out var pgag))
             {
                 using (HeaderExport.Subrecord(writer, PathGrid_Registration.PGAG_HEADER))
                 {
-                    writer.Write(unknown);
+                    writer.Write(pgag);
                 }
             }
 
@@ -159,9 +159,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; private set; }
 
-        private int? _UnknownLocation;
-        public bool Unknown_IsSet => _UnknownLocation.HasValue;
-        public ReadOnlyMemorySlice<byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private int? _PGAGLocation;
+        public bool PGAG_IsSet => _PGAGLocation.HasValue;
+        public ReadOnlyMemorySlice<byte>? PGAG => _PGAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PGAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
 
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x47414750: //"PGAG":
-                        this._UnknownLocation = stream.Position - offset;
+                        this._PGAGLocation = stream.Position - offset;
                         stream.Position += subMeta.TotalLength;
                         break;
                     case 0x52524750: // "PGRR":

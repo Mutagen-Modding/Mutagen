@@ -75,9 +75,9 @@
       <RefList name="Conditions" refName="Condition" binary="Custom" />
       <String name="Entry" recordType="CNAM" translated="DL" />
       <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
-      <ByteArray name="Unknown" recordType="SCHR" />
-      <ByteArray name="Unknown2" recordType="SCTX" />
-      <ByteArray name="Unknown3" recordType="QNAM" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="SCTX" recordType="SCTX" />
+      <ByteArray name="QNAM" recordType="QNAM" />
     </Fields>
   </Object>
   <Object name="QuestObjective" objType="Subrecord" GUID="f9edb5c0-0f4d-4d98-b7ba-462d08c9820d" ID="365">

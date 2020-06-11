@@ -38,7 +38,7 @@
       <ByteArray name="FaceGenGeometrySymmetric" recordType="FGGS" />
       <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />
       <ByteArray name="FaceGenTextureSymmetric" recordType="FGTS" />
-      <ByteArray name="Unknown" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" />
     </Fields>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="01742ef6-ce08-4574-bb21-c03ac0e59d3a" ID="198">

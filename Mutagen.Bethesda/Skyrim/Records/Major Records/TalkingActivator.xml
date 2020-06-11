@@ -13,9 +13,9 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <Int32 name="Unknown" recordType="PNAM" />
+      <Int32 name="PNAM" recordType="PNAM" />
       <FormLink name="LoopingSound" recordType="SNDR" refName="SoundMarker" />
-      <Int16 name="Unknown2" recordType="FNAM" />
+      <Int16 name="FNAM" recordType="FNAM" />
       <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
     </Fields>
   </Object>

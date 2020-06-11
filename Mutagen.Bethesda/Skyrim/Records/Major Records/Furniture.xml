@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Furniture" recordType="FURN" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="d259f939-c92a-48d0-aad5-2d58e712b4f6" ID="192">
     <Interface>ITranslatedNamed</Interface>
@@ -14,7 +14,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <ByteArray name="Unknown" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
       <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
       <CustomLogic name="Flags2" recordType="MNAM" />

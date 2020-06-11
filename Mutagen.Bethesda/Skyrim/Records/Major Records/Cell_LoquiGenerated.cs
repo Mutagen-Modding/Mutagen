@@ -106,16 +106,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
         #endregion
-        #region Unknown
+        #region LNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _LNAM;
+        public MemorySlice<Byte>? LNAM
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._LNAM;
+            set => this._LNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICellGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? ICellGetter.LNAM => this.LNAM;
         #endregion
         #region WaterHeight
         public Single? WaterHeight { get; set; }
@@ -146,27 +146,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<ILocationGetter> ICellGetter.Location => this.Location;
         #endregion
-        #region Unknown2
+        #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown2;
-        public MemorySlice<Byte>? Unknown2
+        protected MemorySlice<Byte>? _XWCN;
+        public MemorySlice<Byte>? XWCN
         {
-            get => this._Unknown2;
-            set => this._Unknown2 = value;
+            get => this._XWCN;
+            set => this._XWCN = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICellGetter.Unknown2 => this.Unknown2;
+        ReadOnlyMemorySlice<Byte>? ICellGetter.XWCN => this.XWCN;
         #endregion
-        #region Unknown3
+        #region XWCS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown3;
-        public MemorySlice<Byte>? Unknown3
+        protected MemorySlice<Byte>? _XWCS;
+        public MemorySlice<Byte>? XWCS
         {
-            get => this._Unknown3;
-            set => this._Unknown3 = value;
+            get => this._XWCS;
+            set => this._XWCS = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICellGetter.Unknown3 => this.Unknown3;
+        ReadOnlyMemorySlice<Byte>? ICellGetter.XWCS => this.XWCS;
         #endregion
         #region WaterVelocity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -478,13 +478,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OcclusionData = initialValue;
                 this.MaxHeightData = initialValue;
                 this.LightingTemplate = initialValue;
-                this.Unknown = initialValue;
+                this.LNAM = initialValue;
                 this.WaterHeight = initialValue;
                 this.WaterNoiseTexture = initialValue;
                 this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Location = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.XWCN = initialValue;
+                this.XWCS = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(initialValue, new CellWaterVelocity.Mask<TItem>(initialValue));
                 this.Water = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
@@ -521,13 +521,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem OcclusionData,
                 TItem MaxHeightData,
                 TItem LightingTemplate,
-                TItem Unknown,
+                TItem LNAM,
                 TItem WaterHeight,
                 TItem WaterNoiseTexture,
                 TItem Regions,
                 TItem Location,
-                TItem Unknown2,
-                TItem Unknown3,
+                TItem XWCN,
+                TItem XWCS,
                 TItem WaterVelocity,
                 TItem Water,
                 TItem Ownership,
@@ -563,13 +563,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OcclusionData = OcclusionData;
                 this.MaxHeightData = MaxHeightData;
                 this.LightingTemplate = LightingTemplate;
-                this.Unknown = Unknown;
+                this.LNAM = LNAM;
                 this.WaterHeight = WaterHeight;
                 this.WaterNoiseTexture = WaterNoiseTexture;
                 this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Location = Location;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.XWCN = XWCN;
+                this.XWCS = XWCS;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(WaterVelocity, new CellWaterVelocity.Mask<TItem>(WaterVelocity));
                 this.Water = Water;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
@@ -608,13 +608,13 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem OcclusionData;
             public TItem MaxHeightData;
             public TItem LightingTemplate;
-            public TItem Unknown;
+            public TItem LNAM;
             public TItem WaterHeight;
             public TItem WaterNoiseTexture;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Regions;
             public TItem Location;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem XWCN;
+            public TItem XWCS;
             public MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
             public TItem Water;
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
@@ -655,13 +655,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.OcclusionData, rhs.OcclusionData)) return false;
                 if (!object.Equals(this.MaxHeightData, rhs.MaxHeightData)) return false;
                 if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.LNAM, rhs.LNAM)) return false;
                 if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
                 if (!object.Equals(this.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
                 if (!object.Equals(this.Regions, rhs.Regions)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
+                if (!object.Equals(this.XWCS, rhs.XWCS)) return false;
                 if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
                 if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
@@ -694,13 +694,13 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.OcclusionData);
                 hash.Add(this.MaxHeightData);
                 hash.Add(this.LightingTemplate);
-                hash.Add(this.Unknown);
+                hash.Add(this.LNAM);
                 hash.Add(this.WaterHeight);
                 hash.Add(this.WaterNoiseTexture);
                 hash.Add(this.Regions);
                 hash.Add(this.Location);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.XWCN);
+                hash.Add(this.XWCS);
                 hash.Add(this.WaterVelocity);
                 hash.Add(this.Water);
                 hash.Add(this.Ownership);
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.OcclusionData)) return false;
                 if (!eval(this.MaxHeightData)) return false;
                 if (!eval(this.LightingTemplate)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.LNAM)) return false;
                 if (!eval(this.WaterHeight)) return false;
                 if (!eval(this.WaterNoiseTexture)) return false;
                 if (this.Regions != null)
@@ -761,8 +761,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Location)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.XWCN)) return false;
+                if (!eval(this.XWCS)) return false;
                 if (WaterVelocity != null)
                 {
                     if (!eval(this.WaterVelocity.Overall)) return false;
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.OcclusionData)) return true;
                 if (eval(this.MaxHeightData)) return true;
                 if (eval(this.LightingTemplate)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.LNAM)) return true;
                 if (eval(this.WaterHeight)) return true;
                 if (eval(this.WaterNoiseTexture)) return true;
                 if (this.Regions != null)
@@ -866,8 +866,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Location)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.XWCN)) return true;
+                if (eval(this.XWCS)) return true;
                 if (WaterVelocity != null)
                 {
                     if (eval(this.WaterVelocity.Overall)) return true;
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.OcclusionData = eval(this.OcclusionData);
                 obj.MaxHeightData = eval(this.MaxHeightData);
                 obj.LightingTemplate = eval(this.LightingTemplate);
-                obj.Unknown = eval(this.Unknown);
+                obj.LNAM = eval(this.LNAM);
                 obj.WaterHeight = eval(this.WaterHeight);
                 obj.WaterNoiseTexture = eval(this.WaterNoiseTexture);
                 if (Regions != null)
@@ -973,8 +973,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Location = eval(this.Location);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.XWCN = eval(this.XWCN);
+                obj.XWCS = eval(this.XWCS);
                 obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, CellWaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
                 obj.Water = eval(this.Water);
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
@@ -1089,9 +1089,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(LightingTemplate, "LightingTemplate");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.LNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.WaterHeight ?? true)
                     {
@@ -1128,13 +1128,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Location, "Location");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.XWCN ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        fg.AppendItem(XWCN, "XWCN");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.XWCS ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        fg.AppendItem(XWCS, "XWCS");
                     }
                     if (printMask?.WaterVelocity?.Overall ?? true)
                     {
@@ -1292,13 +1292,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? OcclusionData;
             public Exception? MaxHeightData;
             public Exception? LightingTemplate;
-            public Exception? Unknown;
+            public Exception? LNAM;
             public Exception? WaterHeight;
             public Exception? WaterNoiseTexture;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Regions;
             public Exception? Location;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? XWCN;
+            public Exception? XWCS;
             public MaskItem<Exception?, CellWaterVelocity.ErrorMask?>? WaterVelocity;
             public Exception? Water;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
@@ -1341,8 +1341,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaxHeightData;
                     case Cell_FieldIndex.LightingTemplate:
                         return LightingTemplate;
-                    case Cell_FieldIndex.Unknown:
-                        return Unknown;
+                    case Cell_FieldIndex.LNAM:
+                        return LNAM;
                     case Cell_FieldIndex.WaterHeight:
                         return WaterHeight;
                     case Cell_FieldIndex.WaterNoiseTexture:
@@ -1351,10 +1351,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Regions;
                     case Cell_FieldIndex.Location:
                         return Location;
-                    case Cell_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case Cell_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case Cell_FieldIndex.XWCN:
+                        return XWCN;
+                    case Cell_FieldIndex.XWCS:
+                        return XWCS;
                     case Cell_FieldIndex.WaterVelocity:
                         return WaterVelocity;
                     case Cell_FieldIndex.Water:
@@ -1426,8 +1426,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.LightingTemplate:
                         this.LightingTemplate = ex;
                         break;
-                    case Cell_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Cell_FieldIndex.LNAM:
+                        this.LNAM = ex;
                         break;
                     case Cell_FieldIndex.WaterHeight:
                         this.WaterHeight = ex;
@@ -1441,11 +1441,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.Location:
                         this.Location = ex;
                         break;
-                    case Cell_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case Cell_FieldIndex.XWCN:
+                        this.XWCN = ex;
                         break;
-                    case Cell_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case Cell_FieldIndex.XWCS:
+                        this.XWCS = ex;
                         break;
                     case Cell_FieldIndex.WaterVelocity:
                         this.WaterVelocity = new MaskItem<Exception?, CellWaterVelocity.ErrorMask?>(ex, null);
@@ -1539,8 +1539,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.LightingTemplate:
                         this.LightingTemplate = (Exception?)obj;
                         break;
-                    case Cell_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Cell_FieldIndex.LNAM:
+                        this.LNAM = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.WaterHeight:
                         this.WaterHeight = (Exception?)obj;
@@ -1554,11 +1554,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.Location:
                         this.Location = (Exception?)obj;
                         break;
-                    case Cell_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case Cell_FieldIndex.XWCN:
+                        this.XWCN = (Exception?)obj;
                         break;
-                    case Cell_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case Cell_FieldIndex.XWCS:
+                        this.XWCS = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.WaterVelocity:
                         this.WaterVelocity = (MaskItem<Exception?, CellWaterVelocity.ErrorMask?>?)obj;
@@ -1636,13 +1636,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (OcclusionData != null) return true;
                 if (MaxHeightData != null) return true;
                 if (LightingTemplate != null) return true;
-                if (Unknown != null) return true;
+                if (LNAM != null) return true;
                 if (WaterHeight != null) return true;
                 if (WaterNoiseTexture != null) return true;
                 if (Regions != null) return true;
                 if (Location != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (XWCN != null) return true;
+                if (XWCS != null) return true;
                 if (WaterVelocity != null) return true;
                 if (Water != null) return true;
                 if (Ownership != null) return true;
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(OcclusionData, "OcclusionData");
                 fg.AppendItem(MaxHeightData, "MaxHeightData");
                 fg.AppendItem(LightingTemplate, "LightingTemplate");
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(LNAM, "LNAM");
                 fg.AppendItem(WaterHeight, "WaterHeight");
                 fg.AppendItem(WaterNoiseTexture, "WaterNoiseTexture");
                 if (Regions.TryGet(out var RegionsItem))
@@ -1731,8 +1731,8 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Location, "Location");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(XWCN, "XWCN");
+                fg.AppendItem(XWCS, "XWCS");
                 WaterVelocity?.ToString(fg);
                 fg.AppendItem(Water, "Water");
                 Ownership?.ToString(fg);
@@ -1831,13 +1831,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.OcclusionData = this.OcclusionData.Combine(rhs.OcclusionData);
                 ret.MaxHeightData = this.MaxHeightData.Combine(rhs.MaxHeightData);
                 ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 ret.WaterNoiseTexture = this.WaterNoiseTexture.Combine(rhs.WaterNoiseTexture);
                 ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
                 ret.Location = this.Location.Combine(rhs.Location);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.XWCN = this.XWCN.Combine(rhs.XWCN);
+                ret.XWCS = this.XWCS.Combine(rhs.XWCS);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
                 ret.Water = this.Water.Combine(rhs.Water);
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
@@ -1887,13 +1887,13 @@ namespace Mutagen.Bethesda.Skyrim
             public bool OcclusionData;
             public bool MaxHeightData;
             public bool LightingTemplate;
-            public bool Unknown;
+            public bool LNAM;
             public bool WaterHeight;
             public bool WaterNoiseTexture;
             public bool Regions;
             public bool Location;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool XWCN;
+            public bool XWCS;
             public MaskItem<bool, CellWaterVelocity.TranslationMask?> WaterVelocity;
             public bool Water;
             public MaskItem<bool, Ownership.TranslationMask?> Ownership;
@@ -1927,13 +1927,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OcclusionData = defaultOn;
                 this.MaxHeightData = defaultOn;
                 this.LightingTemplate = defaultOn;
-                this.Unknown = defaultOn;
+                this.LNAM = defaultOn;
                 this.WaterHeight = defaultOn;
                 this.WaterNoiseTexture = defaultOn;
                 this.Regions = defaultOn;
                 this.Location = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.XWCN = defaultOn;
+                this.XWCS = defaultOn;
                 this.WaterVelocity = new MaskItem<bool, CellWaterVelocity.TranslationMask?>(defaultOn, null);
                 this.Water = defaultOn;
                 this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
@@ -1968,13 +1968,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((OcclusionData, null));
                 ret.Add((MaxHeightData, null));
                 ret.Add((LightingTemplate, null));
-                ret.Add((Unknown, null));
+                ret.Add((LNAM, null));
                 ret.Add((WaterHeight, null));
                 ret.Add((WaterNoiseTexture, null));
                 ret.Add((Regions, null));
                 ret.Add((Location, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((XWCN, null));
+                ret.Add((XWCS, null));
                 ret.Add((WaterVelocity?.Overall ?? true, WaterVelocity?.Specific?.GetCrystal()));
                 ret.Add((Water, null));
                 ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
@@ -2108,13 +2108,13 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? OcclusionData { get; set; }
         new MemorySlice<Byte>? MaxHeightData { get; set; }
         new FormLink<LightingTemplate> LightingTemplate { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new ExtendedList<IFormLink<Region>>? Regions { get; set; }
         new FormLinkNullable<Location> Location { get; set; }
-        new MemorySlice<Byte>? Unknown2 { get; set; }
-        new MemorySlice<Byte>? Unknown3 { get; set; }
+        new MemorySlice<Byte>? XWCN { get; set; }
+        new MemorySlice<Byte>? XWCS { get; set; }
         new CellWaterVelocity? WaterVelocity { get; set; }
         new FormLinkNullable<Water> Water { get; set; }
         new Ownership? Ownership { get; set; }
@@ -2165,13 +2165,13 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? OcclusionData { get; }
         ReadOnlyMemorySlice<Byte>? MaxHeightData { get; }
         IFormLink<ILightingTemplateGetter> LightingTemplate { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? LNAM { get; }
         Single? WaterHeight { get; }
         String? WaterNoiseTexture { get; }
         IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; }
         IFormLinkNullable<ILocationGetter> Location { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown3 { get; }
+        ReadOnlyMemorySlice<Byte>? XWCN { get; }
+        ReadOnlyMemorySlice<Byte>? XWCS { get; }
         ICellWaterVelocityGetter? WaterVelocity { get; }
         IFormLinkNullable<IWaterGetter> Water { get; }
         IOwnershipGetter? Ownership { get; }
@@ -2532,13 +2532,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         OcclusionData = 10,
         MaxHeightData = 11,
         LightingTemplate = 12,
-        Unknown = 13,
+        LNAM = 13,
         WaterHeight = 14,
         WaterNoiseTexture = 15,
         Regions = 16,
         Location = 17,
-        Unknown2 = 18,
-        Unknown3 = 19,
+        XWCN = 18,
+        XWCS = 19,
         WaterVelocity = 20,
         Water = 21,
         Ownership = 22,
@@ -2622,8 +2622,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Cell_FieldIndex.MaxHeightData;
                 case "LIGHTINGTEMPLATE":
                     return (ushort)Cell_FieldIndex.LightingTemplate;
-                case "UNKNOWN":
-                    return (ushort)Cell_FieldIndex.Unknown;
+                case "LNAM":
+                    return (ushort)Cell_FieldIndex.LNAM;
                 case "WATERHEIGHT":
                     return (ushort)Cell_FieldIndex.WaterHeight;
                 case "WATERNOISETEXTURE":
@@ -2632,10 +2632,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Cell_FieldIndex.Regions;
                 case "LOCATION":
                     return (ushort)Cell_FieldIndex.Location;
-                case "UNKNOWN2":
-                    return (ushort)Cell_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)Cell_FieldIndex.Unknown3;
+                case "XWCN":
+                    return (ushort)Cell_FieldIndex.XWCN;
+                case "XWCS":
+                    return (ushort)Cell_FieldIndex.XWCS;
                 case "WATERVELOCITY":
                     return (ushort)Cell_FieldIndex.WaterVelocity;
                 case "WATER":
@@ -2698,12 +2698,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.OcclusionData:
                 case Cell_FieldIndex.MaxHeightData:
                 case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.WaterNoiseTexture:
                 case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.Unknown2:
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCN:
+                case Cell_FieldIndex.XWCS:
                 case Cell_FieldIndex.WaterVelocity:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
@@ -2746,13 +2746,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.OcclusionData:
                 case Cell_FieldIndex.MaxHeightData:
                 case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.WaterNoiseTexture:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.Unknown2:
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCN:
+                case Cell_FieldIndex.XWCS:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.LockList:
                 case Cell_FieldIndex.WaterEnvironmentMap:
@@ -2785,13 +2785,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.OcclusionData:
                 case Cell_FieldIndex.MaxHeightData:
                 case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.WaterNoiseTexture:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.Unknown2:
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCN:
+                case Cell_FieldIndex.XWCS:
                 case Cell_FieldIndex.WaterVelocity:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
@@ -2837,8 +2837,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MaxHeightData";
                 case Cell_FieldIndex.LightingTemplate:
                     return "LightingTemplate";
-                case Cell_FieldIndex.Unknown:
-                    return "Unknown";
+                case Cell_FieldIndex.LNAM:
+                    return "LNAM";
                 case Cell_FieldIndex.WaterHeight:
                     return "WaterHeight";
                 case Cell_FieldIndex.WaterNoiseTexture:
@@ -2847,10 +2847,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Regions";
                 case Cell_FieldIndex.Location:
                     return "Location";
-                case Cell_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case Cell_FieldIndex.Unknown3:
-                    return "Unknown3";
+                case Cell_FieldIndex.XWCN:
+                    return "XWCN";
+                case Cell_FieldIndex.XWCS:
+                    return "XWCS";
                 case Cell_FieldIndex.WaterVelocity:
                     return "WaterVelocity";
                 case Cell_FieldIndex.Water:
@@ -2908,13 +2908,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.OcclusionData:
                 case Cell_FieldIndex.MaxHeightData:
                 case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.WaterNoiseTexture:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.Unknown2:
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCN:
+                case Cell_FieldIndex.XWCS:
                 case Cell_FieldIndex.WaterVelocity:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
@@ -2953,13 +2953,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.OcclusionData:
                 case Cell_FieldIndex.MaxHeightData:
                 case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                 case Cell_FieldIndex.WaterHeight:
                 case Cell_FieldIndex.WaterNoiseTexture:
                 case Cell_FieldIndex.Regions:
                 case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.Unknown2:
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCN:
+                case Cell_FieldIndex.XWCS:
                 case Cell_FieldIndex.WaterVelocity:
                 case Cell_FieldIndex.Water:
                 case Cell_FieldIndex.Ownership:
@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.LightingTemplate:
                     return typeof(FormLink<LightingTemplate>);
-                case Cell_FieldIndex.Unknown:
+                case Cell_FieldIndex.LNAM:
                     return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.WaterHeight:
                     return typeof(Single);
@@ -3015,9 +3015,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<IFormLink<Region>>);
                 case Cell_FieldIndex.Location:
                     return typeof(FormLinkNullable<Location>);
-                case Cell_FieldIndex.Unknown2:
+                case Cell_FieldIndex.XWCN:
                     return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.Unknown3:
+                case Cell_FieldIndex.XWCS:
                     return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.WaterVelocity:
                     return typeof(CellWaterVelocity);
@@ -3160,13 +3160,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.OcclusionData = default;
             item.MaxHeightData = default;
             item.LightingTemplate = FormLink<LightingTemplate>.Null;
-            item.Unknown = default;
+            item.LNAM = default;
             item.WaterHeight = default;
             item.WaterNoiseTexture = default;
             item.Regions = null;
             item.Location = FormLinkNullable<Location>.Null;
-            item.Unknown2 = default;
-            item.Unknown3 = default;
+            item.XWCN = default;
+            item.XWCS = default;
             item.WaterVelocity = null;
             item.Water = FormLinkNullable<Water>.Null;
             item.Ownership = null;
@@ -3382,7 +3382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.OcclusionData = MemorySliceExt.Equal(item.OcclusionData, rhs.OcclusionData);
             ret.MaxHeightData = MemorySliceExt.Equal(item.MaxHeightData, rhs.MaxHeightData);
             ret.LightingTemplate = object.Equals(item.LightingTemplate, rhs.LightingTemplate);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
             ret.Regions = item.Regions.CollectionEqualsHelper(
@@ -3390,8 +3390,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Location = object.Equals(item.Location, rhs.Location);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = MemorySliceExt.Equal(item.Unknown3, rhs.Unknown3);
+            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
+            ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
                 rhs.WaterVelocity,
@@ -3517,10 +3517,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.LightingTemplate, "LightingTemplate");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.LNAM ?? true)
+                && item.LNAM.TryGet(out var LNAMItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if ((printMask?.WaterHeight ?? true)
                 && item.WaterHeight.TryGet(out var WaterHeightItem))
@@ -3556,15 +3556,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(LocationItem, "Location");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2.TryGet(out var Unknown2Item))
+            if ((printMask?.XWCN ?? true)
+                && item.XWCN.TryGet(out var XWCNItem))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendLine($"XWCN => {SpanExt.ToHexString(XWCNItem)}");
             }
-            if ((printMask?.Unknown3 ?? true)
-                && item.Unknown3.TryGet(out var Unknown3Item))
+            if ((printMask?.XWCS ?? true)
+                && item.XWCS.TryGet(out var XWCSItem))
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(Unknown3Item)}");
+                fg.AppendLine($"XWCS => {SpanExt.ToHexString(XWCSItem)}");
             }
             if ((printMask?.WaterVelocity?.Overall ?? true)
                 && item.WaterVelocity.TryGet(out var WaterVelocityItem))
@@ -3712,13 +3712,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Lighting?.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
             if (checkMask.OcclusionData.HasValue && checkMask.OcclusionData.Value != (item.OcclusionData != null)) return false;
             if (checkMask.MaxHeightData.HasValue && checkMask.MaxHeightData.Value != (item.MaxHeightData != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.LNAM.HasValue && checkMask.LNAM.Value != (item.LNAM != null)) return false;
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != (item.WaterHeight != null)) return false;
             if (checkMask.WaterNoiseTexture.HasValue && checkMask.WaterNoiseTexture.Value != (item.WaterNoiseTexture != null)) return false;
             if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != (item.Regions != null)) return false;
             if (checkMask.Location.HasValue && checkMask.Location.Value != (item.Location.FormKey != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            if (checkMask.Unknown3.HasValue && checkMask.Unknown3.Value != (item.Unknown3 != null)) return false;
+            if (checkMask.XWCN.HasValue && checkMask.XWCN.Value != (item.XWCN != null)) return false;
+            if (checkMask.XWCS.HasValue && checkMask.XWCS.Value != (item.XWCS != null)) return false;
             if (checkMask.WaterVelocity?.Overall.HasValue ?? false && checkMask.WaterVelocity.Overall.Value != (item.WaterVelocity != null)) return false;
             if (checkMask.WaterVelocity?.Specific != null && (item.WaterVelocity == null || !item.WaterVelocity.HasBeenSet(checkMask.WaterVelocity.Specific))) return false;
             if (checkMask.Water.HasValue && checkMask.Water.Value != (item.Water.FormKey != null)) return false;
@@ -3751,13 +3751,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.OcclusionData = (item.OcclusionData != null);
             mask.MaxHeightData = (item.MaxHeightData != null);
             mask.LightingTemplate = true;
-            mask.Unknown = (item.Unknown != null);
+            mask.LNAM = (item.LNAM != null);
             mask.WaterHeight = (item.WaterHeight != null);
             mask.WaterNoiseTexture = (item.WaterNoiseTexture != null);
             mask.Regions = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Regions != null), default);
             mask.Location = (item.Location.FormKey != null);
-            mask.Unknown2 = (item.Unknown2 != null);
-            mask.Unknown3 = (item.Unknown3 != null);
+            mask.XWCN = (item.XWCN != null);
+            mask.XWCS = (item.XWCS != null);
             var itemWaterVelocity = item.WaterVelocity;
             mask.WaterVelocity = new MaskItem<bool, CellWaterVelocity.Mask<bool>?>(itemWaterVelocity != null, itemWaterVelocity?.GetHasBeenSetMask());
             mask.Water = (item.Water.FormKey != null);
@@ -3842,13 +3842,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!MemorySliceExt.Equal(lhs.OcclusionData, rhs.OcclusionData)) return false;
             if (!MemorySliceExt.Equal(lhs.MaxHeightData, rhs.MaxHeightData)) return false;
             if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
             if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
             if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown3, rhs.Unknown3)) return false;
+            if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+            if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
             if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
             if (!lhs.Water.Equals(rhs.Water)) return false;
             if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
@@ -3915,9 +3915,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(MaxHeightDataItem);
             }
             hash.Add(item.LightingTemplate);
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.LNAM.TryGet(out var LNAMItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(LNAMItem);
             }
             if (item.WaterHeight.TryGet(out var WaterHeightitem))
             {
@@ -3932,13 +3932,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Locationitem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.XWCN.TryGet(out var XWCNItem))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(XWCNItem);
             }
-            if (item.Unknown3.TryGet(out var Unknown3Item))
+            if (item.XWCS.TryGet(out var XWCSItem))
             {
-                hash.Add(Unknown3Item);
+                hash.Add(XWCSItem);
             }
             if (item.WaterVelocity.TryGet(out var WaterVelocityitem))
             {
@@ -4328,15 +4328,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.LightingTemplate = rhs.LightingTemplate.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.LNAM.TryGet(out var LNAMrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.LNAM = LNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.LNAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
@@ -4378,26 +4378,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Location = rhs.Location.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
+                if(rhs.XWCN.TryGet(out var XWCNrhs))
                 {
-                    item.Unknown2 = Unknown2rhs.ToArray();
+                    item.XWCN = XWCNrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown2 = default;
+                    item.XWCN = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
             {
-                if(rhs.Unknown3.TryGet(out var Unknown3rhs))
+                if(rhs.XWCS.TryGet(out var XWCSrhs))
                 {
-                    item.Unknown3 = Unknown3rhs.ToArray();
+                    item.XWCS = XWCSrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown3 = default;
+                    item.XWCS = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
@@ -4820,14 +4820,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Cell_FieldIndex.LightingTemplate,
                     errorMask: errorMask);
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown) ?? true))
+            if ((item.LNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Cell_FieldIndex.Unknown,
+                    name: nameof(item.LNAM),
+                    item: item.LNAM.Value,
+                    fieldIndex: (int)Cell_FieldIndex.LNAM,
                     errorMask: errorMask);
             }
             if ((item.WaterHeight != null)
@@ -4879,24 +4879,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Cell_FieldIndex.Location,
                     errorMask: errorMask);
             }
-            if ((item.Unknown2 != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown2) ?? true))
+            if ((item.XWCN != null)
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.Value,
-                    fieldIndex: (int)Cell_FieldIndex.Unknown2,
+                    name: nameof(item.XWCN),
+                    item: item.XWCN.Value,
+                    fieldIndex: (int)Cell_FieldIndex.XWCN,
                     errorMask: errorMask);
             }
-            if ((item.Unknown3 != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Unknown3) ?? true))
+            if ((item.XWCS != null)
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.Value,
-                    fieldIndex: (int)Cell_FieldIndex.Unknown3,
+                    name: nameof(item.XWCS),
+                    item: item.XWCS.Value,
+                    fieldIndex: (int)Cell_FieldIndex.XWCS,
                     errorMask: errorMask);
             }
             if ((item.WaterVelocity != null)
@@ -5370,11 +5370,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Unknown);
+                case "LNAM":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.LNAM);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.LNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5470,11 +5470,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Unknown2);
+                case "XWCN":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.XWCN);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XWCN = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5488,11 +5488,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Unknown3);
+                case "XWCS":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.XWCS);
                     try
                     {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.XWCS = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -6053,7 +6053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.LTMP_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.LNAM,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.LNAM_HEADER));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6080,11 +6080,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XLCN_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.XWCN,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XWCN_HEADER));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.XWCS,
                 header: recordTypeConverter.ConvertToCustom(Cell_Registration.XWCS_HEADER));
             if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
             {
@@ -6265,8 +6265,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4C: // LNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown);
+                    item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
                 }
                 case 0x574C4358: // XCLW
                 {
@@ -6304,14 +6304,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E435758: // XWCN
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown2);
+                    item.XWCN = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
                 }
                 case 0x53435758: // XWCS
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown3);
+                    item.XWCS = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
                 }
                 case 0x55435758: // XWCU
                 {
@@ -6517,9 +6517,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool LightingTemplate_IsSet => _LightingTemplateLocation.HasValue;
         public IFormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region LNAM
+        private int? _LNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
@@ -6535,13 +6535,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Location_IsSet => _LocationLocation.HasValue;
         public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XWCN
+        private int? _XWCNLocation;
+        public ReadOnlyMemorySlice<Byte>? XWCN => _XWCNLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XWCNLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region Unknown3
-        private int? _Unknown3Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown3 => _Unknown3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region XWCS
+        private int? _XWCSLocation;
+        public ReadOnlyMemorySlice<Byte>? XWCS => _XWCSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XWCSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
@@ -6700,8 +6700,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown);
+                    _LNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
                 }
                 case 0x574C4358: // XCLW
                 {
@@ -6732,13 +6732,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E435758: // XWCN
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown2);
+                    _XWCNLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
                 }
                 case 0x53435758: // XWCS
                 {
-                    _Unknown3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Unknown3);
+                    _XWCSLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
                 }
                 case 0x55435758: // XWCU
                 {

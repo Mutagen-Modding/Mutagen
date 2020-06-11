@@ -22,7 +22,7 @@
       <Float name="Charge" recordType="XCHG" />
       <Int32 name="Health" recordType="XHLT" />
       <Int32 name="LevelModifier" recordType="XLCM" />
-      <FormLink name="Unknown" recordType="XRTM" refName="OblivionMajorRecord" />
+      <FormLink name="XRTM" recordType="XRTM" refName="OblivionMajorRecord" />
       <Enum name="ActionFlags" recordType="XACT" enumName="PlacedObject.ActionFlag" byteLength="4" />
       <Int32 name="Count" recordType="XCNT" />
       <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />

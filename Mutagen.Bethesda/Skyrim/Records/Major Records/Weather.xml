@@ -6,14 +6,14 @@
         <String hasBeenSet="True" />
       </Array>
       <CustomLogic name="CloudTexturesParse" isUntypedRecordType="true" />
-      <ByteArray name="Unknown" recordType="DNAM" />
-      <ByteArray name="Unknown2" recordType="CNAM" />
-      <ByteArray name="Unknown3" recordType="ANAM" />
-      <ByteArray name="Unknown4" recordType="BNAM" />
-      <ByteArray name="Unknown5" recordType="LNAM" />
+      <ByteArray name="DNAM" recordType="DNAM" />
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <ByteArray name="ANAM" recordType="ANAM" />
+      <ByteArray name="BNAM" recordType="BNAM" />
+      <ByteArray name="LNAM" recordType="LNAM" />
       <FormLink name="Precipitation" refName="ShaderParticleGeometry" recordType="MNAM" />
       <FormLink name="VisualEffect" refName="VisualEffect" recordType="NNAM" hasBeenSet="False" />
-      <ByteArray name="Unknown6" recordType="ONAM" />
+      <ByteArray name="ONAM" recordType="ONAM" />
       <Array name="Clouds" fixedSize="32" binary="Custom" recordType="RNAM" hasBeenSet="False">
         <RefDirect refName="CloudLayer" />
       </Array>
@@ -58,7 +58,7 @@
       <Data>
         <Fields>
           <Percent name="WindSpeed" integerType="Byte" />
-          <UInt16 name="Unknown7" />
+          <UInt16 name="Unknown" />
           <Float name="TransDelta" binaryType="Integer" integerType="Byte" min="0" max="0.25" multiplier="4" />
           <Percent name="SunGlare" integerType="Byte" />
           <Percent name="SunDamage" integerType="Byte" />
@@ -83,8 +83,8 @@
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
       <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" isSE="true" />
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
-      <ByteArray name="Unknown8" recordType="NAM2" />
-      <ByteArray name="Unknown9" recordType="NAM3" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
       <RefDirect name="Aurora" refName="Model" />
       <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" isSE="true" />
     </Fields>

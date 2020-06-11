@@ -106,16 +106,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Unknown
+        #region PNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _PNAM;
+        public MemorySlice<Byte>? PNAM
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._PNAM;
+            set => this._PNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.PNAM => this.PNAM;
         #endregion
         #region Flags
         public Furniture.Flag? Flags { get; set; }
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = initialValue;
+                this.PNAM = initialValue;
                 this.Flags = initialValue;
                 this.InteractionKeyword = initialValue;
                 this.WorkbenchData = new MaskItem<TItem, WorkbenchData.Mask<TItem>?>(initialValue, new WorkbenchData.Mask<TItem>(initialValue));
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model,
                 TItem Destructible,
                 TItem Keywords,
-                TItem Unknown,
+                TItem PNAM,
                 TItem Flags,
                 TItem InteractionKeyword,
                 TItem WorkbenchData,
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown = Unknown;
+                this.PNAM = PNAM;
                 this.Flags = Flags;
                 this.InteractionKeyword = InteractionKeyword;
                 this.WorkbenchData = new MaskItem<TItem, WorkbenchData.Mask<TItem>?>(WorkbenchData, new WorkbenchData.Mask<TItem>(WorkbenchData));
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem Unknown;
+            public TItem PNAM;
             public TItem Flags;
             public TItem InteractionKeyword;
             public MaskItem<TItem, WorkbenchData.Mask<TItem>?>? WorkbenchData { get; set; }
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.InteractionKeyword, rhs.InteractionKeyword)) return false;
                 if (!object.Equals(this.WorkbenchData, rhs.WorkbenchData)) return false;
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
-                hash.Add(this.Unknown);
+                hash.Add(this.PNAM);
                 hash.Add(this.Flags);
                 hash.Add(this.InteractionKeyword);
                 hash.Add(this.WorkbenchData);
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.PNAM)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.InteractionKeyword)) return false;
                 if (WorkbenchData != null)
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.PNAM)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.InteractionKeyword)) return true;
                 if (WorkbenchData != null)
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Unknown = eval(this.Unknown);
+                obj.PNAM = eval(this.PNAM);
                 obj.Flags = eval(this.Flags);
                 obj.InteractionKeyword = eval(this.InteractionKeyword);
                 obj.WorkbenchData = this.WorkbenchData == null ? null : new MaskItem<R, WorkbenchData.Mask<R>?>(eval(this.WorkbenchData.Overall), this.WorkbenchData.Specific?.Translate(eval));
@@ -702,9 +702,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.PNAM ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(PNAM, "PNAM");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? Unknown;
+            public Exception? PNAM;
             public Exception? Flags;
             public Exception? InteractionKeyword;
             public MaskItem<Exception?, WorkbenchData.ErrorMask?>? WorkbenchData;
@@ -794,8 +794,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Destructible;
                     case Furniture_FieldIndex.Keywords:
                         return Keywords;
-                    case Furniture_FieldIndex.Unknown:
-                        return Unknown;
+                    case Furniture_FieldIndex.PNAM:
+                        return PNAM;
                     case Furniture_FieldIndex.Flags:
                         return Flags;
                     case Furniture_FieldIndex.InteractionKeyword:
@@ -836,8 +836,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Furniture_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Furniture_FieldIndex.PNAM:
+                        this.PNAM = ex;
                         break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = ex;
@@ -886,8 +886,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Furniture_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Furniture_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Furniture_FieldIndex.PNAM:
+                        this.PNAM = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Model != null) return true;
                 if (Destructible != null) return true;
                 if (Keywords != null) return true;
-                if (Unknown != null) return true;
+                if (PNAM != null) return true;
                 if (Flags != null) return true;
                 if (InteractionKeyword != null) return true;
                 if (WorkbenchData != null) return true;
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(PNAM, "PNAM");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(InteractionKeyword, "InteractionKeyword");
                 WorkbenchData?.ToString(fg);
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 ret.WorkbenchData = this.WorkbenchData.Combine(rhs.WorkbenchData, (l, r) => l.Combine(r));
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Model.TranslationMask?> Model;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool Keywords;
-            public bool Unknown;
+            public bool PNAM;
             public bool Flags;
             public bool InteractionKeyword;
             public MaskItem<bool, WorkbenchData.TranslationMask?> WorkbenchData;
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
-                this.Unknown = defaultOn;
+                this.PNAM = defaultOn;
                 this.Flags = defaultOn;
                 this.InteractionKeyword = defaultOn;
                 this.WorkbenchData = new MaskItem<bool, WorkbenchData.TranslationMask?>(defaultOn, null);
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Unknown, null));
+                ret.Add((PNAM, null));
                 ret.Add((Flags, null));
                 ret.Add((InteractionKeyword, null));
                 ret.Add((WorkbenchData?.Overall ?? true, WorkbenchData?.Specific?.GetCrystal()));
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
         new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? PNAM { get; }
         Furniture.Flag? Flags { get; }
         IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
         IWorkbenchDataGetter? WorkbenchData { get; }
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Model = 9,
         Destructible = 10,
         Keywords = 11,
-        Unknown = 12,
+        PNAM = 12,
         Flags = 13,
         InteractionKeyword = 14,
         WorkbenchData = 15,
@@ -1643,8 +1643,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Furniture_FieldIndex.Destructible;
                 case "KEYWORDS":
                     return (ushort)Furniture_FieldIndex.Keywords;
-                case "UNKNOWN":
-                    return (ushort)Furniture_FieldIndex.Unknown;
+                case "PNAM":
+                    return (ushort)Furniture_FieldIndex.PNAM;
                 case "FLAGS":
                     return (ushort)Furniture_FieldIndex.Flags;
                 case "INTERACTIONKEYWORD":
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Name:
                 case Furniture_FieldIndex.Model:
                 case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                 case Furniture_FieldIndex.Flags:
                 case Furniture_FieldIndex.InteractionKeyword:
                 case Furniture_FieldIndex.WorkbenchData:
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Furniture_FieldIndex.Name:
                 case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                 case Furniture_FieldIndex.Flags:
                 case Furniture_FieldIndex.InteractionKeyword:
                 case Furniture_FieldIndex.AssociatedSpell:
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Model:
                 case Furniture_FieldIndex.Destructible:
                 case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                 case Furniture_FieldIndex.Flags:
                 case Furniture_FieldIndex.InteractionKeyword:
                 case Furniture_FieldIndex.WorkbenchData:
@@ -1753,8 +1753,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Destructible";
                 case Furniture_FieldIndex.Keywords:
                     return "Keywords";
-                case Furniture_FieldIndex.Unknown:
-                    return "Unknown";
+                case Furniture_FieldIndex.PNAM:
+                    return "PNAM";
                 case Furniture_FieldIndex.Flags:
                     return "Flags";
                 case Furniture_FieldIndex.InteractionKeyword:
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Model:
                 case Furniture_FieldIndex.Destructible:
                 case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                 case Furniture_FieldIndex.Flags:
                 case Furniture_FieldIndex.InteractionKeyword:
                 case Furniture_FieldIndex.WorkbenchData:
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Model:
                 case Furniture_FieldIndex.Destructible:
                 case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                 case Furniture_FieldIndex.Flags:
                 case Furniture_FieldIndex.InteractionKeyword:
                 case Furniture_FieldIndex.WorkbenchData:
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Destructible);
                 case Furniture_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case Furniture_FieldIndex.Unknown:
+                case Furniture_FieldIndex.PNAM:
                     return typeof(MemorySlice<Byte>);
                 case Furniture_FieldIndex.Flags:
                     return typeof(Furniture.Flag);
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Keywords = null;
-            item.Unknown = default;
+            item.PNAM = default;
             item.Flags = default;
             item.InteractionKeyword = FormLinkNullable<Keyword>.Null;
             item.WorkbenchData = null;
@@ -2110,7 +2110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
             ret.Flags = item.Flags == rhs.Flags;
             ret.InteractionKeyword = object.Equals(item.InteractionKeyword, rhs.InteractionKeyword);
             ret.WorkbenchData = EqualsMaskHelper.EqualsHelper(
@@ -2218,10 +2218,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.PNAM ?? true)
+                && item.PNAM.TryGet(out var PNAMItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags.TryGet(out var FlagsItem))
@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.InteractionKeyword.HasValue && checkMask.InteractionKeyword.Value != (item.InteractionKeyword.FormKey != null)) return false;
             if (checkMask.WorkbenchData?.Overall.HasValue ?? false && checkMask.WorkbenchData.Overall.Value != (item.WorkbenchData != null)) return false;
@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Unknown = (item.Unknown != null);
+            mask.PNAM = (item.PNAM != null);
             mask.Flags = (item.Flags != null);
             mask.InteractionKeyword = (item.InteractionKeyword.FormKey != null);
             var itemWorkbenchData = item.WorkbenchData;
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
             if (!object.Equals(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
@@ -2424,9 +2424,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.Keywords);
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.PNAM.TryGet(out var PNAMItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(PNAMItem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
@@ -2699,15 +2699,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.PNAM.TryGet(out var PNAMrhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.PNAM = PNAMrhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.PNAM = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
@@ -3008,14 +3008,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Furniture_FieldIndex.Unknown) ?? true))
+            if ((item.PNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)Furniture_FieldIndex.Unknown,
+                    name: nameof(item.PNAM),
+                    item: item.PNAM.Value,
+                    fieldIndex: (int)Furniture_FieldIndex.PNAM,
                     errorMask: errorMask);
             }
             if ((item.Flags != null)
@@ -3322,11 +3322,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Furniture_FieldIndex.Unknown);
+                case "PNAM":
+                    errorMask?.PushIndex((int)Furniture_FieldIndex.PNAM);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.PNAM = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3652,7 +3652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.PNAM,
                 header: recordTypeConverter.ConvertToCustom(Furniture_Registration.PNAM_HEADER));
             FurnitureBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
@@ -3819,8 +3819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Unknown);
+                    item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.PNAM);
                 }
                 case 0x4D414E46: // FNAM
                 {
@@ -3990,9 +3990,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region PNAM
+        private int? _PNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Flags
         partial void FlagsCustomParse(
@@ -4149,8 +4149,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E50: // PNAM
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Unknown);
+                    _PNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.PNAM);
                 }
                 case 0x4D414E46: // FNAM
                 {

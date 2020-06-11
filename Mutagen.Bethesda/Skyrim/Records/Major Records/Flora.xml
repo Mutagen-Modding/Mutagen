@@ -14,9 +14,9 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <ByteArray name="Unknown" recordType="PNAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
       <String name="ActivateTextOverride" recordType="RNAM" />
-      <ByteArray name="Unknown2" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" />
       <FormLink name="Ingredient" objType="Record" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>

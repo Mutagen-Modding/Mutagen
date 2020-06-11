@@ -60,16 +60,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFragmentsAdapterGetter? IDialogResponsesGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
-        #region Unknown
+        #region DATA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Unknown;
-        public MemorySlice<Byte>? Unknown
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
         {
-            get => this._Unknown;
-            set => this._Unknown = value;
+            get => this._DATA;
+            set => this._DATA = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponsesGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte>? IDialogResponsesGetter.DATA => this.DATA;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>(initialValue, new FragmentsAdapter.Mask<TItem>(initialValue));
-                this.Unknown = initialValue;
+                this.DATA = initialValue;
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(initialValue, new DialogResponseFlags.Mask<TItem>(initialValue));
                 this.Topic = initialValue;
                 this.PreviousDialog = initialValue;
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormVersion,
                 TItem Version2,
                 TItem VirtualMachineAdapter,
-                TItem Unknown,
+                TItem DATA,
                 TItem Flags,
                 TItem Topic,
                 TItem PreviousDialog,
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>(VirtualMachineAdapter, new FragmentsAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Unknown = Unknown;
+                this.DATA = DATA;
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(Flags, new DialogResponseFlags.Mask<TItem>(Flags));
                 this.Topic = Topic;
                 this.PreviousDialog = PreviousDialog;
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
-            public TItem Unknown;
+            public TItem DATA;
             public MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>? Flags { get; set; }
             public TItem Topic;
             public TItem PreviousDialog;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Topic, rhs.Topic)) return false;
                 if (!object.Equals(this.PreviousDialog, rhs.PreviousDialog)) return false;
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
-                hash.Add(this.Unknown);
+                hash.Add(this.DATA);
                 hash.Add(this.Flags);
                 hash.Add(this.Topic);
                 hash.Add(this.PreviousDialog);
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.VirtualMachineAdapter.Overall)) return false;
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.DATA)) return false;
                 if (Flags != null)
                 {
                     if (!eval(this.Flags.Overall)) return false;
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.VirtualMachineAdapter.Overall)) return true;
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Unknown)) return true;
+                if (eval(this.DATA)) return true;
                 if (Flags != null)
                 {
                     if (eval(this.Flags.Overall)) return true;
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, FragmentsAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
-                obj.Unknown = eval(this.Unknown);
+                obj.DATA = eval(this.DATA);
                 obj.Flags = this.Flags == null ? null : new MaskItem<R, DialogResponseFlags.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
                 obj.Topic = eval(this.Topic);
                 obj.PreviousDialog = eval(this.PreviousDialog);
@@ -745,9 +745,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         VirtualMachineAdapter?.ToString(fg);
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.DATA ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(DATA, "DATA");
                     }
                     if (printMask?.Flags?.Overall ?? true)
                     {
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<Exception?, FragmentsAdapter.ErrorMask?>? VirtualMachineAdapter;
-            public Exception? Unknown;
+            public Exception? DATA;
             public MaskItem<Exception?, DialogResponseFlags.ErrorMask?>? Flags;
             public Exception? Topic;
             public Exception? PreviousDialog;
@@ -914,8 +914,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case DialogResponses_FieldIndex.VirtualMachineAdapter:
                         return VirtualMachineAdapter;
-                    case DialogResponses_FieldIndex.Unknown:
-                        return Unknown;
+                    case DialogResponses_FieldIndex.DATA:
+                        return DATA;
                     case DialogResponses_FieldIndex.Flags:
                         return Flags;
                     case DialogResponses_FieldIndex.Topic:
@@ -955,8 +955,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogResponses_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = new MaskItem<Exception?, FragmentsAdapter.ErrorMask?>(ex, null);
                         break;
-                    case DialogResponses_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case DialogResponses_FieldIndex.DATA:
+                        this.DATA = ex;
                         break;
                     case DialogResponses_FieldIndex.Flags:
                         this.Flags = new MaskItem<Exception?, DialogResponseFlags.ErrorMask?>(ex, null);
@@ -1011,8 +1011,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogResponses_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = (MaskItem<Exception?, FragmentsAdapter.ErrorMask?>?)obj;
                         break;
-                    case DialogResponses_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case DialogResponses_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
                         break;
                     case DialogResponses_FieldIndex.Flags:
                         this.Flags = (MaskItem<Exception?, DialogResponseFlags.ErrorMask?>?)obj;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
-                if (Unknown != null) return true;
+                if (DATA != null) return true;
                 if (Flags != null) return true;
                 if (Topic != null) return true;
                 if (PreviousDialog != null) return true;
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(DATA, "DATA");
                 Flags?.ToString(fg);
                 fg.AppendItem(Topic, "Topic");
                 fg.AppendItem(PreviousDialog, "PreviousDialog");
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 ret.PreviousDialog = this.PreviousDialog.Combine(rhs.PreviousDialog);
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<bool, FragmentsAdapter.TranslationMask?> VirtualMachineAdapter;
-            public bool Unknown;
+            public bool DATA;
             public MaskItem<bool, DialogResponseFlags.TranslationMask?> Flags;
             public bool Topic;
             public bool PreviousDialog;
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.VirtualMachineAdapter = new MaskItem<bool, FragmentsAdapter.TranslationMask?>(defaultOn, null);
-                this.Unknown = defaultOn;
+                this.DATA = defaultOn;
                 this.Flags = new MaskItem<bool, DialogResponseFlags.TranslationMask?>(defaultOn, null);
                 this.Topic = defaultOn;
                 this.PreviousDialog = defaultOn;
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((Unknown, null));
+                ret.Add((DATA, null));
                 ret.Add((Flags?.Overall ?? true, Flags?.Specific?.GetCrystal()));
                 ret.Add((Topic, null));
                 ret.Add((PreviousDialog, null));
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesInternal>
     {
         new FragmentsAdapter? VirtualMachineAdapter { get; set; }
-        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? DATA { get; set; }
         new DialogResponseFlags? Flags { get; set; }
         new FormLinkNullable<DialogTopic> Topic { get; set; }
         new FormLinkNullable<DialogResponses> PreviousDialog { get; set; }
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => DialogResponses_Registration.Instance;
         IFragmentsAdapterGetter? VirtualMachineAdapter { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
         IDialogResponseFlagsGetter? Flags { get; }
         IFormLinkNullable<IDialogTopicGetter> Topic { get; }
         IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
@@ -1768,7 +1768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormVersion = 4,
         Version2 = 5,
         VirtualMachineAdapter = 6,
-        Unknown = 7,
+        DATA = 7,
         Flags = 8,
         Topic = 9,
         PreviousDialog = 10,
@@ -1833,8 +1833,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "VIRTUALMACHINEADAPTER":
                     return (ushort)DialogResponses_FieldIndex.VirtualMachineAdapter;
-                case "UNKNOWN":
-                    return (ushort)DialogResponses_FieldIndex.Unknown;
+                case "DATA":
+                    return (ushort)DialogResponses_FieldIndex.DATA;
                 case "FLAGS":
                     return (ushort)DialogResponses_FieldIndex.Flags;
                 case "TOPIC":
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogResponses_FieldIndex.UnknownData:
                     return true;
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                 case DialogResponses_FieldIndex.Flags:
                 case DialogResponses_FieldIndex.Topic:
                 case DialogResponses_FieldIndex.PreviousDialog:
@@ -1904,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogResponses_FieldIndex.Conditions:
                 case DialogResponses_FieldIndex.UnknownData:
                     return true;
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                 case DialogResponses_FieldIndex.Topic:
                 case DialogResponses_FieldIndex.PreviousDialog:
                 case DialogResponses_FieldIndex.FavorLevel:
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                 case DialogResponses_FieldIndex.Flags:
                 case DialogResponses_FieldIndex.Topic:
                 case DialogResponses_FieldIndex.PreviousDialog:
@@ -1953,8 +1953,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
                     return "VirtualMachineAdapter";
-                case DialogResponses_FieldIndex.Unknown:
-                    return "Unknown";
+                case DialogResponses_FieldIndex.DATA:
+                    return "DATA";
                 case DialogResponses_FieldIndex.Flags:
                     return "Flags";
                 case DialogResponses_FieldIndex.Topic:
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                 case DialogResponses_FieldIndex.Flags:
                 case DialogResponses_FieldIndex.Topic:
                 case DialogResponses_FieldIndex.PreviousDialog:
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                 case DialogResponses_FieldIndex.Flags:
                 case DialogResponses_FieldIndex.Topic:
                 case DialogResponses_FieldIndex.PreviousDialog:
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
                     return typeof(FragmentsAdapter);
-                case DialogResponses_FieldIndex.Unknown:
+                case DialogResponses_FieldIndex.DATA:
                     return typeof(MemorySlice<Byte>);
                 case DialogResponses_FieldIndex.Flags:
                     return typeof(DialogResponseFlags);
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Unknown = default;
+            item.DATA = default;
             item.Flags = null;
             item.Topic = FormLinkNullable<DialogTopic>.Null;
             item.PreviousDialog = FormLinkNullable<DialogResponses>.Null;
@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
             ret.Flags = EqualsMaskHelper.EqualsHelper(
                 item.Flags,
                 rhs.Flags,
@@ -2403,10 +2403,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if ((printMask?.DATA ?? true)
+                && item.DATA.TryGet(out var DATAItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
             }
             if ((printMask?.Flags?.Overall ?? true)
                 && item.Flags.TryGet(out var FlagsItem))
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
             if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
+            if (checkMask.DATA.HasValue && checkMask.DATA.Value != (item.DATA != null)) return false;
             if (checkMask.Flags?.Overall.HasValue ?? false && checkMask.Flags.Overall.Value != (item.Flags != null)) return false;
             if (checkMask.Flags?.Specific != null && (item.Flags == null || !item.Flags.HasBeenSet(checkMask.Flags.Specific))) return false;
             if (checkMask.Topic.HasValue && checkMask.Topic.Value != (item.Topic.FormKey != null)) return false;
@@ -2555,7 +2555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
             mask.VirtualMachineAdapter = new MaskItem<bool, FragmentsAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Unknown = (item.Unknown != null);
+            mask.DATA = (item.DATA != null);
             var itemFlags = item.Flags;
             mask.Flags = new MaskItem<bool, DialogResponseFlags.Mask<bool>?>(itemFlags != null, itemFlags?.GetHasBeenSetMask());
             mask.Topic = (item.Topic.FormKey != null);
@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
             if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
             if (!lhs.Topic.Equals(rhs.Topic)) return false;
             if (!lhs.PreviousDialog.Equals(rhs.PreviousDialog)) return false;
@@ -2667,9 +2667,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.DATA.TryGet(out var DATAItem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(DATAItem);
             }
             if (item.Flags.TryGet(out var Flagsitem))
             {
@@ -2861,15 +2861,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
+                if(rhs.DATA.TryGet(out var DATArhs))
                 {
-                    item.Unknown = Unknownrhs.ToArray();
+                    item.DATA = DATArhs.ToArray();
                 }
                 else
                 {
-                    item.Unknown = default;
+                    item.DATA = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
@@ -3177,14 +3177,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter));
                 }
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Unknown) ?? true))
+            if ((item.DATA != null)
+                && (translationMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
-                    fieldIndex: (int)DialogResponses_FieldIndex.Unknown,
+                    name: nameof(item.DATA),
+                    item: item.DATA.Value,
+                    fieldIndex: (int)DialogResponses_FieldIndex.DATA,
                     errorMask: errorMask);
             }
             if ((item.Flags != null)
@@ -3485,11 +3485,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)DialogResponses_FieldIndex.Unknown);
+                case "DATA":
+                    errorMask?.PushIndex((int)DialogResponses_FieldIndex.DATA);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.DATA = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3895,7 +3895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown,
+                item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.DATA_HEADER));
             if (item.Flags.TryGet(out var FlagsItem))
             {
@@ -4063,8 +4063,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Unknown);
+                    item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.DATA);
                 }
                 case 0x4D414E45: // ENAM
                 {
@@ -4272,9 +4272,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFragmentsAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? FragmentsAdapterBinaryOverlay.FragmentsAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;
@@ -4400,8 +4400,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Unknown);
+                    _DATALocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.DATA);
                 }
                 case 0x4D414E45: // ENAM
                 {
