@@ -438,11 +438,10 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
-            CleanEmptyCellGroups(
+            CleanEmptyDialogGroups(
                 stream,
                 formID,
-                loc,
-                numSubGroups: 0);
+                loc);
         }
 
         private void ProcessDialogItems(
