@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Data;
-        public Byte[]? Data
+        protected MemorySlice<Byte>? _Data;
+        public MemorySlice<Byte>? Data
         {
             get => this._Data;
             set => this._Data = value;
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISimpleModel>
     {
         new String File { get; set; }
-        new Byte[]? Data { get; set; }
+        new MemorySlice<Byte>? Data { get; set; }
     }
 
     public partial interface ISimpleModelGetter :
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SimpleModel_FieldIndex.File:
                     return typeof(String);
                 case SimpleModel_FieldIndex.Data:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

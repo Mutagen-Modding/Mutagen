@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[3];
-        public Byte[] Unused
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
             get => _Unused;
             set => this._Unused = value;
@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown3 = new byte[12];
-        public Byte[] Unknown3
+        private MemorySlice<Byte> _Unknown3 = new byte[12];
+        public MemorySlice<Byte> Unknown3
         {
             get => _Unknown3;
             set => this._Unknown3 = value;
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeaponData>
     {
         new WeaponAnimationType AnimationType { get; set; }
-        new Byte[] Unused { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new Single Speed { get; set; }
         new Single Reach { get; set; }
         new WeaponData.Flag Flags { get; set; }
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single RumbleLeftMotorStrength { get; set; }
         new Single RumbleRightMotorStrength { get; set; }
         new Single RumbleDuration { get; set; }
-        new Byte[] Unknown3 { get; set; }
+        new MemorySlice<Byte> Unknown3 { get; set; }
         new Skill? Skill { get; set; }
         new Int64 Unknown4 { get; set; }
         new ActorValueExtended Resist { get; set; }
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WeaponData_FieldIndex.AnimationType:
                     return typeof(WeaponAnimationType);
                 case WeaponData_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case WeaponData_FieldIndex.Speed:
                     return typeof(Single);
                 case WeaponData_FieldIndex.Reach:
@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WeaponData_FieldIndex.RumbleDuration:
                     return typeof(Single);
                 case WeaponData_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case WeaponData_FieldIndex.Skill:
                     return typeof(Skill);
                 case WeaponData_FieldIndex.Unknown4:

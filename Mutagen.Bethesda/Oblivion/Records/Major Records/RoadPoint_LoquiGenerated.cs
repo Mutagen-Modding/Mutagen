@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region NumConnectionsFluffBytes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _NumConnectionsFluffBytes = new byte[3];
-        public Byte[] NumConnectionsFluffBytes
+        private MemorySlice<Byte> _NumConnectionsFluffBytes = new byte[3];
+        public MemorySlice<Byte> NumConnectionsFluffBytes
         {
             get => _NumConnectionsFluffBytes;
             set => this._NumConnectionsFluffBytes = value;
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRoadPoint>
     {
         new P3Float Point { get; set; }
-        new Byte[] NumConnectionsFluffBytes { get; set; }
+        new MemorySlice<Byte> NumConnectionsFluffBytes { get; set; }
         new ExtendedList<P3Float> Connections { get; }
     }
 
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RoadPoint_FieldIndex.Point:
                     return typeof(P3Float);
                 case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case RoadPoint_FieldIndex.Connections:
                     return typeof(ExtendedList<P3Float>);
                 default:

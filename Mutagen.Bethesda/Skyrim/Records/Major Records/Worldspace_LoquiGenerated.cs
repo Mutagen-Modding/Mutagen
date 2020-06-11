@@ -224,8 +224,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _OffsetData;
-        public Byte[]? OffsetData
+        protected MemorySlice<Byte>? _OffsetData;
+        public MemorySlice<Byte>? OffsetData
         {
             get => this._OffsetData;
             set => this._OffsetData = value;
@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? HdLodDiffuseTexture { get; set; }
         new String? HdLodNormalTexture { get; set; }
         new String? WaterEnvironmentMap { get; set; }
-        new Byte[]? OffsetData { get; set; }
+        new MemorySlice<Byte>? OffsetData { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
@@ -2760,7 +2760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Worldspace_FieldIndex.WaterEnvironmentMap:
                     return typeof(String);
                 case Worldspace_FieldIndex.OffsetData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Worldspace_FieldIndex.TopCell:
                     return typeof(Cell);
                 case Worldspace_FieldIndex.SubCellsTimestamp:

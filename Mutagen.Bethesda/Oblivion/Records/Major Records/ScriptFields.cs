@@ -25,9 +25,9 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<ScriptReference, ScriptVariableReference>();
 
         #region CompiledScript
-        protected Byte[]? _CompiledScript;
+        protected MemorySlice<byte>? _CompiledScript;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[]? CompiledScript
+        public MemorySlice<byte>? CompiledScript
         {
             get => this._CompiledScript;
             set

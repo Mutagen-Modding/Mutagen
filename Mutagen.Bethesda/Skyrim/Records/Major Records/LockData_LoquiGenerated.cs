@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[3];
-        public Byte[] Unused
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
             get => _Unused;
             set => this._Unused = value;
@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused2 = new byte[11];
-        public Byte[] Unused2
+        private MemorySlice<Byte> _Unused2 = new byte[11];
+        public MemorySlice<Byte> Unused2
         {
             get => _Unused2;
             set => this._Unused2 = value;
@@ -692,10 +692,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILockData>
     {
         new LockLevel Level { get; set; }
-        new Byte[] Unused { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new FormLink<Key> Key { get; set; }
         new LockData.Flag Flags { get; set; }
-        new Byte[] Unused2 { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
     }
 
     public partial interface ILockDataGetter :
@@ -1211,13 +1211,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LockData_FieldIndex.Level:
                     return typeof(LockLevel);
                 case LockData_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case LockData_FieldIndex.Key:
                     return typeof(FormLink<Key>);
                 case LockData_FieldIndex.Flags:
                     return typeof(LockData.Flag);
                 case LockData_FieldIndex.Unused2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

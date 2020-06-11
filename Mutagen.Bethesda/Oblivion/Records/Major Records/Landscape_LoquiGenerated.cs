@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VertexNormals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _VertexNormals;
-        public Byte[]? VertexNormals
+        protected MemorySlice<Byte>? _VertexNormals;
+        public MemorySlice<Byte>? VertexNormals
         {
             get => this._VertexNormals;
             set => this._VertexNormals = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VertexHeightMap
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _VertexHeightMap;
-        public Byte[]? VertexHeightMap
+        protected MemorySlice<Byte>? _VertexHeightMap;
+        public MemorySlice<Byte>? VertexHeightMap
         {
             get => this._VertexHeightMap;
             set => this._VertexHeightMap = value;
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VertexColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _VertexColors;
-        public Byte[]? VertexColors
+        protected MemorySlice<Byte>? _VertexColors;
+        public MemorySlice<Byte>? VertexColors
         {
             get => this._VertexColors;
             set => this._VertexColors = value;
@@ -927,10 +927,10 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         ILoquiObjectSetter<ILandscapeInternal>
     {
-        new Byte[]? Unknown { get; set; }
-        new Byte[]? VertexNormals { get; set; }
-        new Byte[]? VertexHeightMap { get; set; }
-        new Byte[]? VertexColors { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? VertexNormals { get; set; }
+        new MemorySlice<Byte>? VertexHeightMap { get; set; }
+        new MemorySlice<Byte>? VertexColors { get; set; }
         new ExtendedList<BaseLayer> Layers { get; }
         new ExtendedList<IFormLink<LandTexture>>? Textures { get; set; }
     }
@@ -1443,13 +1443,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Landscape_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.VertexNormals:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.VertexHeightMap:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.VertexColors:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.Layers:
                     return typeof(ExtendedList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:

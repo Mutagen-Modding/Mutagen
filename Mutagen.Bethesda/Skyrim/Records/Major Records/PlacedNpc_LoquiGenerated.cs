@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollData;
-        public Byte[]? RagdollData
+        protected MemorySlice<Byte>? _RagdollData;
+        public MemorySlice<Byte>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RagdollBipedData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollBipedData;
-        public Byte[]? RagdollBipedData
+        protected MemorySlice<Byte>? _RagdollBipedData;
+        public MemorySlice<Byte>? RagdollBipedData
         {
             get => this._RagdollBipedData;
             set => this._RagdollBipedData = value;
@@ -1799,8 +1799,8 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<Npc> Base { get; set; }
         new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
-        new Byte[]? RagdollData { get; set; }
-        new Byte[]? RagdollBipedData { get; set; }
+        new MemorySlice<Byte>? RagdollData { get; set; }
+        new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Patrol? Patrol { get; set; }
         new Level? LevelModifier { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
@@ -2619,9 +2619,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.EncounterZone:
                     return typeof(FormLinkNullable<EncounterZone>);
                 case PlacedNpc_FieldIndex.RagdollData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedNpc_FieldIndex.RagdollBipedData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedNpc_FieldIndex.Patrol:
                     return typeof(Patrol);
                 case PlacedNpc_FieldIndex.LevelModifier:

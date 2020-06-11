@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EventData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _EventData;
-        public Byte[]? EventData
+        protected MemorySlice<Byte>? _EventData;
+        public MemorySlice<Byte>? EventData
         {
             get => this._EventData;
             set => this._EventData = value;
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFindMatchingRefFromEvent>
     {
         new RecordType? FromEvent { get; set; }
-        new Byte[]? EventData { get; set; }
+        new MemorySlice<Byte>? EventData { get; set; }
     }
 
     public partial interface IFindMatchingRefFromEventGetter :
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case FindMatchingRefFromEvent_FieldIndex.FromEvent:
                     return typeof(RecordType);
                 case FindMatchingRefFromEvent_FieldIndex.EventData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

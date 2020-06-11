@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesInternal>
     {
         new DialogResponseAdapter? VirtualMachineAdapter { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new DialogResponseFlags? Flags { get; set; }
         new FormLinkNullable<DialogTopic> Topic { get; set; }
         new FormLinkNullable<DialogResponses> PreviousDialog { get; set; }
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogResponses_FieldIndex.VirtualMachineAdapter:
                     return typeof(DialogResponseAdapter);
                 case DialogResponses_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case DialogResponses_FieldIndex.Flags:
                     return typeof(DialogResponseFlags);
                 case DialogResponses_FieldIndex.Topic:

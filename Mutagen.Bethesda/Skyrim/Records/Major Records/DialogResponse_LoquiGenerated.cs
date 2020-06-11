@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown2 = new byte[3];
-        public Byte[] Unknown2
+        private MemorySlice<Byte> _Unknown2 = new byte[3];
+        public MemorySlice<Byte> Unknown2
         {
             get => _Unknown2;
             set => this._Unknown2 = value;
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown3 = new byte[3];
-        public Byte[] Unknown3
+        private MemorySlice<Byte> _Unknown3 = new byte[3];
+        public MemorySlice<Byte> Unknown3
         {
             get => _Unknown3;
             set => this._Unknown3 = value;
@@ -982,10 +982,10 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 EmotionValue { get; set; }
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
-        new Byte[] Unknown2 { get; set; }
+        new MemorySlice<Byte> Unknown2 { get; set; }
         new FormLink<SoundDescriptor> Sound { get; set; }
         new DialogResponse.Flag Flags { get; set; }
-        new Byte[] Unknown3 { get; set; }
+        new MemorySlice<Byte> Unknown3 { get; set; }
         new TranslatedString Text { get; set; }
         new String ScriptNotes { get; set; }
         new String Edits { get; set; }
@@ -1612,13 +1612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogResponse_FieldIndex.ResponseNumber:
                     return typeof(Byte);
                 case DialogResponse_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case DialogResponse_FieldIndex.Sound:
                     return typeof(FormLink<SoundDescriptor>);
                 case DialogResponse_FieldIndex.Flags:
                     return typeof(DialogResponse.Flag);
                 case DialogResponse_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case DialogResponse_FieldIndex.Text:
                     return typeof(TranslatedString);
                 case DialogResponse_FieldIndex.ScriptNotes:

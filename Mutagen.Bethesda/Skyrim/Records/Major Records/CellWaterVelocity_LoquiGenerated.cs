@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown2 = new byte[0];
-        public Byte[] Unknown2
+        private MemorySlice<Byte> _Unknown2 = new byte[0];
+        public MemorySlice<Byte> Unknown2
         {
             get => _Unknown2;
             set => this._Unknown2 = value;
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         new P3Float Offset { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Angle { get; set; }
-        new Byte[] Unknown2 { get; set; }
+        new MemorySlice<Byte> Unknown2 { get; set; }
     }
 
     public partial interface ICellWaterVelocityGetter :
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CellWaterVelocity_FieldIndex.Angle:
                     return typeof(P3Float);
                 case CellWaterVelocity_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

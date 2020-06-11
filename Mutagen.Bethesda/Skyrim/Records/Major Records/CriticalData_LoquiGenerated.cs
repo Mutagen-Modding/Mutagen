@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused3 = new byte[3];
-        public Byte[] Unused3
+        private MemorySlice<Byte> _Unused3 = new byte[3];
+        public MemorySlice<Byte> Unused3
         {
             get => _Unused3;
             set => this._Unused3 = value;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int16 Unused { get; set; }
         new Single PercentMult { get; set; }
         new CriticalData.Flag Flags { get; set; }
-        new Byte[] Unused3 { get; set; }
+        new MemorySlice<Byte> Unused3 { get; set; }
         new FormLink<Spell> Effect { get; set; }
     }
 
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Flags:
                     return typeof(CriticalData.Flag);
                 case CriticalData_FieldIndex.Unused3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case CriticalData_FieldIndex.Effect:
                     return typeof(FormLink<Spell>);
                 default:

@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
+        protected MemorySlice<Byte>? _Unknown3;
+        public MemorySlice<Byte>? Unknown3
         {
             get => this._Unknown3;
             set => this._Unknown3 = value;
@@ -856,9 +856,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
         new FormLinkNullable<Quest> NextQuest { get; set; }
-        new Byte[]? Unknown { get; set; }
-        new Byte[]? Unknown2 { get; set; }
-        new Byte[]? Unknown3 { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown3 { get; set; }
     }
 
     public partial interface IQuestLogEntryGetter :
@@ -1404,11 +1404,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.NextQuest:
                     return typeof(FormLinkNullable<Quest>);
                 case QuestLogEntry_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case QuestLogEntry_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case QuestLogEntry_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

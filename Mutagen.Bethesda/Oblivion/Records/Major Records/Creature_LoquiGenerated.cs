@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region NIFT
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _NIFT;
-        public Byte[]? NIFT
+        protected MemorySlice<Byte>? _NIFT;
+        public MemorySlice<Byte>? NIFT
         {
             get => this._NIFT;
             set => this._NIFT = value;
@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<ItemEntry> Items { get; }
         new ExtendedList<IFormLink<ASpell>> Spells { get; }
         new ExtendedList<String>? Models { get; set; }
-        new Byte[]? NIFT { get; set; }
+        new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
         new FormLinkNullable<AItem> DeathItem { get; set; }
@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Models:
                     return typeof(ExtendedList<String>);
                 case Creature_FieldIndex.NIFT:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Creature_FieldIndex.Configuration:
                     return typeof(CreatureConfiguration);
                 case Creature_FieldIndex.Factions:

@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavmeshGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _NavmeshGrid = new byte[0];
-        public Byte[] NavmeshGrid
+        private MemorySlice<Byte> _NavmeshGrid = new byte[0];
+        public MemorySlice<Byte> NavmeshGrid
         {
             get => _NavmeshGrid;
             set => this._NavmeshGrid = value;
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MaxDistanceY { get; set; }
         new P3Float Min { get; set; }
         new P3Float Max { get; set; }
-        new Byte[] NavmeshGrid { get; set; }
+        new MemorySlice<Byte> NavmeshGrid { get; set; }
     }
 
     public partial interface IANavigationMeshDataGetter :
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ANavigationMeshData_FieldIndex.Max:
                     return typeof(P3Float);
                 case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

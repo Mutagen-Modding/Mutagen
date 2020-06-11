@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown1 = new byte[3];
-        public Byte[] Unknown1
+        private MemorySlice<Byte> _Unknown1 = new byte[3];
+        public MemorySlice<Byte> Unknown1
         {
             get => _Unknown1;
             set => this._Unknown1 = value;
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new CompareOperator CompareOperator { get; set; }
         new Condition.Flag Flags { get; set; }
-        new Byte[] Unknown1 { get; set; }
+        new MemorySlice<Byte> Unknown1 { get; set; }
     }
 
     public partial interface IConditionGetter :
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Condition_FieldIndex.Flags:
                     return typeof(Condition.Flag);
                 case Condition_FieldIndex.Unknown1:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

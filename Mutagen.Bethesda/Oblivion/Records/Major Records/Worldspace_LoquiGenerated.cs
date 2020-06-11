@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _OffsetData;
-        public Byte[]? OffsetData
+        protected MemorySlice<Byte>? _OffsetData;
+        public MemorySlice<Byte>? OffsetData
         {
             get => this._OffsetData;
             set => this._OffsetData = value;
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion
         new P2Float? ObjectBoundsMin { get; set; }
         new P2Float? ObjectBoundsMax { get; set; }
         new MusicType? Music { get; set; }
-        new Byte[]? OffsetData { get; set; }
+        new MemorySlice<Byte>? OffsetData { get; set; }
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Music:
                     return typeof(MusicType);
                 case Worldspace_FieldIndex.OffsetData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Worldspace_FieldIndex.Road:
                     return typeof(Road);
                 case Worldspace_FieldIndex.TopCell:

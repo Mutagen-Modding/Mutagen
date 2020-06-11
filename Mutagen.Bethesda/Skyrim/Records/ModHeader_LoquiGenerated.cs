@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _TypeOffsets;
-        public Byte[]? TypeOffsets
+        protected MemorySlice<Byte>? _TypeOffsets;
+        public MemorySlice<Byte>? TypeOffsets
         {
             get => this._TypeOffsets;
             set => this._TypeOffsets = value;
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Deleted
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Deleted;
-        public Byte[]? Deleted
+        protected MemorySlice<Byte>? _Deleted;
+        public MemorySlice<Byte>? Deleted
         {
             get => this._Deleted;
             set => this._Deleted = value;
@@ -1165,8 +1165,8 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
         new ModStats Stats { get; set; }
-        new Byte[]? TypeOffsets { get; set; }
-        new Byte[]? Deleted { get; set; }
+        new MemorySlice<Byte>? TypeOffsets { get; set; }
+        new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
@@ -1799,9 +1799,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Stats:
                     return typeof(ModStats);
                 case ModHeader_FieldIndex.TypeOffsets:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case ModHeader_FieldIndex.Deleted:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case ModHeader_FieldIndex.Author:
                     return typeof(String);
                 case ModHeader_FieldIndex.Description:

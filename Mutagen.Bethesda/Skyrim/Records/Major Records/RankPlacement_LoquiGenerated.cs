@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[3];
-        public Byte[] Fluff
+        private MemorySlice<Byte> _Fluff = new byte[3];
+        public MemorySlice<Byte> Fluff
         {
             get => _Fluff;
             set => this._Fluff = value;
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new FormLink<Faction> Faction { get; set; }
         new Byte Rank { get; set; }
-        new Byte[] Fluff { get; set; }
+        new MemorySlice<Byte> Fluff { get; set; }
     }
 
     public partial interface IRankPlacementGetter :
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

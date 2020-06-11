@@ -176,8 +176,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextureFilesHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _TextureFilesHashes;
-        public Byte[]? TextureFilesHashes
+        protected MemorySlice<Byte>? _TextureFilesHashes;
+        public MemorySlice<Byte>? TextureFilesHashes
         {
             get => this._TextureFilesHashes;
             set => this._TextureFilesHashes = value;
@@ -1638,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<TextureSet> DecalData { get; set; }
         new FormLink<CollisionLayer> CollisionLayer { get; set; }
         new String MuzzleFlashModel { get; set; }
-        new Byte[]? TextureFilesHashes { get; set; }
+        new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
         new Projectile.DATADataType DATADataTypeState { get; set; }
     }
@@ -2496,7 +2496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Projectile_FieldIndex.MuzzleFlashModel:
                     return typeof(String);
                 case Projectile_FieldIndex.TextureFilesHashes:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Projectile_FieldIndex.SoundLevel:
                     return typeof(UInt32);
                 case Projectile_FieldIndex.DATADataTypeState:

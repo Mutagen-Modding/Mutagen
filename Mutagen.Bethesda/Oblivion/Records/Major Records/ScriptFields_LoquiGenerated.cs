@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IScriptFields>
     {
         new ScriptMetaSummary MetadataSummary { get; }
-        new Byte[]? CompiledScript { get; set; }
+        new MemorySlice<Byte>? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
         new ExtendedList<LocalVariable> LocalVariables { get; }
         new ExtendedList<ScriptReference> References { get; }
@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.MetadataSummary:
                     return typeof(ScriptMetaSummary);
                 case ScriptFields_FieldIndex.CompiledScript:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:

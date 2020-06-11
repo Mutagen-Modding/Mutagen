@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CellData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _CellData = new byte[0];
-        public Byte[] CellData
+        private MemorySlice<Byte> _CellData = new byte[0];
+        public MemorySlice<Byte> CellData
         {
             get => _CellData;
             set => this._CellData = value;
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new P2Int16 Min { get; set; }
         new P2Int16 Max { get; set; }
-        new Byte[] CellData { get; set; }
+        new MemorySlice<Byte> CellData { get; set; }
     }
 
     public partial interface IWorldspaceMaxHeightGetter :
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WorldspaceMaxHeight_FieldIndex.Max:
                     return typeof(P2Int16);
                 case WorldspaceMaxHeight_FieldIndex.CellData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

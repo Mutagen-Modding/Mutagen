@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Hashes;
-        public Byte[]? Hashes
+        protected MemorySlice<Byte>? _Hashes;
+        public MemorySlice<Byte>? Hashes
         {
             get => this._Hashes;
             set => this._Hashes = value;
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String File { get; set; }
         new Single BoundRadius { get; set; }
-        new Byte[]? Hashes { get; set; }
+        new MemorySlice<Byte>? Hashes { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Model_FieldIndex.BoundRadius:
                     return typeof(Single);
                 case Model_FieldIndex.Hashes:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

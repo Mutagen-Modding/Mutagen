@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new Furniture.Flag? Flags { get; set; }
         new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Furniture_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Furniture_FieldIndex.Flags:
                     return typeof(Furniture.Flag);
                 case Furniture_FieldIndex.InteractionKeyword:

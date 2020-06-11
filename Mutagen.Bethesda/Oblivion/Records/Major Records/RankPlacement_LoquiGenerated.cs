@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[3];
-        public Byte[] Unused
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
             get => _Unused;
             set => this._Unused = value;
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new FormLink<Faction> Faction { get; set; }
         new Byte Rank { get; set; }
-        new Byte[] Unused { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
     }
 
     public partial interface IRankPlacementGetter :
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

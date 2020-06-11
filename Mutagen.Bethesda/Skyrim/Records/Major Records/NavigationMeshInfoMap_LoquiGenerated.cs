@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? NavMeshVersion { get; set; }
         new ExtendedList<NavigationMapInfo> MapInfos { get; }
         new PreferredPathing? PreferredPathing { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
     }
 
     public partial interface INavigationMeshInfoMapInternal :
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return typeof(PreferredPathing);
                 case NavigationMeshInfoMap_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

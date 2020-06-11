@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FNAM;
-        public Byte[]? FNAM
+        protected MemorySlice<Byte>? _FNAM;
+        public MemorySlice<Byte>? FNAM
         {
             get => this._FNAM;
             set => this._FNAM = value;
@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SNDD
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _SNDD;
-        public Byte[]? SNDD
+        protected MemorySlice<Byte>? _SNDD;
+        public MemorySlice<Byte>? SNDD
         {
             get => this._SNDD;
             set => this._SNDD = value;
@@ -694,8 +694,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISoundMarkerInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
-        new Byte[]? FNAM { get; set; }
-        new Byte[]? SNDD { get; set; }
+        new MemorySlice<Byte>? FNAM { get; set; }
+        new MemorySlice<Byte>? SNDD { get; set; }
         new FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; }
     }
 
@@ -1188,9 +1188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SoundMarker_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
                 case SoundMarker_FieldIndex.FNAM:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case SoundMarker_FieldIndex.SNDD:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case SoundMarker_FieldIndex.SoundDescriptor:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 default:

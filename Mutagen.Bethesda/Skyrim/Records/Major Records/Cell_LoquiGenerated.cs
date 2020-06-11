@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OcclusionData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _OcclusionData;
-        public Byte[]? OcclusionData
+        protected MemorySlice<Byte>? _OcclusionData;
+        public MemorySlice<Byte>? OcclusionData
         {
             get => this._OcclusionData;
             set => this._OcclusionData = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaxHeightData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _MaxHeightData;
-        public Byte[]? MaxHeightData
+        protected MemorySlice<Byte>? _MaxHeightData;
+        public MemorySlice<Byte>? MaxHeightData
         {
             get => this._MaxHeightData;
             set => this._MaxHeightData = value;
@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -159,8 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
+        protected MemorySlice<Byte>? _Unknown3;
+        public MemorySlice<Byte>? Unknown3
         {
             get => this._Unknown3;
             set => this._Unknown3 = value;
@@ -2105,16 +2105,16 @@ namespace Mutagen.Bethesda.Skyrim
         new Cell.Flag Flags { get; set; }
         new CellGrid? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new Byte[]? OcclusionData { get; set; }
-        new Byte[]? MaxHeightData { get; set; }
+        new MemorySlice<Byte>? OcclusionData { get; set; }
+        new MemorySlice<Byte>? MaxHeightData { get; set; }
         new FormLink<LightingTemplate> LightingTemplate { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new ExtendedList<IFormLink<Region>>? Regions { get; set; }
         new FormLinkNullable<Location> Location { get; set; }
-        new Byte[]? Unknown2 { get; set; }
-        new Byte[]? Unknown3 { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown3 { get; set; }
         new CellWaterVelocity? WaterVelocity { get; set; }
         new FormLinkNullable<Water> Water { get; set; }
         new Ownership? Ownership { get; set; }
@@ -3000,13 +3000,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.Lighting:
                     return typeof(CellLighting);
                 case Cell_FieldIndex.OcclusionData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.MaxHeightData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.LightingTemplate:
                     return typeof(FormLink<LightingTemplate>);
                 case Cell_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.WaterHeight:
                     return typeof(Single);
                 case Cell_FieldIndex.WaterNoiseTexture:
@@ -3016,9 +3016,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.Location:
                     return typeof(FormLinkNullable<Location>);
                 case Cell_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Cell_FieldIndex.WaterVelocity:
                     return typeof(CellWaterVelocity);
                 case Cell_FieldIndex.Water:

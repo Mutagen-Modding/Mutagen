@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponsesUnknownDataGetter,
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new FormLinkNullable<SkyrimMajorRecord> Unknown2 { get; set; }
         new Boolean Unknown3 { get; set; }
     }
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DialogResponsesUnknownData_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case DialogResponsesUnknownData_FieldIndex.Unknown2:
                     return typeof(FormLinkNullable<SkyrimMajorRecord>);
                 case DialogResponsesUnknownData_FieldIndex.Unknown3:

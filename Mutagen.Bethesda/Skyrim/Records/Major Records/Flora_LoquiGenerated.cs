@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -1101,9 +1101,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new String? ActivateTextOverride { get; set; }
-        new Byte[]? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
         new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
         new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
@@ -1699,11 +1699,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Flora_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Flora_FieldIndex.ActivateTextOverride:
                     return typeof(String);
                 case Flora_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Flora_FieldIndex.Ingredient:
                     return typeof(FormLinkNullable<IHarvestTarget>);
                 case Flora_FieldIndex.HarvestSound:

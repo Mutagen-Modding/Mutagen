@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _XPCIFluff;
-        public Byte[]? XPCIFluff
+        protected MemorySlice<Byte>? _XPCIFluff;
+        public MemorySlice<Byte>? XPCIFluff
         {
             get => this._XPCIFluff;
             set => this._XPCIFluff = value;
@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FULLFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FULLFluff;
-        public Byte[]? FULLFluff
+        protected MemorySlice<Byte>? _FULLFluff;
+        public MemorySlice<Byte>? FULLFluff
         {
             get => this._FULLFluff;
             set => this._FULLFluff = value;
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollData;
-        public Byte[]? RagdollData
+        protected MemorySlice<Byte>? _RagdollData;
+        public MemorySlice<Byte>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
@@ -929,13 +929,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedNpcInternal>
     {
         new FormLinkNullable<Npc> Base { get; set; }
-        new Byte[]? XPCIFluff { get; set; }
-        new Byte[]? FULLFluff { get; set; }
+        new MemorySlice<Byte>? XPCIFluff { get; set; }
+        new MemorySlice<Byte>? FULLFluff { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new EnableParent? EnableParent { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new FormLinkNullable<PlacedCreature> Horse { get; set; }
-        new Byte[]? RagdollData { get; set; }
+        new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new Location? Location { get; set; }
     }
@@ -1493,9 +1493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Base:
                     return typeof(FormLinkNullable<Npc>);
                 case PlacedNpc_FieldIndex.XPCIFluff:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedNpc_FieldIndex.FULLFluff:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedNpc_FieldIndex.DistantLODData:
                     return typeof(DistantLODData);
                 case PlacedNpc_FieldIndex.EnableParent:
@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                     return typeof(FormLinkNullable<PlacedCreature>);
                 case PlacedNpc_FieldIndex.RagdollData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedNpc_FieldIndex.Scale:
                     return typeof(Single);
                 case PlacedNpc_FieldIndex.Location:

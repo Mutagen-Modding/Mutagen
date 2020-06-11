@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
+        protected MemorySlice<Byte>? _Unknown3;
+        public MemorySlice<Byte>? Unknown3
         {
             get => this._Unknown3;
             set => this._Unknown3 = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown4;
-        public Byte[]? Unknown4
+        protected MemorySlice<Byte>? _Unknown4;
+        public MemorySlice<Byte>? Unknown4
         {
             get => this._Unknown4;
             set => this._Unknown4 = value;
@@ -641,9 +641,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IANavigationMeshInternal>
     {
-        new Byte[]? Unknown2 { get; set; }
-        new Byte[]? Unknown3 { get; set; }
-        new Byte[]? Unknown4 { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown3 { get; set; }
+        new MemorySlice<Byte>? Unknown4 { get; set; }
         #region Mutagen
         new ANavigationMesh.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1127,11 +1127,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ANavigationMesh_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case ANavigationMesh_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case ANavigationMesh_FieldIndex.Unknown4:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

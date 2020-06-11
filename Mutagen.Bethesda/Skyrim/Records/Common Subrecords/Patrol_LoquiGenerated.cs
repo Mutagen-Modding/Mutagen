@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -781,8 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single IdleTime { get; set; }
         new FormLink<IdleAnimation> Idle { get; set; }
-        new Byte[]? Unknown { get; set; }
-        new Byte[]? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
         new ExtendedList<ATopicReference> Topics { get; }
     }
 
@@ -1303,9 +1303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Patrol_FieldIndex.Idle:
                     return typeof(FormLink<IdleAnimation>);
                 case Patrol_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Patrol_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Patrol_FieldIndex.Topics:
                     return typeof(ExtendedList<ATopicReference>);
                 default:

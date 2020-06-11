@@ -225,8 +225,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenGeometrySymmetric
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FaceGenGeometrySymmetric;
-        public Byte[]? FaceGenGeometrySymmetric
+        protected MemorySlice<Byte>? _FaceGenGeometrySymmetric;
+        public MemorySlice<Byte>? FaceGenGeometrySymmetric
         {
             get => this._FaceGenGeometrySymmetric;
             set => this._FaceGenGeometrySymmetric = value;
@@ -236,8 +236,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenGeometryAsymmetric
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FaceGenGeometryAsymmetric;
-        public Byte[]? FaceGenGeometryAsymmetric
+        protected MemorySlice<Byte>? _FaceGenGeometryAsymmetric;
+        public MemorySlice<Byte>? FaceGenGeometryAsymmetric
         {
             get => this._FaceGenGeometryAsymmetric;
             set => this._FaceGenGeometryAsymmetric = value;
@@ -247,8 +247,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenTextureSymmetric
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FaceGenTextureSymmetric;
-        public Byte[]? FaceGenTextureSymmetric
+        protected MemorySlice<Byte>? _FaceGenTextureSymmetric;
+        public MemorySlice<Byte>? FaceGenTextureSymmetric
         {
             get => this._FaceGenTextureSymmetric;
             set => this._FaceGenTextureSymmetric = value;
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -1896,10 +1896,10 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new Color? HairColor { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
-        new Byte[]? FaceGenGeometrySymmetric { get; set; }
-        new Byte[]? FaceGenGeometryAsymmetric { get; set; }
-        new Byte[]? FaceGenTextureSymmetric { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? FaceGenGeometrySymmetric { get; set; }
+        new MemorySlice<Byte>? FaceGenGeometryAsymmetric { get; set; }
+        new MemorySlice<Byte>? FaceGenTextureSymmetric { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
     }
 
     public partial interface INpcInternal :
@@ -2636,13 +2636,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.CombatStyle:
                     return typeof(FormLinkNullable<CombatStyle>);
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Npc_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     return ANpc_Registration.GetNthType(index);
             }

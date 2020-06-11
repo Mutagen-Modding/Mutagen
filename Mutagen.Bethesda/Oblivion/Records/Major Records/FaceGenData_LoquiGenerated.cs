@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region SymmetricGeometry
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _SymmetricGeometry;
-        public Byte[]? SymmetricGeometry
+        protected MemorySlice<Byte>? _SymmetricGeometry;
+        public MemorySlice<Byte>? SymmetricGeometry
         {
             get => this._SymmetricGeometry;
             set => this._SymmetricGeometry = value;
@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AsymmetricGeometry
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _AsymmetricGeometry;
-        public Byte[]? AsymmetricGeometry
+        protected MemorySlice<Byte>? _AsymmetricGeometry;
+        public MemorySlice<Byte>? AsymmetricGeometry
         {
             get => this._AsymmetricGeometry;
             set => this._AsymmetricGeometry = value;
@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SymmetricTexture
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _SymmetricTexture;
-        public Byte[]? SymmetricTexture
+        protected MemorySlice<Byte>? _SymmetricTexture;
+        public MemorySlice<Byte>? SymmetricTexture
         {
             get => this._SymmetricTexture;
             set => this._SymmetricTexture = value;
@@ -625,9 +625,9 @@ namespace Mutagen.Bethesda.Oblivion
         IFaceGenDataGetter,
         ILoquiObjectSetter<IFaceGenData>
     {
-        new Byte[]? SymmetricGeometry { get; set; }
-        new Byte[]? AsymmetricGeometry { get; set; }
-        new Byte[]? SymmetricTexture { get; set; }
+        new MemorySlice<Byte>? SymmetricGeometry { get; set; }
+        new MemorySlice<Byte>? AsymmetricGeometry { get; set; }
+        new MemorySlice<Byte>? SymmetricTexture { get; set; }
     }
 
     public partial interface IFaceGenDataGetter :
@@ -1118,11 +1118,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case FaceGenData_FieldIndex.SymmetricTexture:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

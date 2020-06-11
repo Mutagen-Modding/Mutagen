@@ -170,8 +170,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unused;
-        public Byte[]? Unused
+        protected MemorySlice<Byte>? _Unused;
+        public MemorySlice<Byte>? Unused
         {
             get => this._Unused;
             set => this._Unused = value;
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
-        new Byte[]? Unused { get; set; }
+        new MemorySlice<Byte>? Unused { get; set; }
         new FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; }
         new FormLinkNullable<Static> FirstPersonModel { get; set; }
         new FormLinkNullable<SoundDescriptor> AttackSound { get; set; }
@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ScopeModel:
                     return typeof(Model);
                 case Weapon_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weapon_FieldIndex.ImpactDataSet:
                     return typeof(FormLinkNullable<ImpactDataSet>);
                 case Weapon_FieldIndex.FirstPersonModel:

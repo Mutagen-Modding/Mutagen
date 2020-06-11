@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown = new byte[3];
-        public Byte[] Unknown
+        private MemorySlice<Byte> _Unknown = new byte[3];
+        public MemorySlice<Byte> Unknown
         {
             get => _Unknown;
             set => this._Unknown = value;
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
         new EnableParent.VersioningBreaks Versioning { get; set; }
         new FormLink<ILinkedReference> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
-        new Byte[] Unknown { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
     }
 
     public partial interface IEnableParentGetter :
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case EnableParent_FieldIndex.Flags:
                     return typeof(EnableParent.Flag);
                 case EnableParent_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollData;
-        public Byte[]? RagdollData
+        protected MemorySlice<Byte>? _RagdollData;
+        public MemorySlice<Byte>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RagdollBipedData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollBipedData;
-        public Byte[]? RagdollBipedData
+        protected MemorySlice<Byte>? _RagdollBipedData;
+        public MemorySlice<Byte>? RagdollBipedData
         {
             get => this._RagdollBipedData;
             set => this._RagdollBipedData = value;
@@ -263,8 +263,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
+        protected MemorySlice<Byte>? _Unknown3;
+        public MemorySlice<Byte>? Unknown3
         {
             get => this._Unknown3;
             set => this._Unknown3 = value;
@@ -274,8 +274,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown4;
-        public Byte[]? Unknown4
+        protected MemorySlice<Byte>? _Unknown4;
+        public MemorySlice<Byte>? Unknown4
         {
             get => this._Unknown4;
             set => this._Unknown4 = value;
@@ -296,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown5
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown5;
-        public Byte[]? Unknown5
+        protected MemorySlice<Byte>? _Unknown5;
+        public MemorySlice<Byte>? Unknown5
         {
             get => this._Unknown5;
             set => this._Unknown5 = value;
@@ -312,8 +312,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown7
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown7;
-        public Byte[]? Unknown7
+        protected MemorySlice<Byte>? _Unknown7;
+        public MemorySlice<Byte>? Unknown7
         {
             get => this._Unknown7;
             set => this._Unknown7 = value;
@@ -509,8 +509,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DistantLodData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _DistantLodData;
-        public Byte[]? DistantLodData
+        protected MemorySlice<Byte>? _DistantLodData;
+        public MemorySlice<Byte>? DistantLodData
         {
             get => this._DistantLodData;
             set => this._DistantLodData = value;
@@ -3277,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SkyrimMajorRecord> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new Placement? OcclusionPlane { get; set; }
         new ExtendedList<Portal>? Portals { get; set; }
         new Placement? RoomPortal { get; set; }
@@ -3286,8 +3286,8 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new ExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
-        new Byte[]? RagdollData { get; set; }
-        new Byte[]? RagdollBipedData { get; set; }
+        new MemorySlice<Byte>? RagdollData { get; set; }
+        new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Single? Radius { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
         new ExtendedList<IFormLink<PlacedObject>> LitWater { get; }
@@ -3297,12 +3297,12 @@ namespace Mutagen.Bethesda.Skyrim
         new TeleportDestination? TeleportDestination { get; set; }
         new FormLinkNullable<Message> TeleportMessageBox { get; set; }
         new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
-        new Byte[]? Unknown3 { get; set; }
-        new Byte[]? Unknown4 { get; set; }
+        new MemorySlice<Byte>? Unknown3 { get; set; }
+        new MemorySlice<Byte>? Unknown4 { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
-        new Byte[]? Unknown5 { get; set; }
+        new MemorySlice<Byte>? Unknown5 { get; set; }
         new FormLinkNullable<ILinkedReference> Unknown6 { get; set; }
-        new Byte[]? Unknown7 { get; set; }
+        new MemorySlice<Byte>? Unknown7 { get; set; }
         new FormLinkNullable<Cell> Unknown8 { get; set; }
         new Single? Scale { get; set; }
         new FormLinkNullable<PlacedObject> SpawnContainer { get; set; }
@@ -3329,7 +3329,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Boolean OpenByDefault { get; set; }
         new MapMarker? MapMarker { get; set; }
         new FormLinkNullable<IPlacedThing> AttachRef { get; set; }
-        new Byte[]? DistantLodData { get; set; }
+        new MemorySlice<Byte>? DistantLodData { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new PlacedObject.DATADataType DATADataTypeState { get; set; }
@@ -4450,7 +4450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Primitive:
                     return typeof(PlacedPrimitive);
                 case PlacedObject_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.OcclusionPlane:
                     return typeof(Placement);
                 case PlacedObject_FieldIndex.Portals:
@@ -4468,9 +4468,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MultiBoundPrimitive:
                     return typeof(Boolean);
                 case PlacedObject_FieldIndex.RagdollData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.RagdollBipedData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Radius:
                     return typeof(Single);
                 case PlacedObject_FieldIndex.Reflections:
@@ -4490,17 +4490,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MultiboundReference:
                     return typeof(FormLinkNullable<PlacedObject>);
                 case PlacedObject_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Unknown4:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.WaterVelocity:
                     return typeof(WaterVelocity);
                 case PlacedObject_FieldIndex.Unknown5:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Unknown6:
                     return typeof(FormLinkNullable<ILinkedReference>);
                 case PlacedObject_FieldIndex.Unknown7:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Unknown8:
                     return typeof(FormLinkNullable<Cell>);
                 case PlacedObject_FieldIndex.Scale:
@@ -4554,7 +4554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.AttachRef:
                     return typeof(FormLinkNullable<IPlacedThing>);
                 case PlacedObject_FieldIndex.DistantLodData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Position:
                     return typeof(P3Float);
                 case PlacedObject_FieldIndex.Rotation:

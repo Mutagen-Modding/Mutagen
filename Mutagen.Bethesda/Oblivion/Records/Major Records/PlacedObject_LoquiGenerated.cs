@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _XPCIFluff;
-        public Byte[]? XPCIFluff
+        protected MemorySlice<Byte>? _XPCIFluff;
+        public MemorySlice<Byte>? XPCIFluff
         {
             get => this._XPCIFluff;
             set => this._XPCIFluff = value;
@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FULLFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _FULLFluff;
-        public Byte[]? FULLFluff
+        protected MemorySlice<Byte>? _FULLFluff;
+        public MemorySlice<Byte>? FULLFluff
         {
             get => this._FULLFluff;
             set => this._FULLFluff = value;
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollData;
-        public Byte[]? RagdollData
+        protected MemorySlice<Byte>? _RagdollData;
+        public MemorySlice<Byte>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
@@ -1431,8 +1431,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedObjectInternal>
     {
         new FormLinkNullable<OblivionMajorRecord> Base { get; set; }
-        new Byte[]? XPCIFluff { get; set; }
-        new Byte[]? FULLFluff { get; set; }
+        new MemorySlice<Byte>? XPCIFluff { get; set; }
+        new MemorySlice<Byte>? FULLFluff { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new LockInformation? Lock { get; set; }
         new FormLinkNullable<IOwner> Owner { get; set; }
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32? Count { get; set; }
         new MapMarker? MapMarker { get; set; }
         new Boolean OpenByDefault { get; set; }
-        new Byte[]? RagdollData { get; set; }
+        new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new FormLinkNullable<SoulGem> ContainedSoul { get; set; }
         new Location? Location { get; set; }
@@ -2163,9 +2163,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Base:
                     return typeof(FormLinkNullable<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.XPCIFluff:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.FULLFluff:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.TeleportDestination:
                     return typeof(TeleportDestination);
                 case PlacedObject_FieldIndex.Lock:
@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.OpenByDefault:
                     return typeof(Boolean);
                 case PlacedObject_FieldIndex.RagdollData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.Scale:
                     return typeof(Single);
                 case PlacedObject_FieldIndex.ContainedSoul:

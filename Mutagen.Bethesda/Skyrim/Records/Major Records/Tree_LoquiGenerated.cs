@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown = new byte[32];
-        public Byte[] Unknown
+        private MemorySlice<Byte> _Unknown = new byte[32];
+        public MemorySlice<Byte> Unknown
         {
             get => _Unknown;
             set => this._Unknown = value;
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Single TrunkFlexibility { get; set; }
         new Single BranchFlexibility { get; set; }
-        new Byte[] Unknown { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
         new Single LeafAmplitude { get; set; }
         new Single LeafFrequency { get; set; }
         new Tree.CNAMDataType CNAMDataTypeState { get; set; }
@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.BranchFlexibility:
                     return typeof(Single);
                 case Tree_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Tree_FieldIndex.LeafAmplitude:
                     return typeof(Single);
                 case Tree_FieldIndex.LeafFrequency:

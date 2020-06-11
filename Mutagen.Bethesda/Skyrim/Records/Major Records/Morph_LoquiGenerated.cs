@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Data = new byte[32];
-        public Byte[] Data
+        private MemorySlice<Byte> _Data = new byte[32];
+        public MemorySlice<Byte> Data
         {
             get => _Data;
             set => this._Data = value;
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMorphGetter,
         ILoquiObjectSetter<IMorph>
     {
-        new Byte[] Data { get; set; }
+        new MemorySlice<Byte> Data { get; set; }
     }
 
     public partial interface IMorphGetter :
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Morph_FieldIndex.Data:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

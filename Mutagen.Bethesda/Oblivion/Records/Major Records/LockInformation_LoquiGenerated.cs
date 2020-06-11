@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[3];
-        public Byte[] Unused
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
             get => _Unused;
             set => this._Unused = value;
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILockInformation>
     {
         new Byte LockLevel { get; set; }
-        new Byte[] Unused { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new FormLink<Key> Key { get; set; }
         new LockInformation.Flag Flags { get; set; }
     }
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LockInformation_FieldIndex.LockLevel:
                     return typeof(Byte);
                 case LockInformation_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case LockInformation_FieldIndex.Key:
                     return typeof(FormLink<Key>);
                 case LockInformation_FieldIndex.Flags:

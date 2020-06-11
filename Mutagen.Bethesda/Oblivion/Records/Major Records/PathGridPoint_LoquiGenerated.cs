@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[3];
-        public Byte[] Unused
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
             get => _Unused;
             set => this._Unused = value;
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new P3Float Point { get; set; }
         new Byte NumConnections { get; set; }
-        new Byte[] Unused { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new ExtendedList<Int16> Connections { get; }
     }
 
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.NumConnections:
                     return typeof(Byte);
                 case PathGridPoint_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PathGridPoint_FieldIndex.Connections:
                     return typeof(ExtendedList<Int16>);
                 default:

@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _RagdollData;
-        public Byte[]? RagdollData
+        protected MemorySlice<Byte>? _RagdollData;
+        public MemorySlice<Byte>? RagdollData
         {
             get => this._RagdollData;
             set => this._RagdollData = value;
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32? FactionRank { get; set; }
         new FormLinkNullable<Global> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new Byte[]? RagdollData { get; set; }
+        new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new Location? Location { get; set; }
     }
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedCreature_FieldIndex.EnableParent:
                     return typeof(EnableParent);
                 case PlacedCreature_FieldIndex.RagdollData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PlacedCreature_FieldIndex.Scale:
                     return typeof(Single);
                 case PlacedCreature_FieldIndex.Location:

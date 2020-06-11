@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown3 = new byte[3];
-        public Byte[] Unknown3
+        private MemorySlice<Byte> _Unknown3 = new byte[3];
+        public MemorySlice<Byte> Unknown3
         {
             get => _Unknown3;
             set => this._Unknown3 = value;
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ColorRange { get; set; }
         new Single WavePeriod { get; set; }
         new Grass.Flag Flags { get; set; }
-        new Byte[] Unknown3 { get; set; }
+        new MemorySlice<Byte> Unknown3 { get; set; }
         new Grass.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Grass_FieldIndex.Flags:
                     return typeof(Grass.Flag);
                 case Grass_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Grass_FieldIndex.DATADataTypeState:
                     return typeof(Grass.DATADataType);
                 default:

@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown = new byte[12];
-        public Byte[] Unknown
+        private MemorySlice<Byte> _Unknown = new byte[12];
+        public MemorySlice<Byte> Unknown
         {
             get => _Unknown;
             set => this._Unknown = value;
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILocalVariableData>
     {
         new Int32 Index { get; set; }
-        new Byte[] Unknown { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
         new Script.LocalVariableFlag Flags { get; set; }
         new Int32 Unknown2 { get; set; }
     }
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariableData_FieldIndex.Index:
                     return typeof(Int32);
                 case LocalVariableData_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case LocalVariableData_FieldIndex.Flags:
                     return typeof(Script.LocalVariableFlag);
                 case LocalVariableData_FieldIndex.Unknown2:

@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region AlphaLayerData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _AlphaLayerData;
-        public Byte[]? AlphaLayerData
+        protected MemorySlice<Byte>? _AlphaLayerData;
+        public MemorySlice<Byte>? AlphaLayerData
         {
             get => this._AlphaLayerData;
             set => this._AlphaLayerData = value;
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBaseLayer,
         ILoquiObjectSetter<IAlphaLayer>
     {
-        new Byte[]? AlphaLayerData { get; set; }
+        new MemorySlice<Byte>? AlphaLayerData { get; set; }
     }
 
     public partial interface IAlphaLayerGetter :
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case AlphaLayer_FieldIndex.AlphaLayerData:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     return BaseLayer_Registration.GetNthType(index);
             }

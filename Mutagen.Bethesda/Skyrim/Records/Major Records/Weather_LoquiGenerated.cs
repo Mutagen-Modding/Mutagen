@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        protected MemorySlice<Byte>? _Unknown2;
+        public MemorySlice<Byte>? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown3;
-        public Byte[]? Unknown3
+        protected MemorySlice<Byte>? _Unknown3;
+        public MemorySlice<Byte>? Unknown3
         {
             get => this._Unknown3;
             set => this._Unknown3 = value;
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown4;
-        public Byte[]? Unknown4
+        protected MemorySlice<Byte>? _Unknown4;
+        public MemorySlice<Byte>? Unknown4
         {
             get => this._Unknown4;
             set => this._Unknown4 = value;
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown5
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown5;
-        public Byte[]? Unknown5
+        protected MemorySlice<Byte>? _Unknown5;
+        public MemorySlice<Byte>? Unknown5
         {
             get => this._Unknown5;
             set => this._Unknown5 = value;
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown6
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown6;
-        public Byte[]? Unknown6
+        protected MemorySlice<Byte>? _Unknown6;
+        public MemorySlice<Byte>? Unknown6
         {
             get => this._Unknown6;
             set => this._Unknown6 = value;
@@ -366,8 +366,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown8
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown8;
-        public Byte[]? Unknown8
+        protected MemorySlice<Byte>? _Unknown8;
+        public MemorySlice<Byte>? Unknown8
         {
             get => this._Unknown8;
             set => this._Unknown8 = value;
@@ -377,8 +377,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown9
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown9;
-        public Byte[]? Unknown9
+        protected MemorySlice<Byte>? _Unknown9;
+        public MemorySlice<Byte>? Unknown9
         {
             get => this._Unknown9;
             set => this._Unknown9 = value;
@@ -3077,14 +3077,14 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherInternal>
     {
         new String?[] CloudTextures { get; }
-        new Byte[]? Unknown { get; set; }
-        new Byte[]? Unknown2 { get; set; }
-        new Byte[]? Unknown3 { get; set; }
-        new Byte[]? Unknown4 { get; set; }
-        new Byte[]? Unknown5 { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown2 { get; set; }
+        new MemorySlice<Byte>? Unknown3 { get; set; }
+        new MemorySlice<Byte>? Unknown4 { get; set; }
+        new MemorySlice<Byte>? Unknown5 { get; set; }
         new FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; }
         new FormLink<VisualEffect> VisualEffect { get; set; }
-        new Byte[]? Unknown6 { get; set; }
+        new MemorySlice<Byte>? Unknown6 { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
         new WeatherColor FogNearColor { get; set; }
@@ -3131,8 +3131,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
-        new Byte[]? Unknown8 { get; set; }
-        new Byte[]? Unknown9 { get; set; }
+        new MemorySlice<Byte>? Unknown8 { get; set; }
+        new MemorySlice<Byte>? Unknown9 { get; set; }
         new Model? Aurora { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
@@ -4254,21 +4254,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.CloudTextures:
                     return typeof(String[]);
                 case Weather_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Unknown3:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Unknown4:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Unknown5:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Precipitation:
                     return typeof(FormLinkNullable<ShaderParticleGeometry>);
                 case Weather_FieldIndex.VisualEffect:
                     return typeof(FormLink<VisualEffect>);
                 case Weather_FieldIndex.Unknown6:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Clouds:
                     return typeof(CloudLayer[]);
                 case Weather_FieldIndex.SkyUpperColor:
@@ -4362,9 +4362,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return typeof(WeatherAmbientColorSet);
                 case Weather_FieldIndex.Unknown8:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Unknown9:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Aurora:
                     return typeof(Model);
                 case Weather_FieldIndex.NAM0DataTypeState:

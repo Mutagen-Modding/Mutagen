@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPathGridInternal>
     {
         new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
         new ExtendedList<InterCellPoint>? InterCellConnections { get; set; }
         new ExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGrid_FieldIndex.PointToPointConnections:
                     return typeof(ExtendedList<PathGridPoint>);
                 case PathGrid_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case PathGrid_FieldIndex.InterCellConnections:
                     return typeof(ExtendedList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:

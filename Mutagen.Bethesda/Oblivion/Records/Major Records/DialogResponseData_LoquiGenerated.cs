@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown2 = new byte[3];
-        public Byte[] Unknown2
+        private MemorySlice<Byte> _Unknown2 = new byte[3];
+        public MemorySlice<Byte> Unknown2
         {
             get => _Unknown2;
             set => this._Unknown2 = value;
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 EmotionValue { get; set; }
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
-        new Byte[] Unknown2 { get; set; }
+        new MemorySlice<Byte> Unknown2 { get; set; }
     }
 
     public partial interface IDialogResponseDataGetter :
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponseData_FieldIndex.ResponseNumber:
                     return typeof(Byte);
                 case DialogResponseData_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

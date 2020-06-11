@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Level0Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Level0Extra;
-        public Byte[]? Level0Extra
+        protected MemorySlice<Byte>? _Level0Extra;
+        public MemorySlice<Byte>? Level0Extra
         {
             get => this._Level0Extra;
             set => this._Level0Extra = value;
@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Level1Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Level1Extra;
-        public Byte[]? Level1Extra
+        protected MemorySlice<Byte>? _Level1Extra;
+        public MemorySlice<Byte>? Level1Extra
         {
             get => this._Level1Extra;
             set => this._Level1Extra = value;
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Level2Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Level2Extra;
-        public Byte[]? Level2Extra
+        protected MemorySlice<Byte>? _Level2Extra;
+        public MemorySlice<Byte>? Level2Extra
         {
             get => this._Level2Extra;
             set => this._Level2Extra = value;
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Level3Extra
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Level3Extra;
-        public Byte[]? Level3Extra
+        protected MemorySlice<Byte>? _Level3Extra;
+        public MemorySlice<Byte>? Level3Extra
         {
             get => this._Level3Extra;
             set => this._Level3Extra = value;
@@ -793,13 +793,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILod>
     {
         new String Level0 { get; set; }
-        new Byte[]? Level0Extra { get; set; }
+        new MemorySlice<Byte>? Level0Extra { get; set; }
         new String Level1 { get; set; }
-        new Byte[]? Level1Extra { get; set; }
+        new MemorySlice<Byte>? Level1Extra { get; set; }
         new String Level2 { get; set; }
-        new Byte[]? Level2Extra { get; set; }
+        new MemorySlice<Byte>? Level2Extra { get; set; }
         new String Level3 { get; set; }
-        new Byte[]? Level3Extra { get; set; }
+        new MemorySlice<Byte>? Level3Extra { get; set; }
     }
 
     public partial interface ILodGetter :
@@ -1347,19 +1347,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Lod_FieldIndex.Level0:
                     return typeof(String);
                 case Lod_FieldIndex.Level0Extra:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Lod_FieldIndex.Level1:
                     return typeof(String);
                 case Lod_FieldIndex.Level1Extra:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Lod_FieldIndex.Level2:
                     return typeof(String);
                 case Lod_FieldIndex.Level2Extra:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case Lod_FieldIndex.Level3:
                     return typeof(String);
                 case Lod_FieldIndex.Level3Extra:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

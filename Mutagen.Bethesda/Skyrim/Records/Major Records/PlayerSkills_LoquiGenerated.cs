@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused2 = new byte[3];
-        public Byte[] Unused2
+        private MemorySlice<Byte> _Unused2 = new byte[3];
+        public MemorySlice<Byte> Unused2
         {
             get => _Unused2;
             set => this._Unused2 = value;
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Unused { get; set; }
         new Single FarAwayModelDistance { get; set; }
         new Byte GearedUpWeapons { get; set; }
-        new Byte[] Unused2 { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
     }
 
     public partial interface IPlayerSkillsGetter :
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlayerSkills_FieldIndex.GearedUpWeapons:
                     return typeof(Byte);
                 case PlayerSkills_FieldIndex.Unused2:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

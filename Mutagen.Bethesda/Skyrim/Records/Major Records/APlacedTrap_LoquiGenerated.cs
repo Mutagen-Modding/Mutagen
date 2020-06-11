@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region IgnoredBySandbox
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _IgnoredBySandbox;
-        public Byte[]? IgnoredBySandbox
+        protected MemorySlice<Byte>? _IgnoredBySandbox;
+        public MemorySlice<Byte>? IgnoredBySandbox
         {
             get => this._IgnoredBySandbox;
             set => this._IgnoredBySandbox = value;
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim
         new EnableParent? EnableParent { get; set; }
         new FormLinkNullable<IEmittance> Emittance { get; set; }
         new FormLinkNullable<PlacedObject> MultiBoundReference { get; set; }
-        new Byte[]? IgnoredBySandbox { get; set; }
+        new MemorySlice<Byte>? IgnoredBySandbox { get; set; }
         new ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
         new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
         new ExtendedList<Single>? DistantLodData { get; set; }
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case APlacedTrap_FieldIndex.MultiBoundReference:
                     return typeof(FormLinkNullable<PlacedObject>);
                 case APlacedTrap_FieldIndex.IgnoredBySandbox:
-                    return typeof(Byte[]);
+                    return typeof(MemorySlice<Byte>);
                 case APlacedTrap_FieldIndex.LocationRefTypes:
                     return typeof(ExtendedList<IFormLink<LocationReferenceType>>);
                 case APlacedTrap_FieldIndex.LocationReference:
