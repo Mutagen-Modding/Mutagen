@@ -1092,6 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
@@ -1141,6 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LGTM_HEADER = new RecordType("LGTM");
+        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType LCTN_HEADER = new RecordType("LCTN");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1223,6 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ACTI_HEADER,
                         APPA_HEADER,
                         AMMO_HEADER,
+                        ANIO_HEADER,
                         ARMO_HEADER,
                         ARMA_HEADER,
                         ARTO_HEADER,
@@ -1272,6 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         LVLN_HEADER,
                         LIGH_HEADER,
                         LGTM_HEADER,
+                        LSCR_HEADER,
                         LCTN_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,

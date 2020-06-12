@@ -66,6 +66,10 @@
       <Group name="Quests" refName="Quest" />
       <Group name="IdleAnimations" refName="IdleAnimation" />
       <Group name="Packages" refName="Package" />
+      <Group name="CombatStyles" refName="CombatStyle" />
+      <Group name="LoadScreens" refName="LoadScreen" />
+      <Group name="LeveledSpells" refName="LeveledSpell" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
     </Fields>
   </Object>
 </Loqui>

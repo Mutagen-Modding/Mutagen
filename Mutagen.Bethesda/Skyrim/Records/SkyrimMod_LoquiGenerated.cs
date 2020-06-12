@@ -102,6 +102,10 @@ namespace Mutagen.Bethesda.Skyrim
             _Quests_Object = new Group<Quest>(this);
             _IdleAnimations_Object = new Group<IdleAnimation>(this);
             _Packages_Object = new Group<Package>(this);
+            _CombatStyles_Object = new Group<CombatStyle>(this);
+            _LoadScreens_Object = new Group<LoadScreen>(this);
+            _LeveledSpells_Object = new Group<LeveledSpell>(this);
+            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -527,6 +531,34 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IPackageGetter> ISkyrimModGetter.Packages => _Packages_Object;
         #endregion
+        #region CombatStyles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<CombatStyle> _CombatStyles_Object;
+        public Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ICombatStyleGetter> ISkyrimModGetter.CombatStyles => _CombatStyles_Object;
+        #endregion
+        #region LoadScreens
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<LoadScreen> _LoadScreens_Object;
+        public Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILoadScreenGetter> ISkyrimModGetter.LoadScreens => _LoadScreens_Object;
+        #endregion
+        #region LeveledSpells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<LeveledSpell> _LeveledSpells_Object;
+        public Group<LeveledSpell> LeveledSpells => _LeveledSpells_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILeveledSpellGetter> ISkyrimModGetter.LeveledSpells => _LeveledSpells_Object;
+        #endregion
+        #region AnimatedObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AnimatedObject> _AnimatedObjects_Object;
+        public Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAnimatedObjectGetter> ISkyrimModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        #endregion
 
         #region To String
 
@@ -757,6 +789,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -819,7 +855,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DialogTopics,
                 TItem Quests,
                 TItem IdleAnimations,
-                TItem Packages)
+                TItem Packages,
+                TItem CombatStyles,
+                TItem LoadScreens,
+                TItem LeveledSpells,
+                TItem AnimatedObjects)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -881,6 +921,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quests = new MaskItem<TItem, Group.Mask<TItem>?>(Quests, new Group.Mask<TItem>(Quests));
                 this.IdleAnimations = new MaskItem<TItem, Group.Mask<TItem>?>(IdleAnimations, new Group.Mask<TItem>(IdleAnimations));
                 this.Packages = new MaskItem<TItem, Group.Mask<TItem>?>(Packages, new Group.Mask<TItem>(Packages));
+                this.CombatStyles = new MaskItem<TItem, Group.Mask<TItem>?>(CombatStyles, new Group.Mask<TItem>(CombatStyles));
+                this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(LoadScreens, new Group.Mask<TItem>(LoadScreens));
+                this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledSpells, new Group.Mask<TItem>(LeveledSpells));
+                this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(AnimatedObjects, new Group.Mask<TItem>(AnimatedObjects));
             }
 
             #pragma warning disable CS8618
@@ -952,6 +996,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Quests { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? IdleAnimations { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Packages { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CombatStyles { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledSpells { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AnimatedObjects { get; set; }
             #endregion
 
             #region Equals
@@ -1024,6 +1072,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
                 if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
                 if (!object.Equals(this.Packages, rhs.Packages)) return false;
+                if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
+                if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
+                if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
+                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1089,6 +1141,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Quests);
                 hash.Add(this.IdleAnimations);
                 hash.Add(this.Packages);
+                hash.Add(this.CombatStyles);
+                hash.Add(this.LoadScreens);
+                hash.Add(this.LeveledSpells);
+                hash.Add(this.AnimatedObjects);
                 return hash.ToHashCode();
             }
 
@@ -1397,6 +1453,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Packages.Overall)) return false;
                     if (this.Packages.Specific != null && !this.Packages.Specific.All(eval)) return false;
                 }
+                if (CombatStyles != null)
+                {
+                    if (!eval(this.CombatStyles.Overall)) return false;
+                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.All(eval)) return false;
+                }
+                if (LoadScreens != null)
+                {
+                    if (!eval(this.LoadScreens.Overall)) return false;
+                    if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.All(eval)) return false;
+                }
+                if (LeveledSpells != null)
+                {
+                    if (!eval(this.LeveledSpells.Overall)) return false;
+                    if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.All(eval)) return false;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (!eval(this.AnimatedObjects.Overall)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1704,6 +1780,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Packages.Overall)) return true;
                     if (this.Packages.Specific != null && this.Packages.Specific.Any(eval)) return true;
                 }
+                if (CombatStyles != null)
+                {
+                    if (eval(this.CombatStyles.Overall)) return true;
+                    if (this.CombatStyles.Specific != null && this.CombatStyles.Specific.Any(eval)) return true;
+                }
+                if (LoadScreens != null)
+                {
+                    if (eval(this.LoadScreens.Overall)) return true;
+                    if (this.LoadScreens.Specific != null && this.LoadScreens.Specific.Any(eval)) return true;
+                }
+                if (LeveledSpells != null)
+                {
+                    if (eval(this.LeveledSpells.Overall)) return true;
+                    if (this.LeveledSpells.Specific != null && this.LeveledSpells.Specific.Any(eval)) return true;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (eval(this.AnimatedObjects.Overall)) return true;
+                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1778,6 +1874,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
                 obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
                 obj.Packages = this.Packages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
+                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2040,6 +2140,22 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Packages?.ToString(fg);
                     }
+                    if (printMask?.CombatStyles?.Overall ?? true)
+                    {
+                        CombatStyles?.ToString(fg);
+                    }
+                    if (printMask?.LoadScreens?.Overall ?? true)
+                    {
+                        LoadScreens?.ToString(fg);
+                    }
+                    if (printMask?.LeveledSpells?.Overall ?? true)
+                    {
+                        LeveledSpells?.ToString(fg);
+                    }
+                    if (printMask?.AnimatedObjects?.Overall ?? true)
+                    {
+                        AnimatedObjects?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2125,6 +2241,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>? Quests;
             public MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
             public MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>? Packages;
+            public MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
+            public MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
+            public MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             #endregion
 
             #region IErrorMask
@@ -2253,6 +2373,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return IdleAnimations;
                     case SkyrimMod_FieldIndex.Packages:
                         return Packages;
+                    case SkyrimMod_FieldIndex.CombatStyles:
+                        return CombatStyles;
+                    case SkyrimMod_FieldIndex.LoadScreens:
+                        return LoadScreens;
+                    case SkyrimMod_FieldIndex.LeveledSpells:
+                        return LeveledSpells;
+                    case SkyrimMod_FieldIndex.AnimatedObjects:
+                        return AnimatedObjects;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2442,6 +2570,18 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Packages:
                         this.Packages = new MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.CombatStyles:
+                        this.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LoadScreens:
+                        this.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LeveledSpells:
+                        this.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2633,6 +2773,18 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Packages:
                         this.Packages = (MaskItem<Exception?, Group.ErrorMask<Package.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.CombatStyles:
+                        this.CombatStyles = (MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.LoadScreens:
+                        this.LoadScreens = (MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.LeveledSpells:
+                        this.LeveledSpells = (MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = (MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2701,6 +2853,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Quests != null) return true;
                 if (IdleAnimations != null) return true;
                 if (Packages != null) return true;
+                if (CombatStyles != null) return true;
+                if (LoadScreens != null) return true;
+                if (LeveledSpells != null) return true;
+                if (AnimatedObjects != null) return true;
                 return false;
             }
             #endregion
@@ -2795,6 +2951,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Quests?.ToString(fg);
                 IdleAnimations?.ToString(fg);
                 Packages?.ToString(fg);
+                CombatStyles?.ToString(fg);
+                LoadScreens?.ToString(fg);
+                LeveledSpells?.ToString(fg);
+                AnimatedObjects?.ToString(fg);
             }
             #endregion
 
@@ -2863,6 +3023,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
                 ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
+                ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
+                ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
+                ret.LeveledSpells = this.LeveledSpells.Combine(rhs.LeveledSpells, (l, r) => l.Combine(r));
+                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2944,6 +3108,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?> Quests;
             public MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?> IdleAnimations;
             public MaskItem<bool, Group.TranslationMask<Package.TranslationMask>?> Packages;
+            public MaskItem<bool, Group.TranslationMask<CombatStyle.TranslationMask>?> CombatStyles;
+            public MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?> LoadScreens;
+            public MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?> LeveledSpells;
+            public MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?> AnimatedObjects;
             #endregion
 
             #region Ctors
@@ -3009,6 +3177,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quests = new MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?>(defaultOn, null);
                 this.IdleAnimations = new MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?>(defaultOn, null);
                 this.Packages = new MaskItem<bool, Group.TranslationMask<Package.TranslationMask>?>(defaultOn, null);
+                this.CombatStyles = new MaskItem<bool, Group.TranslationMask<CombatStyle.TranslationMask>?>(defaultOn, null);
+                this.LoadScreens = new MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?>(defaultOn, null);
+                this.LeveledSpells = new MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?>(defaultOn, null);
+                this.AnimatedObjects = new MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -3084,6 +3256,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
                 ret.Add((IdleAnimations?.Overall ?? true, IdleAnimations?.Specific?.GetCrystal()));
                 ret.Add((Packages?.Overall ?? true, Packages?.Specific?.GetCrystal()));
+                ret.Add((CombatStyles?.Overall ?? true, CombatStyles?.Specific?.GetCrystal()));
+                ret.Add((LoadScreens?.Overall ?? true, LoadScreens?.Specific?.GetCrystal()));
+                ret.Add((LeveledSpells?.Overall ?? true, LeveledSpells?.Specific?.GetCrystal()));
+                ret.Add((AnimatedObjects?.Overall ?? true, AnimatedObjects?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3157,6 +3333,10 @@ namespace Mutagen.Bethesda.Skyrim
             _Quests_Object = new Group<Quest>(this);
             _IdleAnimations_Object = new Group<IdleAnimation>(this);
             _Packages_Object = new Group<Package>(this);
+            _CombatStyles_Object = new Group<CombatStyle>(this);
+            _LoadScreens_Object = new Group<LoadScreen>(this);
+            _LeveledSpells_Object = new Group<LeveledSpell>(this);
+            _AnimatedObjects_Object = new Group<AnimatedObject>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3400,6 +3580,22 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Packages ?? true)
             {
                 this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
+            }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.RecordCache.Set(rhsMod.CombatStyles.RecordCache.Items);
+            }
+            if (mask?.LoadScreens ?? true)
+            {
+                this.LoadScreens.RecordCache.Set(rhsMod.LoadScreens.RecordCache.Items);
+            }
+            if (mask?.LeveledSpells ?? true)
+            {
+                this.LeveledSpells.RecordCache.Set(rhsMod.LeveledSpells.RecordCache.Items);
+            }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
             }
         }
 
@@ -3821,6 +4017,34 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Package>());
             }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.RecordCache.Set(
+                    rhs.CombatStyles.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<CombatStyle>());
+            }
+            if (mask?.LoadScreens ?? true)
+            {
+                this.LoadScreens.RecordCache.Set(
+                    rhs.LoadScreens.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<LoadScreen>());
+            }
+            if (mask?.LeveledSpells ?? true)
+            {
+                this.LeveledSpells.RecordCache.Set(
+                    rhs.LeveledSpells.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<LeveledSpell>());
+            }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.RecordCache.Set(
+                    rhs.AnimatedObjects.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<AnimatedObject>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3899,6 +4123,10 @@ namespace Mutagen.Bethesda.Skyrim
             count += Quests.RecordCache.Count > 0 ? 1 : 0;
             count += IdleAnimations.RecordCache.Count > 0 ? 1 : 0;
             count += Packages.RecordCache.Count > 0 ? 1 : 0;
+            count += CombatStyles.RecordCache.Count > 0 ? 1 : 0;
+            count += LoadScreens.RecordCache.Count > 0 ? 1 : 0;
+            count += LeveledSpells.RecordCache.Count > 0 ? 1 : 0;
+            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4177,6 +4405,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Quest> Quests { get; }
         new Group<IdleAnimation> IdleAnimations { get; }
         new Group<Package> Packages { get; }
+        new Group<CombatStyle> CombatStyles { get; }
+        new Group<LoadScreen> LoadScreens { get; }
+        new Group<LeveledSpell> LeveledSpells { get; }
+        new Group<AnimatedObject> AnimatedObjects { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4254,6 +4486,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IQuestGetter> Quests { get; }
         IGroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
         IGroupGetter<IPackageGetter> Packages { get; }
+        IGroupGetter<ICombatStyleGetter> CombatStyles { get; }
+        IGroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        IGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
+        IGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
 
     }
 
@@ -4769,6 +5005,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Quests = 57,
         IdleAnimations = 58,
         Packages = 59,
+        CombatStyles = 60,
+        LoadScreens = 61,
+        LeveledSpells = 62,
+        AnimatedObjects = 63,
     }
     #endregion
 
@@ -4786,9 +5026,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 60;
+        public const ushort AdditionalFieldCount = 64;
 
-        public const ushort FieldCount = 60;
+        public const ushort FieldCount = 64;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4938,6 +5178,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.IdleAnimations;
                 case "PACKAGES":
                     return (ushort)SkyrimMod_FieldIndex.Packages;
+                case "COMBATSTYLES":
+                    return (ushort)SkyrimMod_FieldIndex.CombatStyles;
+                case "LOADSCREENS":
+                    return (ushort)SkyrimMod_FieldIndex.LoadScreens;
+                case "LEVELEDSPELLS":
+                    return (ushort)SkyrimMod_FieldIndex.LeveledSpells;
+                case "ANIMATEDOBJECTS":
+                    return (ushort)SkyrimMod_FieldIndex.AnimatedObjects;
                 default:
                     return null;
             }
@@ -5008,6 +5256,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Quests:
                 case SkyrimMod_FieldIndex.IdleAnimations:
                 case SkyrimMod_FieldIndex.Packages:
+                case SkyrimMod_FieldIndex.CombatStyles:
+                case SkyrimMod_FieldIndex.LoadScreens:
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                case SkyrimMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5079,6 +5331,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Quests:
                 case SkyrimMod_FieldIndex.IdleAnimations:
                 case SkyrimMod_FieldIndex.Packages:
+                case SkyrimMod_FieldIndex.CombatStyles:
+                case SkyrimMod_FieldIndex.LoadScreens:
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                case SkyrimMod_FieldIndex.AnimatedObjects:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5150,6 +5406,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Quests:
                 case SkyrimMod_FieldIndex.IdleAnimations:
                 case SkyrimMod_FieldIndex.Packages:
+                case SkyrimMod_FieldIndex.CombatStyles:
+                case SkyrimMod_FieldIndex.LoadScreens:
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                case SkyrimMod_FieldIndex.AnimatedObjects:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5281,6 +5541,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "IdleAnimations";
                 case SkyrimMod_FieldIndex.Packages:
                     return "Packages";
+                case SkyrimMod_FieldIndex.CombatStyles:
+                    return "CombatStyles";
+                case SkyrimMod_FieldIndex.LoadScreens:
+                    return "LoadScreens";
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                    return "LeveledSpells";
+                case SkyrimMod_FieldIndex.AnimatedObjects:
+                    return "AnimatedObjects";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5351,6 +5619,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Quests:
                 case SkyrimMod_FieldIndex.IdleAnimations:
                 case SkyrimMod_FieldIndex.Packages:
+                case SkyrimMod_FieldIndex.CombatStyles:
+                case SkyrimMod_FieldIndex.LoadScreens:
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                case SkyrimMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5423,6 +5695,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Quests:
                 case SkyrimMod_FieldIndex.IdleAnimations:
                 case SkyrimMod_FieldIndex.Packages:
+                case SkyrimMod_FieldIndex.CombatStyles:
+                case SkyrimMod_FieldIndex.LoadScreens:
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                case SkyrimMod_FieldIndex.AnimatedObjects:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5554,6 +5830,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<IdleAnimation>);
                 case SkyrimMod_FieldIndex.Packages:
                     return typeof(Group<Package>);
+                case SkyrimMod_FieldIndex.CombatStyles:
+                    return typeof(Group<CombatStyle>);
+                case SkyrimMod_FieldIndex.LoadScreens:
+                    return typeof(Group<LoadScreen>);
+                case SkyrimMod_FieldIndex.LeveledSpells:
+                    return typeof(Group<LeveledSpell>);
+                case SkyrimMod_FieldIndex.AnimatedObjects:
+                    return typeof(Group<AnimatedObject>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5620,6 +5904,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType QUST_HEADER = new RecordType("QUST");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
+        public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
+        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
@@ -5721,6 +6009,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Quests.Clear();
             item.IdleAnimations.Clear();
             item.Packages.Clear();
+            item.CombatStyles.Clear();
+            item.LoadScreens.Clear();
+            item.LeveledSpells.Clear();
+            item.AnimatedObjects.Clear();
         }
         
         #region Xml Translation
@@ -5935,6 +6227,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
             ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
             ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
+            ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
+            ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
+            ret.LeveledSpells = MaskItemExt.Factory(item.LeveledSpells.GetEqualsMask(rhs.LeveledSpells, include), include);
+            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
         }
         
         public string ToString(
@@ -6221,6 +6517,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Packages?.ToString(fg, "Packages");
             }
+            if (printMask?.CombatStyles?.Overall ?? true)
+            {
+                item.CombatStyles?.ToString(fg, "CombatStyles");
+            }
+            if (printMask?.LoadScreens?.Overall ?? true)
+            {
+                item.LoadScreens?.ToString(fg, "LoadScreens");
+            }
+            if (printMask?.LeveledSpells?.Overall ?? true)
+            {
+                item.LeveledSpells?.ToString(fg, "LeveledSpells");
+            }
+            if (printMask?.AnimatedObjects?.Overall ?? true)
+            {
+                item.AnimatedObjects?.ToString(fg, "AnimatedObjects");
+            }
         }
         
         public bool HasBeenSet(
@@ -6294,6 +6606,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Quests = new MaskItem<bool, Group.Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
             mask.IdleAnimations = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
             mask.Packages = new MaskItem<bool, Group.Mask<bool>?>(true, item.Packages?.GetHasBeenSetMask());
+            mask.CombatStyles = new MaskItem<bool, Group.Mask<bool>?>(true, item.CombatStyles?.GetHasBeenSetMask());
+            mask.LoadScreens = new MaskItem<bool, Group.Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
+            mask.LeveledSpells = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
+            mask.AnimatedObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6363,6 +6679,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
             if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
             if (!object.Equals(lhs.Packages, rhs.Packages)) return false;
+            if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
+            if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
+            if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
+            if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
             return true;
         }
         
@@ -6429,6 +6749,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Quests);
             hash.Add(item.IdleAnimations);
             hash.Add(item.Packages);
+            hash.Add(item.CombatStyles);
+            hash.Add(item.LoadScreens);
+            hash.Add(item.LeveledSpells);
+            hash.Add(item.AnimatedObjects);
             return hash.ToHashCode();
         }
         
@@ -6740,6 +7064,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackage":
                 case "IPackageInternal":
                     return obj.Packages.RecordCache;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    return obj.CombatStyles.RecordCache;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    return obj.LoadScreens.RecordCache;
+                case "LeveledSpell":
+                case "ILeveledSpellGetter":
+                case "ILeveledSpell":
+                case "ILeveledSpellInternal":
+                    return obj.LeveledSpells.RecordCache;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    return obj.AnimatedObjects.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -6759,7 +7103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[59];
+            Stream[] outputStreams = new Stream[63];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -6820,6 +7164,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7283,6 +7631,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.CombatStyles is ILinkedFormKeyContainer CombatStyleslinkCont)
+            {
+                foreach (var item in CombatStyleslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LoadScreens is ILinkedFormKeyContainer LoadScreenslinkCont)
+            {
+                foreach (var item in LoadScreenslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LeveledSpells is ILinkedFormKeyContainer LeveledSpellslinkCont)
+            {
+                foreach (var item in LeveledSpellslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AnimatedObjects is ILinkedFormKeyContainer AnimatedObjectslinkCont)
+            {
+                foreach (var item in AnimatedObjectslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7522,6 +7898,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Packages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CombatStyles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledSpells.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8069,6 +8461,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackage":
                 case "IPackageInternal":
                     foreach (var item in obj.Packages.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledSpell":
+                case "ILeveledSpellGetter":
+                case "ILeveledSpell":
+                case "ILeveledSpellInternal":
+                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -9292,6 +9720,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CombatStyles) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CombatStyles);
+                try
+                {
+                    item.CombatStyles.DeepCopyIn(
+                        rhs: rhs.CombatStyles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CombatStyles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LoadScreens) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LoadScreens);
+                try
+                {
+                    item.LoadScreens.DeepCopyIn(
+                        rhs: rhs.LoadScreens,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LoadScreens));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledSpells) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledSpells);
+                try
+                {
+                    item.LeveledSpells.DeepCopyIn(
+                        rhs: rhs.LeveledSpells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledSpells));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    item.AnimatedObjects.DeepCopyIn(
+                        rhs: rhs.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AnimatedObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -10040,6 +10548,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Packages,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Packages));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CombatStyles) ?? true))
+            {
+                var CombatStylesItem = item.CombatStyles;
+                ((GroupXmlWriteTranslation)((IXmlItem)CombatStylesItem).XmlWriteTranslator).Write<ICombatStyleGetter>(
+                    item: CombatStylesItem,
+                    node: node,
+                    name: nameof(item.CombatStyles),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.CombatStyles,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CombatStyles));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LoadScreens) ?? true))
+            {
+                var LoadScreensItem = item.LoadScreens;
+                ((GroupXmlWriteTranslation)((IXmlItem)LoadScreensItem).XmlWriteTranslator).Write<ILoadScreenGetter>(
+                    item: LoadScreensItem,
+                    node: node,
+                    name: nameof(item.LoadScreens),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.LoadScreens,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LoadScreens));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledSpells) ?? true))
+            {
+                var LeveledSpellsItem = item.LeveledSpells;
+                ((GroupXmlWriteTranslation)((IXmlItem)LeveledSpellsItem).XmlWriteTranslator).Write<ILeveledSpellGetter>(
+                    item: LeveledSpellsItem,
+                    node: node,
+                    name: nameof(item.LeveledSpells),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.LeveledSpells,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledSpells));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                ((GroupXmlWriteTranslation)((IXmlItem)AnimatedObjectsItem).XmlWriteTranslator).Write<IAnimatedObjectGetter>(
+                    item: AnimatedObjectsItem,
+                    node: node,
+                    name: nameof(item.AnimatedObjects),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.AnimatedObjects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AnimatedObjects));
             }
         }
 
@@ -11249,6 +11801,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "CombatStyles":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CombatStyles);
+                    try
+                    {
+                        item.CombatStyles.CopyInFromXml<CombatStyle>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LoadScreens":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LoadScreens);
+                    try
+                    {
+                        item.LoadScreens.CopyInFromXml<LoadScreen>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeveledSpells":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledSpells);
+                    try
+                    {
+                        item.LeveledSpells.CopyInFromXml<LeveledSpell>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AnimatedObjects":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                    try
+                    {
+                        item.AnimatedObjects.CopyInFromXml<AnimatedObject>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -11477,6 +12105,10 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Quests;
         public bool IdleAnimations;
         public bool Packages;
+        public bool CombatStyles;
+        public bool LoadScreens;
+        public bool LeveledSpells;
+        public bool AnimatedObjects;
         public GroupMask()
         {
         }
@@ -11541,6 +12173,10 @@ namespace Mutagen.Bethesda.Skyrim
             Quests = defaultValue;
             IdleAnimations = defaultValue;
             Packages = defaultValue;
+            CombatStyles = defaultValue;
+            LoadScreens = defaultValue;
+            LeveledSpells = defaultValue;
+            AnimatedObjects = defaultValue;
         }
     }
 
@@ -12214,6 +12850,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
                         item: PackagesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.CombatStyles ?? true)
+            {
+                var CombatStylesItem = item.CombatStyles;
+                if (CombatStylesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                        item: CombatStylesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.LoadScreens ?? true)
+            {
+                var LoadScreensItem = item.LoadScreens;
+                if (LoadScreensItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
+                        item: LoadScreensItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.LeveledSpells ?? true)
+            {
+                var LeveledSpellsItem = item.LeveledSpells;
+                if (LeveledSpellsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledSpellsItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
+                        item: LeveledSpellsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                if (AnimatedObjectsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                        item: AnimatedObjectsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -13113,6 +13793,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
                 }
+                case 0x59545343: // CSTY
+                {
+                    if (importMask?.CombatStyles ?? true)
+                    {
+                        item.CombatStyles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                }
+                case 0x5243534C: // LSCR
+                {
+                    if (importMask?.LoadScreens ?? true)
+                    {
+                        item.LoadScreens.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                }
+                case 0x5053564C: // LVSP
+                {
+                    if (importMask?.LeveledSpells ?? true)
+                    {
+                        item.LeveledSpells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                }
+                case 0x4F494E41: // ANIO
+                {
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        item.AnimatedObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -13579,6 +14315,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IPackageGetter>? _Packages => _PackagesLocation.HasValue ? GroupBinaryOverlay<IPackageGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _PackagesLocation!.Value.Min, _PackagesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IPackageGetter> Packages => _Packages ?? new Group<Package>(this);
         #endregion
+        #region CombatStyles
+        private RangeInt64? _CombatStylesLocation;
+        private IGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocation.HasValue ? GroupBinaryOverlay<ICombatStyleGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _CombatStylesLocation!.Value.Min, _CombatStylesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Group<CombatStyle>(this);
+        #endregion
+        #region LoadScreens
+        private RangeInt64? _LoadScreensLocation;
+        private IGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocation.HasValue ? GroupBinaryOverlay<ILoadScreenGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LoadScreensLocation!.Value.Min, _LoadScreensLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Group<LoadScreen>(this);
+        #endregion
+        #region LeveledSpells
+        private RangeInt64? _LeveledSpellsLocation;
+        private IGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocation.HasValue ? GroupBinaryOverlay<ILeveledSpellGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledSpellsLocation!.Value.Min, _LeveledSpellsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new Group<LeveledSpell>(this);
+        #endregion
+        #region AnimatedObjects
+        private RangeInt64? _AnimatedObjectsLocation;
+        private IGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? GroupBinaryOverlay<IAnimatedObjectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -13968,6 +14724,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                }
+                case 0x59545343: // CSTY
+                {
+                    _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                }
+                case 0x5243534C: // LSCR
+                {
+                    _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                }
+                case 0x5053564C: // LVSP
+                {
+                    _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                }
+                case 0x4F494E41: // ANIO
+                {
+                    _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

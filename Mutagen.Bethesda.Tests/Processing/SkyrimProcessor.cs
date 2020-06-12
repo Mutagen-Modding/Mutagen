@@ -846,7 +846,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "ALCH", "DESC" },
                     new RecordType[] { "WEAP", "DESC" },
                     new RecordType[] { "BOOK", "DESC" },
-                    new RecordType[] { "QUST", "CNAM" }
+                    new RecordType[] { "QUST", "CNAM" },
+                    new RecordType[] { "LSCR", "DESC" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

@@ -357,6 +357,14 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PackageDataTopic_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PackageIdles_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PackageDataObjectList_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.CombatStyleMelee_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.CombatStyleCloseRange_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.CombatStyleFlight_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.LoadScreen_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Int16MinMax_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.LeveledSpellEntry_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.LeveledSpellEntryData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.AnimatedObject_Registration.Instance);
         }
     }
 }
