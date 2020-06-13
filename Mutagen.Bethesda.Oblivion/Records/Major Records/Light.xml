@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Light" objType="Record" recordType="LIGH" baseClass="AItem" GUID="c427a7d6-4fbf-45c8-80c7-f3c8f8646bc1" ID="59">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <String name="Name" recordType="FULL" />
+      <String name="Icon" recordType="ICON" />
+      <RefDirect name="Data" refName="LightData" />
+      <Float name="Fade" recordType="FNAM" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+    </Fields>
+  </Object>
+  <Object name="LightData" recordType="DATA" objType="Subrecord" GUID="64493ae8-9647-44e1-bd6d-544b3907b84d" ID="195">
+    <Fields>
+      <Int32 name="Time" default="-1" />
+      <UInt32 name="Radius" />
+      <Color name="Color" binaryType="Alpha" />
+      <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
+      <Float name="FalloffExponent" default="1" />
+      <Float name="FOV" default="90" />
+      <Break />
+      <UInt32 name="Value" />
+      <Float name="Weight" />
+    </Fields>
+  </Object>
+</Loqui>

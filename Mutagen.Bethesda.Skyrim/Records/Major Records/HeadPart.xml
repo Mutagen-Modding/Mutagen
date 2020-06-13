@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="857a29e8-2860-48f1-b007-30df75c1667c" ID="44">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IModeled</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
+      <Enum name="Type" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
+      <List name="ExtraParts">
+        <FormLink refName="HeadPart" recordType="HNAM" />
+      </List>
+      <RefList name="Parts" refName="Part" />
+      <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
+      <FormLink name="Color" refName="ColorRecord" recordType="CNAM" />
+      <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
+    </Fields>
+  </Object>
+  <Object name="Part" objType="Subrecord" GUID="c4ffaf8a-c25b-42cd-aab4-35f7c641b1e8" ID="45">
+    <Fields>
+      <Enum name="PartType" enumName="Part.PartTypeEnum" byteLength="4" recordType="NAM0" />
+      <String name="FileName" recordType="NAM1" />
+    </Fields>
+  </Object>
+</Loqui>

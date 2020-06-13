@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="OblivionMajorRecord" customBinaryEnd="Normal" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
+    <Interface>INamed</Interface>
+    <Fields>
+      <List name="Quests">
+        <FormLink recordType="QSTI" refName="Quest" />
+      </List>
+      <String name="Name" recordType="FULL" />
+      <Enum name="DialogType" recordType="DATA" enumName="DialogType" byteLength="1" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <RefList name="Items" binary="NoGeneration" refName="DialogItem" />
+    </Fields>
+  </Object>
+  <Object name="DialogItem" objType="Record" baseClass="OblivionMajorRecord" recordType="INFO" GUID="2d9149e0-aa5e-4b4e-8bef-93b32f602f3b" ID="149">
+    <Fields>
+      <RefDirect name="Data" refName="DialogItemData" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <FormLink name="PreviousTopic" recordType="PNAM" refName="DialogItem" />
+      <List name="Topics">
+        <FormLink recordType="NAME" refName="DialogTopic" />
+      </List>
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="Condition" />
+      <List name="Choices">
+        <FormLink recordType="TCLT" refName="DialogTopic" />
+      </List>
+      <List name="LinkFrom">
+        <FormLink recordType="TCLF" refName="DialogTopic" />
+      </List>
+      <RefDirect name="Script" refName="ScriptFields" singleton="true" />
+    </Fields>
+  </Object>
+  <Object name="DialogItemData" objType="Subrecord" recordType="DATA" GUID="2261ed10-f5dd-4b02-b71a-8eedb897e41e" ID="186">
+    <Fields>
+      <Enum name="DialogType" enumName="DialogType" byteLength="2" />
+      <Break />
+      <Enum name="Flags" enumName="DialogItem.Flag" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord" GUID="d8438f70-ccc0-4bc8-876d-11134cdabd97" ID="150">
+    <Fields>
+      <RefDirect name="Data" refName="DialogResponseData" />
+      <String name="ResponseText" recordType="NAM1" />
+      <String name="ActorNotes" recordType="NAM2" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseData" objType="Subrecord" recordType="TRDT" GUID="000d3b32-e5ea-42c0-84d5-1f91f223bf0c" ID="187">
+    <Fields>
+      <Enum name="Emotion" enumName="EmotionType" byteLength="4" />
+      <Int32 name="EmotionValue" />
+      <Int32 name="Unknown" />
+      <UInt8 name="ResponseNumber" />
+      <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
+    </Fields>
+  </Object>
+</Loqui>

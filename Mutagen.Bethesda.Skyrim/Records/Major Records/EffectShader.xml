@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa7eca9-d976-44d0-aadd-b5a8dbb97974" ID="106">
+    <Fields>
+      <String name="FillTexture" recordType="ICON" />
+      <String name="ParticleShaderTexture" recordType="ICO2" />
+      <String name="HolesTexture" recordType="NAM7" />
+      <String name="MembranePaletteTexture" recordType="NAM8" />
+      <String name="ParticlePaletteTexture" recordType="NAM9" />
+      <Data>
+        <Fields>
+          <Int32 name="Unknown" />
+          <Enum name="MembraneSourceBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <Enum name="MembraneBlendOperation" enumName="EffectShader.BlendOperation" default="BlendOperation.Add" />
+          <Enum name="MembraneZTest" enumName="EffectShader.ZTest" default="ZTest.Normal" />
+          <Color name="FillColorKey1" binaryType="Alpha" />
+          <Float name="FillAlphaFadeInTime" />
+          <Float name="FillFullAlphaTime" />
+          <Float name="FillFadeOutTime" />
+          <Float name="FillPersistentAlphaRatio" />
+          <Float name="FillAlphaPulseAmplitude" />
+          <Float name="FillAlphaPulseFrequency" />
+          <Float name="FillTextureAnimationSpeedU" />
+          <Float name="FillTextureAnimationSpeedV" />
+          <Float name="EdgeEffectFallOff" />
+          <Color name="EdgeEffectColor" binaryType="Alpha" />
+          <Float name="EdgeEffectAlphaFadeInTime" />
+          <Float name="EdgeEffectFullAlphaTime" />
+          <Float name="EdgeEffectAlphaFadeOutTime" />
+          <Float name="EdgeEffectPersistentAlphaRatio" />
+          <Float name="EdgeEffectAlphaPulseAmplitude" />
+          <Float name="EdgeEffectAlphaPulseFrequency" />
+          <Float name="FillFullAlphaRatio" />
+          <Float name="EdgeEffectFullAlphaRatio" />
+          <Enum name="MembraneDestBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <Enum name="ParticleSourceBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <Enum name="ParticleBlendOperation" enumName="EffectShader.BlendOperation" default="BlendOperation.Add" />
+          <Enum name="ParticleZTest" enumName="EffectShader.ZTest" default="ZTest.Normal" />
+          <Enum name="ParticleDestBlendMode" enumName="EffectShader.BlendMode" default="BlendMode.Zero" />
+          <Float name="ParticleBirthRampUpTime" />
+          <Float name="ParticleFullBirthTime" />
+          <Float name="ParticleBirthRampDownTime" />
+          <Float name="ParticleFullBirthRatio" />
+          <Float name="ParticlePeristentCount" />
+          <Float name="ParticleLifetime" />
+          <Float name="ParticleLifetimePlusMinus" />
+          <Float name="ParticleInitialSpeedAlongNormal" />
+          <Float name="ParticleAccelerationAlongNormal" />
+          <Float name="ParticleInitialVelocity1" />
+          <Float name="ParticleInitialVelocity2" />
+          <Float name="ParticleInitialVelocity3" />
+          <Float name="ParticleAcceleration1" />
+          <Float name="ParticleAcceleration2" />
+          <Float name="ParticleAcceleration3" />
+          <Float name="ParticleScaleKey1" />
+          <Float name="ParticleScaleKey2" />
+          <Float name="ParticleScaleKey1Time" />
+          <Float name="ParticleScaleKey2Time" />
+          <Color name="ColorKey1" binaryType="Alpha" />
+          <Color name="ColorKey2" binaryType="Alpha" />
+          <Color name="ColorKey3" binaryType="Alpha" />
+          <Float name="ColorKey1Alpha" />
+          <Float name="ColorKey2Alpha" />
+          <Float name="ColorKey3Alpha" />
+          <Float name="ColorKey1Time" />
+          <Float name="ColorKey2Time" />
+          <Float name="ColorKey3Time" />
+          <Float name="ParticleInitialSpeedAlongNormalPlusMinus" />
+          <Float name="ParticleInitialRotationDegree" />
+          <Float name="ParticleInitialRotationDegreePlusMinus" />
+          <Float name="ParticleRotationSpeedDegreePerSec" />
+          <Float name="ParticleRotationSpeedDegreePerSecPlusMinus" />
+          <FormLink name="AddonModels" refName="Debris" />
+          <Float name="HolesStartTime" />
+          <Float name="HolesEndTime" />
+          <Float name="HolesStartValue" />
+          <Float name="HolesEndValue" />
+          <Float name="EdgeWidth" />
+          <Color name="EdgeColor" binaryType="Alpha" />
+          <Float name="ExplosionWindSpeed" />
+          <UInt32 name="TextureCountU" />
+          <UInt32 name="TextureCountV" />
+          <Float name="AddonModelsFadeInTime" />
+          <Float name="AddonModelsFadeOutTime" />
+          <Float name="AddonModelsScaleStart" />
+          <Float name="AddonModelsScaleEnd" />
+          <Float name="AddonModelsScaleInTime" />
+          <Float name="AddonModelsScaleOutTime" />
+          <Break />
+          <FormLink name="AmbientSound" objType="Record" >
+            <Interface>ISound</Interface>
+          </FormLink>
+          <Break />
+          <Color name="FillColorKey2" binaryType="Alpha" />
+          <Color name="FillColorKey3" binaryType="Alpha" />
+          <Float name="FillColorKey1Scale" />
+          <Float name="FillColorKey2Scale" />
+          <Float name="FillColorKey3Scale" />
+          <Float name="FillColorKey1Time" />
+          <Float name="FillColorKey2Time" />
+          <Float name="FillColorKey3Time" />
+          <Break />
+          <Float name="ColorScale" />
+          <Float name="BirthPositionOffset" />
+          <Float name="BirthPositionOffsetRangePlusMinus" />
+          <UInt32 name="ParticleAnimatedStartFrame" />
+          <UInt32 name="ParticleAnimatedStartFrameVariation" />
+          <UInt32 name="ParticleAnimatedEndFrame" />
+          <UInt32 name="ParticleAnimatedLoopStartFrame" />
+          <UInt32 name="ParticleAnimatedLoopStartVariation" />
+          <UInt32 name="ParticleAnimatedFrameCount" />
+          <UInt32 name="ParticleAnimatedFrameCountVariation" />
+          <Enum name="Flags" enumName="EffectShader.Flag" />
+          <Float name="FillTextureScaleU" />
+          <Float name="FillTextureScaleV" />
+          <Break />
+          <UInt32 name="SceneGraphEmitDepthLimit" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

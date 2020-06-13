@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AlchemicalApparatus" baseClass="AItem" objType="Record" recordType="APPA" GUID="731a9b97-8051-4d72-8008-3e53a96659cd" ID="66">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <RefDirect name="Data" refName="AlchemicalApparatusData" />
+    </Fields>
+  </Object>
+  <Object name="AlchemicalApparatusData" objType="Subrecord" recordType="DATA" GUID="32ff30be-3aff-4ff7-bdff-41f63ebaf293" ID="174">
+    <Fields>
+      <Enum name="Type" enumName="AlchemicalApparatus.ApparatusType" byteLength="1" />
+      <UInt32 name="Value" />
+      <Float name="Weight" />
+      <Float name="Quality" min="0" max="255" />
+    </Fields>
+  </Object>
+</Loqui>

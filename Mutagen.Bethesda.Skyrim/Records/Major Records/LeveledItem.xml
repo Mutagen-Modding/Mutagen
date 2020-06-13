@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="dbc7006d-3752-43d0-9e4f-95268f3353ab" ID="166">
+    <Interface>IItem</Interface>
+    <Interface>IHarvestTarget</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <UInt8 name="ChanceNone" recordType="LVLD" hasBeenSet="False" />
+      <Enum name="Flags" recordType="LVLF" hasBeenSet="False" enumName="LeveledItem.Flag" byteLength="1" />
+      <FormLink name="Global" recordType="LVLG" refName="Global" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
+    </Fields>
+  </Object>
+  <Object name="LeveledItemEntry" objType="Subrecord" GUID="a077418e-1fb2-4956-abe3-a48f9d76449b" ID="239">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledItemEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledItemEntryData" objType="Subrecord" recordType="LVLO" GUID="a14b1375-6780-4482-bb8c-bf9362feb0e9" ID="240">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" objType="Record">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

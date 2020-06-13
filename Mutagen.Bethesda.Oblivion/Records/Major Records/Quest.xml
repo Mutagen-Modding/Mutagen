@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="OblivionMajorRecord" GUID="bcd4f22e-1051-4402-9032-895ecb9ac0ac" ID="148">
+    <Interface>INamed</Interface>
+    <Fields>
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <String name="Name" recordType="FULL" />
+      <String name="Icon" recordType="ICON" />
+      <RefDirect name="Data" refName="QuestData" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefList name="Stages" refName="QuestStage" />
+      <RefList name="Targets" refName="QuestTarget" />
+    </Fields>
+  </Object>
+  <Object name="QuestStage" objType="Subrecord" GUID="d6976f07-ece4-42a6-9beb-643d202313b5" ID="155">
+    <Fields>
+      <UInt16 name="Stage" recordType="INDX" hasBeenSet="False" />
+      <RefList name="LogEntries" refName="LogEntry" />
+    </Fields>
+  </Object>
+  <Object name="LogEntry" objType="Subrecord" GUID="c5072833-ef3f-418b-b86d-452f4bbd7617" ID="153">
+    <Fields>
+      <Enum name="Flags" enumName="LogEntry.Flag" byteLength="1" recordType="QSDT" />
+      <RefList name="Conditions" refName="Condition" />
+      <String name="Entry" recordType="CNAM" />
+      <RefDirect name="ResultScript" refName="ScriptFields" />
+    </Fields>
+  </Object>
+  <Object name="QuestTarget" objType="Subrecord" GUID="f3941d6e-a418-41e7-8bfd-dcb8b5520b6a" ID="154">
+    <Fields>
+      <RefDirect name="Data" refName="QuestTargetData" hasBeenSet="False" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="QuestTargetData" objType="Subrecord" recordType="QSTA" GUID="e35b0594-8cec-4316-9e1b-ba136e9f8d05" ID="203">
+    <Fields>
+      <FormLink name="Target" objType="Record">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Enum name="Flags" enumName="QuestTarget.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="QuestData" recordType="DATA" objType="Subrecord" GUID="5b840cca-e7ee-4460-87e7-da2cdcbb3b74" ID="204">
+    <Fields>
+      <Enum name="Flags" enumName="Quest.Flag" byteLength="1" />
+      <UInt8 name="Priority" />
+    </Fields>
+  </Object>
+</Loqui>

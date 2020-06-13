@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Tree" baseClass="OblivionMajorRecord" objType="Record" recordType="TREE" GUID="82606775-b1a1-4c44-9052-b021c5ccc13a" ID="79">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <List name="SpeedTreeSeeds" recordType="SNAM">
+        <UInt32 />
+      </List>
+      <RefDirect name="Data" refName="TreeData" />
+      <RefDirect name="BillboardDimensions" refName="Dimensions" />
+    </Fields>
+  </Object>
+  <Object name="TreeData" recordType="CNAM" objType="Subrecord" GUID="690e9f8f-ddb5-4a0a-8d70-59c08a37997d" ID="212">
+    <Fields>
+      <Float name="LeafCurvature" />
+      <Float name="MinimumLeafAngle" />
+      <Float name="MaximumLeafAngle" />
+      <Float name="BranchDimmingValue" />
+      <Float name="LeafDimmingValue" />
+      <Int32 name="ShadowRadius" />
+      <Float name="RockingSpeed" />
+      <Float name="RustleSpeed" />
+    </Fields>
+  </Object>
+  <Object name="Dimensions" recordType="BNAM" objType="Subrecord" GUID="0689828d-fb99-478d-81f7-0260867ff78b" ID="213">
+    <Fields>
+      <Float name="Width" />
+      <Float name="Height" />
+    </Fields>
+  </Object>
+</Loqui>

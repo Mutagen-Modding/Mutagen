@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Static" recordType="STAT" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="89036057-4570-493d-a5f7-4c5718f67a06" ID="105">
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
+    <Interface>IRegionTarget</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="MaxAngle" min="30" max="120" default="30" />
+          <FormLink name="Material" refName="MaterialObject" />
+          <Enum name="Flags" enumName="Static.Flag" byteLength="1" isSE="true" />
+          <ByteArray name="Unused" byteLength="3" hasBeenSet="False" isSE="true" />
+        </Fields>
+      </Data>
+      <RefDirect name="Lod" refName="Lod" />
+    </Fields>
+  </Object>
+  <Object name="Lod" objType="Subrecord" recordType="MNAM" GUID="a708745a-1c62-4a97-afcc-345a6c66ad64" ID="185">
+    <Fields>
+      <String name="Level0" binary="Custom" binaryOverlay="NoGeneration" maxLength="259" />
+      <ByteArray name="Level0Extra" binary="NoGeneration" hasBeenSet="True" />
+      <String name="Level1" binary="NoGeneration" maxLength="259" />
+      <ByteArray name="Level1Extra" binary="NoGeneration" hasBeenSet="True" />
+      <String name="Level2" binary="NoGeneration" maxLength="259" />
+      <ByteArray name="Level2Extra" binary="NoGeneration" hasBeenSet="True" />
+      <String name="Level3" binary="NoGeneration" maxLength="259" />
+      <ByteArray name="Level3Extra" binary="NoGeneration" hasBeenSet="True" />
+    </Fields>
+  </Object>
+</Loqui>

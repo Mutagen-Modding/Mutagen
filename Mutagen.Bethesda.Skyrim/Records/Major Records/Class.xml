@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Class" recordType="CLAS" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa1b071-96bf-43c3-be87-10d98e0b6cd8" ID="25">
+    <Interface>ITranslatedNamedRequired</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" hasBeenSet="False" translated="Normal" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <String name="Icon" recordType="ICON" />
+      <Data>
+        <Fields>
+          <Int32 name="Unknown" />
+          <Enum name="Teaches" byteLength="1" enumName="Skill" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
+          <UInt8 name="MaxTrainingLevel" />
+          <Dict name="SkillWeights" numEnumKeys="18" >
+            <Key>
+              <Enum enumName="Skill" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+          <Float name="BleedoutDefault" />
+          <UInt32 name="VoicePoints" />
+          <Dict name="StatWeights" numEnumKeys="3" >
+            <Key>
+              <Enum enumName="BasicStat" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+          <UInt8 name="Unknown2" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

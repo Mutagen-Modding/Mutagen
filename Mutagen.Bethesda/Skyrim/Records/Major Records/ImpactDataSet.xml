@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="SkyrimMajorRecord" GUID="c121a55e-e93f-481f-a6b0-cea75cfbdb64" ID="79">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

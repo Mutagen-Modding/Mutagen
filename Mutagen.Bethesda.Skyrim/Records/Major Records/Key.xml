@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Key" recordType="KEYM" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="aae23e29-1f5c-44c3-aa51-ae68f15be91b" ID="165">
+    <Interface>ITranslatedNamedRequired</Interface>
+    <Interface>IItem</Interface>
+    <Interface>IObjectId</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IWeightValue</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <String name="Name" recordType="FULL" hasBeenSet="False" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

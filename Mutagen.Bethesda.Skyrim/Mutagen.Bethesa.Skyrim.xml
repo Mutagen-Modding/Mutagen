@@ -1,0 +1,409 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mutagen.Bethesda.Skyrim</name>
+    </assembly>
+    <members>
+        <member name="T:Mutagen.Bethesda.Skyrim.IAliasVoiceType">
+            <summary>
+            An interface for something that can be specified as an Alias voice type
+            Implemented by: [Npc, FormList]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IAliasVoiceTypeGetter">
+            <summary>
+            An interface for something that can be specified as an Alias voice type
+            Implemented by: [Npc, FormList]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColors">
+            <summary>
+            Interface for ambient color definitions.
+            Implemented by: [WeatherAmbientColors, CellLighting]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColorsGetter">
+            <summary>
+            Interface for ambient color definitions.
+            Implemented by: [WeatherAmbientColors, CellLighting]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IBoundableEquipment">
+            <summary>
+            Used for specifying which records are allowed in a MagicEffect referencing Bound Equipment spells
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IDialog">
+            <summary>
+            Used for specifying which records are allowed as a dialog target
+            Implemented by: [DialogItem, DialogResponses]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IDialogGetter">
+            <summary>
+            Used for specifying which records are allowed as a dialog target
+            Implemented by: [DialogItem, DialogResponses]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IEffectRecord">
+            <summary>
+            Used for specifying which records are allowed as an Object Effect
+            Implemented by: [Spell, ObjectEffect]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IEffectRecordGetter">
+            <summary>
+            Used for specifying which records are allowed as an Object Effect
+            Implemented by: [Spell, ObjectEffect]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IEmittance">
+            <summary>
+            Common interface for records that can be emitted
+            Implemented by: [Light, Region]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IEmittanceGetter">
+            <summary>
+            Common interface for records that can be emitted
+            Implemented by: [Light, Region]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHarvestable">
+            <summary>
+            Common interface for records that can be harvested
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHarvestableGetter">
+            <summary>
+            Common interface for records that can be harvested
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHarvestTarget">
+            <summary>
+            Used for specifying which records are allowed as something that can be retrieved from a harvest action.
+            Implemented by: [Ingredient, Ingestible, LeveledItem, MiscItem]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHarvestTargetGetter">
+            <summary>
+            Used for specifying which records are allowed as something that can be retrieved from a harvest action.
+            Implemented by: [Ingredient, Ingestible, LeveledItem, MiscItem]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHasIcons">
+            <summary>
+            Common interface for records that have icons
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IHasIconsGetter">
+            <summary>
+            Common interface for records that have icons
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IIdleRelation">
+            <summary>
+            Used for specifying which records are allowed as a related idle
+            Implemented by: [IdleAnimation, ActionRecord]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IIdleRelationGetter">
+            <summary>
+            Used for specifying which records are allowed as a related idle
+            Implemented by: [IdleAnimation, ActionRecord]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IItem">
+            <summary>
+            Used for specifying which records are allowed in a container
+            Implemented by: [Armor, Ammunition, AlchemicalApparatus, MiscItem, Weapon, Book, LeveledItem, 
+            Key, Ingestible, Ingredient, Light, Soulgem, Scroll]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IItemGetter">
+            <summary>
+            Used for specifying which records are allowed in a container
+            Implemented by: [Armor, Ammunition, AlchemicalApparatus, MiscItem, Weapon, Book, LeveledItem, 
+            Key, Ingestible, Ingredient, Light, Soulgem, Scroll]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IKeywordLinkedReference">
+            <summary>
+            Used for specifying which records can be specified in a Linked Reference
+            Implemented by: [Keyword]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IKeywordLinkedReferenceGetter">
+            <summary>
+            Used for specifying which records can be specified in a Linked Reference
+            Implemented by: [Keyword]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILinkedReference">
+            <summary>
+            Used for specifying which records can be specified in a Linked Reference
+            Implemented by: [Player, PlacedNpc, PlacedObject, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILinkedReferenceGetter">
+            <summary>
+            Used for specifying which records can be specified in a Linked Reference
+            Implemented by: [Player, PlacedNpc, PlacedObject, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationRecord">
+            <summary>
+            Common interface for Location related records
+            Implemented by: [Location, LocationReferenceType]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationRecordGetter">
+            <summary>
+            Common interface for Location related records
+            Implemented by: [Location, LocationReferenceType]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationReferencable">
+            <summary>
+            Used for specifying which records can be specified in a Location Reference.
+            Implemented by: [Door, PlacedNpc, PlacedObject]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationReferencableGetter">
+            <summary>
+            Used for specifying which records can be specified in a Location Reference.
+            Implemented by: [Door, PlacedNpc, PlacedObject]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILockList">
+            <summary>
+            Used for specifying which records are allowed as a cell lock list
+            Implemented by: [FormList, Npc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ILockListGetter">
+            <summary>
+            Used for specifying which records are allowed as a cell lock list
+            Implemented by: [FormList, Npc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IModeled">
+            <summary>
+            Common interface for records that have a model
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IModeledGetter">
+            <summary>
+            Common interface for records that have a model
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.INpcSpawn">
+            <summary>
+            Common interface for records that can spawn in a leveled npc list
+            Implemented by: [Npc, LeveledNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.INpcSpawnGetter">
+            <summary>
+            Common interface for records that can spawn in a leveled npc list
+            Implemented by: [Npc, LeveledNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectBounded">
+            <summary>
+            Common interface for records that physical bounds
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectBoundedGetter">
+            <summary>
+            Common interface for records that physical bounds
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectBoundedOptional">
+            <summary>
+            Common interface for records that physical bounds
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectBoundedOptionalGetter">
+            <summary>
+            Common interface for records that physical bounds
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectId">
+            <summary>
+            Used for specifying which records can be specified in a Location ObjectID.
+            Implemented by: [Activator, Door, Static, MoveableStatic, Furniture, Spell, Scroll, Npc, Container, Armor, 
+            Ammunition, MiscItem, Weapon, Book, Key, Ingestible, Light, Faction, FormList, IdleMarker, Shout, SoundMarker,
+            TextureSet, Projectile]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IObjectIdGetter">
+            <summary>
+            Used for specifying which records can be specified in a Location ObjectID.
+            Implemented by: [Activator, Door, Static, MoveableStatic, Furniture, Spell, Scroll, Npc, Container, Armor, 
+            Ammunition, MiscItem, Weapon, Book, Key, Ingestible, Light, Faction, FormList, IdleMarker, Shout, SoundMarker,
+            TextureSet, Projectile]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IOwner">
+            <summary>
+            Used for specifying which records are allowed as an owner
+            Implemented by: [Faction, PlacedNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IOwnerGetter">
+            <summary>
+            Used for specifying which records are allowed as an owner
+            Implemented by: [Faction, PlacedNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlaced">
+            <summary>
+            An interface for something that can be placed in a Cell/Worldspace
+            Implemented by: [PlacedObject, PlacedNpc, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlacedGetter">
+            <summary>
+            An interface for something that can be placed in a Cell/Worldspace
+            Implemented by: [PlacedObject, PlacedNpc, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlacedThing">
+            <summary>
+            An interface for an object that can be placed in a Cell/Worldspace
+            Implemented by: [PlacedObject, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlacedThingGetter">
+            <summary>
+            An interface for an object that can be placed in a Cell/Worldspace
+            Implemented by: [PlacedObject, APlacedTrap]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IRegionTarget">
+            <summary>
+            Used for specifying which records are allowed as Region objects
+            Implemented by: [Tree, Flora, Static, LandscapeTexture, MoveableStatic]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IRegionTargetGetter">
+            <summary>
+            Used for specifying which records are allowed as Region objects
+            Implemented by: [Tree, Flora, Static, LandscapeTexture, MoveableStatic]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IRelatable">
+            <summary>
+            Used for specifying which records can be specified in a Relation
+            Implemented by: [Faction, Race]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IRelatableGetter">
+            <summary>
+            Used for specifying which records can be specified in a Relation
+            Implemented by: [Faction, Race]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ISound">
+            <summary>
+            Used for specifying which records are sounds
+            Implemented by: [SoundDescriptor, SoundMarker]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ISoundGetter">
+            <summary>
+            Used for specifying which records are sounds
+            Implemented by: [SoundDescriptor, SoundMarker]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ISpellSpawn">
+            <summary>
+            Common interface for records that can spawn in a leveled spell list
+            Implemented by: [Spell, LeveledSpell]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.ISpellSpawnGetter">
+            <summary>
+            Common interface for records that can spawn in a leveled spell list
+            Implemented by: [Spell, LeveledSpell]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.Internals.FurnitureBinaryCreateTranslation">
+            <summary>
+            Parsing for Furniture is fairly custom.  The 2nd flags subrecord has sit booleans, which are combined with both the
+            'Markers' list and the 'Marker Entry Points' list from the binary data into one list of objects to be exposed
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.NpcConfiguration.Flag">
+            <summary>
+            Flags for NpcConfiguration
+            - PcLevelMult is disabled/hidden, as that functionality is exposed via a customizedNpcConfiguration's Level field.
+              Instantiate either a NpcLevel or PcLevelMult object to specify what type you want.
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.Phoneme.Slot">
+            <summary>
+            Enum representing the different phonemes a weight set can be applied to
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.StaticMajorFlag">
+            <summary>
+            Used when Placed Object refers to:
+            [Activator, Static, Tree]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.ContainerMajorFlag">
+            <summary>
+            Used when Placed Object refers to: [Container]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.DoorMajorFlag">
+            <summary>
+            Used when Placed Object refers to: [Door]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.LightMajorFlag">
+            <summary>
+            Used when Placed Object refers to: [Light]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.MoveableStaticMajorFlag">
+            <summary>
+            Used when Placed Object refers to: [MoveableStatic]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.AddonNodeMajorFlag">
+            <summary>
+            Used when Placed Object refers to: [AddonNode]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.PlacedObject.ItemMajorFlag">
+            <summary>
+            Used when Placed Object refers to:
+            [Ingestible, Scroll, Ammunition, Ingredient, Key, MiscItem, SoulGem, Weapon]
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Skyrim.Water.Flag.EnableFlowmap">
+            <summary>
+            SSE only
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Skyrim.Water.Flag.BlendNormals">
+            <summary>
+            SSE only
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.Warmup">
+            <summary>
+            A static class to house initialization warmup logic
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Skyrim.Warmup.Init">
+            <summary>
+            Will initialize internals in a more efficient way that avoids reflection.
+            Not required to call, but can be used to warm up ahead of time.
+            </summary>
+        </member>
+    </members>
+</doc>

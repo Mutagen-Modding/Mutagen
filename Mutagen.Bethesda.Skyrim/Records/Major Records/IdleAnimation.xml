@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleAnimation" recordType="IDLE" baseClass="SkyrimMajorRecord" objType="Record" GUID="bf69327e-265b-487b-8e17-3a2a13dd3f74" ID="236">
+    <Interface>IIdleRelation</Interface>
+    <Fields>
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <String name="Filename" recordType="DNAM" />
+      <String name="AnimationEvent" recordType="ENAM" />
+      <List name="RelatedIdles" recordType="ANAM" hasBeenSet="False" >
+        <FormLink objType="Record">
+          <Interface>IIdleRelation</Interface>
+        </FormLink>
+      </List>
+      <Data>
+        <Fields>
+          <UInt8 name="LoopingSecondsMin" />
+          <UInt8 name="LoopingSecondsMax" />
+          <Enum name="Flags" enumName="IdleAnimation.Flag" byteLength="1" />
+          <UInt8 name="AnimationGroupSection" />
+          <UInt16 name="ReplayDelay" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

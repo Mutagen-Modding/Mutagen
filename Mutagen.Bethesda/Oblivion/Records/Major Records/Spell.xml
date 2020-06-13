@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Spell" objType="Record" abstract="true" baseClass="ASpell" GUID="44825ec2-b86b-4bd0-9d30-06761a7db25c" ID="63">
-    <Interface>INamed</Interface>
-    <Fields>
-      <String name="Name" recordType="FULL" />
-    </Fields>
-  </Object>
-</Loqui>

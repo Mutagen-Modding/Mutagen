@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Light" recordType="LIGH" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="749a2492-52b8-4580-ac1c-b645cabfd20b" ID="107">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IItem</Interface>
+    <Interface>IHasIcons</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
+    <Interface>IWeightValue</Interface>
+    <Interface>IEmittance</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Icons" refName="Icons" />
+      <Data>
+        <Fields>
+          <Int32 name="Time" />
+          <UInt32 name="Radius" />
+          <Color name="Color" binaryType="Alpha" />
+          <Enum name="Flags" enumName="Light.Flag" byteLength="4" />
+          <Float name="FalloffExponent" />
+          <Float name="FOV" />
+          <Float name="NearClip" />
+          <Float name="FlickerPeriod" />
+          <Float name="FlickerIntensityAmplitude" />
+          <Float name="FlickerMovementAmplitude" />
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Float name="FadeValue" recordType="FNAM" hasBeenSet="False" />
+      <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
+    </Fields>
+  </Object>
+</Loqui>

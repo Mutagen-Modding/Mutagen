@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Perk" recordType="PERK" objType="Record" baseClass="SkyrimMajorRecord" GUID="dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c" ID="114">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

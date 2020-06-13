@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="SkyrimMajorRecord" GUID="5bcb6ea3-f45b-4db7-a1ce-65457d4695fe" ID="142">
+    <Fields>
+      <RefList name="Models" refName="DebrisModel" />
+    </Fields>
+  </Object>
+  <Object name="DebrisModel" objType="Subrecord" GUID="efe281d8-06f2-4ae1-940f-05501d82853c" ID="404">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt8 name="Percentage" />
+          <String name="ModelFilename" binaryType="NullTerminate" />
+          <Break />
+          <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
+        </Fields>
+      </Data>
+      <ByteArray name="TextureFileHashes" recordType="MODT" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" ctorPermission="protected" usesStringFiles="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
+    <Fields>
+      <RefDirect name="ModHeader" refName="ModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="Globals" refName="Global" />
+      <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
+      <Group name="Hairs" refName="Hair" />
+      <Group name="Eyes" refName="Eye" />
+      <Group name="Races" refName="Race" />
+      <Group name="Sounds" refName="Sound" />
+      <Group name="Skills" refName="SkillRecord" />
+      <Group name="MagicEffects" refName="MagicEffect" edidLinked="true" />
+      <Group name="Scripts" refName="Script" customFolder="True" />
+      <Group name="LandTextures" refName="LandTexture" />
+      <Group name="Enchantments" refName="Enchantment" />
+      <Group name="Spells" refName="SpellUnleveled" />
+      <Group name="Birthsigns" refName="Birthsign" />
+      <Group name="Activators" refName="Activator" />
+      <Group name="AlchemicalApparatus" refName="AlchemicalApparatus" />
+      <Group name="Armors" refName="Armor" />
+      <Group name="Books" refName="Book" />
+      <Group name="Clothes" refName="Clothing" />
+      <Group name="Containers" refName="Container" />
+      <Group name="Doors" refName="Door" />
+      <Group name="Ingredients" refName="Ingredient" />
+      <Group name="Lights" refName="Light" />
+      <Group name="Miscellaneous" refName="Miscellaneous" />
+      <Group name="Statics" refName="Static" />
+      <Group name="Grasses" refName="Grass" />
+      <Group name="Trees" refName="Tree" />
+      <Group name="Flora" refName="Flora" />
+      <Group name="Furniture" refName="Furniture" />
+      <Group name="Weapons" refName="Weapon" />
+      <Group name="Ammunitions" refName="Ammunition" />
+      <Group name="Npcs" refName="Npc" />
+      <Group name="Creatures" refName="Creature" />
+      <Group name="LeveledCreatures" refName="LeveledCreature" />
+      <Group name="SoulGems" refName="SoulGem" />
+      <Group name="Keys" refName="Key" /> 
+      <Group name="Potions" refName="Potion" />
+      <Group name="Subspaces" refName="Subspace" />
+      <Group name="SigilStones" refName="SigilStone" />
+      <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="Weathers" refName="Weather" />
+      <Group name="Climates" refName="Climate" />
+      <Group name="Regions" refName="Region" />
+      <Ref name="Cells" singleton="true" >
+        <Direct refName="ListGroup" >
+          <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
+      <Group name="Worldspaces" refName="Worldspace" customFolder="True" />
+      <Group name="DialogTopics" refName="DialogTopic" />
+      <Group name="Quests" refName="Quest" />
+      <Group name="IdleAnimations" refName="IdleAnimation" />
+      <Group name="AIPackages" refName="AIPackage" />
+      <Group name="CombatStyles" refName="CombatStyle" />
+      <Group name="LoadScreens" refName="LoadScreen" />
+      <Group name="LeveledSpells" refName="LeveledSpell" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="Waters" refName="Water" />
+      <Group name="EffectShaders" refName="EffectShader" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SkyrimMod" objType="Mod" failOnUnknownType="false" ctorPermission="protected" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
+    <Fields>
+      <RefDirect name="ModHeader" refName="ModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="Keywords" refName="Keyword" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+      <Group name="Actions" refName="ActionRecord" />
+      <Group name="TextureSets" refName="TextureSet" />
+      <Group name="Globals" refName="Global" />
+      <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
+      <Group name="HeadParts" refName="HeadPart" />
+      <Group name="Hairs" refName="Hair" />
+      <Group name="Eyes" refName="Eyes" />
+      <Group name="Races" refName="Race" />
+      <Group name="SoundMarkers" refName="SoundMarker" />
+      <Group name="AcousticSpaces" refName="AcousticSpace" />
+      <Group name="MagicEffects" refName="MagicEffect" />
+      <Group name="LandscapeTextures" refName="LandscapeTexture" />
+      <Group name="ObjectEffects" refName="ObjectEffect" />
+      <Group name="Spells" refName="Spell" />
+      <Group name="Scrolls" refName="Scroll" />
+      <Group name="Activators" refName="Activator" />
+      <Group name="TalkingActivators" refName="TalkingActivator" />
+      <Group name="Armors" refName="Armor" />
+      <Group name="Books" refName="Book" />
+      <Group name="Containers" refName="Container" />
+      <Group name="Doors" refName="Door" />
+      <Group name="Ingredients" refName="Ingredient" />
+      <Group name="Lights" refName="Light" />
+      <Group name="MiscItems" refName="MiscItem" />
+      <Group name="AlchemicalApparatuses" refName="AlchemicalApparatus" />
+      <Group name="Statics" refName="Static" />
+      <Group name="MoveableStatics" refName="MoveableStatic" />
+      <Group name="Grasses" refName="Grass" />
+      <Group name="Trees" refName="Tree" />
+      <Group name="Florae" refName="Flora" />
+      <Group name="Furniture" refName="Furniture" />
+      <Group name="Weapons" refName="Weapon" />
+      <Group name="Ammunitions" refName="Ammunition" />
+      <Group name="Npcs" refName="Npc" />
+      <Group name="LeveledNpcs" refName="LeveledNpc" />
+      <Group name="Keys" refName="Key" />
+      <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="IdleMarkers" refName="IdleMarker" />
+      <Group name="ConstructibleObjects" refName="ConstructibleObject" />
+      <Group name="Projectiles" refName="Projectile" />
+      <Group name="Hazards" refName="Hazard" />
+      <Group name="SoulGems" refName="SoulGem" />
+      <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="Weathers" refName="Weather" />
+      <Group name="Climates" refName="Climate" />
+      <Group name="ShaderParticleGeometries" refName="ShaderParticleGeometry" />
+      <Group name="VisualEffects" refName="VisualEffect" />
+      <Group name="Regions" refName="Region" />
+      <Group name="NavigationMeshInfoMaps" refName="NavigationMeshInfoMap" />
+      <Ref name="Cells" singleton="true" >
+        <Direct refName="ListGroup" >
+          <GenericSpecification Definition="Skyrim.CellBlock" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
+      <Group name="Worldspaces" refName="Worldspace" />
+      <Group name="DialogTopics" refName="DialogTopic" />
+      <Group name="Quests" refName="Quest" />
+      <Group name="IdleAnimations" refName="IdleAnimation" />
+      <Group name="Packages" refName="Package" />
+      <Group name="CombatStyles" refName="CombatStyle" />
+      <Group name="LoadScreens" refName="LoadScreen" />
+      <Group name="LeveledSpells" refName="LeveledSpell" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="Waters" refName="Water" />
+      <Group name="EffectShaders" refName="EffectShader" />
+      <Group name="Explosions" refName="Explosion" />
+      <Group name="Debris" refName="Debris" />
+      <Group name="ImageSpaces" refName="ImageSpace" />
+    </Fields>
+  </Object>
+</Loqui>

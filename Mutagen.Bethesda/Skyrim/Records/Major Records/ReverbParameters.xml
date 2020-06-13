@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="SkyrimMajorRecord" GUID="17f23f33-dc99-49b9-a085-54538d98e9f4" ID="86">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

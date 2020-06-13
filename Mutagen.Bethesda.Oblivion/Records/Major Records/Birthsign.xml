@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Birthsign" baseClass="OblivionMajorRecord" objType="Record" recordType="BSGN" GUID="5c709517-acb6-4254-9ad8-59b502466e63" ID="62">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="Icon" recordType="ICON" />
+      <String name="Description" recordType="DESC" />
+      <List name="Spells">
+        <FormLink recordType="SPLO" refName="Spell" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>
