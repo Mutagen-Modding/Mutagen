@@ -1129,6 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
+        public static readonly RecordType IMGS_HEADER = new RecordType("IMGS");
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
@@ -1263,6 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HDPT_HEADER,
                         IDLE_HEADER,
                         IDLM_HEADER,
+                        IMGS_HEADER,
                         IMAD_HEADER,
                         IPDS_HEADER,
                         ALCH_HEADER,

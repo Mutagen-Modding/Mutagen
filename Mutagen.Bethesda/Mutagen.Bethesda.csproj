@@ -218,6 +218,9 @@
     <Compile Include="Skyrim\Records\Major Records\IdleAnimation.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceDepthOfField.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledSpell.cs">
       <DependentUpon>LeveledSpell.xml</DependentUpon>
     </Compile>
@@ -2594,6 +2597,21 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\DebrisModel_LoquiGenerated.cs">
       <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpace_LoquiGenerated.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceHdr_LoquiGenerated.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceCinematic_LoquiGenerated.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceTint_LoquiGenerated.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ImageSpaceDepthOfField_LoquiGenerated.cs">
+      <DependentUpon>ImageSpace.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

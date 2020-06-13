@@ -74,6 +74,7 @@
       <Group name="EffectShaders" refName="EffectShader" />
       <Group name="Explosions" refName="Explosion" />
       <Group name="Debris" refName="Debris" />
+      <Group name="ImageSpaces" refName="ImageSpace" />
     </Fields>
   </Object>
 </Loqui>

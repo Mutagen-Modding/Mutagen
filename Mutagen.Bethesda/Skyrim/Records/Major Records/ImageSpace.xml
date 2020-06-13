@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpace" objType="Record" recordType="IMGS" baseClass="SkyrimMajorRecord" GUID="7fbf7dd3-9a44-4458-80bd-6adf1608e5f0" ID="405">
+    <Fields>
+      <ByteArray name="ENAM" recordType="ENAM" />
+      <RefDirect name="Hdr" refName="ImageSpaceHdr" />
+      <RefDirect name="Cinematic" refName="ImageSpaceCinematic" />
+      <RefDirect name="Tint" refName="ImageSpaceTint" />
+      <RefDirect name="DepthOfField" refName="ImageSpaceDepthOfField" />
+    </Fields>
+  </Object>
+  <Object name="ImageSpaceHdr" objType="Subrecord" recordType="HNAM" GUID="b392db2b-257c-406c-9196-ad7376dc03be" ID="406">
+    <Fields>
+      <Float name="EyeAdaptSpeed" />
+      <Float name="BloomBlurRadius" />
+      <Float name="BloomThreshold" />
+      <Float name="BloomScale" />
+      <Float name="ReceiveBloomThreshold" />
+      <Float name="White" />
+      <Float name="SunlightScale" />
+      <Float name="SkyScale" />
+      <Float name="EyeAdaptStrength" />
+    </Fields>
+  </Object>
+  <Object name="ImageSpaceCinematic" objType="Subrecord" recordType="CNAM" GUID="41c902bf-7849-422b-b283-92ee24348f0b" ID="407">
+    <Fields>
+      <Float name="Saturation" />
+      <Float name="Brightness" />
+      <Float name="Contrast" />
+    </Fields>
+  </Object>
+  <Object name="ImageSpaceTint" objType="Subrecord" recordType="TNAM" GUID="6cddd481-b46f-4491-9732-493e97e0f16b" ID="408">
+    <Fields>
+      <Float name="Amount" />
+      <Color name="Color" binaryType="NoAlphaFloat" />
+    </Fields>
+  </Object>
+  <Object name="ImageSpaceDepthOfField" objType="Subrecord" recordType="DNAM" GUID="78ab71b8-6b57-4e09-bc44-6f48ba86d023" ID="409">
+    <Fields>
+      <Float name="Strength" />
+      <Float name="Distance" />
+      <Float name="Range" />
+      <Break />
+      <Int16 name="Unknown" />
+      <UInt8 name="BlurRadius" min="0" max="7" binary="Custom" />
+      <Bool name="Sky" binary="Custom" />
+    </Fields>
+  </Object>
+</Loqui>
