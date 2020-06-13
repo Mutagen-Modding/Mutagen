@@ -3808,7 +3808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _CSGDLocation;
         public CombatStyle.CSGDDataType CSGDDataTypeState { get; private set; }
         #region OffensiveMult
-        private int _OffensiveMultLocation => _CSGDLocation!.Value + 0x0;
+        private int _OffensiveMultLocation => _CSGDLocation!.Value;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
         public Single OffensiveMult => _OffensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_OffensiveMultLocation, 4)) : default;
         #endregion

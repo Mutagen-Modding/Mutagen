@@ -99,6 +99,17 @@ namespace Mutagen.Bethesda.Generation
                 extraArgs.Add($"source: {nameof(StringsSource)}.{str.Translated.Value}");
             }
             extraArgs.Add($"stringBinaryType: {nameof(StringBinaryType)}.{str.BinaryType}");
+            switch (str.BinaryType)
+            {
+                case StringBinaryType.NullTerminate:
+                    if (!data.HasTrigger)
+                    {
+                        extraArgs.Add("parseWhole: false");
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
@@ -146,6 +157,34 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
+        }
+
+        public override async Task GenerateWrapperFields(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen, 
+            Accessor dataAccessor, 
+            int? currentPosition, 
+            string passedLengthAccessor, 
+            DataType dataType = null)
+        {
+            StringType str = typeGen as StringType;
+            var data = str.GetFieldData();
+            if (data.HasTrigger)
+            {
+                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType);
+                return;
+            }
+            switch (str.BinaryType)
+            {
+                case StringBinaryType.NullTerminate:
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{str.NullChar} {typeGen.Name} {{ get; private set; }} = string.Empty;");
+                    break;
+                default:
+                    await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType);
+                    return;
+            }
+
         }
 
         public override string GenerateForTypicalWrapper(
@@ -201,6 +240,10 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case StringBinaryType.PrependLengthUShort:
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadUInt16LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 2;");
+                    break;
+                case StringBinaryType.NullTerminate:
+                    fg.AppendLine($"ret.{typeGen.Name} = {nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}));");
+                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}ret.{typeGen.Name}.Length + 1;");
                     break;
                 default:
                     if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return;

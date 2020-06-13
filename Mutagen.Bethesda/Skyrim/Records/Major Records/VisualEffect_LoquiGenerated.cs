@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public VisualEffect.DATADataType DATADataTypeState { get; private set; }
         #region EffectArt
-        private int _EffectArtLocation => _DATALocation!.Value + 0x0;
+        private int _EffectArtLocation => _DATALocation!.Value;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;
         public IFormLink<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion

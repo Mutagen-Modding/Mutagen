@@ -7,6 +7,7 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -86,19 +87,14 @@ namespace Mutagen.Bethesda.Generation
                     break;
             }
 
-            int? dataPassedLength = 0;
+            var lengths = await this.Module.IteratePassedLengths(
+                    objGen,
+                    dataType.SubFields,
+                    forOverlay: true)
+                .ToListAsync();
             foreach (var field in dataType.IterateFieldsWithMeta())
             {
                 if (!field.Field.Enabled) continue;
-                if (!field.Field.IntegrateField)
-                {
-                    var fieldData = field.Field.GetFieldData();
-                    if (fieldData.Length.HasValue)
-                    {
-                        dataPassedLength += fieldData.Length.Value;
-                        continue;
-                    }
-                }
                 if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
                 using (new RegionWrapper(fg, field.Field.Name)
                 {
@@ -106,15 +102,39 @@ namespace Mutagen.Bethesda.Generation
                     SkipIfOnlyOneLine = true
                 })
                 {
+                    var length = lengths.FirstOrDefault(l => l.Field == field.Field);
+                    if (length.Field == null)
+                    {
+                        throw new ArgumentException();
+                    }
+
+                    var passIn = length.PassedAccessor;
+                    if (passIn == null)
+                    {
+                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value";
+                    } 
+                    else if (passIn?.StartsWith("0x") ?? true)
+                    {
+                        passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value + {passIn}";
+                    }
+
                     await subTypeGen.GenerateWrapperFields(
                         fg,
                         objGen,
                         field.Field,
                         dataAccessor,
-                        dataPassedLength,
-                        $"{dataPassedLength}",
+                        length.PassedLength,
+                        passIn,
                         data: dataType);
-                    dataPassedLength += await subTypeGen.GetPassedAmount(objGen, field.Field);
+                    if (length.CurLength == null)
+                    {
+                        var fieldData = field.Field.GetFieldData();
+                        fg.AppendLine($"protected int {length.Field.Name}EndingPos;");
+                        if (fieldData.BinaryOverlayFallback == BinaryGenerationType.Custom)
+                        {
+                            fg.AppendLine($"partial void Custom{length.Field.Name}EndPos();");
+                        }
+                    }
                 }
             }
         }
@@ -152,10 +172,19 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
             }
             bool generatedStart = false;
-            int? passedLen = 0;
+            var lengths = await this.Module.IteratePassedLengths(
+                    objGen,
+                    dataType.SubFields,
+                    forOverlay: true)
+                .ToListAsync();
             foreach (var item in dataType.IterateFieldsWithMeta())
             {
                 if (!this.Module.TryGetTypeGeneration(item.Field.GetType(), out var typeGen)) continue;
+                var length = lengths.FirstOrDefault(l => l.Field == item.Field);
+                if (length.Field == null)
+                {
+                    throw new ArgumentException();
+                }
                 if (item.BreakIndex != -1)
                 {
                     if (!generatedStart)
@@ -163,7 +192,7 @@ namespace Mutagen.Bethesda.Generation
                         generatedStart = true;
                         fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
-                    fg.AppendLine($"if (subLen <= 0x{passedLen.Value:X})");
+                    fg.AppendLine($"if (subLen <= {length.PassedAccessor})");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
@@ -177,7 +206,6 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"var subLen = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(_data.Slice({locationAccessor})).ContentLength;");
                     }
                 }
-                passedLen += await typeGen.GetPassedAmount(objGen, item.Field);
             }
             for (int i = 0; i < dataType.RangeIndices.Count; i++)
             {
@@ -207,7 +235,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
-            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location!.Value + {posAccessor};");
+            fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
@@ -217,6 +245,59 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        public override async Task GenerateWrapperUnknownLengthParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            int? passedLength,
+            string passedLengthAccessor)
+        {
+            var dataType = typeGen as DataType;
+            var lengths = await this.Module.IteratePassedLengths(
+                    objGen,
+                    dataType.SubFields,
+                    forOverlay: true)
+                .ToListAsync();
+            foreach (var field in dataType.IterateFieldsWithMeta())
+            {
+                if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
+                var data = field.Field.GetFieldData();
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Normal:
+                    case BinaryGenerationType.Custom:
+                        break;
+                    default:
+                        continue;
+                }
+                if (data.HasTrigger) continue;
+                var amount = await subTypeGen.GetPassedAmount(objGen, field.Field);
+                if (amount != null) continue;
+                if (field.Field is CustomLogic) continue;
+                switch (data.BinaryOverlayFallback)
+                {
+                    case BinaryGenerationType.Custom:
+                        fg.AppendLine($"ret.Custom{field.Field.Name}EndPos();");
+                        break;
+                    case BinaryGenerationType.NoGeneration:
+                        break;
+                    case BinaryGenerationType.Normal:
+                        var length = lengths.FirstOrDefault(l => l.Field == field.Field);
+                        if (length.Field == null)
+                        {
+                            throw new ArgumentException();
+                        }
+                        await subTypeGen.GenerateWrapperUnknownLengthParse(
+                            fg,
+                            objGen,
+                            field.Field,
+                            length.PassedLength,
+                            $"ret._{dataType.GetFieldData().RecordType}Location!.Value + {length.PassedAccessor}");
+                        break;
+                }
             }
         }
     }

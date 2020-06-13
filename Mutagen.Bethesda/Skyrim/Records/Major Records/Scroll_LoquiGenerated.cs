@@ -4796,7 +4796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Scroll.DATADataType DATADataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x0;
+        private int _ValueLocation => _DATALocation!.Value;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
@@ -4808,7 +4808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _SPITLocation;
         public Scroll.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
-        private int _BaseCostLocation => _SPITLocation!.Value + 0x0;
+        private int _BaseCostLocation => _SPITLocation!.Value;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
         public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BaseCostLocation, 4)) : default;
         #endregion

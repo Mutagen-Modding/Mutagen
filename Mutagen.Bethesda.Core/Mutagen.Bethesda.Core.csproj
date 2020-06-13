@@ -50,6 +50,7 @@
     <Compile Include="Enums\FloatBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />

@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
         #region LoopingSecondsMin
-        private int _LoopingSecondsMinLocation => _DATALocation!.Value + 0x0;
+        private int _LoopingSecondsMinLocation => _DATALocation!.Value;
         private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;
         public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _data.Span[_LoopingSecondsMinLocation] : default;
         #endregion

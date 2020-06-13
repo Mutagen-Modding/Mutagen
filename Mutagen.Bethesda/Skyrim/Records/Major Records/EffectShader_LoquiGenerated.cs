@@ -11795,7 +11795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public EffectShader.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x0;
+        private int _UnknownLocation => _DATALocation!.Value;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion

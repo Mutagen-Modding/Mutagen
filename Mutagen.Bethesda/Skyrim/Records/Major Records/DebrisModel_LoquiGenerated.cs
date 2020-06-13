@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -33,44 +32,52 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class QuestTarget :
-        IQuestTarget,
-        ILoquiObjectSetter<QuestTarget>,
-        IEquatable<QuestTarget>,
+    public partial class DebrisModel :
+        IDebrisModel,
+        ILoquiObjectSetter<DebrisModel>,
+        IEquatable<DebrisModel>,
         IEqualsMask
     {
         #region Ctor
-        public QuestTarget()
+        public DebrisModel()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Target
-        public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
+        #region Percentage
+        public Byte Percentage { get; set; } = default;
+        #endregion
+        #region ModelFilename
+        public String ModelFilename { get; set; } = string.Empty;
         #endregion
         #region Flags
-        public Quest.TargetFlag Flags { get; set; } = default;
-        #endregion
-        #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private DebrisModel.Flag _Flags;
+        public DebrisModel.Flag Flags
         {
-            get => this._Conditions;
-            protected set => this._Conditions = value;
+            get => this._Flags;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._Flags = value;
+            }
         }
-        #region Interface Members
+        #endregion
+        #region TextureFileHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter> IQuestTargetGetter.Conditions => _Conditions;
+        protected MemorySlice<Byte>? _TextureFileHashes;
+        public MemorySlice<Byte>? TextureFileHashes
+        {
+            get => this._TextureFileHashes;
+            set => this._TextureFileHashes = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
         #endregion
-
-        #endregion
-        #region QSTADataTypeState
-        public QuestTarget.QSTADataType QSTADataTypeState { get; set; } = default;
+        #region DATADataTypeState
+        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -79,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            QuestTargetMixIn.ToString(
+            DebrisModelMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -89,22 +96,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestTargetGetter rhs)) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IDebrisModelGetter rhs)) return false;
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTarget obj)
+        public bool Equals(DebrisModel obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestTargetXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => DebrisModelXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -113,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((QuestTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -122,9 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             XElement node,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -133,27 +140,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             XElement node,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DebrisModel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new QuestTarget();
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new DebrisModel();
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -161,9 +168,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             string path,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,10 +178,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             string path,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -183,10 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,9 +202,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             Stream stream,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,10 +212,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             Stream stream,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,10 +224,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static QuestTarget CreateFromXml(
+        public static DebrisModel CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -242,22 +249,25 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Target = initialValue;
+                this.Percentage = initialValue;
+                this.ModelFilename = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.QSTADataTypeState = initialValue;
+                this.TextureFileHashes = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
-                TItem Target,
+                TItem Percentage,
+                TItem ModelFilename,
                 TItem Flags,
-                TItem Conditions,
-                TItem QSTADataTypeState)
+                TItem TextureFileHashes,
+                TItem DATADataTypeState)
             {
-                this.Target = Target;
+                this.Percentage = Percentage;
+                this.ModelFilename = ModelFilename;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.QSTADataTypeState = QSTADataTypeState;
+                this.TextureFileHashes = TextureFileHashes;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -269,10 +279,11 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Target;
+            public TItem Percentage;
+            public TItem ModelFilename;
             public TItem Flags;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem QSTADataTypeState;
+            public TItem TextureFileHashes;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -285,19 +296,21 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Percentage, rhs.Percentage)) return false;
+                if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.QSTADataTypeState, rhs.QSTADataTypeState)) return false;
+                if (!object.Equals(this.TextureFileHashes, rhs.TextureFileHashes)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Target);
+                hash.Add(this.Percentage);
+                hash.Add(this.ModelFilename);
                 hash.Add(this.Flags);
-                hash.Add(this.Conditions);
-                hash.Add(this.QSTADataTypeState);
+                hash.Add(this.TextureFileHashes);
+                hash.Add(this.DATADataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -306,21 +319,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Target)) return false;
+                if (!eval(this.Percentage)) return false;
+                if (!eval(this.ModelFilename)) return false;
                 if (!eval(this.Flags)) return false;
-                if (this.Conditions != null)
-                {
-                    if (!eval(this.Conditions.Overall)) return false;
-                    if (this.Conditions.Specific != null)
-                    {
-                        foreach (var item in this.Conditions.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (!eval(this.QSTADataTypeState)) return false;
+                if (!eval(this.TextureFileHashes)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -328,21 +331,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Target)) return true;
+                if (eval(this.Percentage)) return true;
+                if (eval(this.ModelFilename)) return true;
                 if (eval(this.Flags)) return true;
-                if (this.Conditions != null)
-                {
-                    if (eval(this.Conditions.Overall)) return true;
-                    if (this.Conditions.Specific != null)
-                    {
-                        foreach (var item in this.Conditions.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
-                if (eval(this.QSTADataTypeState)) return true;
+                if (eval(this.TextureFileHashes)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -350,31 +343,18 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new QuestTarget.Mask<R>();
+                var ret = new DebrisModel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Target = eval(this.Target);
+                obj.Percentage = eval(this.Percentage);
+                obj.ModelFilename = eval(this.ModelFilename);
                 obj.Flags = eval(this.Flags);
-                if (Conditions != null)
-                {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
-                    if (Conditions.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
-                        obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                obj.QSTADataTypeState = eval(this.QSTADataTypeState);
+                obj.TextureFileHashes = eval(this.TextureFileHashes);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -384,53 +364,38 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(QuestTarget.Mask<bool>? printMask = null)
+            public string ToString(DebrisModel.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, QuestTarget.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, DebrisModel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(QuestTarget.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(DebrisModel.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Target ?? true)
+                    if (printMask?.Percentage ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        fg.AppendItem(Percentage, "Percentage");
+                    }
+                    if (printMask?.ModelFilename ?? true)
+                    {
+                        fg.AppendItem(ModelFilename, "ModelFilename");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions.TryGet(out var ConditionsItem))
+                    if (printMask?.TextureFileHashes ?? true)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(ConditionsItem.Overall);
-                            if (ConditionsItem.Specific != null)
-                            {
-                                foreach (var subItem in ConditionsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        fg.AppendItem(TextureFileHashes, "TextureFileHashes");
                     }
-                    if (printMask?.QSTADataTypeState ?? true)
+                    if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -457,26 +422,29 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Target;
+            public Exception? Percentage;
+            public Exception? ModelFilename;
             public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? QSTADataTypeState;
+            public Exception? TextureFileHashes;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case QuestTarget_FieldIndex.Target:
-                        return Target;
-                    case QuestTarget_FieldIndex.Flags:
+                    case DebrisModel_FieldIndex.Percentage:
+                        return Percentage;
+                    case DebrisModel_FieldIndex.ModelFilename:
+                        return ModelFilename;
+                    case DebrisModel_FieldIndex.Flags:
                         return Flags;
-                    case QuestTarget_FieldIndex.Conditions:
-                        return Conditions;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        return QSTADataTypeState;
+                    case DebrisModel_FieldIndex.TextureFileHashes:
+                        return TextureFileHashes;
+                    case DebrisModel_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -484,20 +452,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case QuestTarget_FieldIndex.Target:
-                        this.Target = ex;
+                    case DebrisModel_FieldIndex.Percentage:
+                        this.Percentage = ex;
                         break;
-                    case QuestTarget_FieldIndex.Flags:
+                    case DebrisModel_FieldIndex.ModelFilename:
+                        this.ModelFilename = ex;
+                        break;
+                    case DebrisModel_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case QuestTarget_FieldIndex.Conditions:
-                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                    case DebrisModel_FieldIndex.TextureFileHashes:
+                        this.TextureFileHashes = ex;
                         break;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        this.QSTADataTypeState = ex;
+                    case DebrisModel_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -506,20 +477,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case QuestTarget_FieldIndex.Target:
-                        this.Target = (Exception?)obj;
+                    case DebrisModel_FieldIndex.Percentage:
+                        this.Percentage = (Exception?)obj;
                         break;
-                    case QuestTarget_FieldIndex.Flags:
+                    case DebrisModel_FieldIndex.ModelFilename:
+                        this.ModelFilename = (Exception?)obj;
+                        break;
+                    case DebrisModel_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case QuestTarget_FieldIndex.Conditions:
-                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                    case DebrisModel_FieldIndex.TextureFileHashes:
+                        this.TextureFileHashes = (Exception?)obj;
                         break;
-                    case QuestTarget_FieldIndex.QSTADataTypeState:
-                        this.QSTADataTypeState = (Exception?)obj;
+                    case DebrisModel_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -529,10 +503,11 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Target != null) return true;
+                if (Percentage != null) return true;
+                if (ModelFilename != null) return true;
                 if (Flags != null) return true;
-                if (Conditions != null) return true;
-                if (QSTADataTypeState != null) return true;
+                if (TextureFileHashes != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -567,31 +542,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Target, "Target");
+                fg.AppendItem(Percentage, "Percentage");
+                fg.AppendItem(ModelFilename, "ModelFilename");
                 fg.AppendItem(Flags, "Flags");
-                if (Conditions.TryGet(out var ConditionsItem))
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(ConditionsItem.Overall);
-                        if (ConditionsItem.Specific != null)
-                        {
-                            foreach (var subItem in ConditionsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
+                fg.AppendItem(TextureFileHashes, "TextureFileHashes");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -600,10 +555,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Target = this.Target.Combine(rhs.Target);
+                ret.Percentage = this.Percentage.Combine(rhs.Percentage);
+                ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.QSTADataTypeState = this.QSTADataTypeState.Combine(rhs.QSTADataTypeState);
+                ret.TextureFileHashes = this.TextureFileHashes.Combine(rhs.TextureFileHashes);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -625,19 +581,21 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Target;
+            public bool Percentage;
+            public bool ModelFilename;
             public bool Flags;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public bool QSTADataTypeState;
+            public bool TextureFileHashes;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Target = defaultOn;
+                this.Percentage = defaultOn;
+                this.ModelFilename = defaultOn;
                 this.Flags = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.QSTADataTypeState = defaultOn;
+                this.TextureFileHashes = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -653,57 +611,53 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Target, null));
+                ret.Add((Percentage, null));
+                ret.Add((ModelFilename, null));
                 ret.Add((Flags, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((QSTADataTypeState, null));
+                ret.Add((TextureFileHashes, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = QuestTarget_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
+        public new static readonly RecordType GrupRecordType = DebrisModel_Registration.TriggeringRecordType;
         [Flags]
-        public enum QSTADataType
+        public enum DATADataType
         {
+            Break0 = 1
         }
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => QuestTargetBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DebrisModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static QuestTarget CreateFromBinary(MutagenFrame frame)
+        public static DebrisModel CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static QuestTarget CreateFromBinary(
+        public static DebrisModel CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new QuestTarget();
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new DebrisModel();
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -716,37 +670,37 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisModelGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static QuestTarget GetNew()
+        internal static DebrisModel GetNew()
         {
-            return new QuestTarget();
+            return new DebrisModel();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IQuestTarget :
-        IQuestTargetGetter,
-        ILoquiObjectSetter<IQuestTarget>
+    public partial interface IDebrisModel :
+        IDebrisModelGetter,
+        ILoquiObjectSetter<IDebrisModel>
     {
-        new FormLink<IPlaced> Target { get; set; }
-        new Quest.TargetFlag Flags { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
-        new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
+        new Byte Percentage { get; set; }
+        new String ModelFilename { get; set; }
+        new DebrisModel.Flag Flags { get; set; }
+        new MemorySlice<Byte>? TextureFileHashes { get; set; }
+        new DebrisModel.DATADataType DATADataTypeState { get; set; }
     }
 
-    public partial interface IQuestTargetGetter :
+    public partial interface IDebrisModelGetter :
         ILoquiObject,
-        ILoquiObject<IQuestTargetGetter>,
+        ILoquiObject<IDebrisModelGetter>,
         IXmlItem,
-        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -755,53 +709,54 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => QuestTarget_Registration.Instance;
-        IFormLink<IPlacedGetter> Target { get; }
-        Quest.TargetFlag Flags { get; }
-        IReadOnlyList<IConditionGetter> Conditions { get; }
-        QuestTarget.QSTADataType QSTADataTypeState { get; }
+        static ILoquiRegistration Registration => DebrisModel_Registration.Instance;
+        Byte Percentage { get; }
+        String ModelFilename { get; }
+        DebrisModel.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
+        DebrisModel.DATADataType DATADataTypeState { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class QuestTargetMixIn
+    public static partial class DebrisModelMixIn
     {
-        public static void Clear(this IQuestTarget item)
+        public static void Clear(this IDebrisModel item)
         {
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static QuestTarget.Mask<bool> GetEqualsMask(
-            this IQuestTargetGetter item,
-            IQuestTargetGetter rhs,
+        public static DebrisModel.Mask<bool> GetEqualsMask(
+            this IDebrisModelGetter item,
+            IDebrisModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             string? name = null,
-            QuestTarget.Mask<bool>? printMask = null)
+            DebrisModel.Mask<bool>? printMask = null)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
+            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestTarget.Mask<bool>? printMask = null)
+            DebrisModel.Mask<bool>? printMask = null)
         {
-            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
+            ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -809,37 +764,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IQuestTargetGetter item,
-            QuestTarget.Mask<bool?> checkMask)
+            this IDebrisModelGetter item,
+            DebrisModel.Mask<bool?> checkMask)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).HasBeenSet(
+            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static QuestTarget.Mask<bool> GetHasBeenSetMask(this IQuestTargetGetter item)
+        public static DebrisModel.Mask<bool> GetHasBeenSetMask(this IDebrisModelGetter item)
         {
-            var ret = new QuestTarget.Mask<bool>(false);
-            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new DebrisModel.Mask<bool>(false);
+            ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IQuestTargetGetter item,
-            IQuestTargetGetter rhs)
+            this IDebrisModelGetter item,
+            IDebrisModelGetter rhs)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Equals(
+            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IQuestTarget lhs,
-            IQuestTargetGetter rhs)
+            this IDebrisModel lhs,
+            IDebrisModelGetter rhs)
         {
-            ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -847,11 +802,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IQuestTarget lhs,
-            IQuestTargetGetter rhs,
-            QuestTarget.TranslationMask? copyMask = null)
+            this IDebrisModel lhs,
+            IDebrisModelGetter rhs,
+            DebrisModel.TranslationMask? copyMask = null)
         {
-            ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -859,59 +814,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IQuestTarget lhs,
-            IQuestTargetGetter rhs,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? copyMask = null)
+            this IDebrisModel lhs,
+            IDebrisModelGetter rhs,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DebrisModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IQuestTarget lhs,
-            IQuestTargetGetter rhs,
+            this IDebrisModel lhs,
+            IDebrisModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static QuestTarget DeepCopy(
-            this IQuestTargetGetter item,
-            QuestTarget.TranslationMask? copyMask = null)
+        public static DebrisModel DeepCopy(
+            this IDebrisModelGetter item,
+            DebrisModel.TranslationMask? copyMask = null)
         {
-            return ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static QuestTarget DeepCopy(
-            this IQuestTargetGetter item,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? copyMask = null)
+        public static DebrisModel DeepCopy(
+            this IDebrisModelGetter item,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? copyMask = null)
         {
-            return ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static QuestTarget DeepCopy(
-            this IQuestTargetGetter item,
+        public static DebrisModel DeepCopy(
+            this IDebrisModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisModelSetterTranslationCommon)((IDebrisModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -920,9 +875,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             XElement node,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -933,10 +888,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             XElement node,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -944,16 +899,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DebrisModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -961,9 +916,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             string path,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -973,10 +928,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             string path,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -987,10 +942,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1001,9 +956,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             Stream stream,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1013,10 +968,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             Stream stream,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1027,10 +982,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IQuestTarget item,
+            this IDebrisModel item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1045,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IQuestTarget item,
+            this IDebrisModel item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1055,11 +1010,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IQuestTarget item,
+            this IDebrisModel item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DebrisModelSetterCommon)((IDebrisModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1075,50 +1030,51 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum QuestTarget_FieldIndex
+    public enum DebrisModel_FieldIndex
     {
-        Target = 0,
-        Flags = 1,
-        Conditions = 2,
-        QSTADataTypeState = 3,
+        Percentage = 0,
+        ModelFilename = 1,
+        Flags = 2,
+        TextureFileHashes = 3,
+        DATADataTypeState = 4,
     }
     #endregion
 
     #region Registration
-    public partial class QuestTarget_Registration : ILoquiRegistration
+    public partial class DebrisModel_Registration : ILoquiRegistration
     {
-        public static readonly QuestTarget_Registration Instance = new QuestTarget_Registration();
+        public static readonly DebrisModel_Registration Instance = new DebrisModel_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 373,
+            msgID: 404,
             version: 0);
 
-        public const string GUID = "37f43515-81c6-41a2-9d11-d42e333a4ccc";
+        public const string GUID = "efe281d8-06f2-4ae1-940f-05501d82853c";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(QuestTarget.Mask<>);
+        public static readonly Type MaskType = typeof(DebrisModel.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(QuestTarget.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DebrisModel.ErrorMask);
 
-        public static readonly Type ClassType = typeof(QuestTarget);
+        public static readonly Type ClassType = typeof(DebrisModel);
 
-        public static readonly Type GetterType = typeof(IQuestTargetGetter);
+        public static readonly Type GetterType = typeof(IDebrisModelGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IQuestTarget);
+        public static readonly Type SetterType = typeof(IDebrisModel);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.QuestTarget";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.DebrisModel";
 
-        public const string Name = "QuestTarget";
+        public const string Name = "DebrisModel";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1130,14 +1086,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "TARGET":
-                    return (ushort)QuestTarget_FieldIndex.Target;
+                case "PERCENTAGE":
+                    return (ushort)DebrisModel_FieldIndex.Percentage;
+                case "MODELFILENAME":
+                    return (ushort)DebrisModel_FieldIndex.ModelFilename;
                 case "FLAGS":
-                    return (ushort)QuestTarget_FieldIndex.Flags;
-                case "CONDITIONS":
-                    return (ushort)QuestTarget_FieldIndex.Conditions;
-                case "QSTADATATYPESTATE":
-                    return (ushort)QuestTarget_FieldIndex.QSTADataTypeState;
+                    return (ushort)DebrisModel_FieldIndex.Flags;
+                case "TEXTUREFILEHASHES":
+                    return (ushort)DebrisModel_FieldIndex.TextureFileHashes;
+                case "DATADATATYPESTATE":
+                    return (ushort)DebrisModel_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1145,14 +1103,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
+                case DebrisModel_FieldIndex.Percentage:
+                case DebrisModel_FieldIndex.ModelFilename:
+                case DebrisModel_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                case DebrisModel_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1161,14 +1119,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
+                case DebrisModel_FieldIndex.Percentage:
+                case DebrisModel_FieldIndex.ModelFilename:
+                case DebrisModel_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                case DebrisModel_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1177,13 +1135,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
+                case DebrisModel_FieldIndex.Percentage:
+                case DebrisModel_FieldIndex.ModelFilename:
+                case DebrisModel_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                case DebrisModel_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1192,17 +1151,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Target:
-                    return "Target";
-                case QuestTarget_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.Percentage:
+                    return "Percentage";
+                case DebrisModel_FieldIndex.ModelFilename:
+                    return "ModelFilename";
+                case DebrisModel_FieldIndex.Flags:
                     return "Flags";
-                case QuestTarget_FieldIndex.Conditions:
-                    return "Conditions";
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return "QSTADataTypeState";
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                    return "TextureFileHashes";
+                case DebrisModel_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1210,13 +1171,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
+                case DebrisModel_FieldIndex.Percentage:
+                case DebrisModel_FieldIndex.ModelFilename:
+                case DebrisModel_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                case DebrisModel_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1225,13 +1187,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
+                case DebrisModel_FieldIndex.Percentage:
+                case DebrisModel_FieldIndex.ModelFilename:
+                case DebrisModel_FieldIndex.Flags:
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                case DebrisModel_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1240,27 +1203,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+            DebrisModel_FieldIndex enu = (DebrisModel_FieldIndex)index;
             switch (enu)
             {
-                case QuestTarget_FieldIndex.Target:
-                    return typeof(FormLink<IPlaced>);
-                case QuestTarget_FieldIndex.Flags:
-                    return typeof(Quest.TargetFlag);
-                case QuestTarget_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return typeof(QuestTarget.QSTADataType);
+                case DebrisModel_FieldIndex.Percentage:
+                    return typeof(Byte);
+                case DebrisModel_FieldIndex.ModelFilename:
+                    return typeof(String);
+                case DebrisModel_FieldIndex.Flags:
+                    return typeof(DebrisModel.Flag);
+                case DebrisModel_FieldIndex.TextureFileHashes:
+                    return typeof(MemorySlice<Byte>);
+                case DebrisModel_FieldIndex.DATADataTypeState:
+                    return typeof(DebrisModel.DATADataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(QuestTargetXmlWriteTranslation);
-        public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = QSTA_HEADER;
-        public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(DebrisModelXmlWriteTranslation);
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public static readonly Type BinaryWriteTranslation = typeof(DebrisModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1293,33 +1258,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestTargetSetterCommon
+    public partial class DebrisModelSetterCommon
     {
-        public static readonly QuestTargetSetterCommon Instance = new QuestTargetSetterCommon();
+        public static readonly DebrisModelSetterCommon Instance = new DebrisModelSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IQuestTarget item)
+        public void Clear(IDebrisModel item)
         {
             ClearPartial();
-            item.Target = FormLink<IPlaced>.Null;
+            item.Percentage = default;
+            item.ModelFilename = string.Empty;
             item.Flags = default;
-            item.Conditions.Clear();
-            item.QSTADataTypeState = default;
+            item.TextureFileHashes = default;
+            item.DATADataTypeState = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IQuestTarget item,
+            IDebrisModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             try
             {
+                item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
-                    QuestTargetXmlCreateTranslation.FillPublicElementXml(
+                    DebrisModelXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1338,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IQuestTarget item,
+            IDebrisModel item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1346,24 +1313,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: QuestTargetBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: QuestTargetBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: DebrisModelBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DebrisModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class QuestTargetCommon
+    public partial class DebrisModelCommon
     {
-        public static readonly QuestTargetCommon Instance = new QuestTargetCommon();
+        public static readonly DebrisModelCommon Instance = new DebrisModelCommon();
 
-        public QuestTarget.Mask<bool> GetEqualsMask(
-            IQuestTargetGetter item,
-            IQuestTargetGetter rhs,
+        public DebrisModel.Mask<bool> GetEqualsMask(
+            IDebrisModelGetter item,
+            IDebrisModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new QuestTarget.Mask<bool>(false);
-            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new DebrisModel.Mask<bool>(false);
+            ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1372,25 +1339,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IQuestTargetGetter item,
-            IQuestTargetGetter rhs,
-            QuestTarget.Mask<bool> ret,
+            IDebrisModelGetter item,
+            IDebrisModelGetter rhs,
+            DebrisModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Target = object.Equals(item.Target, rhs.Target);
+            ret.Percentage = item.Percentage == rhs.Percentage;
+            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Conditions = item.Conditions.CollectionEqualsHelper(
-                rhs.Conditions,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.QSTADataTypeState = item.QSTADataTypeState == rhs.QSTADataTypeState;
+            ret.TextureFileHashes = MemorySliceExt.Equal(item.TextureFileHashes, rhs.TextureFileHashes);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
         public string ToString(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             string? name = null,
-            QuestTarget.Mask<bool>? printMask = null)
+            DebrisModel.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1402,18 +1367,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestTarget.Mask<bool>? printMask = null)
+            DebrisModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestTarget =>");
+                fg.AppendLine($"DebrisModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestTarget) =>");
+                fg.AppendLine($"{name} (DebrisModel) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1427,81 +1392,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             FileGeneration fg,
-            QuestTarget.Mask<bool>? printMask = null)
+            DebrisModel.Mask<bool>? printMask = null)
         {
-            if (printMask?.Target ?? true)
+            if (printMask?.Percentage ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Percentage, "Percentage");
+            }
+            if (printMask?.ModelFilename ?? true)
+            {
+                fg.AppendItem(item.ModelFilename, "ModelFilename");
             }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Conditions?.Overall ?? true)
+            if ((printMask?.TextureFileHashes ?? true)
+                && item.TextureFileHashes.TryGet(out var TextureFileHashesItem))
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Conditions)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                fg.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
             }
-            if (printMask?.QSTADataTypeState ?? true)
+            if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
         public bool HasBeenSet(
-            IQuestTargetGetter item,
-            QuestTarget.Mask<bool?> checkMask)
+            IDebrisModelGetter item,
+            DebrisModel.Mask<bool?> checkMask)
         {
+            if (checkMask.TextureFileHashes.HasValue && checkMask.TextureFileHashes.Value != (item.TextureFileHashes != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IQuestTargetGetter item,
-            QuestTarget.Mask<bool> mask)
+            IDebrisModelGetter item,
+            DebrisModel.Mask<bool> mask)
         {
-            mask.Target = true;
+            mask.Percentage = true;
+            mask.ModelFilename = true;
             mask.Flags = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.QSTADataTypeState = true;
+            mask.TextureFileHashes = (item.TextureFileHashes != null);
+            mask.DATADataTypeState = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IQuestTargetGetter? lhs,
-            IQuestTargetGetter? rhs)
+            IDebrisModelGetter? lhs,
+            IDebrisModelGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Target.Equals(rhs.Target)) return false;
+            if (lhs.Percentage != rhs.Percentage) return false;
+            if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            if (!MemorySliceExt.Equal(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IQuestTargetGetter item)
+        public virtual int GetHashCode(IDebrisModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Target);
+            hash.Add(item.Percentage);
+            hash.Add(item.ModelFilename);
             hash.Add(item.Flags);
-            hash.Add(item.Conditions);
-            hash.Add(item.QSTADataTypeState);
+            if (item.TextureFileHashes.TryGet(out var TextureFileHashesItem))
+            {
+                hash.Add(TextureFileHashesItem);
+            }
+            hash.Add(item.DATADataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1510,93 +1472,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return QuestTarget.GetNew();
+            return DebrisModel.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IQuestTargetGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDebrisModelGetter obj)
         {
-            yield return obj.Target.FormKey;
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
-                .SelectMany((f) => f.LinkFormKeys))
-            {
-                yield return item;
-            }
             yield break;
         }
         
-        public void RemapLinks(IQuestTargetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IDebrisModelGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class QuestTargetSetterTranslationCommon
+    public partial class DebrisModelSetterTranslationCommon
     {
-        public static readonly QuestTargetSetterTranslationCommon Instance = new QuestTargetSetterTranslationCommon();
+        public static readonly DebrisModelSetterTranslationCommon Instance = new DebrisModelSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IQuestTarget item,
-            IQuestTargetGetter rhs,
+            IDebrisModel item,
+            IDebrisModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Percentage) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Percentage = rhs.Percentage;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
+            {
+                item.ModelFilename = rhs.ModelFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
-                errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
-                try
+                if(rhs.TextureFileHashes.TryGet(out var TextureFileHashesrhs))
                 {
-                    item.Conditions.SetTo(
-                        rhs.Conditions
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    item.TextureFileHashes = TextureFileHashesrhs.ToArray();
                 }
-                catch (Exception ex)
-                when (errorMask != null)
+                else
                 {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    item.TextureFileHashes = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
             {
-                item.QSTADataTypeState = rhs.QSTADataTypeState;
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
         #endregion
         
-        public QuestTarget DeepCopy(
-            IQuestTargetGetter item,
-            QuestTarget.TranslationMask? copyMask = null)
+        public DebrisModel DeepCopy(
+            IDebrisModelGetter item,
+            DebrisModel.TranslationMask? copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetNew();
+            DebrisModel ret = (DebrisModel)((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public QuestTarget DeepCopy(
-            IQuestTargetGetter item,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? copyMask = null)
+        public DebrisModel DeepCopy(
+            IDebrisModelGetter item,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetNew();
+            DebrisModel ret = (DebrisModel)((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1604,12 +1551,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public QuestTarget DeepCopy(
-            IQuestTargetGetter item,
+        public DebrisModel DeepCopy(
+            IDebrisModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetNew();
+            DebrisModel ret = (DebrisModel)((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1624,27 +1571,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestTarget
+    public partial class DebrisModel
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
+        public static DebrisModel_Registration Registration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => QuestTargetCommon.Instance;
+        protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return QuestTargetSetterCommon.Instance;
+            return DebrisModelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DebrisModelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        object IDebrisModelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IQuestTargetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDebrisModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDebrisModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1655,77 +1602,83 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class QuestTargetXmlWriteTranslation : IXmlWriteTranslator
+    public partial class DebrisModelXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static QuestTargetXmlWriteTranslation Instance = new QuestTargetXmlWriteTranslation();
+        public readonly static DebrisModelXmlWriteTranslation Instance = new DebrisModelXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Percentage) ?? true))
             {
-                FormKeyXmlTranslation.Instance.Write(
+                ByteXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Target),
-                    item: item.Target.FormKey,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Target,
+                    name: nameof(item.Percentage),
+                    item: item.Percentage,
+                    fieldIndex: (int)DebrisModel_FieldIndex.Percentage,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
             {
-                EnumXmlTranslation<Quest.TargetFlag>.Instance.Write(
+                StringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Flags,
+                    name: nameof(item.ModelFilename),
+                    item: item.ModelFilename,
+                    fieldIndex: (int)DebrisModel_FieldIndex.ModelFilename,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
             {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
+                if ((translationMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<DebrisModel.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)DebrisModel_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
+            else
             {
-                EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Write(
+                node.Add(new XElement("HasDATADataType"));
+            }
+            if ((item.TextureFileHashes != null)
+                && (translationMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.QSTADataTypeState),
-                    item: item.QSTADataTypeState,
-                    fieldIndex: (int)QuestTarget_FieldIndex.QSTADataTypeState,
+                    name: nameof(item.TextureFileHashes),
+                    item: item.TextureFileHashes.Value,
+                    fieldIndex: (int)DebrisModel_FieldIndex.TextureFileHashes,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<DebrisModel.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)DebrisModel_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.QuestTarget");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DebrisModel");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.QuestTarget");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DebrisModel");
             }
             WriteToNodeXml(
                 item: item,
@@ -1742,7 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IQuestTargetGetter)item,
+                item: (IDebrisModelGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1751,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1761,7 +1714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IQuestTargetGetter)item,
+                    item: (IDebrisModelGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1780,12 +1733,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestTargetXmlCreateTranslation
+    public partial class DebrisModelXmlCreateTranslation
     {
-        public readonly static QuestTargetXmlCreateTranslation Instance = new QuestTargetXmlCreateTranslation();
+        public readonly static DebrisModelXmlCreateTranslation Instance = new DebrisModelXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IQuestTarget item,
+            IDebrisModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1794,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    QuestTargetXmlCreateTranslation.FillPublicElementXml(
+                    DebrisModelXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1810,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IQuestTarget item,
+            IDebrisModel item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1818,11 +1771,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Target":
-                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
+                case "Percentage":
+                    errorMask?.PushIndex((int)DebrisModel_FieldIndex.Percentage);
                     try
                     {
-                        item.Target = FormKeyXmlTranslation.Instance.Parse(
+                        item.Percentage = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ModelFilename":
+                    errorMask?.PushIndex((int)DebrisModel_FieldIndex.ModelFilename);
+                    try
+                    {
+                        item.ModelFilename = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1837,10 +1808,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
-                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
+                    errorMask?.PushIndex((int)DebrisModel_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<Quest.TargetFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<DebrisModel.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~DebrisModel.DATADataType.Break0;
+                    break;
+                case "TextureFileHashes":
+                    errorMask?.PushIndex((int)DebrisModel_FieldIndex.TextureFileHashes);
+                    try
+                    {
+                        item.TextureFileHashes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1854,39 +1844,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)DebrisModel_FieldIndex.DATADataTypeState);
                     try
                     {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "QSTADataTypeState":
-                    errorMask?.PushIndex((int)QuestTarget_FieldIndex.QSTADataTypeState);
-                    try
-                    {
-                        item.QSTADataTypeState = EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<DebrisModel.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1911,30 +1873,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class QuestTargetXmlTranslationMixIn
+    public static class DebrisModelXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             XElement node,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DebrisModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             string path,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1948,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1965,10 +1927,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             Stream stream,
-            out QuestTarget.ErrorMask errorMask,
-            QuestTarget.TranslationMask? translationMask = null,
+            out DebrisModel.ErrorMask errorMask,
+            DebrisModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1982,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1999,13 +1961,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2014,12 +1976,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             XElement node,
             string? name = null,
-            QuestTarget.TranslationMask? translationMask = null)
+            DebrisModel.TranslationMask? translationMask = null)
         {
-            ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2028,12 +1990,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2043,12 +2005,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2067,52 +2029,45 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class QuestTargetBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class DebrisModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
-
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IQuestTargetGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IQuestTargetGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
+        public readonly static DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             MutagenWriter writer)
         {
         }
 
         public static void WriteRecordTypes(
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(DebrisModel_Registration.DATA_HEADER)))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer.Write(item.Percentage);
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Target);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.TargetFlag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                    item: item.ModelFilename,
+                    binaryType: StringBinaryType.NullTerminate);
+                if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DebrisModel.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                }
             }
-            QuestTargetBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item);
+                item: item.TextureFileHashes,
+                header: recordTypeConverter.ConvertToCustom(DebrisModel_Registration.MODT_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
-            IQuestTargetGetter item,
+            IDebrisModelGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -2130,25 +2085,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IQuestTargetGetter)item,
+                item: (IDebrisModelGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class QuestTargetBinaryCreateTranslation
+    public partial class DebrisModelBinaryCreateTranslation
     {
-        public readonly static QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
+        public readonly static DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IQuestTarget item,
+            IDebrisModel item,
             MutagenFrame frame)
         {
         }
 
         public static TryGet<int?> FillBinaryRecordTypes(
-            IQuestTarget item,
+            IDebrisModel item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -2158,32 +2113,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case 0x41544144: // DATA
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Percentage = dataFrame.ReadUInt8();
+                    item.ModelFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: false);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.ModelFilename);
+                    }
+                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case 0x54444F4D: // MODT
                 {
-                    QuestTargetBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TextureFileHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.TextureFileHashes);
                 }
                 default:
                     return TryGet<int?>.Failure;
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IQuestTarget item);
 
     }
 
@@ -2191,13 +2148,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class QuestTargetBinaryTranslationMixIn
+    public static class DebrisModelBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IQuestTargetGetter item,
+            this IDebrisModelGetter item,
             MutagenWriter writer)
         {
-            ((QuestTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((DebrisModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2210,39 +2167,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class QuestTargetBinaryOverlay :
+    public partial class DebrisModelBinaryOverlay :
         BinaryOverlay,
-        IQuestTargetGetter
+        IDebrisModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
+        public static DebrisModel_Registration Registration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => QuestTargetCommon.Instance;
+        protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DebrisModelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        object IDebrisModelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IQuestTargetGetter.CommonSetterInstance() => null;
+        object? IDebrisModelGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IDebrisModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisModelGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestTargetXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => DebrisModelXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2251,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((QuestTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((DebrisModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2259,38 +2210,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => QuestTargetBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => DebrisModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        private int? _QSTALocation;
-        public QuestTarget.QSTADataType QSTADataTypeState { get; private set; }
-        #region Target
-        private int _TargetLocation => _QSTALocation!.Value;
-        private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
+        private int? _DATALocation;
+        public DebrisModel.DATADataType DATADataTypeState { get; private set; }
+        #region Percentage
+        private int _PercentageLocation => _DATALocation!.Value;
+        private bool _Percentage_IsSet => _DATALocation.HasValue;
+        public Byte Percentage => _Percentage_IsSet ? _data.Span[_PercentageLocation] : default;
+        #endregion
+        #region ModelFilename
+        public String ModelFilename { get; private set; } = string.Empty;
+        protected int ModelFilenameEndingPos;
         #endregion
         #region Flags
-        private int _FlagsLocation => _QSTALocation!.Value + 0x4;
-        private bool _Flags_IsSet => _QSTALocation.HasValue;
-        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        private int _FlagsLocation => ModelFilenameEndingPos;
+        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
+        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            BinaryMemoryReadStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed);
+        #region TextureFileHashes
+        private int? _TextureFileHashesLocation;
+        public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2298,7 +2249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected QuestTargetBinaryOverlay(
+        protected DebrisModelBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2308,12 +2259,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static DebrisModelBinaryOverlay DebrisModelFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new QuestTargetBinaryOverlay(
+            var ret = new DebrisModelBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2323,15 +2274,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 offset: offset,
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1));
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value + 0x1 + ret.ModelFilename.Length + 1;
             return ret;
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static DebrisModelBinaryOverlay DebrisModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return QuestTargetFactory(
+            return DebrisModelFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2348,21 +2301,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case 0x41544144: // DATA
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= ModelFilenameEndingPos)
+                    {
+                        this.DATADataTypeState |= DebrisModel.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case 0x54444F4D: // MODT
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Conditions);
+                    _TextureFileHashesLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.TextureFileHashes);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -2374,7 +2327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            QuestTargetMixIn.ToString(
+            DebrisModelMixIn.ToString(
                 item: this,
                 name: name);
         }

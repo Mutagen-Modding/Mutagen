@@ -2366,7 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _INDXLocation;
         public QuestStage.INDXDataType INDXDataTypeState { get; private set; }
         #region Index
-        private int _IndexLocation => _INDXLocation!.Value + 0x0;
+        private int _IndexLocation => _INDXLocation!.Value;
         private bool _Index_IsSet => _INDXLocation.HasValue;
         public UInt16 Index => _Index_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_IndexLocation, 2)) : default;
         #endregion

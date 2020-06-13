@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }
         #region AliasIndex
-        private int _AliasIndexLocation => _ALCALocation!.Value + 0x0;
+        private int _AliasIndexLocation => _ALCALocation!.Value;
         private bool _AliasIndex_IsSet => _ALCALocation.HasValue;
         public Int16 AliasIndex => _AliasIndex_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_AliasIndexLocation, 2)) : default;
         #endregion

@@ -5577,7 +5577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PKDTLocation;
         public Package.PKDTDataType PKDTDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _PKDTLocation!.Value + 0x0;
+        private int _FlagsLocation => _PKDTLocation!.Value;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
         public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
@@ -5614,7 +5614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PSDTLocation;
         public Package.PSDTDataType PSDTDataTypeState { get; private set; }
         #region ScheduleMonth
-        private int _ScheduleMonthLocation => _PSDTLocation!.Value + 0x0;
+        private int _ScheduleMonthLocation => _PSDTLocation!.Value;
         private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
         public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_data.Slice(_ScheduleMonthLocation, 1)[0] : default;
         #endregion

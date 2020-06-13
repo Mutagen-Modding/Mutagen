@@ -4320,7 +4320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _ENITLocation;
         public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
         #region Value
-        private int _ValueLocation => _ENITLocation!.Value + 0x0;
+        private int _ValueLocation => _ENITLocation!.Value;
         private bool _Value_IsSet => _ENITLocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion

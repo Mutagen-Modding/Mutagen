@@ -3473,7 +3473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Grass.DATADataType DATADataTypeState { get; private set; }
         #region Density
-        private int _DensityLocation => _DATALocation!.Value + 0x0;
+        private int _DensityLocation => _DATALocation!.Value;
         private bool _Density_IsSet => _DATALocation.HasValue;
         public Byte Density => _Density_IsSet ? _data.Span[_DensityLocation] : default;
         #endregion

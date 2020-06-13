@@ -3074,7 +3074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TRDTLocation;
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
         #region Emotion
-        private int _EmotionLocation => _TRDTLocation!.Value + 0x0;
+        private int _EmotionLocation => _TRDTLocation!.Value;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
         public EmotionType Emotion => _Emotion_IsSet ? (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)) : default;
         #endregion

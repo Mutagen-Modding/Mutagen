@@ -3454,7 +3454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Hazard.DATADataType DATADataTypeState { get; private set; }
         #region Limit
-        private int _LimitLocation => _DATALocation!.Value + 0x0;
+        private int _LimitLocation => _DATALocation!.Value;
         private bool _Limit_IsSet => _DATALocation.HasValue;
         public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_LimitLocation, 4)) : default;
         #endregion

@@ -68,7 +68,6 @@
     <Compile Include="Skyrim\Enums\Level.cs" />
     <Compile Include="Skyrim\Enums\LockLevel.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
-    <Compile Include="Common\Enums\Quadrant.cs" />
     <Compile Include="Skyrim\Enums\TargetObjectType.cs" />
     <Compile Include="Skyrim\Enums\Responsibility.cs" />
     <Compile Include="Skyrim\Enums\Size.cs" />
@@ -194,6 +193,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\CreateReferenceToObject.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DebrisModel.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogResponse.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
@@ -2589,6 +2591,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AnimatedObject_LoquiGenerated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DebrisModel_LoquiGenerated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -3457,7 +3457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
-        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value + 0x0;
+        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
         public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_TrunkFlexibilityLocation, 4)) : default;
         #endregion

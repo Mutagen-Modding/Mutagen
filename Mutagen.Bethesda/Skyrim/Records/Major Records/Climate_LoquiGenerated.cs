@@ -3315,7 +3315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TNAMLocation;
         public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
         #region SunriseBeginRaw
-        private int _SunriseBeginRawLocation => _TNAMLocation!.Value + 0x0;
+        private int _SunriseBeginRawLocation => _TNAMLocation!.Value;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
         public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _data.Span[_SunriseBeginRawLocation] : default;
         #endregion
@@ -3343,7 +3343,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void MoonAndPhaseLengthCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
+        protected int MoonAndPhaseLengthEndingPos;
         #endregion
+        protected int MoonsEndingPos;
+        protected int PhaseLengthEndingPos;
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

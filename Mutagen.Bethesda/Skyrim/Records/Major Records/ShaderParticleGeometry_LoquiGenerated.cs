@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public ShaderParticleGeometry.DATADataType DATADataTypeState { get; private set; }
         #region GravityVelocity
-        private int _GravityVelocityLocation => _DATALocation!.Value + 0x0;
+        private int _GravityVelocityLocation => _DATALocation!.Value;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
         public Single GravityVelocity => _GravityVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityVelocityLocation, 4)) : default;
         #endregion

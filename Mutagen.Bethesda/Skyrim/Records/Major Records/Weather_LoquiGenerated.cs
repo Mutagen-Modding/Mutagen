@@ -9299,7 +9299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NAM0Location;
         public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
         #region SkyUpperColor
-        private int _SkyUpperColorLocation => _NAM0Location!.Value + 0x0;
+        private int _SkyUpperColorLocation => _NAM0Location!.Value;
         private bool _SkyUpperColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SkyUpperColorLocation)), _package) : default;
         public IWeatherColorGetter SkyUpperColor => _SkyUpperColor ?? new WeatherColor();
@@ -9403,7 +9403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDistanceDayNear
-        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value + 0x0;
+        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayNearLocation, 4)) : default;
         #endregion
@@ -9445,7 +9445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
         #region WindSpeed
-        private int _WindSpeedLocation => _DATALocation!.Value + 0x0;
+        private int _WindSpeedLocation => _DATALocation!.Value;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
         public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
         #endregion

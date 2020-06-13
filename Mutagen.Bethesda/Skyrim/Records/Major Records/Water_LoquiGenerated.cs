@@ -8294,7 +8294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DNAMLocation;
         public Water.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DNAMLocation!.Value + 0x0;
+        private int _UnknownLocation => _DNAMLocation!.Value;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 16).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion

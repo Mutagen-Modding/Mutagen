@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (dataType != null)
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
             }
             if (eType.HasBeenSetFallbackInt != null)
             {

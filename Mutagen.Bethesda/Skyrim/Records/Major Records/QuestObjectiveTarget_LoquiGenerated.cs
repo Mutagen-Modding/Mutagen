@@ -2268,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _QSTALocation;
         public QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; private set; }
         #region AliasIndex
-        private int _AliasIndexLocation => _QSTALocation!.Value + 0x0;
+        private int _AliasIndexLocation => _QSTALocation!.Value;
         private bool _AliasIndex_IsSet => _QSTALocation.HasValue;
         public Int32 AliasIndex => _AliasIndex_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_AliasIndexLocation, 4)) : default;
         #endregion

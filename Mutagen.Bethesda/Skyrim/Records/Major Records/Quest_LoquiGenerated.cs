@@ -4653,7 +4653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DNAMLocation;
         public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value + 0x0;
+        private int _FlagsLocation => _DNAMLocation!.Value;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion

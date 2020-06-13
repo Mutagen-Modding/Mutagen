@@ -4214,7 +4214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Light.DATADataType DATADataTypeState { get; private set; }
         #region Time
-        private int _TimeLocation => _DATALocation!.Value + 0x0;
+        private int _TimeLocation => _DATALocation!.Value;
         private bool _Time_IsSet => _DATALocation.HasValue;
         public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TimeLocation, 4)) : default;
         #endregion

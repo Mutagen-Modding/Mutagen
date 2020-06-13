@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Generation
             else if (dataType != null)
             {
                 loc = $"_{typeGen.Name}Location";
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLenAccessor);
             }
             else
             {

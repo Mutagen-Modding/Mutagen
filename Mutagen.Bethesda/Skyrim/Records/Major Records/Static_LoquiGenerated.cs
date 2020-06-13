@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DNAMLocation;
         public Static.DNAMDataType DNAMDataTypeState { get; private set; }
         #region MaxAngle
-        private int _MaxAngleLocation => _DNAMLocation!.Value + 0x0;
+        private int _MaxAngleLocation => _DNAMLocation!.Value;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
         public Single MaxAngle => _MaxAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaxAngleLocation, 4)) : default;
         #endregion

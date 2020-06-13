@@ -4093,7 +4093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Explosion.DATADataType DATADataTypeState { get; private set; }
         #region Light
-        private int _LightLocation => _DATALocation!.Value + 0x0;
+        private int _LightLocation => _DATALocation!.Value;
         private bool _Light_IsSet => _DATALocation.HasValue;
         public IFormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion

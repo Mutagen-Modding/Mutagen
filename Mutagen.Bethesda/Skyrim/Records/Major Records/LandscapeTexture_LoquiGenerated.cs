@@ -2756,7 +2756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
         #region HavokFriction
-        private int _HavokFrictionLocation => _HNAMLocation!.Value + 0x0;
+        private int _HavokFrictionLocation => _HNAMLocation!.Value;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
         public Byte HavokFriction => _HavokFriction_IsSet ? _data.Span[_HavokFrictionLocation] : default;
         #endregion

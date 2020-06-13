@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Waters_Object = new Group<Water>(this);
             _EffectShaders_Object = new Group<EffectShader>(this);
             _Explosions_Object = new Group<Explosion>(this);
+            _Debris_Object = new Group<Debris>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -583,6 +584,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IExplosionGetter> ISkyrimModGetter.Explosions => _Explosions_Object;
         #endregion
+        #region Debris
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Debris> _Debris_Object;
+        public Group<Debris> Debris => _Debris_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDebrisGetter> ISkyrimModGetter.Debris => _Debris_Object;
+        #endregion
 
         #region To String
 
@@ -820,6 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Debris = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -889,7 +898,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AnimatedObjects,
                 TItem Waters,
                 TItem EffectShaders,
-                TItem Explosions)
+                TItem Explosions,
+                TItem Debris)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -958,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(Waters, new Group.Mask<TItem>(Waters));
                 this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(EffectShaders, new Group.Mask<TItem>(EffectShaders));
                 this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(Explosions, new Group.Mask<TItem>(Explosions));
+                this.Debris = new MaskItem<TItem, Group.Mask<TItem>?>(Debris, new Group.Mask<TItem>(Debris));
             }
 
             #pragma warning disable CS8618
@@ -1036,6 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Waters { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? EffectShaders { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Explosions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Debris { get; set; }
             #endregion
 
             #region Equals
@@ -1115,6 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Waters, rhs.Waters)) return false;
                 if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
                 if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1187,6 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Waters);
                 hash.Add(this.EffectShaders);
                 hash.Add(this.Explosions);
+                hash.Add(this.Debris);
                 return hash.ToHashCode();
             }
 
@@ -1530,6 +1544,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Explosions.Overall)) return false;
                     if (this.Explosions.Specific != null && !this.Explosions.Specific.All(eval)) return false;
                 }
+                if (Debris != null)
+                {
+                    if (!eval(this.Debris.Overall)) return false;
+                    if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1872,6 +1891,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Explosions.Overall)) return true;
                     if (this.Explosions.Specific != null && this.Explosions.Specific.Any(eval)) return true;
                 }
+                if (Debris != null)
+                {
+                    if (eval(this.Debris.Overall)) return true;
+                    if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1953,6 +1977,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Waters = this.Waters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
                 obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
                 obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
+                obj.Debris = this.Debris == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2243,6 +2268,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Explosions?.ToString(fg);
                     }
+                    if (printMask?.Debris?.Overall ?? true)
+                    {
+                        Debris?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2335,6 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>? Waters;
             public MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
             public MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
+            public MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>? Debris;
             #endregion
 
             #region IErrorMask
@@ -2477,6 +2507,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return EffectShaders;
                     case SkyrimMod_FieldIndex.Explosions:
                         return Explosions;
+                    case SkyrimMod_FieldIndex.Debris:
+                        return Debris;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2687,6 +2719,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Explosions:
                         this.Explosions = new MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Debris:
+                        this.Debris = new MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2899,6 +2934,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Explosions:
                         this.Explosions = (MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Debris:
+                        this.Debris = (MaskItem<Exception?, Group.ErrorMask<Debris.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2974,6 +3012,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Waters != null) return true;
                 if (EffectShaders != null) return true;
                 if (Explosions != null) return true;
+                if (Debris != null) return true;
                 return false;
             }
             #endregion
@@ -3075,6 +3114,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Waters?.ToString(fg);
                 EffectShaders?.ToString(fg);
                 Explosions?.ToString(fg);
+                Debris?.ToString(fg);
             }
             #endregion
 
@@ -3150,6 +3190,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
                 ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
                 ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
+                ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3238,6 +3279,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?> Waters;
             public MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?> EffectShaders;
             public MaskItem<bool, Group.TranslationMask<Explosion.TranslationMask>?> Explosions;
+            public MaskItem<bool, Group.TranslationMask<Debris.TranslationMask>?> Debris;
             #endregion
 
             #region Ctors
@@ -3310,6 +3352,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Waters = new MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?>(defaultOn, null);
                 this.EffectShaders = new MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?>(defaultOn, null);
                 this.Explosions = new MaskItem<bool, Group.TranslationMask<Explosion.TranslationMask>?>(defaultOn, null);
+                this.Debris = new MaskItem<bool, Group.TranslationMask<Debris.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -3392,6 +3435,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Waters?.Overall ?? true, Waters?.Specific?.GetCrystal()));
                 ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
                 ret.Add((Explosions?.Overall ?? true, Explosions?.Specific?.GetCrystal()));
+                ret.Add((Debris?.Overall ?? true, Debris?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3472,6 +3516,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Waters_Object = new Group<Water>(this);
             _EffectShaders_Object = new Group<EffectShader>(this);
             _Explosions_Object = new Group<Explosion>(this);
+            _Debris_Object = new Group<Debris>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3743,6 +3788,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Explosions ?? true)
             {
                 this.Explosions.RecordCache.Set(rhsMod.Explosions.RecordCache.Items);
+            }
+            if (mask?.Debris ?? true)
+            {
+                this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
             }
         }
 
@@ -4213,6 +4262,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Explosion>());
             }
+            if (mask?.Debris ?? true)
+            {
+                this.Debris.RecordCache.Set(
+                    rhs.Debris.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Debris>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -4298,6 +4354,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Waters.RecordCache.Count > 0 ? 1 : 0;
             count += EffectShaders.RecordCache.Count > 0 ? 1 : 0;
             count += Explosions.RecordCache.Count > 0 ? 1 : 0;
+            count += Debris.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4583,6 +4640,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Water> Waters { get; }
         new Group<EffectShader> EffectShaders { get; }
         new Group<Explosion> Explosions { get; }
+        new Group<Debris> Debris { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4667,6 +4725,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IWaterGetter> Waters { get; }
         IGroupGetter<IEffectShaderGetter> EffectShaders { get; }
         IGroupGetter<IExplosionGetter> Explosions { get; }
+        IGroupGetter<IDebrisGetter> Debris { get; }
 
     }
 
@@ -5189,6 +5248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Waters = 64,
         EffectShaders = 65,
         Explosions = 66,
+        Debris = 67,
     }
     #endregion
 
@@ -5206,9 +5266,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 67;
+        public const ushort AdditionalFieldCount = 68;
 
-        public const ushort FieldCount = 67;
+        public const ushort FieldCount = 68;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -5372,6 +5432,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.EffectShaders;
                 case "EXPLOSIONS":
                     return (ushort)SkyrimMod_FieldIndex.Explosions;
+                case "DEBRIS":
+                    return (ushort)SkyrimMod_FieldIndex.Debris;
                 default:
                     return null;
             }
@@ -5449,6 +5511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Waters:
                 case SkyrimMod_FieldIndex.EffectShaders:
                 case SkyrimMod_FieldIndex.Explosions:
+                case SkyrimMod_FieldIndex.Debris:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5527,6 +5590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Waters:
                 case SkyrimMod_FieldIndex.EffectShaders:
                 case SkyrimMod_FieldIndex.Explosions:
+                case SkyrimMod_FieldIndex.Debris:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5605,6 +5669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Waters:
                 case SkyrimMod_FieldIndex.EffectShaders:
                 case SkyrimMod_FieldIndex.Explosions:
+                case SkyrimMod_FieldIndex.Debris:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5750,6 +5815,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EffectShaders";
                 case SkyrimMod_FieldIndex.Explosions:
                     return "Explosions";
+                case SkyrimMod_FieldIndex.Debris:
+                    return "Debris";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5827,6 +5894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Waters:
                 case SkyrimMod_FieldIndex.EffectShaders:
                 case SkyrimMod_FieldIndex.Explosions:
+                case SkyrimMod_FieldIndex.Debris:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5906,6 +5974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Waters:
                 case SkyrimMod_FieldIndex.EffectShaders:
                 case SkyrimMod_FieldIndex.Explosions:
+                case SkyrimMod_FieldIndex.Debris:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6051,6 +6120,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<EffectShader>);
                 case SkyrimMod_FieldIndex.Explosions:
                     return typeof(Group<Explosion>);
+                case SkyrimMod_FieldIndex.Debris:
+                    return typeof(Group<Debris>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6124,6 +6195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
+        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
@@ -6232,6 +6304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Waters.Clear();
             item.EffectShaders.Clear();
             item.Explosions.Clear();
+            item.Debris.Clear();
         }
         
         #region Xml Translation
@@ -6453,6 +6526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
             ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
             ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
+            ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
         }
         
         public string ToString(
@@ -6767,6 +6841,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Explosions?.ToString(fg, "Explosions");
             }
+            if (printMask?.Debris?.Overall ?? true)
+            {
+                item.Debris?.ToString(fg, "Debris");
+            }
         }
         
         public bool HasBeenSet(
@@ -6847,6 +6925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Waters = new MaskItem<bool, Group.Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
             mask.EffectShaders = new MaskItem<bool, Group.Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
             mask.Explosions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Explosions?.GetHasBeenSetMask());
+            mask.Debris = new MaskItem<bool, Group.Mask<bool>?>(true, item.Debris?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6923,6 +7002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
             if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
             if (!object.Equals(lhs.Explosions, rhs.Explosions)) return false;
+            if (!object.Equals(lhs.Debris, rhs.Debris)) return false;
             return true;
         }
         
@@ -6996,6 +7076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Waters);
             hash.Add(item.EffectShaders);
             hash.Add(item.Explosions);
+            hash.Add(item.Debris);
             return hash.ToHashCode();
         }
         
@@ -7342,6 +7423,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosion":
                 case "IExplosionInternal":
                     return obj.Explosions.RecordCache;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    return obj.Debris.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -7361,7 +7447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[66];
+            Stream[] outputStreams = new Stream[67];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -7429,6 +7515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7941,6 +8028,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Debris is ILinkedFormKeyContainer DebrislinkCont)
+            {
+                foreach (var item in DebrislinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -8208,6 +8302,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Explosions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8818,6 +8916,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosion":
                 case "IExplosionInternal":
                     foreach (var item in obj.Explosions.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in obj.Debris.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -10181,6 +10288,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Debris) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Debris);
+                try
+                {
+                    item.Debris.DeepCopyIn(
+                        rhs: rhs.Debris,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Debris));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11006,6 +11133,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Explosions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Explosions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Debris) ?? true))
+            {
+                var DebrisItem = item.Debris;
+                ((GroupXmlWriteTranslation)((IXmlItem)DebrisItem).XmlWriteTranslator).Write<IDebrisGetter>(
+                    item: DebrisItem,
+                    node: node,
+                    name: nameof(item.Debris),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Debris,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Debris));
             }
         }
 
@@ -12348,6 +12486,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Debris":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Debris);
+                    try
+                    {
+                        item.Debris.CopyInFromXml<Debris>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -12583,6 +12740,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Waters;
         public bool EffectShaders;
         public bool Explosions;
+        public bool Debris;
         public GroupMask()
         {
         }
@@ -12654,6 +12812,7 @@ namespace Mutagen.Bethesda.Skyrim
             Waters = defaultValue;
             EffectShaders = defaultValue;
             Explosions = defaultValue;
+            Debris = defaultValue;
         }
     }
 
@@ -13404,6 +13563,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
                         item: ExplosionsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Debris ?? true)
+            {
+                var DebrisItem = item.Debris;
+                if (DebrisItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
+                        item: DebrisItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -14401,6 +14571,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
                 }
+                case 0x52424544: // DEBR
+                {
+                    if (importMask?.Debris ?? true)
+                    {
+                        item.Debris.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -14902,6 +15086,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocation.HasValue ? GroupBinaryOverlay<IExplosionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ExplosionsLocation!.Value.Min, _ExplosionsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Group<Explosion>(this);
         #endregion
+        #region Debris
+        private RangeInt64? _DebrisLocation;
+        private IGroupGetter<IDebrisGetter>? _Debris => _DebrisLocation.HasValue ? GroupBinaryOverlay<IDebrisGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _DebrisLocation!.Value.Min, _DebrisLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IDebrisGetter> Debris => _Debris ?? new Group<Debris>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -15326,6 +15515,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                }
+                case 0x52424544: // DEBR
+                {
+                    _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

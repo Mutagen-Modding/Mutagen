@@ -11378,7 +11378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region SkillBoost0
-        private int _SkillBoost0Location => _DATALocation!.Value + 0x0;
+        private int _SkillBoost0Location => _DATALocation!.Value;
         private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
         private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost0Location)), _package) : default;
         public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
@@ -11459,7 +11459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region Starting
-        private int _StartingLocation => _DATALocation!.Value + 36;
+        private int _StartingLocation => _DATALocation!.Value + 0x24;
         private bool _Starting_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.MetaData)),
@@ -11512,7 +11512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
         #region Regen
-        private int _RegenLocation => _DATALocation!.Value + 84;
+        private int _RegenLocation => _DATALocation!.Value + 0x54;
         private bool _Regen_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.MetaData)),
@@ -11553,6 +11553,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
         public Single AngularTolerance => _AngularTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularToleranceLocation, 4)) : default;
+        #endregion
+        #region Flags2
+        partial void Flags2CustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #endregion
         #region MountData
         private int _MountDataLocation => _DATALocation!.Value + 0x80;

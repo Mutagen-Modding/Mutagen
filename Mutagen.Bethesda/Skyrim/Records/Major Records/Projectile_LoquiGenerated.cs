@@ -5126,7 +5126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Projectile.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x0;
+        private int _FlagsLocation => _DATALocation!.Value;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion

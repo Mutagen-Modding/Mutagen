@@ -3320,7 +3320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x0;
+        private int _UnknownLocation => _DATALocation!.Value;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
         #endregion
@@ -3343,7 +3343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
         #endregion
         #region SkillWeights
-        private int _SkillWeightsLocation => _DATALocation!.Value + 6;
+        private int _SkillWeightsLocation => _DATALocation!.Value + 0x6;
         private bool _SkillWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_SkillWeightsLocation), _package.MetaData)),
@@ -3361,7 +3361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
         #region StatWeights
-        private int _StatWeightsLocation => _DATALocation!.Value + 32;
+        private int _StatWeightsLocation => _DATALocation!.Value + 0x20;
         private bool _StatWeights_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StatWeightsLocation), _package.MetaData)),

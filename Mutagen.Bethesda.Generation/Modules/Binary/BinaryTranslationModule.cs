@@ -2244,8 +2244,8 @@ namespace Mutagen.Bethesda.Generation
                         string structPassedAccessor = null;
                         int? structPassedLen = 0;
                         await foreach (var lengths in IteratePassedLengths(
-                            obj, 
-                            forOverlay: true, 
+                            obj,
+                            forOverlay: true,
                             includeBaseClass: true,
                             passedLenPrefix: "ret."))
                         {
@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (breaks.Count > 0)
                                 {
                                     int breakIndex = 0;
-                                    await foreach (var lengths in IteratePassedLengths(obj, 
+                                    await foreach (var lengths in IteratePassedLengths(obj,
                                         forOverlay: true,
                                         includeBaseClass: true,
                                         passedLenPrefix: "ret."))
@@ -2452,6 +2452,31 @@ namespace Mutagen.Bethesda.Generation
                                 args.AddPassArg($"offset");
                             }
                         }
+
+                        // Parse ending positions 
+                        await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
+                        {
+                            if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                            var data = lengths.Field.GetFieldData();
+                            switch (data.BinaryOverlayFallback)
+                            {
+                                case BinaryGenerationType.Normal:
+                                case BinaryGenerationType.Custom:
+                                    break;
+                                default:
+                                    continue;
+                            }
+                            if (lengths.Field is DataType)
+                            {
+                                await typeGen.GenerateWrapperUnknownLengthParse(
+                                    fg,
+                                    obj,
+                                    lengths.Field,
+                                    lengths.PassedLength,
+                                    lengths.PassedAccessor);
+                            }
+                        }
+
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             foreach (var field in obj.IterateFields())
@@ -2688,27 +2713,54 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public class PassedLengths
+        public struct PassedLengths
         {
             public TypeGeneration Field;
             public string PassedAccessor;
-            public int? PassedLength = 0;
+            public int? PassedLength;
             public string CurAccessor;
-            public int? CurLength = 0;
+            public int? CurLength;
         }
 
         public async IAsyncEnumerable<PassedLengths> IteratePassedLengths(
             ObjectGeneration obj,
             bool forOverlay,
             string passedLenPrefix = null,
-            bool includeBaseClass = false)
+            bool includeBaseClass = false,
+            SetMarkerType.ExpandSets expand = SetMarkerType.ExpandSets.FalseAndInclude)
         {
-            var lengths = new PassedLengths();
+            await foreach (var item in IteratePassedLengths(
+                obj,
+                obj.IterateFields(
+                    expandSets: expand,
+                    nonIntegrated: true,
+                    includeBaseClass: true),
+                forOverlay: forOverlay,
+                passedLenPrefix: passedLenPrefix))
+            {
+                if (includeBaseClass
+                    || obj.Fields.Contains(item.Field)
+                    || ((expand == SetMarkerType.ExpandSets.True || expand == SetMarkerType.ExpandSets.TrueAndInclude)
+                        && obj.Fields.WhereCastable<TypeGeneration, DataType>().Any(d => d.SubFields.Contains(item.Field))))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public async IAsyncEnumerable<PassedLengths> IteratePassedLengths(
+            ObjectGeneration obj,
+            IEnumerable<TypeGeneration> fields,
+            bool forOverlay,
+            string passedLenPrefix = null)
+        {
+            var lengths = new PassedLengths()
+            {
+                PassedLength = 0,
+                CurLength = 0
+            };
             TypeGeneration lastUnknownField = null;
-            foreach (var field in obj.IterateFields(
-                expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                nonIntegrated: true,
-                includeBaseClass: true))
+            foreach (var field in fields)
             {
                 lengths.Field = field;
                 if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
@@ -2753,16 +2805,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     case BinaryGenerationType.Custom:
                         processLen(await CustomLogic.ExpectedLength(obj, field));
-                        if (includeBaseClass || obj.Fields.Contains(field))
-                        {
-                            yield return lengths;
-                        }
+                        yield return lengths;
                         break;
                     case BinaryGenerationType.NoGeneration:
-                        if (includeBaseClass || obj.Fields.Contains(field))
-                        {
-                            yield return lengths;
-                        }
+                        yield return lengths;
                         break;
                     default:
                         if (!data.HasTrigger)
@@ -2776,10 +2822,7 @@ namespace Mutagen.Bethesda.Generation
                                 processLen(await typeGen.GetPassedAmount(obj, field));
                             }
                         }
-                        if (includeBaseClass || obj.Fields.Contains(field))
-                        {
-                            yield return lengths;
-                        }
+                        yield return lengths;
                         break;
                 }
             }

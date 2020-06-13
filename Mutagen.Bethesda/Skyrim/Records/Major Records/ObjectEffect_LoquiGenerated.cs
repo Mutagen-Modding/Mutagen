@@ -3366,7 +3366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _ENITLocation;
         public ObjectEffect.ENITDataType ENITDataTypeState { get; private set; }
         #region EnchantmentCost
-        private int _EnchantmentCostLocation => _ENITLocation!.Value + 0x0;
+        private int _EnchantmentCostLocation => _ENITLocation!.Value;
         private bool _EnchantmentCost_IsSet => _ENITLocation.HasValue;
         public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EnchantmentCostLocation, 4)) : default;
         #endregion

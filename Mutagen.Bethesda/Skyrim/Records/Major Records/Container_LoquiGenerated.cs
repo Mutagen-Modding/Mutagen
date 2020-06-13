@@ -3468,7 +3468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x0;
+        private int _FlagsLocation => _DATALocation!.Value;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Container.Flag Flags => _Flags_IsSet ? (Container.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion

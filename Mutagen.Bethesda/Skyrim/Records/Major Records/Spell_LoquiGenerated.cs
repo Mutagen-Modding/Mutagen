@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _SPITLocation;
         public Spell.SPITDataType SPITDataTypeState { get; private set; }
         #region BaseCost
-        private int _BaseCostLocation => _SPITLocation!.Value + 0x0;
+        private int _BaseCostLocation => _SPITLocation!.Value;
         private bool _BaseCost_IsSet => _SPITLocation.HasValue;
         public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BaseCostLocation, 4)) : default;
         #endregion

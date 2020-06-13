@@ -49,6 +49,20 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Models
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DebrisModel> _Models = new ExtendedList<DebrisModel>();
+        public ExtendedList<DebrisModel> Models
+        {
+            get => this._Models;
+            protected set => this._Models = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDebrisModelGetter> IDebrisGetter.Models => _Models;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -219,6 +233,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -227,7 +242,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Models)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(Models, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -244,6 +261,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>? Models;
             #endregion
 
             #region Equals
@@ -257,11 +278,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Models, rhs.Models)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Models);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +295,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Models != null)
+                {
+                    if (!eval(this.Models.Overall)) return false;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -280,6 +315,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Models != null)
+                {
+                    if (eval(this.Models.Overall)) return true;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -295,6 +342,21 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Models != null)
+                {
+                    obj.Models = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebrisModel.Mask<R>?>>?>(eval(this.Models.Overall), Enumerable.Empty<MaskItemIndexed<R, DebrisModel.Mask<R>?>>());
+                    if (Models.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DebrisModel.Mask<R>?>>();
+                        obj.Models.Specific = l;
+                        foreach (var item in Models.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, DebrisModel.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebrisModel.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -317,6 +379,29 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if ((printMask?.Models?.Overall ?? true)
+                        && Models.TryGet(out var ModelsItem))
+                    {
+                        fg.AppendLine("Models =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ModelsItem.Overall);
+                            if (ModelsItem.Specific != null)
+                            {
+                                foreach (var subItem in ModelsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +413,18 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>? Models;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        return Models;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +435,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +449,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Models != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +497,28 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (Models.TryGet(out var ModelsItem))
+                {
+                    fg.AppendLine("Models =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ModelsItem.Overall);
+                        if (ModelsItem.Specific != null)
+                        {
+                            foreach (var subItem in ModelsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -407,6 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,14 +549,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, DebrisModel.TranslationMask?> Models;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Models = new MaskItem<bool, DebrisModel.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Models?.Overall ?? true, Models?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
@@ -520,6 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDebrisInternal>
     {
+        new ExtendedList<DebrisModel> Models { get; }
     }
 
     public partial interface IDebrisInternal :
@@ -536,6 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => Debris_Registration.Instance;
+        IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }
 
@@ -836,6 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Models = 6,
     }
     #endregion
 
@@ -853,9 +987,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5bcb6ea3-f45b-4db7-a1ce-65457d4695fe";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Debris.Mask<>);
 
@@ -885,6 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "MODELS":
+                    return (ushort)Debris_FieldIndex.Models;
                 default:
                     return null;
             }
@@ -895,6 +1031,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1043,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1067,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return "Models";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1079,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1091,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1103,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
+                case Debris_FieldIndex.Models:
+                    return typeof(ExtendedList<DebrisModel>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -962,6 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(DebrisXmlWriteTranslation);
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = DEBR_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface
@@ -1005,6 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDebrisInternal item)
         {
             ClearPartial();
+            item.Models.Clear();
             base.Clear(item);
         }
         
@@ -1162,6 +1314,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Models = item.Models.CollectionEqualsHelper(
+                rhs.Models,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1213,6 +1369,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Models?.Overall ?? true)
+            {
+                fg.AppendLine("Models =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Models)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
@@ -1228,6 +1402,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDebrisGetter item,
             Debris.Mask<bool> mask)
         {
+            var ModelsItem = item.Models;
+            mask.Models = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DebrisModel.Mask<bool>?>>?>(true, ModelsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DebrisModel.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1279,6 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
             return true;
         }
         
@@ -1303,6 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDebrisGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Models);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1379,6 +1557,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                errorMask?.PushIndex((int)Debris_FieldIndex.Models);
+                try
+                {
+                    item.Models.SetTo(
+                        rhs.Models
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1521,6 +1723,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                ListXmlTranslation<IDebrisModelGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Models),
+                    item: item.Models,
+                    fieldIndex: (int)Debris_FieldIndex.Models,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Debris_FieldIndex.Models),
+                    transl: (XElement subNode, IDebrisModelGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((DebrisModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1628,6 +1850,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Models":
+                    errorMask?.PushIndex((int)Debris_FieldIndex.Models);
+                    try
+                    {
+                        if (ListXmlTranslation<DebrisModel>.Instance.Parse(
+                            node: node,
+                            enumer: out var ModelsItem,
+                            transl: LoquiXmlTranslation<DebrisModel>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Models.SetTo(ModelsItem);
+                        }
+                        else
+                        {
+                            item.Models.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1714,6 +1964,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IDebrisGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
+                writer: writer,
+                items: item.Models,
+                transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((DebrisModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IDebrisGetter item,
@@ -1727,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1781,6 +2053,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IDebrisInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    item.Models.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DebrisModel>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Debris_Registration.DATA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out DebrisModel listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<DebrisModel>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
 
     }
@@ -1844,6 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = ListExt.Empty<DebrisModelBinaryOverlay>();
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1896,6 +2205,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x41544144: // DATA
+                {
+                    this.Models = this.ParseRepeatedTypelessSubrecord<DebrisModelBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: Debris_Registration.DATA_HEADER,
+                        factory:  DebrisModelBinaryOverlay.DebrisModelFactory);
+                    return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

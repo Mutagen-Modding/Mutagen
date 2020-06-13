@@ -10210,7 +10210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public PlacedObject.DATADataType DATADataTypeState { get; private set; }
         #region Position
-        private int _PositionLocation => _DATALocation!.Value + 0x0;
+        private int _PositionLocation => _DATALocation!.Value;
         private bool _Position_IsSet => _DATALocation.HasValue;
         public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
         #endregion

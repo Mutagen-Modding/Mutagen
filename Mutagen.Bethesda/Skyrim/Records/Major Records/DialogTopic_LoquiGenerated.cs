@@ -3403,7 +3403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public DialogTopic.DATADataType DATADataTypeState { get; private set; }
         #region TopicFlags
-        private int _TopicFlagsLocation => _DATALocation!.Value + 0x0;
+        private int _TopicFlagsLocation => _DATALocation!.Value;
         private bool _TopicFlags_IsSet => _DATALocation.HasValue;
         public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_data.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
         #endregion

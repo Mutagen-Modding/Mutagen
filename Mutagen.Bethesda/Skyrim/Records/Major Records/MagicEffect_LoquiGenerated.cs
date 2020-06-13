@@ -7021,7 +7021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x0;
+        private int _FlagsLocation => _DATALocation!.Value;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
@@ -7029,6 +7029,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int _BaseCostLocation => _DATALocation!.Value + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
         public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCostLocation, 4)) : default;
+        #endregion
+        #region AssociatedItem
+        partial void AssociatedItemCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #endregion
         #region MagicSkill
         private int _MagicSkillLocation => _DATALocation!.Value + 0xC;
