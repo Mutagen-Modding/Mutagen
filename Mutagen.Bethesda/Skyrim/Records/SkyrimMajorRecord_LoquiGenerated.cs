@@ -1199,6 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
+        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
@@ -1332,6 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         RFCT_HEADER,
                         VTYP_HEADER,
                         VOLI_HEADER,
+                        WATR_HEADER,
                         WEAP_HEADER,
                         WTHR_HEADER,
                         WRLD_HEADER,

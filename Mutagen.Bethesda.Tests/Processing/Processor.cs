@@ -140,13 +140,13 @@ namespace Mutagen.Bethesda.Tests
 
         public void ProcessFormIDOverflow(
             IMutagenReadStream stream,
-            RangeInt64 loc)
+            RangeInt64? loc)
         {
             var formID = new FormID(stream.ReadUInt32());
             if (formID.ModIndex.ID <= this._NumMasters) return;
             // Need to zero out master
             this._Instructions.SetSubstitution(
-                loc.Min + stream.Position - 1,
+                (loc?.Min ?? 0) + stream.Position - 1,
                 0);
         }
 

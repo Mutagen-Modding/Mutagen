@@ -165,7 +165,9 @@
     <Compile Include="Skyrim\Records\Major Records\ANavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\AnimatedObject.cs" />
+    <Compile Include="Skyrim\Records\Major Records\AnimatedObject.cs">
+      <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\APackageData.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -201,6 +203,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EffectShader.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Explosion.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\FindMatchingRefNearAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
@@ -300,6 +308,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\QuestTarget.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Water.cs">
+      <DependentUpon>Water.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Worldspace.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>

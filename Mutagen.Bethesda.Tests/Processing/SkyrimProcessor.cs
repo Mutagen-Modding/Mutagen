@@ -32,6 +32,8 @@ namespace Mutagen.Bethesda.Tests
             ProcessDialogs(stream, formID, recType, loc);
             ProcessQuests(stream, formID, recType, loc);
             ProcessPackages(stream, formID, recType, loc);
+            ProcessShaders(stream, formID, recType, loc);
+            ProcessExplosions(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -776,6 +778,92 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessShaders(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!EffectShader_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, EffectShader_Registration.DATA_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                stream.Position += 20;
+                for (int i = 0; i < 9; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 4;
+                for (int i = 0; i < 8; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 20;
+                for (int i = 0; i < 19; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 12;
+                for (int i = 0; i < 11; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 4;
+                for (int i = 0; i < 5; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 4;
+                ProcessZeroFloat(stream);
+                stream.Position += 8;
+                for (int i = 0; i < 6; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 12;
+                for (int i = 0; i < 9; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+                stream.Position += 32;
+                for (int i = 0; i < 2; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
+        }
+
+        private void ProcessExplosions(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Explosion_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, EffectShader_Registration.DATA_HEADER);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                for (int i = 0; i < 6; i++)
+                {
+                    ProcessFormIDOverflow(stream, loc: null);
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
+        }
+
         protected override void PreProcessorJobs(IMutagenReadStream stream)
         {
             base.PreProcessorJobs(stream);
@@ -829,7 +917,9 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "WRLD", "FULL" },
                     new RecordType[] { "DIAL", "FULL" },
                     new RecordType[] { "INFO", "RNAM" },
-                    new RecordType[] { "QUST", "FULL", "NNAM" }
+                    new RecordType[] { "QUST", "FULL", "NNAM" },
+                    new RecordType[] { "WATR", "FULL" },
+                    new RecordType[] { "EXPL", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

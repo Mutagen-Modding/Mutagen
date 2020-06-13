@@ -106,6 +106,9 @@ namespace Mutagen.Bethesda.Skyrim
             _LoadScreens_Object = new Group<LoadScreen>(this);
             _LeveledSpells_Object = new Group<LeveledSpell>(this);
             _AnimatedObjects_Object = new Group<AnimatedObject>(this);
+            _Waters_Object = new Group<Water>(this);
+            _EffectShaders_Object = new Group<EffectShader>(this);
+            _Explosions_Object = new Group<Explosion>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -559,6 +562,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IAnimatedObjectGetter> ISkyrimModGetter.AnimatedObjects => _AnimatedObjects_Object;
         #endregion
+        #region Waters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Water> _Waters_Object;
+        public Group<Water> Waters => _Waters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IWaterGetter> ISkyrimModGetter.Waters => _Waters_Object;
+        #endregion
+        #region EffectShaders
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<EffectShader> _EffectShaders_Object;
+        public Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IEffectShaderGetter> ISkyrimModGetter.EffectShaders => _EffectShaders_Object;
+        #endregion
+        #region Explosions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Explosion> _Explosions_Object;
+        public Group<Explosion> Explosions => _Explosions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IExplosionGetter> ISkyrimModGetter.Explosions => _Explosions_Object;
+        #endregion
 
         #region To String
 
@@ -793,6 +817,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -859,7 +886,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CombatStyles,
                 TItem LoadScreens,
                 TItem LeveledSpells,
-                TItem AnimatedObjects)
+                TItem AnimatedObjects,
+                TItem Waters,
+                TItem EffectShaders,
+                TItem Explosions)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -925,6 +955,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LoadScreens = new MaskItem<TItem, Group.Mask<TItem>?>(LoadScreens, new Group.Mask<TItem>(LoadScreens));
                 this.LeveledSpells = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledSpells, new Group.Mask<TItem>(LeveledSpells));
                 this.AnimatedObjects = new MaskItem<TItem, Group.Mask<TItem>?>(AnimatedObjects, new Group.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, Group.Mask<TItem>?>(Waters, new Group.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, Group.Mask<TItem>?>(EffectShaders, new Group.Mask<TItem>(EffectShaders));
+                this.Explosions = new MaskItem<TItem, Group.Mask<TItem>?>(Explosions, new Group.Mask<TItem>(Explosions));
             }
 
             #pragma warning disable CS8618
@@ -1000,6 +1033,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? LoadScreens { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LeveledSpells { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Explosions { get; set; }
             #endregion
 
             #region Equals
@@ -1076,6 +1112,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
                 if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (!object.Equals(this.Waters, rhs.Waters)) return false;
+                if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
+                if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1145,6 +1184,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LoadScreens);
                 hash.Add(this.LeveledSpells);
                 hash.Add(this.AnimatedObjects);
+                hash.Add(this.Waters);
+                hash.Add(this.EffectShaders);
+                hash.Add(this.Explosions);
                 return hash.ToHashCode();
             }
 
@@ -1473,6 +1515,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.AnimatedObjects.Overall)) return false;
                     if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
                 }
+                if (Waters != null)
+                {
+                    if (!eval(this.Waters.Overall)) return false;
+                    if (this.Waters.Specific != null && !this.Waters.Specific.All(eval)) return false;
+                }
+                if (EffectShaders != null)
+                {
+                    if (!eval(this.EffectShaders.Overall)) return false;
+                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
+                }
+                if (Explosions != null)
+                {
+                    if (!eval(this.Explosions.Overall)) return false;
+                    if (this.Explosions.Specific != null && !this.Explosions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1800,6 +1857,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.AnimatedObjects.Overall)) return true;
                     if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
                 }
+                if (Waters != null)
+                {
+                    if (eval(this.Waters.Overall)) return true;
+                    if (this.Waters.Specific != null && this.Waters.Specific.Any(eval)) return true;
+                }
+                if (EffectShaders != null)
+                {
+                    if (eval(this.EffectShaders.Overall)) return true;
+                    if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
+                }
+                if (Explosions != null)
+                {
+                    if (eval(this.Explosions.Overall)) return true;
+                    if (this.Explosions.Specific != null && this.Explosions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1878,6 +1950,9 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
                 obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2156,6 +2231,18 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         AnimatedObjects?.ToString(fg);
                     }
+                    if (printMask?.Waters?.Overall ?? true)
+                    {
+                        Waters?.ToString(fg);
+                    }
+                    if (printMask?.EffectShaders?.Overall ?? true)
+                    {
+                        EffectShaders?.ToString(fg);
+                    }
+                    if (printMask?.Explosions?.Overall ?? true)
+                    {
+                        Explosions?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2245,6 +2332,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
             public MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
             public MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
             #endregion
 
             #region IErrorMask
@@ -2381,6 +2471,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return LeveledSpells;
                     case SkyrimMod_FieldIndex.AnimatedObjects:
                         return AnimatedObjects;
+                    case SkyrimMod_FieldIndex.Waters:
+                        return Waters;
+                    case SkyrimMod_FieldIndex.EffectShaders:
+                        return EffectShaders;
+                    case SkyrimMod_FieldIndex.Explosions:
+                        return Explosions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2582,6 +2678,15 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Waters:
+                        this.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.EffectShaders:
+                        this.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Explosions:
+                        this.Explosions = new MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2785,6 +2890,15 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = (MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Waters:
+                        this.Waters = (MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.EffectShaders:
+                        this.EffectShaders = (MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Explosions:
+                        this.Explosions = (MaskItem<Exception?, Group.ErrorMask<Explosion.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2857,6 +2971,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LoadScreens != null) return true;
                 if (LeveledSpells != null) return true;
                 if (AnimatedObjects != null) return true;
+                if (Waters != null) return true;
+                if (EffectShaders != null) return true;
+                if (Explosions != null) return true;
                 return false;
             }
             #endregion
@@ -2955,6 +3072,9 @@ namespace Mutagen.Bethesda.Skyrim
                 LoadScreens?.ToString(fg);
                 LeveledSpells?.ToString(fg);
                 AnimatedObjects?.ToString(fg);
+                Waters?.ToString(fg);
+                EffectShaders?.ToString(fg);
+                Explosions?.ToString(fg);
             }
             #endregion
 
@@ -3027,6 +3147,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
                 ret.LeveledSpells = this.LeveledSpells.Combine(rhs.LeveledSpells, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
+                ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
+                ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
+                ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3112,6 +3235,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?> LoadScreens;
             public MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?> LeveledSpells;
             public MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?> AnimatedObjects;
+            public MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?> Waters;
+            public MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?> EffectShaders;
+            public MaskItem<bool, Group.TranslationMask<Explosion.TranslationMask>?> Explosions;
             #endregion
 
             #region Ctors
@@ -3181,6 +3307,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LoadScreens = new MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?>(defaultOn, null);
                 this.LeveledSpells = new MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?>(defaultOn, null);
                 this.AnimatedObjects = new MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?>(defaultOn, null);
+                this.Waters = new MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?>(defaultOn, null);
+                this.EffectShaders = new MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?>(defaultOn, null);
+                this.Explosions = new MaskItem<bool, Group.TranslationMask<Explosion.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -3260,6 +3389,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LoadScreens?.Overall ?? true, LoadScreens?.Specific?.GetCrystal()));
                 ret.Add((LeveledSpells?.Overall ?? true, LeveledSpells?.Specific?.GetCrystal()));
                 ret.Add((AnimatedObjects?.Overall ?? true, AnimatedObjects?.Specific?.GetCrystal()));
+                ret.Add((Waters?.Overall ?? true, Waters?.Specific?.GetCrystal()));
+                ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
+                ret.Add((Explosions?.Overall ?? true, Explosions?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3337,6 +3469,9 @@ namespace Mutagen.Bethesda.Skyrim
             _LoadScreens_Object = new Group<LoadScreen>(this);
             _LeveledSpells_Object = new Group<LeveledSpell>(this);
             _AnimatedObjects_Object = new Group<AnimatedObject>(this);
+            _Waters_Object = new Group<Water>(this);
+            _EffectShaders_Object = new Group<EffectShader>(this);
+            _Explosions_Object = new Group<Explosion>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3596,6 +3731,18 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.AnimatedObjects ?? true)
             {
                 this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
+            }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.RecordCache.Set(rhsMod.Waters.RecordCache.Items);
+            }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
+            }
+            if (mask?.Explosions ?? true)
+            {
+                this.Explosions.RecordCache.Set(rhsMod.Explosions.RecordCache.Items);
             }
         }
 
@@ -4045,6 +4192,27 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AnimatedObject>());
             }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.RecordCache.Set(
+                    rhs.Waters.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Water>());
+            }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.RecordCache.Set(
+                    rhs.EffectShaders.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<EffectShader>());
+            }
+            if (mask?.Explosions ?? true)
+            {
+                this.Explosions.RecordCache.Set(
+                    rhs.Explosions.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Explosion>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -4127,6 +4295,9 @@ namespace Mutagen.Bethesda.Skyrim
             count += LoadScreens.RecordCache.Count > 0 ? 1 : 0;
             count += LeveledSpells.RecordCache.Count > 0 ? 1 : 0;
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : 0;
+            count += Waters.RecordCache.Count > 0 ? 1 : 0;
+            count += EffectShaders.RecordCache.Count > 0 ? 1 : 0;
+            count += Explosions.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4409,6 +4580,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<LoadScreen> LoadScreens { get; }
         new Group<LeveledSpell> LeveledSpells { get; }
         new Group<AnimatedObject> AnimatedObjects { get; }
+        new Group<Water> Waters { get; }
+        new Group<EffectShader> EffectShaders { get; }
+        new Group<Explosion> Explosions { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4490,6 +4664,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<ILoadScreenGetter> LoadScreens { get; }
         IGroupGetter<ILeveledSpellGetter> LeveledSpells { get; }
         IGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        IGroupGetter<IWaterGetter> Waters { get; }
+        IGroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        IGroupGetter<IExplosionGetter> Explosions { get; }
 
     }
 
@@ -5009,6 +5186,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LoadScreens = 61,
         LeveledSpells = 62,
         AnimatedObjects = 63,
+        Waters = 64,
+        EffectShaders = 65,
+        Explosions = 66,
     }
     #endregion
 
@@ -5026,9 +5206,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 64;
+        public const ushort AdditionalFieldCount = 67;
 
-        public const ushort FieldCount = 64;
+        public const ushort FieldCount = 67;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -5186,6 +5366,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.LeveledSpells;
                 case "ANIMATEDOBJECTS":
                     return (ushort)SkyrimMod_FieldIndex.AnimatedObjects;
+                case "WATERS":
+                    return (ushort)SkyrimMod_FieldIndex.Waters;
+                case "EFFECTSHADERS":
+                    return (ushort)SkyrimMod_FieldIndex.EffectShaders;
+                case "EXPLOSIONS":
+                    return (ushort)SkyrimMod_FieldIndex.Explosions;
                 default:
                     return null;
             }
@@ -5260,6 +5446,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LoadScreens:
                 case SkyrimMod_FieldIndex.LeveledSpells:
                 case SkyrimMod_FieldIndex.AnimatedObjects:
+                case SkyrimMod_FieldIndex.Waters:
+                case SkyrimMod_FieldIndex.EffectShaders:
+                case SkyrimMod_FieldIndex.Explosions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5335,6 +5524,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LoadScreens:
                 case SkyrimMod_FieldIndex.LeveledSpells:
                 case SkyrimMod_FieldIndex.AnimatedObjects:
+                case SkyrimMod_FieldIndex.Waters:
+                case SkyrimMod_FieldIndex.EffectShaders:
+                case SkyrimMod_FieldIndex.Explosions:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5410,6 +5602,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LoadScreens:
                 case SkyrimMod_FieldIndex.LeveledSpells:
                 case SkyrimMod_FieldIndex.AnimatedObjects:
+                case SkyrimMod_FieldIndex.Waters:
+                case SkyrimMod_FieldIndex.EffectShaders:
+                case SkyrimMod_FieldIndex.Explosions:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5549,6 +5744,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "LeveledSpells";
                 case SkyrimMod_FieldIndex.AnimatedObjects:
                     return "AnimatedObjects";
+                case SkyrimMod_FieldIndex.Waters:
+                    return "Waters";
+                case SkyrimMod_FieldIndex.EffectShaders:
+                    return "EffectShaders";
+                case SkyrimMod_FieldIndex.Explosions:
+                    return "Explosions";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5623,6 +5824,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LoadScreens:
                 case SkyrimMod_FieldIndex.LeveledSpells:
                 case SkyrimMod_FieldIndex.AnimatedObjects:
+                case SkyrimMod_FieldIndex.Waters:
+                case SkyrimMod_FieldIndex.EffectShaders:
+                case SkyrimMod_FieldIndex.Explosions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5699,6 +5903,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.LoadScreens:
                 case SkyrimMod_FieldIndex.LeveledSpells:
                 case SkyrimMod_FieldIndex.AnimatedObjects:
+                case SkyrimMod_FieldIndex.Waters:
+                case SkyrimMod_FieldIndex.EffectShaders:
+                case SkyrimMod_FieldIndex.Explosions:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5838,6 +6045,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<LeveledSpell>);
                 case SkyrimMod_FieldIndex.AnimatedObjects:
                     return typeof(Group<AnimatedObject>);
+                case SkyrimMod_FieldIndex.Waters:
+                    return typeof(Group<Water>);
+                case SkyrimMod_FieldIndex.EffectShaders:
+                    return typeof(Group<EffectShader>);
+                case SkyrimMod_FieldIndex.Explosions:
+                    return typeof(Group<Explosion>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5908,6 +6121,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
+        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
+        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
+        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
@@ -6013,6 +6229,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LoadScreens.Clear();
             item.LeveledSpells.Clear();
             item.AnimatedObjects.Clear();
+            item.Waters.Clear();
+            item.EffectShaders.Clear();
+            item.Explosions.Clear();
         }
         
         #region Xml Translation
@@ -6231,6 +6450,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
             ret.LeveledSpells = MaskItemExt.Factory(item.LeveledSpells.GetEqualsMask(rhs.LeveledSpells, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
+            ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
+            ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
+            ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
         }
         
         public string ToString(
@@ -6533,6 +6755,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.AnimatedObjects?.ToString(fg, "AnimatedObjects");
             }
+            if (printMask?.Waters?.Overall ?? true)
+            {
+                item.Waters?.ToString(fg, "Waters");
+            }
+            if (printMask?.EffectShaders?.Overall ?? true)
+            {
+                item.EffectShaders?.ToString(fg, "EffectShaders");
+            }
+            if (printMask?.Explosions?.Overall ?? true)
+            {
+                item.Explosions?.ToString(fg, "Explosions");
+            }
         }
         
         public bool HasBeenSet(
@@ -6610,6 +6844,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.LoadScreens = new MaskItem<bool, Group.Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
             mask.LeveledSpells = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
             mask.AnimatedObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
+            mask.Waters = new MaskItem<bool, Group.Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
+            mask.EffectShaders = new MaskItem<bool, Group.Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
+            mask.Explosions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Explosions?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6683,6 +6920,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
             if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
             if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
+            if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
+            if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
+            if (!object.Equals(lhs.Explosions, rhs.Explosions)) return false;
             return true;
         }
         
@@ -6753,6 +6993,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.LoadScreens);
             hash.Add(item.LeveledSpells);
             hash.Add(item.AnimatedObjects);
+            hash.Add(item.Waters);
+            hash.Add(item.EffectShaders);
+            hash.Add(item.Explosions);
             return hash.ToHashCode();
         }
         
@@ -7084,6 +7327,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
                     return obj.AnimatedObjects.RecordCache;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    return obj.Waters.RecordCache;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    return obj.EffectShaders.RecordCache;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    return obj.Explosions.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -7103,7 +7361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[63];
+            Stream[] outputStreams = new Stream[66];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -7168,6 +7426,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -7659,6 +7920,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Waters is ILinkedFormKeyContainer WaterslinkCont)
+            {
+                foreach (var item in WaterslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.EffectShaders is ILinkedFormKeyContainer EffectShaderslinkCont)
+            {
+                foreach (var item in EffectShaderslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Explosions is ILinkedFormKeyContainer ExplosionslinkCont)
+            {
+                foreach (var item in ExplosionslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7914,6 +8196,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8497,6 +8791,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in obj.Waters.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -9800,6 +10121,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Waters) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Waters);
+                try
+                {
+                    item.Waters.DeepCopyIn(
+                        rhs: rhs.Waters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Waters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EffectShaders) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EffectShaders);
+                try
+                {
+                    item.EffectShaders.DeepCopyIn(
+                        rhs: rhs.EffectShaders,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EffectShaders));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Explosions) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Explosions);
+                try
+                {
+                    item.Explosions.DeepCopyIn(
+                        rhs: rhs.Explosions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Explosions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -10592,6 +10973,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.AnimatedObjects,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AnimatedObjects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Waters) ?? true))
+            {
+                var WatersItem = item.Waters;
+                ((GroupXmlWriteTranslation)((IXmlItem)WatersItem).XmlWriteTranslator).Write<IWaterGetter>(
+                    item: WatersItem,
+                    node: node,
+                    name: nameof(item.Waters),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Waters,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Waters));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EffectShaders) ?? true))
+            {
+                var EffectShadersItem = item.EffectShaders;
+                ((GroupXmlWriteTranslation)((IXmlItem)EffectShadersItem).XmlWriteTranslator).Write<IEffectShaderGetter>(
+                    item: EffectShadersItem,
+                    node: node,
+                    name: nameof(item.EffectShaders),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.EffectShaders,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EffectShaders));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Explosions) ?? true))
+            {
+                var ExplosionsItem = item.Explosions;
+                ((GroupXmlWriteTranslation)((IXmlItem)ExplosionsItem).XmlWriteTranslator).Write<IExplosionGetter>(
+                    item: ExplosionsItem,
+                    node: node,
+                    name: nameof(item.Explosions),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Explosions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Explosions));
             }
         }
 
@@ -11877,6 +12291,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Waters":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Waters);
+                    try
+                    {
+                        item.Waters.CopyInFromXml<Water>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EffectShaders":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EffectShaders);
+                    try
+                    {
+                        item.EffectShaders.CopyInFromXml<EffectShader>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Explosions":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Explosions);
+                    try
+                    {
+                        item.Explosions.CopyInFromXml<Explosion>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -12109,6 +12580,9 @@ namespace Mutagen.Bethesda.Skyrim
         public bool LoadScreens;
         public bool LeveledSpells;
         public bool AnimatedObjects;
+        public bool Waters;
+        public bool EffectShaders;
+        public bool Explosions;
         public GroupMask()
         {
         }
@@ -12177,6 +12651,9 @@ namespace Mutagen.Bethesda.Skyrim
             LoadScreens = defaultValue;
             LeveledSpells = defaultValue;
             AnimatedObjects = defaultValue;
+            Waters = defaultValue;
+            EffectShaders = defaultValue;
+            Explosions = defaultValue;
         }
     }
 
@@ -12894,6 +13371,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Waters ?? true)
+            {
+                var WatersItem = item.Waters;
+                if (WatersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                        item: WatersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.EffectShaders ?? true)
+            {
+                var EffectShadersItem = item.EffectShaders;
+                if (EffectShadersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                        item: EffectShadersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Explosions ?? true)
+            {
+                var ExplosionsItem = item.Explosions;
+                if (ExplosionsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
+                        item: ExplosionsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -13849,6 +14359,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
                 }
+                case 0x52544157: // WATR
+                {
+                    if (importMask?.Waters ?? true)
+                    {
+                        item.Waters.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                }
+                case 0x48534645: // EFSH
+                {
+                    if (importMask?.EffectShaders ?? true)
+                    {
+                        item.EffectShaders.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                }
+                case 0x4C505845: // EXPL
+                {
+                    if (importMask?.Explosions ?? true)
+                    {
+                        item.Explosions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -14335,6 +14887,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocation.HasValue ? GroupBinaryOverlay<IAnimatedObjectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AnimatedObjectsLocation!.Value.Min, _AnimatedObjectsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Group<AnimatedObject>(this);
         #endregion
+        #region Waters
+        private RangeInt64? _WatersLocation;
+        private IGroupGetter<IWaterGetter>? _Waters => _WatersLocation.HasValue ? GroupBinaryOverlay<IWaterGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WatersLocation!.Value.Min, _WatersLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IWaterGetter> Waters => _Waters ?? new Group<Water>(this);
+        #endregion
+        #region EffectShaders
+        private RangeInt64? _EffectShadersLocation;
+        private IGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocation.HasValue ? GroupBinaryOverlay<IEffectShaderGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EffectShadersLocation!.Value.Min, _EffectShadersLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Group<EffectShader>(this);
+        #endregion
+        #region Explosions
+        private RangeInt64? _ExplosionsLocation;
+        private IGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocation.HasValue ? GroupBinaryOverlay<IExplosionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ExplosionsLocation!.Value.Min, _ExplosionsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Group<Explosion>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -14744,6 +15311,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                }
+                case 0x52544157: // WATR
+                {
+                    _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                }
+                case 0x48534645: // EFSH
+                {
+                    _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                }
+                case 0x4C505845: // EXPL
+                {
+                    _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

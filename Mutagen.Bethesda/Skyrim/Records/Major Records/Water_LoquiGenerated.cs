@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -49,6 +50,279 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IWaterGetter.Name => this.Name;
+        #endregion
+        #region UnusedNoisemaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
+        public ExtendedList<String> UnusedNoisemaps
+        {
+            get => this._UnusedNoisemaps;
+            protected set => this._UnusedNoisemaps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<String> IWaterGetter.UnusedNoisemaps => _UnusedNoisemaps;
+        #endregion
+
+        #endregion
+        #region Opacity
+        public Byte Opacity { get; set; } = default;
+        #endregion
+        #region Flags
+        public Water.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Water.Flag? IWaterGetter.Flags => this.Flags;
+        #endregion
+        #region MNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _MNAM;
+        public MemorySlice<Byte>? MNAM
+        {
+            get => this._MNAM;
+            set => this._MNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWaterGetter.MNAM => this.MNAM;
+        #endregion
+        #region Material
+        public FormLinkNullable<MaterialType> Material { get; set; } = new FormLinkNullable<MaterialType>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IMaterialTypeGetter> IWaterGetter.Material => this.Material;
+        #endregion
+        #region OpenSound
+        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound;
+        #endregion
+        #region Spell
+        public FormLinkNullable<Spell> Spell { get; set; } = new FormLinkNullable<Spell>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<ISpellGetter> IWaterGetter.Spell => this.Spell;
+        #endregion
+        #region ImageSpace
+        public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;
+        #endregion
+        #region DamagePerSecond
+        public UInt16? DamagePerSecond { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IWaterGetter.DamagePerSecond => this.DamagePerSecond;
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown = new byte[16];
+        public MemorySlice<Byte> Unknown
+        {
+            get => _Unknown;
+            set => this._Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWaterGetter.Unknown => this.Unknown;
+        #endregion
+        #region SpecularSunPower
+        public Single SpecularSunPower { get; set; } = default;
+        #endregion
+        #region WaterReflectivity
+        public Single WaterReflectivity { get; set; } = default;
+        #endregion
+        #region WaterFresnel
+        public Single WaterFresnel { get; set; } = default;
+        #endregion
+        #region Unknown2
+        public Int32 Unknown2 { get; set; } = default;
+        #endregion
+        #region FogAboveWaterDistanceNearPlane
+        public Single FogAboveWaterDistanceNearPlane { get; set; } = default;
+        #endregion
+        #region FogAboveWaterDistanceFarPlane
+        public Single FogAboveWaterDistanceFarPlane { get; set; } = default;
+        #endregion
+        #region ShallowColor
+        public Color ShallowColor { get; set; } = default;
+        #endregion
+        #region DeepColor
+        public Color DeepColor { get; set; } = default;
+        #endregion
+        #region ReflectionColor
+        public Color ReflectionColor { get; set; } = default;
+        #endregion
+        #region Unknown3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown3 = new byte[20];
+        public MemorySlice<Byte> Unknown3
+        {
+            get => _Unknown3;
+            set => this._Unknown3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWaterGetter.Unknown3 => this.Unknown3;
+        #endregion
+        #region DisplacementStartingSize
+        public Single DisplacementStartingSize { get; set; } = default;
+        #endregion
+        #region DisplacementFoce
+        public Single DisplacementFoce { get; set; } = default;
+        #endregion
+        #region DisplacementVelocity
+        public Single DisplacementVelocity { get; set; } = default;
+        #endregion
+        #region DisplacementFalloff
+        public Single DisplacementFalloff { get; set; } = default;
+        #endregion
+        #region DisplacementDampner
+        public Single DisplacementDampner { get; set; } = default;
+        #endregion
+        #region Unknown4
+        public Int32 Unknown4 { get; set; } = default;
+        #endregion
+        #region NoiseFalloff
+        public Single NoiseFalloff { get; set; } = default;
+        #endregion
+        #region NoiseLayerOneWindDirection
+        public Single NoiseLayerOneWindDirection { get; set; } = default;
+        #endregion
+        #region NoiseLayerTwoWindDirection
+        public Single NoiseLayerTwoWindDirection { get; set; } = default;
+        #endregion
+        #region NoiseLayerThreeWindDirection
+        public Single NoiseLayerThreeWindDirection { get; set; } = default;
+        #endregion
+        #region NoiseLayerOneWindSpeed
+        public Single NoiseLayerOneWindSpeed { get; set; } = default;
+        #endregion
+        #region NoiseLayerTwoWindSpeed
+        public Single NoiseLayerTwoWindSpeed { get; set; } = default;
+        #endregion
+        #region NoiseLayerThreeWindSpeed
+        public Single NoiseLayerThreeWindSpeed { get; set; } = default;
+        #endregion
+        #region Unknown5
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown5 = new byte[8];
+        public MemorySlice<Byte> Unknown5
+        {
+            get => _Unknown5;
+            set => this._Unknown5 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWaterGetter.Unknown5 => this.Unknown5;
+        #endregion
+        #region FogAboveWaterAmount
+        public Single FogAboveWaterAmount { get; set; } = default;
+        #endregion
+        #region Unknown6
+        public Int32 Unknown6 { get; set; } = default;
+        #endregion
+        #region FogUnderWaterAmount
+        public Single FogUnderWaterAmount { get; set; } = default;
+        #endregion
+        #region FogUnderWaterDistanceNearPlane
+        public Single FogUnderWaterDistanceNearPlane { get; set; } = default;
+        #endregion
+        #region FogUnderWaterDistanceFarPlane
+        public Single FogUnderWaterDistanceFarPlane { get; set; } = default;
+        #endregion
+        #region WaterRefractionMagnitude
+        public Single WaterRefractionMagnitude { get; set; } = default;
+        #endregion
+        #region SpecularPower
+        public Single SpecularPower { get; set; } = default;
+        #endregion
+        #region Unknown7
+        public Int32 Unknown7 { get; set; } = default;
+        #endregion
+        #region SpecularRadius
+        public Single SpecularRadius { get; set; } = default;
+        #endregion
+        #region SpecularBrightness
+        public Single SpecularBrightness { get; set; } = default;
+        #endregion
+        #region NoiseLayerOneUvScale
+        public Single NoiseLayerOneUvScale { get; set; } = default;
+        #endregion
+        #region NoiseLayerTwoUvScale
+        public Single NoiseLayerTwoUvScale { get; set; } = default;
+        #endregion
+        #region NoiseLayerThreeUvScale
+        public Single NoiseLayerThreeUvScale { get; set; } = default;
+        #endregion
+        #region NoiseLayerOneAmplitudeScale
+        public Single NoiseLayerOneAmplitudeScale { get; set; } = default;
+        #endregion
+        #region NoiseLayerTwoAmplitudeScale
+        public Single NoiseLayerTwoAmplitudeScale { get; set; } = default;
+        #endregion
+        #region NoiseLayerThreeAmplitudeScale
+        public Single NoiseLayerThreeAmplitudeScale { get; set; } = default;
+        #endregion
+        #region WaterReflectionMagnitude
+        public Single WaterReflectionMagnitude { get; set; } = default;
+        #endregion
+        #region SpecularSunSparkleMagnitude
+        public Single SpecularSunSparkleMagnitude { get; set; } = default;
+        #endregion
+        #region SpecularSunSpecularMagnitude
+        public Single SpecularSunSpecularMagnitude { get; set; } = default;
+        #endregion
+        #region DepthReflections
+        public Single DepthReflections { get; set; } = default;
+        #endregion
+        #region DepthRefraction
+        public Single DepthRefraction { get; set; } = default;
+        #endregion
+        #region DepthNormals
+        public Single DepthNormals { get; set; } = default;
+        #endregion
+        #region DepthSpecularLighting
+        public Single DepthSpecularLighting { get; set; } = default;
+        #endregion
+        #region SpecularSunSparklePower
+        public Single SpecularSunSparklePower { get; set; } = default;
+        #endregion
+        #region GNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _GNAM;
+        public MemorySlice<Byte>? GNAM
+        {
+            get => this._GNAM;
+            set => this._GNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWaterGetter.GNAM => this.GNAM;
+        #endregion
+        #region LinearVelocity
+        public P3Float? LinearVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.LinearVelocity => this.LinearVelocity;
+        #endregion
+        #region AngularVelocity
+        public P3Float? AngularVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
+        #endregion
+        #region NoiseLayerOneTexture
+        public String? NoiseLayerOneTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NoiseLayerOneTexture => this.NoiseLayerOneTexture;
+        #endregion
+        #region NoiseLayerTwoTexture
+        public String? NoiseLayerTwoTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NoiseLayerTwoTexture => this.NoiseLayerTwoTexture;
+        #endregion
+        #region NoiseLayerThreeTexture
+        public String? NoiseLayerThreeTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
+        #endregion
+        #region DNAMDataTypeState
+        public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +493,72 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Opacity = initialValue;
+                this.Flags = initialValue;
+                this.MNAM = initialValue;
+                this.Material = initialValue;
+                this.OpenSound = initialValue;
+                this.Spell = initialValue;
+                this.ImageSpace = initialValue;
+                this.DamagePerSecond = initialValue;
+                this.Unknown = initialValue;
+                this.SpecularSunPower = initialValue;
+                this.WaterReflectivity = initialValue;
+                this.WaterFresnel = initialValue;
+                this.Unknown2 = initialValue;
+                this.FogAboveWaterDistanceNearPlane = initialValue;
+                this.FogAboveWaterDistanceFarPlane = initialValue;
+                this.ShallowColor = initialValue;
+                this.DeepColor = initialValue;
+                this.ReflectionColor = initialValue;
+                this.Unknown3 = initialValue;
+                this.DisplacementStartingSize = initialValue;
+                this.DisplacementFoce = initialValue;
+                this.DisplacementVelocity = initialValue;
+                this.DisplacementFalloff = initialValue;
+                this.DisplacementDampner = initialValue;
+                this.Unknown4 = initialValue;
+                this.NoiseFalloff = initialValue;
+                this.NoiseLayerOneWindDirection = initialValue;
+                this.NoiseLayerTwoWindDirection = initialValue;
+                this.NoiseLayerThreeWindDirection = initialValue;
+                this.NoiseLayerOneWindSpeed = initialValue;
+                this.NoiseLayerTwoWindSpeed = initialValue;
+                this.NoiseLayerThreeWindSpeed = initialValue;
+                this.Unknown5 = initialValue;
+                this.FogAboveWaterAmount = initialValue;
+                this.Unknown6 = initialValue;
+                this.FogUnderWaterAmount = initialValue;
+                this.FogUnderWaterDistanceNearPlane = initialValue;
+                this.FogUnderWaterDistanceFarPlane = initialValue;
+                this.WaterRefractionMagnitude = initialValue;
+                this.SpecularPower = initialValue;
+                this.Unknown7 = initialValue;
+                this.SpecularRadius = initialValue;
+                this.SpecularBrightness = initialValue;
+                this.NoiseLayerOneUvScale = initialValue;
+                this.NoiseLayerTwoUvScale = initialValue;
+                this.NoiseLayerThreeUvScale = initialValue;
+                this.NoiseLayerOneAmplitudeScale = initialValue;
+                this.NoiseLayerTwoAmplitudeScale = initialValue;
+                this.NoiseLayerThreeAmplitudeScale = initialValue;
+                this.WaterReflectionMagnitude = initialValue;
+                this.SpecularSunSparkleMagnitude = initialValue;
+                this.SpecularSunSpecularMagnitude = initialValue;
+                this.DepthReflections = initialValue;
+                this.DepthRefraction = initialValue;
+                this.DepthNormals = initialValue;
+                this.DepthSpecularLighting = initialValue;
+                this.SpecularSunSparklePower = initialValue;
+                this.GNAM = initialValue;
+                this.LinearVelocity = initialValue;
+                this.AngularVelocity = initialValue;
+                this.NoiseLayerOneTexture = initialValue;
+                this.NoiseLayerTwoTexture = initialValue;
+                this.NoiseLayerThreeTexture = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +567,73 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem UnusedNoisemaps,
+                TItem Opacity,
+                TItem Flags,
+                TItem MNAM,
+                TItem Material,
+                TItem OpenSound,
+                TItem Spell,
+                TItem ImageSpace,
+                TItem DamagePerSecond,
+                TItem Unknown,
+                TItem SpecularSunPower,
+                TItem WaterReflectivity,
+                TItem WaterFresnel,
+                TItem Unknown2,
+                TItem FogAboveWaterDistanceNearPlane,
+                TItem FogAboveWaterDistanceFarPlane,
+                TItem ShallowColor,
+                TItem DeepColor,
+                TItem ReflectionColor,
+                TItem Unknown3,
+                TItem DisplacementStartingSize,
+                TItem DisplacementFoce,
+                TItem DisplacementVelocity,
+                TItem DisplacementFalloff,
+                TItem DisplacementDampner,
+                TItem Unknown4,
+                TItem NoiseFalloff,
+                TItem NoiseLayerOneWindDirection,
+                TItem NoiseLayerTwoWindDirection,
+                TItem NoiseLayerThreeWindDirection,
+                TItem NoiseLayerOneWindSpeed,
+                TItem NoiseLayerTwoWindSpeed,
+                TItem NoiseLayerThreeWindSpeed,
+                TItem Unknown5,
+                TItem FogAboveWaterAmount,
+                TItem Unknown6,
+                TItem FogUnderWaterAmount,
+                TItem FogUnderWaterDistanceNearPlane,
+                TItem FogUnderWaterDistanceFarPlane,
+                TItem WaterRefractionMagnitude,
+                TItem SpecularPower,
+                TItem Unknown7,
+                TItem SpecularRadius,
+                TItem SpecularBrightness,
+                TItem NoiseLayerOneUvScale,
+                TItem NoiseLayerTwoUvScale,
+                TItem NoiseLayerThreeUvScale,
+                TItem NoiseLayerOneAmplitudeScale,
+                TItem NoiseLayerTwoAmplitudeScale,
+                TItem NoiseLayerThreeAmplitudeScale,
+                TItem WaterReflectionMagnitude,
+                TItem SpecularSunSparkleMagnitude,
+                TItem SpecularSunSpecularMagnitude,
+                TItem DepthReflections,
+                TItem DepthRefraction,
+                TItem DepthNormals,
+                TItem DepthSpecularLighting,
+                TItem SpecularSunSparklePower,
+                TItem GNAM,
+                TItem LinearVelocity,
+                TItem AngularVelocity,
+                TItem NoiseLayerOneTexture,
+                TItem NoiseLayerTwoTexture,
+                TItem NoiseLayerThreeTexture,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +642,72 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnusedNoisemaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Opacity = Opacity;
+                this.Flags = Flags;
+                this.MNAM = MNAM;
+                this.Material = Material;
+                this.OpenSound = OpenSound;
+                this.Spell = Spell;
+                this.ImageSpace = ImageSpace;
+                this.DamagePerSecond = DamagePerSecond;
+                this.Unknown = Unknown;
+                this.SpecularSunPower = SpecularSunPower;
+                this.WaterReflectivity = WaterReflectivity;
+                this.WaterFresnel = WaterFresnel;
+                this.Unknown2 = Unknown2;
+                this.FogAboveWaterDistanceNearPlane = FogAboveWaterDistanceNearPlane;
+                this.FogAboveWaterDistanceFarPlane = FogAboveWaterDistanceFarPlane;
+                this.ShallowColor = ShallowColor;
+                this.DeepColor = DeepColor;
+                this.ReflectionColor = ReflectionColor;
+                this.Unknown3 = Unknown3;
+                this.DisplacementStartingSize = DisplacementStartingSize;
+                this.DisplacementFoce = DisplacementFoce;
+                this.DisplacementVelocity = DisplacementVelocity;
+                this.DisplacementFalloff = DisplacementFalloff;
+                this.DisplacementDampner = DisplacementDampner;
+                this.Unknown4 = Unknown4;
+                this.NoiseFalloff = NoiseFalloff;
+                this.NoiseLayerOneWindDirection = NoiseLayerOneWindDirection;
+                this.NoiseLayerTwoWindDirection = NoiseLayerTwoWindDirection;
+                this.NoiseLayerThreeWindDirection = NoiseLayerThreeWindDirection;
+                this.NoiseLayerOneWindSpeed = NoiseLayerOneWindSpeed;
+                this.NoiseLayerTwoWindSpeed = NoiseLayerTwoWindSpeed;
+                this.NoiseLayerThreeWindSpeed = NoiseLayerThreeWindSpeed;
+                this.Unknown5 = Unknown5;
+                this.FogAboveWaterAmount = FogAboveWaterAmount;
+                this.Unknown6 = Unknown6;
+                this.FogUnderWaterAmount = FogUnderWaterAmount;
+                this.FogUnderWaterDistanceNearPlane = FogUnderWaterDistanceNearPlane;
+                this.FogUnderWaterDistanceFarPlane = FogUnderWaterDistanceFarPlane;
+                this.WaterRefractionMagnitude = WaterRefractionMagnitude;
+                this.SpecularPower = SpecularPower;
+                this.Unknown7 = Unknown7;
+                this.SpecularRadius = SpecularRadius;
+                this.SpecularBrightness = SpecularBrightness;
+                this.NoiseLayerOneUvScale = NoiseLayerOneUvScale;
+                this.NoiseLayerTwoUvScale = NoiseLayerTwoUvScale;
+                this.NoiseLayerThreeUvScale = NoiseLayerThreeUvScale;
+                this.NoiseLayerOneAmplitudeScale = NoiseLayerOneAmplitudeScale;
+                this.NoiseLayerTwoAmplitudeScale = NoiseLayerTwoAmplitudeScale;
+                this.NoiseLayerThreeAmplitudeScale = NoiseLayerThreeAmplitudeScale;
+                this.WaterReflectionMagnitude = WaterReflectionMagnitude;
+                this.SpecularSunSparkleMagnitude = SpecularSunSparkleMagnitude;
+                this.SpecularSunSpecularMagnitude = SpecularSunSpecularMagnitude;
+                this.DepthReflections = DepthReflections;
+                this.DepthRefraction = DepthRefraction;
+                this.DepthNormals = DepthNormals;
+                this.DepthSpecularLighting = DepthSpecularLighting;
+                this.SpecularSunSparklePower = SpecularSunSparklePower;
+                this.GNAM = GNAM;
+                this.LinearVelocity = LinearVelocity;
+                this.AngularVelocity = AngularVelocity;
+                this.NoiseLayerOneTexture = NoiseLayerOneTexture;
+                this.NoiseLayerTwoTexture = NoiseLayerTwoTexture;
+                this.NoiseLayerThreeTexture = NoiseLayerThreeTexture;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +716,75 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? UnusedNoisemaps;
+            public TItem Opacity;
+            public TItem Flags;
+            public TItem MNAM;
+            public TItem Material;
+            public TItem OpenSound;
+            public TItem Spell;
+            public TItem ImageSpace;
+            public TItem DamagePerSecond;
+            public TItem Unknown;
+            public TItem SpecularSunPower;
+            public TItem WaterReflectivity;
+            public TItem WaterFresnel;
+            public TItem Unknown2;
+            public TItem FogAboveWaterDistanceNearPlane;
+            public TItem FogAboveWaterDistanceFarPlane;
+            public TItem ShallowColor;
+            public TItem DeepColor;
+            public TItem ReflectionColor;
+            public TItem Unknown3;
+            public TItem DisplacementStartingSize;
+            public TItem DisplacementFoce;
+            public TItem DisplacementVelocity;
+            public TItem DisplacementFalloff;
+            public TItem DisplacementDampner;
+            public TItem Unknown4;
+            public TItem NoiseFalloff;
+            public TItem NoiseLayerOneWindDirection;
+            public TItem NoiseLayerTwoWindDirection;
+            public TItem NoiseLayerThreeWindDirection;
+            public TItem NoiseLayerOneWindSpeed;
+            public TItem NoiseLayerTwoWindSpeed;
+            public TItem NoiseLayerThreeWindSpeed;
+            public TItem Unknown5;
+            public TItem FogAboveWaterAmount;
+            public TItem Unknown6;
+            public TItem FogUnderWaterAmount;
+            public TItem FogUnderWaterDistanceNearPlane;
+            public TItem FogUnderWaterDistanceFarPlane;
+            public TItem WaterRefractionMagnitude;
+            public TItem SpecularPower;
+            public TItem Unknown7;
+            public TItem SpecularRadius;
+            public TItem SpecularBrightness;
+            public TItem NoiseLayerOneUvScale;
+            public TItem NoiseLayerTwoUvScale;
+            public TItem NoiseLayerThreeUvScale;
+            public TItem NoiseLayerOneAmplitudeScale;
+            public TItem NoiseLayerTwoAmplitudeScale;
+            public TItem NoiseLayerThreeAmplitudeScale;
+            public TItem WaterReflectionMagnitude;
+            public TItem SpecularSunSparkleMagnitude;
+            public TItem SpecularSunSpecularMagnitude;
+            public TItem DepthReflections;
+            public TItem DepthRefraction;
+            public TItem DepthNormals;
+            public TItem DepthSpecularLighting;
+            public TItem SpecularSunSparklePower;
+            public TItem GNAM;
+            public TItem LinearVelocity;
+            public TItem AngularVelocity;
+            public TItem NoiseLayerOneTexture;
+            public TItem NoiseLayerTwoTexture;
+            public TItem NoiseLayerThreeTexture;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +798,143 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.UnusedNoisemaps, rhs.UnusedNoisemaps)) return false;
+                if (!object.Equals(this.Opacity, rhs.Opacity)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.Spell, rhs.Spell)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
+                if (!object.Equals(this.DamagePerSecond, rhs.DamagePerSecond)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.SpecularSunPower, rhs.SpecularSunPower)) return false;
+                if (!object.Equals(this.WaterReflectivity, rhs.WaterReflectivity)) return false;
+                if (!object.Equals(this.WaterFresnel, rhs.WaterFresnel)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.FogAboveWaterDistanceNearPlane, rhs.FogAboveWaterDistanceNearPlane)) return false;
+                if (!object.Equals(this.FogAboveWaterDistanceFarPlane, rhs.FogAboveWaterDistanceFarPlane)) return false;
+                if (!object.Equals(this.ShallowColor, rhs.ShallowColor)) return false;
+                if (!object.Equals(this.DeepColor, rhs.DeepColor)) return false;
+                if (!object.Equals(this.ReflectionColor, rhs.ReflectionColor)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.DisplacementStartingSize, rhs.DisplacementStartingSize)) return false;
+                if (!object.Equals(this.DisplacementFoce, rhs.DisplacementFoce)) return false;
+                if (!object.Equals(this.DisplacementVelocity, rhs.DisplacementVelocity)) return false;
+                if (!object.Equals(this.DisplacementFalloff, rhs.DisplacementFalloff)) return false;
+                if (!object.Equals(this.DisplacementDampner, rhs.DisplacementDampner)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.NoiseFalloff, rhs.NoiseFalloff)) return false;
+                if (!object.Equals(this.NoiseLayerOneWindDirection, rhs.NoiseLayerOneWindDirection)) return false;
+                if (!object.Equals(this.NoiseLayerTwoWindDirection, rhs.NoiseLayerTwoWindDirection)) return false;
+                if (!object.Equals(this.NoiseLayerThreeWindDirection, rhs.NoiseLayerThreeWindDirection)) return false;
+                if (!object.Equals(this.NoiseLayerOneWindSpeed, rhs.NoiseLayerOneWindSpeed)) return false;
+                if (!object.Equals(this.NoiseLayerTwoWindSpeed, rhs.NoiseLayerTwoWindSpeed)) return false;
+                if (!object.Equals(this.NoiseLayerThreeWindSpeed, rhs.NoiseLayerThreeWindSpeed)) return false;
+                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.FogAboveWaterAmount, rhs.FogAboveWaterAmount)) return false;
+                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
+                if (!object.Equals(this.FogUnderWaterAmount, rhs.FogUnderWaterAmount)) return false;
+                if (!object.Equals(this.FogUnderWaterDistanceNearPlane, rhs.FogUnderWaterDistanceNearPlane)) return false;
+                if (!object.Equals(this.FogUnderWaterDistanceFarPlane, rhs.FogUnderWaterDistanceFarPlane)) return false;
+                if (!object.Equals(this.WaterRefractionMagnitude, rhs.WaterRefractionMagnitude)) return false;
+                if (!object.Equals(this.SpecularPower, rhs.SpecularPower)) return false;
+                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
+                if (!object.Equals(this.SpecularRadius, rhs.SpecularRadius)) return false;
+                if (!object.Equals(this.SpecularBrightness, rhs.SpecularBrightness)) return false;
+                if (!object.Equals(this.NoiseLayerOneUvScale, rhs.NoiseLayerOneUvScale)) return false;
+                if (!object.Equals(this.NoiseLayerTwoUvScale, rhs.NoiseLayerTwoUvScale)) return false;
+                if (!object.Equals(this.NoiseLayerThreeUvScale, rhs.NoiseLayerThreeUvScale)) return false;
+                if (!object.Equals(this.NoiseLayerOneAmplitudeScale, rhs.NoiseLayerOneAmplitudeScale)) return false;
+                if (!object.Equals(this.NoiseLayerTwoAmplitudeScale, rhs.NoiseLayerTwoAmplitudeScale)) return false;
+                if (!object.Equals(this.NoiseLayerThreeAmplitudeScale, rhs.NoiseLayerThreeAmplitudeScale)) return false;
+                if (!object.Equals(this.WaterReflectionMagnitude, rhs.WaterReflectionMagnitude)) return false;
+                if (!object.Equals(this.SpecularSunSparkleMagnitude, rhs.SpecularSunSparkleMagnitude)) return false;
+                if (!object.Equals(this.SpecularSunSpecularMagnitude, rhs.SpecularSunSpecularMagnitude)) return false;
+                if (!object.Equals(this.DepthReflections, rhs.DepthReflections)) return false;
+                if (!object.Equals(this.DepthRefraction, rhs.DepthRefraction)) return false;
+                if (!object.Equals(this.DepthNormals, rhs.DepthNormals)) return false;
+                if (!object.Equals(this.DepthSpecularLighting, rhs.DepthSpecularLighting)) return false;
+                if (!object.Equals(this.SpecularSunSparklePower, rhs.SpecularSunSparklePower)) return false;
+                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
+                if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
+                if (!object.Equals(this.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
+                if (!object.Equals(this.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
+                if (!object.Equals(this.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.UnusedNoisemaps);
+                hash.Add(this.Opacity);
+                hash.Add(this.Flags);
+                hash.Add(this.MNAM);
+                hash.Add(this.Material);
+                hash.Add(this.OpenSound);
+                hash.Add(this.Spell);
+                hash.Add(this.ImageSpace);
+                hash.Add(this.DamagePerSecond);
+                hash.Add(this.Unknown);
+                hash.Add(this.SpecularSunPower);
+                hash.Add(this.WaterReflectivity);
+                hash.Add(this.WaterFresnel);
+                hash.Add(this.Unknown2);
+                hash.Add(this.FogAboveWaterDistanceNearPlane);
+                hash.Add(this.FogAboveWaterDistanceFarPlane);
+                hash.Add(this.ShallowColor);
+                hash.Add(this.DeepColor);
+                hash.Add(this.ReflectionColor);
+                hash.Add(this.Unknown3);
+                hash.Add(this.DisplacementStartingSize);
+                hash.Add(this.DisplacementFoce);
+                hash.Add(this.DisplacementVelocity);
+                hash.Add(this.DisplacementFalloff);
+                hash.Add(this.DisplacementDampner);
+                hash.Add(this.Unknown4);
+                hash.Add(this.NoiseFalloff);
+                hash.Add(this.NoiseLayerOneWindDirection);
+                hash.Add(this.NoiseLayerTwoWindDirection);
+                hash.Add(this.NoiseLayerThreeWindDirection);
+                hash.Add(this.NoiseLayerOneWindSpeed);
+                hash.Add(this.NoiseLayerTwoWindSpeed);
+                hash.Add(this.NoiseLayerThreeWindSpeed);
+                hash.Add(this.Unknown5);
+                hash.Add(this.FogAboveWaterAmount);
+                hash.Add(this.Unknown6);
+                hash.Add(this.FogUnderWaterAmount);
+                hash.Add(this.FogUnderWaterDistanceNearPlane);
+                hash.Add(this.FogUnderWaterDistanceFarPlane);
+                hash.Add(this.WaterRefractionMagnitude);
+                hash.Add(this.SpecularPower);
+                hash.Add(this.Unknown7);
+                hash.Add(this.SpecularRadius);
+                hash.Add(this.SpecularBrightness);
+                hash.Add(this.NoiseLayerOneUvScale);
+                hash.Add(this.NoiseLayerTwoUvScale);
+                hash.Add(this.NoiseLayerThreeUvScale);
+                hash.Add(this.NoiseLayerOneAmplitudeScale);
+                hash.Add(this.NoiseLayerTwoAmplitudeScale);
+                hash.Add(this.NoiseLayerThreeAmplitudeScale);
+                hash.Add(this.WaterReflectionMagnitude);
+                hash.Add(this.SpecularSunSparkleMagnitude);
+                hash.Add(this.SpecularSunSpecularMagnitude);
+                hash.Add(this.DepthReflections);
+                hash.Add(this.DepthRefraction);
+                hash.Add(this.DepthNormals);
+                hash.Add(this.DepthSpecularLighting);
+                hash.Add(this.SpecularSunSparklePower);
+                hash.Add(this.GNAM);
+                hash.Add(this.LinearVelocity);
+                hash.Add(this.AngularVelocity);
+                hash.Add(this.NoiseLayerOneTexture);
+                hash.Add(this.NoiseLayerTwoTexture);
+                hash.Add(this.NoiseLayerThreeTexture);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +945,82 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.UnusedNoisemaps != null)
+                {
+                    if (!eval(this.UnusedNoisemaps.Overall)) return false;
+                    if (this.UnusedNoisemaps.Specific != null)
+                    {
+                        foreach (var item in this.UnusedNoisemaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Opacity)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MNAM)) return false;
+                if (!eval(this.Material)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.Spell)) return false;
+                if (!eval(this.ImageSpace)) return false;
+                if (!eval(this.DamagePerSecond)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.SpecularSunPower)) return false;
+                if (!eval(this.WaterReflectivity)) return false;
+                if (!eval(this.WaterFresnel)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.FogAboveWaterDistanceNearPlane)) return false;
+                if (!eval(this.FogAboveWaterDistanceFarPlane)) return false;
+                if (!eval(this.ShallowColor)) return false;
+                if (!eval(this.DeepColor)) return false;
+                if (!eval(this.ReflectionColor)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.DisplacementStartingSize)) return false;
+                if (!eval(this.DisplacementFoce)) return false;
+                if (!eval(this.DisplacementVelocity)) return false;
+                if (!eval(this.DisplacementFalloff)) return false;
+                if (!eval(this.DisplacementDampner)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.NoiseFalloff)) return false;
+                if (!eval(this.NoiseLayerOneWindDirection)) return false;
+                if (!eval(this.NoiseLayerTwoWindDirection)) return false;
+                if (!eval(this.NoiseLayerThreeWindDirection)) return false;
+                if (!eval(this.NoiseLayerOneWindSpeed)) return false;
+                if (!eval(this.NoiseLayerTwoWindSpeed)) return false;
+                if (!eval(this.NoiseLayerThreeWindSpeed)) return false;
+                if (!eval(this.Unknown5)) return false;
+                if (!eval(this.FogAboveWaterAmount)) return false;
+                if (!eval(this.Unknown6)) return false;
+                if (!eval(this.FogUnderWaterAmount)) return false;
+                if (!eval(this.FogUnderWaterDistanceNearPlane)) return false;
+                if (!eval(this.FogUnderWaterDistanceFarPlane)) return false;
+                if (!eval(this.WaterRefractionMagnitude)) return false;
+                if (!eval(this.SpecularPower)) return false;
+                if (!eval(this.Unknown7)) return false;
+                if (!eval(this.SpecularRadius)) return false;
+                if (!eval(this.SpecularBrightness)) return false;
+                if (!eval(this.NoiseLayerOneUvScale)) return false;
+                if (!eval(this.NoiseLayerTwoUvScale)) return false;
+                if (!eval(this.NoiseLayerThreeUvScale)) return false;
+                if (!eval(this.NoiseLayerOneAmplitudeScale)) return false;
+                if (!eval(this.NoiseLayerTwoAmplitudeScale)) return false;
+                if (!eval(this.NoiseLayerThreeAmplitudeScale)) return false;
+                if (!eval(this.WaterReflectionMagnitude)) return false;
+                if (!eval(this.SpecularSunSparkleMagnitude)) return false;
+                if (!eval(this.SpecularSunSpecularMagnitude)) return false;
+                if (!eval(this.DepthReflections)) return false;
+                if (!eval(this.DepthRefraction)) return false;
+                if (!eval(this.DepthNormals)) return false;
+                if (!eval(this.DepthSpecularLighting)) return false;
+                if (!eval(this.SpecularSunSparklePower)) return false;
+                if (!eval(this.GNAM)) return false;
+                if (!eval(this.LinearVelocity)) return false;
+                if (!eval(this.AngularVelocity)) return false;
+                if (!eval(this.NoiseLayerOneTexture)) return false;
+                if (!eval(this.NoiseLayerTwoTexture)) return false;
+                if (!eval(this.NoiseLayerThreeTexture)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +1029,82 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (this.UnusedNoisemaps != null)
+                {
+                    if (eval(this.UnusedNoisemaps.Overall)) return true;
+                    if (this.UnusedNoisemaps.Specific != null)
+                    {
+                        foreach (var item in this.UnusedNoisemaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Opacity)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MNAM)) return true;
+                if (eval(this.Material)) return true;
+                if (eval(this.OpenSound)) return true;
+                if (eval(this.Spell)) return true;
+                if (eval(this.ImageSpace)) return true;
+                if (eval(this.DamagePerSecond)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.SpecularSunPower)) return true;
+                if (eval(this.WaterReflectivity)) return true;
+                if (eval(this.WaterFresnel)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.FogAboveWaterDistanceNearPlane)) return true;
+                if (eval(this.FogAboveWaterDistanceFarPlane)) return true;
+                if (eval(this.ShallowColor)) return true;
+                if (eval(this.DeepColor)) return true;
+                if (eval(this.ReflectionColor)) return true;
+                if (eval(this.Unknown3)) return true;
+                if (eval(this.DisplacementStartingSize)) return true;
+                if (eval(this.DisplacementFoce)) return true;
+                if (eval(this.DisplacementVelocity)) return true;
+                if (eval(this.DisplacementFalloff)) return true;
+                if (eval(this.DisplacementDampner)) return true;
+                if (eval(this.Unknown4)) return true;
+                if (eval(this.NoiseFalloff)) return true;
+                if (eval(this.NoiseLayerOneWindDirection)) return true;
+                if (eval(this.NoiseLayerTwoWindDirection)) return true;
+                if (eval(this.NoiseLayerThreeWindDirection)) return true;
+                if (eval(this.NoiseLayerOneWindSpeed)) return true;
+                if (eval(this.NoiseLayerTwoWindSpeed)) return true;
+                if (eval(this.NoiseLayerThreeWindSpeed)) return true;
+                if (eval(this.Unknown5)) return true;
+                if (eval(this.FogAboveWaterAmount)) return true;
+                if (eval(this.Unknown6)) return true;
+                if (eval(this.FogUnderWaterAmount)) return true;
+                if (eval(this.FogUnderWaterDistanceNearPlane)) return true;
+                if (eval(this.FogUnderWaterDistanceFarPlane)) return true;
+                if (eval(this.WaterRefractionMagnitude)) return true;
+                if (eval(this.SpecularPower)) return true;
+                if (eval(this.Unknown7)) return true;
+                if (eval(this.SpecularRadius)) return true;
+                if (eval(this.SpecularBrightness)) return true;
+                if (eval(this.NoiseLayerOneUvScale)) return true;
+                if (eval(this.NoiseLayerTwoUvScale)) return true;
+                if (eval(this.NoiseLayerThreeUvScale)) return true;
+                if (eval(this.NoiseLayerOneAmplitudeScale)) return true;
+                if (eval(this.NoiseLayerTwoAmplitudeScale)) return true;
+                if (eval(this.NoiseLayerThreeAmplitudeScale)) return true;
+                if (eval(this.WaterReflectionMagnitude)) return true;
+                if (eval(this.SpecularSunSparkleMagnitude)) return true;
+                if (eval(this.SpecularSunSpecularMagnitude)) return true;
+                if (eval(this.DepthReflections)) return true;
+                if (eval(this.DepthRefraction)) return true;
+                if (eval(this.DepthNormals)) return true;
+                if (eval(this.DepthSpecularLighting)) return true;
+                if (eval(this.SpecularSunSparklePower)) return true;
+                if (eval(this.GNAM)) return true;
+                if (eval(this.LinearVelocity)) return true;
+                if (eval(this.AngularVelocity)) return true;
+                if (eval(this.NoiseLayerOneTexture)) return true;
+                if (eval(this.NoiseLayerTwoTexture)) return true;
+                if (eval(this.NoiseLayerThreeTexture)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +1120,85 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                if (UnusedNoisemaps != null)
+                {
+                    obj.UnusedNoisemaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnusedNoisemaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (UnusedNoisemaps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.UnusedNoisemaps.Specific = l;
+                        foreach (var item in UnusedNoisemaps.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Opacity = eval(this.Opacity);
+                obj.Flags = eval(this.Flags);
+                obj.MNAM = eval(this.MNAM);
+                obj.Material = eval(this.Material);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.Spell = eval(this.Spell);
+                obj.ImageSpace = eval(this.ImageSpace);
+                obj.DamagePerSecond = eval(this.DamagePerSecond);
+                obj.Unknown = eval(this.Unknown);
+                obj.SpecularSunPower = eval(this.SpecularSunPower);
+                obj.WaterReflectivity = eval(this.WaterReflectivity);
+                obj.WaterFresnel = eval(this.WaterFresnel);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.FogAboveWaterDistanceNearPlane = eval(this.FogAboveWaterDistanceNearPlane);
+                obj.FogAboveWaterDistanceFarPlane = eval(this.FogAboveWaterDistanceFarPlane);
+                obj.ShallowColor = eval(this.ShallowColor);
+                obj.DeepColor = eval(this.DeepColor);
+                obj.ReflectionColor = eval(this.ReflectionColor);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.DisplacementStartingSize = eval(this.DisplacementStartingSize);
+                obj.DisplacementFoce = eval(this.DisplacementFoce);
+                obj.DisplacementVelocity = eval(this.DisplacementVelocity);
+                obj.DisplacementFalloff = eval(this.DisplacementFalloff);
+                obj.DisplacementDampner = eval(this.DisplacementDampner);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.NoiseFalloff = eval(this.NoiseFalloff);
+                obj.NoiseLayerOneWindDirection = eval(this.NoiseLayerOneWindDirection);
+                obj.NoiseLayerTwoWindDirection = eval(this.NoiseLayerTwoWindDirection);
+                obj.NoiseLayerThreeWindDirection = eval(this.NoiseLayerThreeWindDirection);
+                obj.NoiseLayerOneWindSpeed = eval(this.NoiseLayerOneWindSpeed);
+                obj.NoiseLayerTwoWindSpeed = eval(this.NoiseLayerTwoWindSpeed);
+                obj.NoiseLayerThreeWindSpeed = eval(this.NoiseLayerThreeWindSpeed);
+                obj.Unknown5 = eval(this.Unknown5);
+                obj.FogAboveWaterAmount = eval(this.FogAboveWaterAmount);
+                obj.Unknown6 = eval(this.Unknown6);
+                obj.FogUnderWaterAmount = eval(this.FogUnderWaterAmount);
+                obj.FogUnderWaterDistanceNearPlane = eval(this.FogUnderWaterDistanceNearPlane);
+                obj.FogUnderWaterDistanceFarPlane = eval(this.FogUnderWaterDistanceFarPlane);
+                obj.WaterRefractionMagnitude = eval(this.WaterRefractionMagnitude);
+                obj.SpecularPower = eval(this.SpecularPower);
+                obj.Unknown7 = eval(this.Unknown7);
+                obj.SpecularRadius = eval(this.SpecularRadius);
+                obj.SpecularBrightness = eval(this.SpecularBrightness);
+                obj.NoiseLayerOneUvScale = eval(this.NoiseLayerOneUvScale);
+                obj.NoiseLayerTwoUvScale = eval(this.NoiseLayerTwoUvScale);
+                obj.NoiseLayerThreeUvScale = eval(this.NoiseLayerThreeUvScale);
+                obj.NoiseLayerOneAmplitudeScale = eval(this.NoiseLayerOneAmplitudeScale);
+                obj.NoiseLayerTwoAmplitudeScale = eval(this.NoiseLayerTwoAmplitudeScale);
+                obj.NoiseLayerThreeAmplitudeScale = eval(this.NoiseLayerThreeAmplitudeScale);
+                obj.WaterReflectionMagnitude = eval(this.WaterReflectionMagnitude);
+                obj.SpecularSunSparkleMagnitude = eval(this.SpecularSunSparkleMagnitude);
+                obj.SpecularSunSpecularMagnitude = eval(this.SpecularSunSpecularMagnitude);
+                obj.DepthReflections = eval(this.DepthReflections);
+                obj.DepthRefraction = eval(this.DepthRefraction);
+                obj.DepthNormals = eval(this.DepthNormals);
+                obj.DepthSpecularLighting = eval(this.DepthSpecularLighting);
+                obj.SpecularSunSparklePower = eval(this.SpecularSunSparklePower);
+                obj.GNAM = eval(this.GNAM);
+                obj.LinearVelocity = eval(this.LinearVelocity);
+                obj.AngularVelocity = eval(this.AngularVelocity);
+                obj.NoiseLayerOneTexture = eval(this.NoiseLayerOneTexture);
+                obj.NoiseLayerTwoTexture = eval(this.NoiseLayerTwoTexture);
+                obj.NoiseLayerThreeTexture = eval(this.NoiseLayerThreeTexture);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -317,6 +1221,289 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.UnusedNoisemaps?.Overall ?? true)
+                        && UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                    {
+                        fg.AppendLine("UnusedNoisemaps =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(UnusedNoisemapsItem.Overall);
+                            if (UnusedNoisemapsItem.Specific != null)
+                            {
+                                foreach (var subItem in UnusedNoisemapsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Opacity ?? true)
+                    {
+                        fg.AppendItem(Opacity, "Opacity");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.MNAM ?? true)
+                    {
+                        fg.AppendItem(MNAM, "MNAM");
+                    }
+                    if (printMask?.Material ?? true)
+                    {
+                        fg.AppendItem(Material, "Material");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        fg.AppendItem(OpenSound, "OpenSound");
+                    }
+                    if (printMask?.Spell ?? true)
+                    {
+                        fg.AppendItem(Spell, "Spell");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        fg.AppendItem(ImageSpace, "ImageSpace");
+                    }
+                    if (printMask?.DamagePerSecond ?? true)
+                    {
+                        fg.AppendItem(DamagePerSecond, "DamagePerSecond");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.SpecularSunPower ?? true)
+                    {
+                        fg.AppendItem(SpecularSunPower, "SpecularSunPower");
+                    }
+                    if (printMask?.WaterReflectivity ?? true)
+                    {
+                        fg.AppendItem(WaterReflectivity, "WaterReflectivity");
+                    }
+                    if (printMask?.WaterFresnel ?? true)
+                    {
+                        fg.AppendItem(WaterFresnel, "WaterFresnel");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
+                    {
+                        fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                    }
+                    if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
+                    {
+                        fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                    }
+                    if (printMask?.ShallowColor ?? true)
+                    {
+                        fg.AppendItem(ShallowColor, "ShallowColor");
+                    }
+                    if (printMask?.DeepColor ?? true)
+                    {
+                        fg.AppendItem(DeepColor, "DeepColor");
+                    }
+                    if (printMask?.ReflectionColor ?? true)
+                    {
+                        fg.AppendItem(ReflectionColor, "ReflectionColor");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.DisplacementStartingSize ?? true)
+                    {
+                        fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                    }
+                    if (printMask?.DisplacementFoce ?? true)
+                    {
+                        fg.AppendItem(DisplacementFoce, "DisplacementFoce");
+                    }
+                    if (printMask?.DisplacementVelocity ?? true)
+                    {
+                        fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                    }
+                    if (printMask?.DisplacementFalloff ?? true)
+                    {
+                        fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                    }
+                    if (printMask?.DisplacementDampner ?? true)
+                    {
+                        fg.AppendItem(DisplacementDampner, "DisplacementDampner");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        fg.AppendItem(Unknown4, "Unknown4");
+                    }
+                    if (printMask?.NoiseFalloff ?? true)
+                    {
+                        fg.AppendItem(NoiseFalloff, "NoiseFalloff");
+                    }
+                    if (printMask?.NoiseLayerOneWindDirection ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                    }
+                    if (printMask?.NoiseLayerTwoWindDirection ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                    }
+                    if (printMask?.NoiseLayerThreeWindDirection ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                    }
+                    if (printMask?.NoiseLayerOneWindSpeed ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                    }
+                    if (printMask?.NoiseLayerTwoWindSpeed ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                    }
+                    if (printMask?.NoiseLayerThreeWindSpeed ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                    }
+                    if (printMask?.Unknown5 ?? true)
+                    {
+                        fg.AppendItem(Unknown5, "Unknown5");
+                    }
+                    if (printMask?.FogAboveWaterAmount ?? true)
+                    {
+                        fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                    }
+                    if (printMask?.Unknown6 ?? true)
+                    {
+                        fg.AppendItem(Unknown6, "Unknown6");
+                    }
+                    if (printMask?.FogUnderWaterAmount ?? true)
+                    {
+                        fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                    }
+                    if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
+                    {
+                        fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                    }
+                    if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
+                    {
+                        fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                    }
+                    if (printMask?.WaterRefractionMagnitude ?? true)
+                    {
+                        fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                    }
+                    if (printMask?.SpecularPower ?? true)
+                    {
+                        fg.AppendItem(SpecularPower, "SpecularPower");
+                    }
+                    if (printMask?.Unknown7 ?? true)
+                    {
+                        fg.AppendItem(Unknown7, "Unknown7");
+                    }
+                    if (printMask?.SpecularRadius ?? true)
+                    {
+                        fg.AppendItem(SpecularRadius, "SpecularRadius");
+                    }
+                    if (printMask?.SpecularBrightness ?? true)
+                    {
+                        fg.AppendItem(SpecularBrightness, "SpecularBrightness");
+                    }
+                    if (printMask?.NoiseLayerOneUvScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                    }
+                    if (printMask?.NoiseLayerTwoUvScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                    }
+                    if (printMask?.NoiseLayerThreeUvScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                    }
+                    if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                    }
+                    if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                    }
+                    if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                    }
+                    if (printMask?.WaterReflectionMagnitude ?? true)
+                    {
+                        fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                    }
+                    if (printMask?.SpecularSunSparkleMagnitude ?? true)
+                    {
+                        fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                    }
+                    if (printMask?.SpecularSunSpecularMagnitude ?? true)
+                    {
+                        fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                    }
+                    if (printMask?.DepthReflections ?? true)
+                    {
+                        fg.AppendItem(DepthReflections, "DepthReflections");
+                    }
+                    if (printMask?.DepthRefraction ?? true)
+                    {
+                        fg.AppendItem(DepthRefraction, "DepthRefraction");
+                    }
+                    if (printMask?.DepthNormals ?? true)
+                    {
+                        fg.AppendItem(DepthNormals, "DepthNormals");
+                    }
+                    if (printMask?.DepthSpecularLighting ?? true)
+                    {
+                        fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                    }
+                    if (printMask?.SpecularSunSparklePower ?? true)
+                    {
+                        fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                    }
+                    if (printMask?.GNAM ?? true)
+                    {
+                        fg.AppendItem(GNAM, "GNAM");
+                    }
+                    if (printMask?.LinearVelocity ?? true)
+                    {
+                        fg.AppendItem(LinearVelocity, "LinearVelocity");
+                    }
+                    if (printMask?.AngularVelocity ?? true)
+                    {
+                        fg.AppendItem(AngularVelocity, "AngularVelocity");
+                    }
+                    if (printMask?.NoiseLayerOneTexture ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                    }
+                    if (printMask?.NoiseLayerTwoTexture ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                    }
+                    if (printMask?.NoiseLayerThreeTexture ?? true)
+                    {
+                        fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +1515,213 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UnusedNoisemaps;
+            public Exception? Opacity;
+            public Exception? Flags;
+            public Exception? MNAM;
+            public Exception? Material;
+            public Exception? OpenSound;
+            public Exception? Spell;
+            public Exception? ImageSpace;
+            public Exception? DamagePerSecond;
+            public Exception? Unknown;
+            public Exception? SpecularSunPower;
+            public Exception? WaterReflectivity;
+            public Exception? WaterFresnel;
+            public Exception? Unknown2;
+            public Exception? FogAboveWaterDistanceNearPlane;
+            public Exception? FogAboveWaterDistanceFarPlane;
+            public Exception? ShallowColor;
+            public Exception? DeepColor;
+            public Exception? ReflectionColor;
+            public Exception? Unknown3;
+            public Exception? DisplacementStartingSize;
+            public Exception? DisplacementFoce;
+            public Exception? DisplacementVelocity;
+            public Exception? DisplacementFalloff;
+            public Exception? DisplacementDampner;
+            public Exception? Unknown4;
+            public Exception? NoiseFalloff;
+            public Exception? NoiseLayerOneWindDirection;
+            public Exception? NoiseLayerTwoWindDirection;
+            public Exception? NoiseLayerThreeWindDirection;
+            public Exception? NoiseLayerOneWindSpeed;
+            public Exception? NoiseLayerTwoWindSpeed;
+            public Exception? NoiseLayerThreeWindSpeed;
+            public Exception? Unknown5;
+            public Exception? FogAboveWaterAmount;
+            public Exception? Unknown6;
+            public Exception? FogUnderWaterAmount;
+            public Exception? FogUnderWaterDistanceNearPlane;
+            public Exception? FogUnderWaterDistanceFarPlane;
+            public Exception? WaterRefractionMagnitude;
+            public Exception? SpecularPower;
+            public Exception? Unknown7;
+            public Exception? SpecularRadius;
+            public Exception? SpecularBrightness;
+            public Exception? NoiseLayerOneUvScale;
+            public Exception? NoiseLayerTwoUvScale;
+            public Exception? NoiseLayerThreeUvScale;
+            public Exception? NoiseLayerOneAmplitudeScale;
+            public Exception? NoiseLayerTwoAmplitudeScale;
+            public Exception? NoiseLayerThreeAmplitudeScale;
+            public Exception? WaterReflectionMagnitude;
+            public Exception? SpecularSunSparkleMagnitude;
+            public Exception? SpecularSunSpecularMagnitude;
+            public Exception? DepthReflections;
+            public Exception? DepthRefraction;
+            public Exception? DepthNormals;
+            public Exception? DepthSpecularLighting;
+            public Exception? SpecularSunSparklePower;
+            public Exception? GNAM;
+            public Exception? LinearVelocity;
+            public Exception? AngularVelocity;
+            public Exception? NoiseLayerOneTexture;
+            public Exception? NoiseLayerTwoTexture;
+            public Exception? NoiseLayerThreeTexture;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        return Name;
+                    case Water_FieldIndex.UnusedNoisemaps:
+                        return UnusedNoisemaps;
+                    case Water_FieldIndex.Opacity:
+                        return Opacity;
+                    case Water_FieldIndex.Flags:
+                        return Flags;
+                    case Water_FieldIndex.MNAM:
+                        return MNAM;
+                    case Water_FieldIndex.Material:
+                        return Material;
+                    case Water_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Water_FieldIndex.Spell:
+                        return Spell;
+                    case Water_FieldIndex.ImageSpace:
+                        return ImageSpace;
+                    case Water_FieldIndex.DamagePerSecond:
+                        return DamagePerSecond;
+                    case Water_FieldIndex.Unknown:
+                        return Unknown;
+                    case Water_FieldIndex.SpecularSunPower:
+                        return SpecularSunPower;
+                    case Water_FieldIndex.WaterReflectivity:
+                        return WaterReflectivity;
+                    case Water_FieldIndex.WaterFresnel:
+                        return WaterFresnel;
+                    case Water_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        return FogAboveWaterDistanceNearPlane;
+                    case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        return FogAboveWaterDistanceFarPlane;
+                    case Water_FieldIndex.ShallowColor:
+                        return ShallowColor;
+                    case Water_FieldIndex.DeepColor:
+                        return DeepColor;
+                    case Water_FieldIndex.ReflectionColor:
+                        return ReflectionColor;
+                    case Water_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case Water_FieldIndex.DisplacementStartingSize:
+                        return DisplacementStartingSize;
+                    case Water_FieldIndex.DisplacementFoce:
+                        return DisplacementFoce;
+                    case Water_FieldIndex.DisplacementVelocity:
+                        return DisplacementVelocity;
+                    case Water_FieldIndex.DisplacementFalloff:
+                        return DisplacementFalloff;
+                    case Water_FieldIndex.DisplacementDampner:
+                        return DisplacementDampner;
+                    case Water_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case Water_FieldIndex.NoiseFalloff:
+                        return NoiseFalloff;
+                    case Water_FieldIndex.NoiseLayerOneWindDirection:
+                        return NoiseLayerOneWindDirection;
+                    case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                        return NoiseLayerTwoWindDirection;
+                    case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                        return NoiseLayerThreeWindDirection;
+                    case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                        return NoiseLayerOneWindSpeed;
+                    case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                        return NoiseLayerTwoWindSpeed;
+                    case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                        return NoiseLayerThreeWindSpeed;
+                    case Water_FieldIndex.Unknown5:
+                        return Unknown5;
+                    case Water_FieldIndex.FogAboveWaterAmount:
+                        return FogAboveWaterAmount;
+                    case Water_FieldIndex.Unknown6:
+                        return Unknown6;
+                    case Water_FieldIndex.FogUnderWaterAmount:
+                        return FogUnderWaterAmount;
+                    case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        return FogUnderWaterDistanceNearPlane;
+                    case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        return FogUnderWaterDistanceFarPlane;
+                    case Water_FieldIndex.WaterRefractionMagnitude:
+                        return WaterRefractionMagnitude;
+                    case Water_FieldIndex.SpecularPower:
+                        return SpecularPower;
+                    case Water_FieldIndex.Unknown7:
+                        return Unknown7;
+                    case Water_FieldIndex.SpecularRadius:
+                        return SpecularRadius;
+                    case Water_FieldIndex.SpecularBrightness:
+                        return SpecularBrightness;
+                    case Water_FieldIndex.NoiseLayerOneUvScale:
+                        return NoiseLayerOneUvScale;
+                    case Water_FieldIndex.NoiseLayerTwoUvScale:
+                        return NoiseLayerTwoUvScale;
+                    case Water_FieldIndex.NoiseLayerThreeUvScale:
+                        return NoiseLayerThreeUvScale;
+                    case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        return NoiseLayerOneAmplitudeScale;
+                    case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        return NoiseLayerTwoAmplitudeScale;
+                    case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        return NoiseLayerThreeAmplitudeScale;
+                    case Water_FieldIndex.WaterReflectionMagnitude:
+                        return WaterReflectionMagnitude;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        return SpecularSunSparkleMagnitude;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        return SpecularSunSpecularMagnitude;
+                    case Water_FieldIndex.DepthReflections:
+                        return DepthReflections;
+                    case Water_FieldIndex.DepthRefraction:
+                        return DepthRefraction;
+                    case Water_FieldIndex.DepthNormals:
+                        return DepthNormals;
+                    case Water_FieldIndex.DepthSpecularLighting:
+                        return DepthSpecularLighting;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        return SpecularSunSparklePower;
+                    case Water_FieldIndex.GNAM:
+                        return GNAM;
+                    case Water_FieldIndex.LinearVelocity:
+                        return LinearVelocity;
+                    case Water_FieldIndex.AngularVelocity:
+                        return AngularVelocity;
+                    case Water_FieldIndex.NoiseLayerOneTexture:
+                        return NoiseLayerOneTexture;
+                    case Water_FieldIndex.NoiseLayerTwoTexture:
+                        return NoiseLayerTwoTexture;
+                    case Water_FieldIndex.NoiseLayerThreeTexture:
+                        return NoiseLayerThreeTexture;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +1732,204 @@ namespace Mutagen.Bethesda.Skyrim
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Water_FieldIndex.UnusedNoisemaps:
+                        this.UnusedNoisemaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = ex;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Water_FieldIndex.MNAM:
+                        this.MNAM = ex;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = ex;
+                        break;
+                    case Water_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Water_FieldIndex.Spell:
+                        this.Spell = ex;
+                        break;
+                    case Water_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
+                    case Water_FieldIndex.DamagePerSecond:
+                        this.DamagePerSecond = ex;
+                        break;
+                    case Water_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunPower:
+                        this.SpecularSunPower = ex;
+                        break;
+                    case Water_FieldIndex.WaterReflectivity:
+                        this.WaterReflectivity = ex;
+                        break;
+                    case Water_FieldIndex.WaterFresnel:
+                        this.WaterFresnel = ex;
+                        break;
+                    case Water_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        this.FogAboveWaterDistanceNearPlane = ex;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        this.FogAboveWaterDistanceFarPlane = ex;
+                        break;
+                    case Water_FieldIndex.ShallowColor:
+                        this.ShallowColor = ex;
+                        break;
+                    case Water_FieldIndex.DeepColor:
+                        this.DeepColor = ex;
+                        break;
+                    case Water_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = ex;
+                        break;
+                    case Water_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementStartingSize:
+                        this.DisplacementStartingSize = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementFoce:
+                        this.DisplacementFoce = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementVelocity:
+                        this.DisplacementVelocity = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementFalloff:
+                        this.DisplacementFalloff = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementDampner:
+                        this.DisplacementDampner = ex;
+                        break;
+                    case Water_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case Water_FieldIndex.NoiseFalloff:
+                        this.NoiseFalloff = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneWindDirection:
+                        this.NoiseLayerOneWindDirection = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                        this.NoiseLayerTwoWindDirection = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                        this.NoiseLayerThreeWindDirection = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                        this.NoiseLayerOneWindSpeed = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                        this.NoiseLayerTwoWindSpeed = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                        this.NoiseLayerThreeWindSpeed = ex;
+                        break;
+                    case Water_FieldIndex.Unknown5:
+                        this.Unknown5 = ex;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterAmount:
+                        this.FogAboveWaterAmount = ex;
+                        break;
+                    case Water_FieldIndex.Unknown6:
+                        this.Unknown6 = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterAmount:
+                        this.FogUnderWaterAmount = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        this.FogUnderWaterDistanceNearPlane = ex;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        this.FogUnderWaterDistanceFarPlane = ex;
+                        break;
+                    case Water_FieldIndex.WaterRefractionMagnitude:
+                        this.WaterRefractionMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.SpecularPower:
+                        this.SpecularPower = ex;
+                        break;
+                    case Water_FieldIndex.Unknown7:
+                        this.Unknown7 = ex;
+                        break;
+                    case Water_FieldIndex.SpecularRadius:
+                        this.SpecularRadius = ex;
+                        break;
+                    case Water_FieldIndex.SpecularBrightness:
+                        this.SpecularBrightness = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneUvScale:
+                        this.NoiseLayerOneUvScale = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoUvScale:
+                        this.NoiseLayerTwoUvScale = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeUvScale:
+                        this.NoiseLayerThreeUvScale = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        this.NoiseLayerOneAmplitudeScale = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        this.NoiseLayerTwoAmplitudeScale = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        this.NoiseLayerThreeAmplitudeScale = ex;
+                        break;
+                    case Water_FieldIndex.WaterReflectionMagnitude:
+                        this.WaterReflectionMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        this.SpecularSunSparkleMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        this.SpecularSunSpecularMagnitude = ex;
+                        break;
+                    case Water_FieldIndex.DepthReflections:
+                        this.DepthReflections = ex;
+                        break;
+                    case Water_FieldIndex.DepthRefraction:
+                        this.DepthRefraction = ex;
+                        break;
+                    case Water_FieldIndex.DepthNormals:
+                        this.DepthNormals = ex;
+                        break;
+                    case Water_FieldIndex.DepthSpecularLighting:
+                        this.DepthSpecularLighting = ex;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        this.SpecularSunSparklePower = ex;
+                        break;
+                    case Water_FieldIndex.GNAM:
+                        this.GNAM = ex;
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = ex;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneTexture:
+                        this.NoiseLayerOneTexture = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoTexture:
+                        this.NoiseLayerTwoTexture = ex;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeTexture:
+                        this.NoiseLayerThreeTexture = ex;
+                        break;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +1941,204 @@ namespace Mutagen.Bethesda.Skyrim
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.UnusedNoisemaps:
+                        this.UnusedNoisemaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.MNAM:
+                        this.MNAM = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Spell:
+                        this.Spell = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DamagePerSecond:
+                        this.DamagePerSecond = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunPower:
+                        this.SpecularSunPower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.WaterReflectivity:
+                        this.WaterReflectivity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.WaterFresnel:
+                        this.WaterFresnel = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        this.FogAboveWaterDistanceNearPlane = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        this.FogAboveWaterDistanceFarPlane = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ShallowColor:
+                        this.ShallowColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DeepColor:
+                        this.DeepColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementStartingSize:
+                        this.DisplacementStartingSize = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementFoce:
+                        this.DisplacementFoce = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementVelocity:
+                        this.DisplacementVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementFalloff:
+                        this.DisplacementFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementDampner:
+                        this.DisplacementDampner = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseFalloff:
+                        this.NoiseFalloff = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneWindDirection:
+                        this.NoiseLayerOneWindDirection = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                        this.NoiseLayerTwoWindDirection = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                        this.NoiseLayerThreeWindDirection = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                        this.NoiseLayerOneWindSpeed = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                        this.NoiseLayerTwoWindSpeed = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                        this.NoiseLayerThreeWindSpeed = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown5:
+                        this.Unknown5 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogAboveWaterAmount:
+                        this.FogAboveWaterAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown6:
+                        this.Unknown6 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterAmount:
+                        this.FogUnderWaterAmount = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        this.FogUnderWaterDistanceNearPlane = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        this.FogUnderWaterDistanceFarPlane = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.WaterRefractionMagnitude:
+                        this.WaterRefractionMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularPower:
+                        this.SpecularPower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Unknown7:
+                        this.Unknown7 = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularRadius:
+                        this.SpecularRadius = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularBrightness:
+                        this.SpecularBrightness = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneUvScale:
+                        this.NoiseLayerOneUvScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoUvScale:
+                        this.NoiseLayerTwoUvScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeUvScale:
+                        this.NoiseLayerThreeUvScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        this.NoiseLayerOneAmplitudeScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        this.NoiseLayerTwoAmplitudeScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        this.NoiseLayerThreeAmplitudeScale = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.WaterReflectionMagnitude:
+                        this.WaterReflectionMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                        this.SpecularSunSparkleMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                        this.SpecularSunSpecularMagnitude = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DepthReflections:
+                        this.DepthReflections = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DepthRefraction:
+                        this.DepthRefraction = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DepthNormals:
+                        this.DepthNormals = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DepthSpecularLighting:
+                        this.DepthSpecularLighting = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.SpecularSunSparklePower:
+                        this.SpecularSunSparklePower = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.GNAM:
+                        this.GNAM = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerOneTexture:
+                        this.NoiseLayerOneTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerTwoTexture:
+                        this.NoiseLayerTwoTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseLayerThreeTexture:
+                        this.NoiseLayerThreeTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +2148,72 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (UnusedNoisemaps != null) return true;
+                if (Opacity != null) return true;
+                if (Flags != null) return true;
+                if (MNAM != null) return true;
+                if (Material != null) return true;
+                if (OpenSound != null) return true;
+                if (Spell != null) return true;
+                if (ImageSpace != null) return true;
+                if (DamagePerSecond != null) return true;
+                if (Unknown != null) return true;
+                if (SpecularSunPower != null) return true;
+                if (WaterReflectivity != null) return true;
+                if (WaterFresnel != null) return true;
+                if (Unknown2 != null) return true;
+                if (FogAboveWaterDistanceNearPlane != null) return true;
+                if (FogAboveWaterDistanceFarPlane != null) return true;
+                if (ShallowColor != null) return true;
+                if (DeepColor != null) return true;
+                if (ReflectionColor != null) return true;
+                if (Unknown3 != null) return true;
+                if (DisplacementStartingSize != null) return true;
+                if (DisplacementFoce != null) return true;
+                if (DisplacementVelocity != null) return true;
+                if (DisplacementFalloff != null) return true;
+                if (DisplacementDampner != null) return true;
+                if (Unknown4 != null) return true;
+                if (NoiseFalloff != null) return true;
+                if (NoiseLayerOneWindDirection != null) return true;
+                if (NoiseLayerTwoWindDirection != null) return true;
+                if (NoiseLayerThreeWindDirection != null) return true;
+                if (NoiseLayerOneWindSpeed != null) return true;
+                if (NoiseLayerTwoWindSpeed != null) return true;
+                if (NoiseLayerThreeWindSpeed != null) return true;
+                if (Unknown5 != null) return true;
+                if (FogAboveWaterAmount != null) return true;
+                if (Unknown6 != null) return true;
+                if (FogUnderWaterAmount != null) return true;
+                if (FogUnderWaterDistanceNearPlane != null) return true;
+                if (FogUnderWaterDistanceFarPlane != null) return true;
+                if (WaterRefractionMagnitude != null) return true;
+                if (SpecularPower != null) return true;
+                if (Unknown7 != null) return true;
+                if (SpecularRadius != null) return true;
+                if (SpecularBrightness != null) return true;
+                if (NoiseLayerOneUvScale != null) return true;
+                if (NoiseLayerTwoUvScale != null) return true;
+                if (NoiseLayerThreeUvScale != null) return true;
+                if (NoiseLayerOneAmplitudeScale != null) return true;
+                if (NoiseLayerTwoAmplitudeScale != null) return true;
+                if (NoiseLayerThreeAmplitudeScale != null) return true;
+                if (WaterReflectionMagnitude != null) return true;
+                if (SpecularSunSparkleMagnitude != null) return true;
+                if (SpecularSunSpecularMagnitude != null) return true;
+                if (DepthReflections != null) return true;
+                if (DepthRefraction != null) return true;
+                if (DepthNormals != null) return true;
+                if (DepthSpecularLighting != null) return true;
+                if (SpecularSunSparklePower != null) return true;
+                if (GNAM != null) return true;
+                if (LinearVelocity != null) return true;
+                if (AngularVelocity != null) return true;
+                if (NoiseLayerOneTexture != null) return true;
+                if (NoiseLayerTwoTexture != null) return true;
+                if (NoiseLayerThreeTexture != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +2249,93 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Name, "Name");
+                if (UnusedNoisemaps.TryGet(out var UnusedNoisemapsItem))
+                {
+                    fg.AppendLine("UnusedNoisemaps =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(UnusedNoisemapsItem.Overall);
+                        if (UnusedNoisemapsItem.Specific != null)
+                        {
+                            foreach (var subItem in UnusedNoisemapsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Opacity, "Opacity");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(MNAM, "MNAM");
+                fg.AppendItem(Material, "Material");
+                fg.AppendItem(OpenSound, "OpenSound");
+                fg.AppendItem(Spell, "Spell");
+                fg.AppendItem(ImageSpace, "ImageSpace");
+                fg.AppendItem(DamagePerSecond, "DamagePerSecond");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(SpecularSunPower, "SpecularSunPower");
+                fg.AppendItem(WaterReflectivity, "WaterReflectivity");
+                fg.AppendItem(WaterFresnel, "WaterFresnel");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                fg.AppendItem(ShallowColor, "ShallowColor");
+                fg.AppendItem(DeepColor, "DeepColor");
+                fg.AppendItem(ReflectionColor, "ReflectionColor");
+                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                fg.AppendItem(DisplacementFoce, "DisplacementFoce");
+                fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                fg.AppendItem(DisplacementDampner, "DisplacementDampner");
+                fg.AppendItem(Unknown4, "Unknown4");
+                fg.AppendItem(NoiseFalloff, "NoiseFalloff");
+                fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                fg.AppendItem(Unknown5, "Unknown5");
+                fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                fg.AppendItem(Unknown6, "Unknown6");
+                fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                fg.AppendItem(SpecularPower, "SpecularPower");
+                fg.AppendItem(Unknown7, "Unknown7");
+                fg.AppendItem(SpecularRadius, "SpecularRadius");
+                fg.AppendItem(SpecularBrightness, "SpecularBrightness");
+                fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                fg.AppendItem(DepthReflections, "DepthReflections");
+                fg.AppendItem(DepthRefraction, "DepthRefraction");
+                fg.AppendItem(DepthNormals, "DepthNormals");
+                fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                fg.AppendItem(GNAM, "GNAM");
+                fg.AppendItem(LinearVelocity, "LinearVelocity");
+                fg.AppendItem(AngularVelocity, "AngularVelocity");
+                fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -407,6 +2344,72 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.UnusedNoisemaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.UnusedNoisemaps?.Overall, rhs.UnusedNoisemaps?.Overall), ExceptionExt.Combine(this.UnusedNoisemaps?.Specific, rhs.UnusedNoisemaps?.Specific));
+                ret.Opacity = this.Opacity.Combine(rhs.Opacity);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MNAM = this.MNAM.Combine(rhs.MNAM);
+                ret.Material = this.Material.Combine(rhs.Material);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.Spell = this.Spell.Combine(rhs.Spell);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
+                ret.DamagePerSecond = this.DamagePerSecond.Combine(rhs.DamagePerSecond);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.SpecularSunPower = this.SpecularSunPower.Combine(rhs.SpecularSunPower);
+                ret.WaterReflectivity = this.WaterReflectivity.Combine(rhs.WaterReflectivity);
+                ret.WaterFresnel = this.WaterFresnel.Combine(rhs.WaterFresnel);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.FogAboveWaterDistanceNearPlane = this.FogAboveWaterDistanceNearPlane.Combine(rhs.FogAboveWaterDistanceNearPlane);
+                ret.FogAboveWaterDistanceFarPlane = this.FogAboveWaterDistanceFarPlane.Combine(rhs.FogAboveWaterDistanceFarPlane);
+                ret.ShallowColor = this.ShallowColor.Combine(rhs.ShallowColor);
+                ret.DeepColor = this.DeepColor.Combine(rhs.DeepColor);
+                ret.ReflectionColor = this.ReflectionColor.Combine(rhs.ReflectionColor);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.DisplacementStartingSize = this.DisplacementStartingSize.Combine(rhs.DisplacementStartingSize);
+                ret.DisplacementFoce = this.DisplacementFoce.Combine(rhs.DisplacementFoce);
+                ret.DisplacementVelocity = this.DisplacementVelocity.Combine(rhs.DisplacementVelocity);
+                ret.DisplacementFalloff = this.DisplacementFalloff.Combine(rhs.DisplacementFalloff);
+                ret.DisplacementDampner = this.DisplacementDampner.Combine(rhs.DisplacementDampner);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.NoiseFalloff = this.NoiseFalloff.Combine(rhs.NoiseFalloff);
+                ret.NoiseLayerOneWindDirection = this.NoiseLayerOneWindDirection.Combine(rhs.NoiseLayerOneWindDirection);
+                ret.NoiseLayerTwoWindDirection = this.NoiseLayerTwoWindDirection.Combine(rhs.NoiseLayerTwoWindDirection);
+                ret.NoiseLayerThreeWindDirection = this.NoiseLayerThreeWindDirection.Combine(rhs.NoiseLayerThreeWindDirection);
+                ret.NoiseLayerOneWindSpeed = this.NoiseLayerOneWindSpeed.Combine(rhs.NoiseLayerOneWindSpeed);
+                ret.NoiseLayerTwoWindSpeed = this.NoiseLayerTwoWindSpeed.Combine(rhs.NoiseLayerTwoWindSpeed);
+                ret.NoiseLayerThreeWindSpeed = this.NoiseLayerThreeWindSpeed.Combine(rhs.NoiseLayerThreeWindSpeed);
+                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.FogAboveWaterAmount = this.FogAboveWaterAmount.Combine(rhs.FogAboveWaterAmount);
+                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
+                ret.FogUnderWaterAmount = this.FogUnderWaterAmount.Combine(rhs.FogUnderWaterAmount);
+                ret.FogUnderWaterDistanceNearPlane = this.FogUnderWaterDistanceNearPlane.Combine(rhs.FogUnderWaterDistanceNearPlane);
+                ret.FogUnderWaterDistanceFarPlane = this.FogUnderWaterDistanceFarPlane.Combine(rhs.FogUnderWaterDistanceFarPlane);
+                ret.WaterRefractionMagnitude = this.WaterRefractionMagnitude.Combine(rhs.WaterRefractionMagnitude);
+                ret.SpecularPower = this.SpecularPower.Combine(rhs.SpecularPower);
+                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
+                ret.SpecularRadius = this.SpecularRadius.Combine(rhs.SpecularRadius);
+                ret.SpecularBrightness = this.SpecularBrightness.Combine(rhs.SpecularBrightness);
+                ret.NoiseLayerOneUvScale = this.NoiseLayerOneUvScale.Combine(rhs.NoiseLayerOneUvScale);
+                ret.NoiseLayerTwoUvScale = this.NoiseLayerTwoUvScale.Combine(rhs.NoiseLayerTwoUvScale);
+                ret.NoiseLayerThreeUvScale = this.NoiseLayerThreeUvScale.Combine(rhs.NoiseLayerThreeUvScale);
+                ret.NoiseLayerOneAmplitudeScale = this.NoiseLayerOneAmplitudeScale.Combine(rhs.NoiseLayerOneAmplitudeScale);
+                ret.NoiseLayerTwoAmplitudeScale = this.NoiseLayerTwoAmplitudeScale.Combine(rhs.NoiseLayerTwoAmplitudeScale);
+                ret.NoiseLayerThreeAmplitudeScale = this.NoiseLayerThreeAmplitudeScale.Combine(rhs.NoiseLayerThreeAmplitudeScale);
+                ret.WaterReflectionMagnitude = this.WaterReflectionMagnitude.Combine(rhs.WaterReflectionMagnitude);
+                ret.SpecularSunSparkleMagnitude = this.SpecularSunSparkleMagnitude.Combine(rhs.SpecularSunSparkleMagnitude);
+                ret.SpecularSunSpecularMagnitude = this.SpecularSunSpecularMagnitude.Combine(rhs.SpecularSunSpecularMagnitude);
+                ret.DepthReflections = this.DepthReflections.Combine(rhs.DepthReflections);
+                ret.DepthRefraction = this.DepthRefraction.Combine(rhs.DepthRefraction);
+                ret.DepthNormals = this.DepthNormals.Combine(rhs.DepthNormals);
+                ret.DepthSpecularLighting = this.DepthSpecularLighting.Combine(rhs.DepthSpecularLighting);
+                ret.SpecularSunSparklePower = this.SpecularSunSparklePower.Combine(rhs.SpecularSunSparklePower);
+                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
+                ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
+                ret.NoiseLayerOneTexture = this.NoiseLayerOneTexture.Combine(rhs.NoiseLayerOneTexture);
+                ret.NoiseLayerTwoTexture = this.NoiseLayerTwoTexture.Combine(rhs.NoiseLayerTwoTexture);
+                ret.NoiseLayerThreeTexture = this.NoiseLayerThreeTexture.Combine(rhs.NoiseLayerThreeTexture);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +2431,230 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool UnusedNoisemaps;
+            public bool Opacity;
+            public bool Flags;
+            public bool MNAM;
+            public bool Material;
+            public bool OpenSound;
+            public bool Spell;
+            public bool ImageSpace;
+            public bool DamagePerSecond;
+            public bool Unknown;
+            public bool SpecularSunPower;
+            public bool WaterReflectivity;
+            public bool WaterFresnel;
+            public bool Unknown2;
+            public bool FogAboveWaterDistanceNearPlane;
+            public bool FogAboveWaterDistanceFarPlane;
+            public bool ShallowColor;
+            public bool DeepColor;
+            public bool ReflectionColor;
+            public bool Unknown3;
+            public bool DisplacementStartingSize;
+            public bool DisplacementFoce;
+            public bool DisplacementVelocity;
+            public bool DisplacementFalloff;
+            public bool DisplacementDampner;
+            public bool Unknown4;
+            public bool NoiseFalloff;
+            public bool NoiseLayerOneWindDirection;
+            public bool NoiseLayerTwoWindDirection;
+            public bool NoiseLayerThreeWindDirection;
+            public bool NoiseLayerOneWindSpeed;
+            public bool NoiseLayerTwoWindSpeed;
+            public bool NoiseLayerThreeWindSpeed;
+            public bool Unknown5;
+            public bool FogAboveWaterAmount;
+            public bool Unknown6;
+            public bool FogUnderWaterAmount;
+            public bool FogUnderWaterDistanceNearPlane;
+            public bool FogUnderWaterDistanceFarPlane;
+            public bool WaterRefractionMagnitude;
+            public bool SpecularPower;
+            public bool Unknown7;
+            public bool SpecularRadius;
+            public bool SpecularBrightness;
+            public bool NoiseLayerOneUvScale;
+            public bool NoiseLayerTwoUvScale;
+            public bool NoiseLayerThreeUvScale;
+            public bool NoiseLayerOneAmplitudeScale;
+            public bool NoiseLayerTwoAmplitudeScale;
+            public bool NoiseLayerThreeAmplitudeScale;
+            public bool WaterReflectionMagnitude;
+            public bool SpecularSunSparkleMagnitude;
+            public bool SpecularSunSpecularMagnitude;
+            public bool DepthReflections;
+            public bool DepthRefraction;
+            public bool DepthNormals;
+            public bool DepthSpecularLighting;
+            public bool SpecularSunSparklePower;
+            public bool GNAM;
+            public bool LinearVelocity;
+            public bool AngularVelocity;
+            public bool NoiseLayerOneTexture;
+            public bool NoiseLayerTwoTexture;
+            public bool NoiseLayerThreeTexture;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Name = defaultOn;
+                this.UnusedNoisemaps = defaultOn;
+                this.Opacity = defaultOn;
+                this.Flags = defaultOn;
+                this.MNAM = defaultOn;
+                this.Material = defaultOn;
+                this.OpenSound = defaultOn;
+                this.Spell = defaultOn;
+                this.ImageSpace = defaultOn;
+                this.DamagePerSecond = defaultOn;
+                this.Unknown = defaultOn;
+                this.SpecularSunPower = defaultOn;
+                this.WaterReflectivity = defaultOn;
+                this.WaterFresnel = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.FogAboveWaterDistanceNearPlane = defaultOn;
+                this.FogAboveWaterDistanceFarPlane = defaultOn;
+                this.ShallowColor = defaultOn;
+                this.DeepColor = defaultOn;
+                this.ReflectionColor = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.DisplacementStartingSize = defaultOn;
+                this.DisplacementFoce = defaultOn;
+                this.DisplacementVelocity = defaultOn;
+                this.DisplacementFalloff = defaultOn;
+                this.DisplacementDampner = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.NoiseFalloff = defaultOn;
+                this.NoiseLayerOneWindDirection = defaultOn;
+                this.NoiseLayerTwoWindDirection = defaultOn;
+                this.NoiseLayerThreeWindDirection = defaultOn;
+                this.NoiseLayerOneWindSpeed = defaultOn;
+                this.NoiseLayerTwoWindSpeed = defaultOn;
+                this.NoiseLayerThreeWindSpeed = defaultOn;
+                this.Unknown5 = defaultOn;
+                this.FogAboveWaterAmount = defaultOn;
+                this.Unknown6 = defaultOn;
+                this.FogUnderWaterAmount = defaultOn;
+                this.FogUnderWaterDistanceNearPlane = defaultOn;
+                this.FogUnderWaterDistanceFarPlane = defaultOn;
+                this.WaterRefractionMagnitude = defaultOn;
+                this.SpecularPower = defaultOn;
+                this.Unknown7 = defaultOn;
+                this.SpecularRadius = defaultOn;
+                this.SpecularBrightness = defaultOn;
+                this.NoiseLayerOneUvScale = defaultOn;
+                this.NoiseLayerTwoUvScale = defaultOn;
+                this.NoiseLayerThreeUvScale = defaultOn;
+                this.NoiseLayerOneAmplitudeScale = defaultOn;
+                this.NoiseLayerTwoAmplitudeScale = defaultOn;
+                this.NoiseLayerThreeAmplitudeScale = defaultOn;
+                this.WaterReflectionMagnitude = defaultOn;
+                this.SpecularSunSparkleMagnitude = defaultOn;
+                this.SpecularSunSpecularMagnitude = defaultOn;
+                this.DepthReflections = defaultOn;
+                this.DepthRefraction = defaultOn;
+                this.DepthNormals = defaultOn;
+                this.DepthSpecularLighting = defaultOn;
+                this.SpecularSunSparklePower = defaultOn;
+                this.GNAM = defaultOn;
+                this.LinearVelocity = defaultOn;
+                this.AngularVelocity = defaultOn;
+                this.NoiseLayerOneTexture = defaultOn;
+                this.NoiseLayerTwoTexture = defaultOn;
+                this.NoiseLayerThreeTexture = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((UnusedNoisemaps, null));
+                ret.Add((Opacity, null));
+                ret.Add((Flags, null));
+                ret.Add((MNAM, null));
+                ret.Add((Material, null));
+                ret.Add((OpenSound, null));
+                ret.Add((Spell, null));
+                ret.Add((ImageSpace, null));
+                ret.Add((DamagePerSecond, null));
+                ret.Add((Unknown, null));
+                ret.Add((SpecularSunPower, null));
+                ret.Add((WaterReflectivity, null));
+                ret.Add((WaterFresnel, null));
+                ret.Add((Unknown2, null));
+                ret.Add((FogAboveWaterDistanceNearPlane, null));
+                ret.Add((FogAboveWaterDistanceFarPlane, null));
+                ret.Add((ShallowColor, null));
+                ret.Add((DeepColor, null));
+                ret.Add((ReflectionColor, null));
+                ret.Add((Unknown3, null));
+                ret.Add((DisplacementStartingSize, null));
+                ret.Add((DisplacementFoce, null));
+                ret.Add((DisplacementVelocity, null));
+                ret.Add((DisplacementFalloff, null));
+                ret.Add((DisplacementDampner, null));
+                ret.Add((Unknown4, null));
+                ret.Add((NoiseFalloff, null));
+                ret.Add((NoiseLayerOneWindDirection, null));
+                ret.Add((NoiseLayerTwoWindDirection, null));
+                ret.Add((NoiseLayerThreeWindDirection, null));
+                ret.Add((NoiseLayerOneWindSpeed, null));
+                ret.Add((NoiseLayerTwoWindSpeed, null));
+                ret.Add((NoiseLayerThreeWindSpeed, null));
+                ret.Add((Unknown5, null));
+                ret.Add((FogAboveWaterAmount, null));
+                ret.Add((Unknown6, null));
+                ret.Add((FogUnderWaterAmount, null));
+                ret.Add((FogUnderWaterDistanceNearPlane, null));
+                ret.Add((FogUnderWaterDistanceFarPlane, null));
+                ret.Add((WaterRefractionMagnitude, null));
+                ret.Add((SpecularPower, null));
+                ret.Add((Unknown7, null));
+                ret.Add((SpecularRadius, null));
+                ret.Add((SpecularBrightness, null));
+                ret.Add((NoiseLayerOneUvScale, null));
+                ret.Add((NoiseLayerTwoUvScale, null));
+                ret.Add((NoiseLayerThreeUvScale, null));
+                ret.Add((NoiseLayerOneAmplitudeScale, null));
+                ret.Add((NoiseLayerTwoAmplitudeScale, null));
+                ret.Add((NoiseLayerThreeAmplitudeScale, null));
+                ret.Add((WaterReflectionMagnitude, null));
+                ret.Add((SpecularSunSparkleMagnitude, null));
+                ret.Add((SpecularSunSpecularMagnitude, null));
+                ret.Add((DepthReflections, null));
+                ret.Add((DepthRefraction, null));
+                ret.Add((DepthNormals, null));
+                ret.Add((DepthSpecularLighting, null));
+                ret.Add((SpecularSunSparklePower, null));
+                ret.Add((GNAM, null));
+                ret.Add((LinearVelocity, null));
+                ret.Add((AngularVelocity, null));
+                ret.Add((NoiseLayerOneTexture, null));
+                ret.Add((NoiseLayerTwoTexture, null));
+                ret.Add((NoiseLayerThreeTexture, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         public Water(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +2672,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +2736,75 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWater :
         IWaterGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamed,
         ILoquiObjectSetter<IWaterInternal>
     {
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<String> UnusedNoisemaps { get; }
+        new Byte Opacity { get; set; }
+        new Water.Flag? Flags { get; set; }
+        new MemorySlice<Byte>? MNAM { get; set; }
+        new FormLinkNullable<MaterialType> Material { get; set; }
+        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
+        new FormLinkNullable<Spell> Spell { get; set; }
+        new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
+        new UInt16? DamagePerSecond { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
+        new Single SpecularSunPower { get; set; }
+        new Single WaterReflectivity { get; set; }
+        new Single WaterFresnel { get; set; }
+        new Int32 Unknown2 { get; set; }
+        new Single FogAboveWaterDistanceNearPlane { get; set; }
+        new Single FogAboveWaterDistanceFarPlane { get; set; }
+        new Color ShallowColor { get; set; }
+        new Color DeepColor { get; set; }
+        new Color ReflectionColor { get; set; }
+        new MemorySlice<Byte> Unknown3 { get; set; }
+        new Single DisplacementStartingSize { get; set; }
+        new Single DisplacementFoce { get; set; }
+        new Single DisplacementVelocity { get; set; }
+        new Single DisplacementFalloff { get; set; }
+        new Single DisplacementDampner { get; set; }
+        new Int32 Unknown4 { get; set; }
+        new Single NoiseFalloff { get; set; }
+        new Single NoiseLayerOneWindDirection { get; set; }
+        new Single NoiseLayerTwoWindDirection { get; set; }
+        new Single NoiseLayerThreeWindDirection { get; set; }
+        new Single NoiseLayerOneWindSpeed { get; set; }
+        new Single NoiseLayerTwoWindSpeed { get; set; }
+        new Single NoiseLayerThreeWindSpeed { get; set; }
+        new MemorySlice<Byte> Unknown5 { get; set; }
+        new Single FogAboveWaterAmount { get; set; }
+        new Int32 Unknown6 { get; set; }
+        new Single FogUnderWaterAmount { get; set; }
+        new Single FogUnderWaterDistanceNearPlane { get; set; }
+        new Single FogUnderWaterDistanceFarPlane { get; set; }
+        new Single WaterRefractionMagnitude { get; set; }
+        new Single SpecularPower { get; set; }
+        new Int32 Unknown7 { get; set; }
+        new Single SpecularRadius { get; set; }
+        new Single SpecularBrightness { get; set; }
+        new Single NoiseLayerOneUvScale { get; set; }
+        new Single NoiseLayerTwoUvScale { get; set; }
+        new Single NoiseLayerThreeUvScale { get; set; }
+        new Single NoiseLayerOneAmplitudeScale { get; set; }
+        new Single NoiseLayerTwoAmplitudeScale { get; set; }
+        new Single NoiseLayerThreeAmplitudeScale { get; set; }
+        new Single WaterReflectionMagnitude { get; set; }
+        new Single SpecularSunSparkleMagnitude { get; set; }
+        new Single SpecularSunSpecularMagnitude { get; set; }
+        new Single DepthReflections { get; set; }
+        new Single DepthRefraction { get; set; }
+        new Single DepthNormals { get; set; }
+        new Single DepthSpecularLighting { get; set; }
+        new Single SpecularSunSparklePower { get; set; }
+        new MemorySlice<Byte>? GNAM { get; set; }
+        new P3Float? LinearVelocity { get; set; }
+        new P3Float? AngularVelocity { get; set; }
+        new String? NoiseLayerOneTexture { get; set; }
+        new String? NoiseLayerTwoTexture { get; set; }
+        new String? NoiseLayerThreeTexture { get; set; }
+        new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IWaterInternal :
@@ -531,11 +2816,79 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWaterGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IWaterGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Water_Registration.Instance;
+        TranslatedString? Name { get; }
+        IReadOnlyList<String> UnusedNoisemaps { get; }
+        Byte Opacity { get; }
+        Water.Flag? Flags { get; }
+        ReadOnlyMemorySlice<Byte>? MNAM { get; }
+        IFormLinkNullable<IMaterialTypeGetter> Material { get; }
+        IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
+        IFormLinkNullable<ISpellGetter> Spell { get; }
+        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        UInt16? DamagePerSecond { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        Single SpecularSunPower { get; }
+        Single WaterReflectivity { get; }
+        Single WaterFresnel { get; }
+        Int32 Unknown2 { get; }
+        Single FogAboveWaterDistanceNearPlane { get; }
+        Single FogAboveWaterDistanceFarPlane { get; }
+        Color ShallowColor { get; }
+        Color DeepColor { get; }
+        Color ReflectionColor { get; }
+        ReadOnlyMemorySlice<Byte> Unknown3 { get; }
+        Single DisplacementStartingSize { get; }
+        Single DisplacementFoce { get; }
+        Single DisplacementVelocity { get; }
+        Single DisplacementFalloff { get; }
+        Single DisplacementDampner { get; }
+        Int32 Unknown4 { get; }
+        Single NoiseFalloff { get; }
+        Single NoiseLayerOneWindDirection { get; }
+        Single NoiseLayerTwoWindDirection { get; }
+        Single NoiseLayerThreeWindDirection { get; }
+        Single NoiseLayerOneWindSpeed { get; }
+        Single NoiseLayerTwoWindSpeed { get; }
+        Single NoiseLayerThreeWindSpeed { get; }
+        ReadOnlyMemorySlice<Byte> Unknown5 { get; }
+        Single FogAboveWaterAmount { get; }
+        Int32 Unknown6 { get; }
+        Single FogUnderWaterAmount { get; }
+        Single FogUnderWaterDistanceNearPlane { get; }
+        Single FogUnderWaterDistanceFarPlane { get; }
+        Single WaterRefractionMagnitude { get; }
+        Single SpecularPower { get; }
+        Int32 Unknown7 { get; }
+        Single SpecularRadius { get; }
+        Single SpecularBrightness { get; }
+        Single NoiseLayerOneUvScale { get; }
+        Single NoiseLayerTwoUvScale { get; }
+        Single NoiseLayerThreeUvScale { get; }
+        Single NoiseLayerOneAmplitudeScale { get; }
+        Single NoiseLayerTwoAmplitudeScale { get; }
+        Single NoiseLayerThreeAmplitudeScale { get; }
+        Single WaterReflectionMagnitude { get; }
+        Single SpecularSunSparkleMagnitude { get; }
+        Single SpecularSunSpecularMagnitude { get; }
+        Single DepthReflections { get; }
+        Single DepthRefraction { get; }
+        Single DepthNormals { get; }
+        Single DepthSpecularLighting { get; }
+        Single SpecularSunSparklePower { get; }
+        ReadOnlyMemorySlice<Byte>? GNAM { get; }
+        P3Float? LinearVelocity { get; }
+        P3Float? AngularVelocity { get; }
+        String? NoiseLayerOneTexture { get; }
+        String? NoiseLayerTwoTexture { get; }
+        String? NoiseLayerThreeTexture { get; }
+        Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -836,6 +3189,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        UnusedNoisemaps = 7,
+        Opacity = 8,
+        Flags = 9,
+        MNAM = 10,
+        Material = 11,
+        OpenSound = 12,
+        Spell = 13,
+        ImageSpace = 14,
+        DamagePerSecond = 15,
+        Unknown = 16,
+        SpecularSunPower = 17,
+        WaterReflectivity = 18,
+        WaterFresnel = 19,
+        Unknown2 = 20,
+        FogAboveWaterDistanceNearPlane = 21,
+        FogAboveWaterDistanceFarPlane = 22,
+        ShallowColor = 23,
+        DeepColor = 24,
+        ReflectionColor = 25,
+        Unknown3 = 26,
+        DisplacementStartingSize = 27,
+        DisplacementFoce = 28,
+        DisplacementVelocity = 29,
+        DisplacementFalloff = 30,
+        DisplacementDampner = 31,
+        Unknown4 = 32,
+        NoiseFalloff = 33,
+        NoiseLayerOneWindDirection = 34,
+        NoiseLayerTwoWindDirection = 35,
+        NoiseLayerThreeWindDirection = 36,
+        NoiseLayerOneWindSpeed = 37,
+        NoiseLayerTwoWindSpeed = 38,
+        NoiseLayerThreeWindSpeed = 39,
+        Unknown5 = 40,
+        FogAboveWaterAmount = 41,
+        Unknown6 = 42,
+        FogUnderWaterAmount = 43,
+        FogUnderWaterDistanceNearPlane = 44,
+        FogUnderWaterDistanceFarPlane = 45,
+        WaterRefractionMagnitude = 46,
+        SpecularPower = 47,
+        Unknown7 = 48,
+        SpecularRadius = 49,
+        SpecularBrightness = 50,
+        NoiseLayerOneUvScale = 51,
+        NoiseLayerTwoUvScale = 52,
+        NoiseLayerThreeUvScale = 53,
+        NoiseLayerOneAmplitudeScale = 54,
+        NoiseLayerTwoAmplitudeScale = 55,
+        NoiseLayerThreeAmplitudeScale = 56,
+        WaterReflectionMagnitude = 57,
+        SpecularSunSparkleMagnitude = 58,
+        SpecularSunSpecularMagnitude = 59,
+        DepthReflections = 60,
+        DepthRefraction = 61,
+        DepthNormals = 62,
+        DepthSpecularLighting = 63,
+        SpecularSunSparklePower = 64,
+        GNAM = 65,
+        LinearVelocity = 66,
+        AngularVelocity = 67,
+        NoiseLayerOneTexture = 68,
+        NoiseLayerTwoTexture = 69,
+        NoiseLayerThreeTexture = 70,
+        DNAMDataTypeState = 71,
     }
     #endregion
 
@@ -853,9 +3272,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "cf1e41d5-72e0-47c6-82ca-e1289b290653";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 66;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 72;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -885,6 +3304,138 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Water_FieldIndex.Name;
+                case "UNUSEDNOISEMAPS":
+                    return (ushort)Water_FieldIndex.UnusedNoisemaps;
+                case "OPACITY":
+                    return (ushort)Water_FieldIndex.Opacity;
+                case "FLAGS":
+                    return (ushort)Water_FieldIndex.Flags;
+                case "MNAM":
+                    return (ushort)Water_FieldIndex.MNAM;
+                case "MATERIAL":
+                    return (ushort)Water_FieldIndex.Material;
+                case "OPENSOUND":
+                    return (ushort)Water_FieldIndex.OpenSound;
+                case "SPELL":
+                    return (ushort)Water_FieldIndex.Spell;
+                case "IMAGESPACE":
+                    return (ushort)Water_FieldIndex.ImageSpace;
+                case "DAMAGEPERSECOND":
+                    return (ushort)Water_FieldIndex.DamagePerSecond;
+                case "UNKNOWN":
+                    return (ushort)Water_FieldIndex.Unknown;
+                case "SPECULARSUNPOWER":
+                    return (ushort)Water_FieldIndex.SpecularSunPower;
+                case "WATERREFLECTIVITY":
+                    return (ushort)Water_FieldIndex.WaterReflectivity;
+                case "WATERFRESNEL":
+                    return (ushort)Water_FieldIndex.WaterFresnel;
+                case "UNKNOWN2":
+                    return (ushort)Water_FieldIndex.Unknown2;
+                case "FOGABOVEWATERDISTANCENEARPLANE":
+                    return (ushort)Water_FieldIndex.FogAboveWaterDistanceNearPlane;
+                case "FOGABOVEWATERDISTANCEFARPLANE":
+                    return (ushort)Water_FieldIndex.FogAboveWaterDistanceFarPlane;
+                case "SHALLOWCOLOR":
+                    return (ushort)Water_FieldIndex.ShallowColor;
+                case "DEEPCOLOR":
+                    return (ushort)Water_FieldIndex.DeepColor;
+                case "REFLECTIONCOLOR":
+                    return (ushort)Water_FieldIndex.ReflectionColor;
+                case "UNKNOWN3":
+                    return (ushort)Water_FieldIndex.Unknown3;
+                case "DISPLACEMENTSTARTINGSIZE":
+                    return (ushort)Water_FieldIndex.DisplacementStartingSize;
+                case "DISPLACEMENTFOCE":
+                    return (ushort)Water_FieldIndex.DisplacementFoce;
+                case "DISPLACEMENTVELOCITY":
+                    return (ushort)Water_FieldIndex.DisplacementVelocity;
+                case "DISPLACEMENTFALLOFF":
+                    return (ushort)Water_FieldIndex.DisplacementFalloff;
+                case "DISPLACEMENTDAMPNER":
+                    return (ushort)Water_FieldIndex.DisplacementDampner;
+                case "UNKNOWN4":
+                    return (ushort)Water_FieldIndex.Unknown4;
+                case "NOISEFALLOFF":
+                    return (ushort)Water_FieldIndex.NoiseFalloff;
+                case "NOISELAYERONEWINDDIRECTION":
+                    return (ushort)Water_FieldIndex.NoiseLayerOneWindDirection;
+                case "NOISELAYERTWOWINDDIRECTION":
+                    return (ushort)Water_FieldIndex.NoiseLayerTwoWindDirection;
+                case "NOISELAYERTHREEWINDDIRECTION":
+                    return (ushort)Water_FieldIndex.NoiseLayerThreeWindDirection;
+                case "NOISELAYERONEWINDSPEED":
+                    return (ushort)Water_FieldIndex.NoiseLayerOneWindSpeed;
+                case "NOISELAYERTWOWINDSPEED":
+                    return (ushort)Water_FieldIndex.NoiseLayerTwoWindSpeed;
+                case "NOISELAYERTHREEWINDSPEED":
+                    return (ushort)Water_FieldIndex.NoiseLayerThreeWindSpeed;
+                case "UNKNOWN5":
+                    return (ushort)Water_FieldIndex.Unknown5;
+                case "FOGABOVEWATERAMOUNT":
+                    return (ushort)Water_FieldIndex.FogAboveWaterAmount;
+                case "UNKNOWN6":
+                    return (ushort)Water_FieldIndex.Unknown6;
+                case "FOGUNDERWATERAMOUNT":
+                    return (ushort)Water_FieldIndex.FogUnderWaterAmount;
+                case "FOGUNDERWATERDISTANCENEARPLANE":
+                    return (ushort)Water_FieldIndex.FogUnderWaterDistanceNearPlane;
+                case "FOGUNDERWATERDISTANCEFARPLANE":
+                    return (ushort)Water_FieldIndex.FogUnderWaterDistanceFarPlane;
+                case "WATERREFRACTIONMAGNITUDE":
+                    return (ushort)Water_FieldIndex.WaterRefractionMagnitude;
+                case "SPECULARPOWER":
+                    return (ushort)Water_FieldIndex.SpecularPower;
+                case "UNKNOWN7":
+                    return (ushort)Water_FieldIndex.Unknown7;
+                case "SPECULARRADIUS":
+                    return (ushort)Water_FieldIndex.SpecularRadius;
+                case "SPECULARBRIGHTNESS":
+                    return (ushort)Water_FieldIndex.SpecularBrightness;
+                case "NOISELAYERONEUVSCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerOneUvScale;
+                case "NOISELAYERTWOUVSCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerTwoUvScale;
+                case "NOISELAYERTHREEUVSCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerThreeUvScale;
+                case "NOISELAYERONEAMPLITUDESCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerOneAmplitudeScale;
+                case "NOISELAYERTWOAMPLITUDESCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerTwoAmplitudeScale;
+                case "NOISELAYERTHREEAMPLITUDESCALE":
+                    return (ushort)Water_FieldIndex.NoiseLayerThreeAmplitudeScale;
+                case "WATERREFLECTIONMAGNITUDE":
+                    return (ushort)Water_FieldIndex.WaterReflectionMagnitude;
+                case "SPECULARSUNSPARKLEMAGNITUDE":
+                    return (ushort)Water_FieldIndex.SpecularSunSparkleMagnitude;
+                case "SPECULARSUNSPECULARMAGNITUDE":
+                    return (ushort)Water_FieldIndex.SpecularSunSpecularMagnitude;
+                case "DEPTHREFLECTIONS":
+                    return (ushort)Water_FieldIndex.DepthReflections;
+                case "DEPTHREFRACTION":
+                    return (ushort)Water_FieldIndex.DepthRefraction;
+                case "DEPTHNORMALS":
+                    return (ushort)Water_FieldIndex.DepthNormals;
+                case "DEPTHSPECULARLIGHTING":
+                    return (ushort)Water_FieldIndex.DepthSpecularLighting;
+                case "SPECULARSUNSPARKLEPOWER":
+                    return (ushort)Water_FieldIndex.SpecularSunSparklePower;
+                case "GNAM":
+                    return (ushort)Water_FieldIndex.GNAM;
+                case "LINEARVELOCITY":
+                    return (ushort)Water_FieldIndex.LinearVelocity;
+                case "ANGULARVELOCITY":
+                    return (ushort)Water_FieldIndex.AngularVelocity;
+                case "NOISELAYERONETEXTURE":
+                    return (ushort)Water_FieldIndex.NoiseLayerOneTexture;
+                case "NOISELAYERTWOTEXTURE":
+                    return (ushort)Water_FieldIndex.NoiseLayerTwoTexture;
+                case "NOISELAYERTHREETEXTURE":
+                    return (ushort)Water_FieldIndex.NoiseLayerThreeTexture;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)Water_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +3446,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.UnusedNoisemaps:
+                    return true;
+                case Water_FieldIndex.Name:
+                case Water_FieldIndex.Opacity:
+                case Water_FieldIndex.Flags:
+                case Water_FieldIndex.MNAM:
+                case Water_FieldIndex.Material:
+                case Water_FieldIndex.OpenSound:
+                case Water_FieldIndex.Spell:
+                case Water_FieldIndex.ImageSpace:
+                case Water_FieldIndex.DamagePerSecond:
+                case Water_FieldIndex.Unknown:
+                case Water_FieldIndex.SpecularSunPower:
+                case Water_FieldIndex.WaterReflectivity:
+                case Water_FieldIndex.WaterFresnel:
+                case Water_FieldIndex.Unknown2:
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                case Water_FieldIndex.ShallowColor:
+                case Water_FieldIndex.DeepColor:
+                case Water_FieldIndex.ReflectionColor:
+                case Water_FieldIndex.Unknown3:
+                case Water_FieldIndex.DisplacementStartingSize:
+                case Water_FieldIndex.DisplacementFoce:
+                case Water_FieldIndex.DisplacementVelocity:
+                case Water_FieldIndex.DisplacementFalloff:
+                case Water_FieldIndex.DisplacementDampner:
+                case Water_FieldIndex.Unknown4:
+                case Water_FieldIndex.NoiseFalloff:
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                case Water_FieldIndex.Unknown5:
+                case Water_FieldIndex.FogAboveWaterAmount:
+                case Water_FieldIndex.Unknown6:
+                case Water_FieldIndex.FogUnderWaterAmount:
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                case Water_FieldIndex.SpecularPower:
+                case Water_FieldIndex.Unknown7:
+                case Water_FieldIndex.SpecularRadius:
+                case Water_FieldIndex.SpecularBrightness:
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                case Water_FieldIndex.DepthReflections:
+                case Water_FieldIndex.DepthRefraction:
+                case Water_FieldIndex.DepthNormals:
+                case Water_FieldIndex.DepthSpecularLighting:
+                case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.GNAM:
+                case Water_FieldIndex.LinearVelocity:
+                case Water_FieldIndex.AngularVelocity:
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +3524,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                case Water_FieldIndex.UnusedNoisemaps:
+                case Water_FieldIndex.Opacity:
+                case Water_FieldIndex.Flags:
+                case Water_FieldIndex.MNAM:
+                case Water_FieldIndex.Material:
+                case Water_FieldIndex.OpenSound:
+                case Water_FieldIndex.Spell:
+                case Water_FieldIndex.ImageSpace:
+                case Water_FieldIndex.DamagePerSecond:
+                case Water_FieldIndex.Unknown:
+                case Water_FieldIndex.SpecularSunPower:
+                case Water_FieldIndex.WaterReflectivity:
+                case Water_FieldIndex.WaterFresnel:
+                case Water_FieldIndex.Unknown2:
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                case Water_FieldIndex.ShallowColor:
+                case Water_FieldIndex.DeepColor:
+                case Water_FieldIndex.ReflectionColor:
+                case Water_FieldIndex.Unknown3:
+                case Water_FieldIndex.DisplacementStartingSize:
+                case Water_FieldIndex.DisplacementFoce:
+                case Water_FieldIndex.DisplacementVelocity:
+                case Water_FieldIndex.DisplacementFalloff:
+                case Water_FieldIndex.DisplacementDampner:
+                case Water_FieldIndex.Unknown4:
+                case Water_FieldIndex.NoiseFalloff:
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                case Water_FieldIndex.Unknown5:
+                case Water_FieldIndex.FogAboveWaterAmount:
+                case Water_FieldIndex.Unknown6:
+                case Water_FieldIndex.FogUnderWaterAmount:
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                case Water_FieldIndex.SpecularPower:
+                case Water_FieldIndex.Unknown7:
+                case Water_FieldIndex.SpecularRadius:
+                case Water_FieldIndex.SpecularBrightness:
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                case Water_FieldIndex.DepthReflections:
+                case Water_FieldIndex.DepthRefraction:
+                case Water_FieldIndex.DepthNormals:
+                case Water_FieldIndex.DepthSpecularLighting:
+                case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.GNAM:
+                case Water_FieldIndex.LinearVelocity:
+                case Water_FieldIndex.AngularVelocity:
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +3601,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                case Water_FieldIndex.UnusedNoisemaps:
+                case Water_FieldIndex.Opacity:
+                case Water_FieldIndex.Flags:
+                case Water_FieldIndex.MNAM:
+                case Water_FieldIndex.Material:
+                case Water_FieldIndex.OpenSound:
+                case Water_FieldIndex.Spell:
+                case Water_FieldIndex.ImageSpace:
+                case Water_FieldIndex.DamagePerSecond:
+                case Water_FieldIndex.Unknown:
+                case Water_FieldIndex.SpecularSunPower:
+                case Water_FieldIndex.WaterReflectivity:
+                case Water_FieldIndex.WaterFresnel:
+                case Water_FieldIndex.Unknown2:
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                case Water_FieldIndex.ShallowColor:
+                case Water_FieldIndex.DeepColor:
+                case Water_FieldIndex.ReflectionColor:
+                case Water_FieldIndex.Unknown3:
+                case Water_FieldIndex.DisplacementStartingSize:
+                case Water_FieldIndex.DisplacementFoce:
+                case Water_FieldIndex.DisplacementVelocity:
+                case Water_FieldIndex.DisplacementFalloff:
+                case Water_FieldIndex.DisplacementDampner:
+                case Water_FieldIndex.Unknown4:
+                case Water_FieldIndex.NoiseFalloff:
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                case Water_FieldIndex.Unknown5:
+                case Water_FieldIndex.FogAboveWaterAmount:
+                case Water_FieldIndex.Unknown6:
+                case Water_FieldIndex.FogUnderWaterAmount:
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                case Water_FieldIndex.SpecularPower:
+                case Water_FieldIndex.Unknown7:
+                case Water_FieldIndex.SpecularRadius:
+                case Water_FieldIndex.SpecularBrightness:
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                case Water_FieldIndex.DepthReflections:
+                case Water_FieldIndex.DepthRefraction:
+                case Water_FieldIndex.DepthNormals:
+                case Water_FieldIndex.DepthSpecularLighting:
+                case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.GNAM:
+                case Water_FieldIndex.LinearVelocity:
+                case Water_FieldIndex.AngularVelocity:
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +3678,138 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                    return "Name";
+                case Water_FieldIndex.UnusedNoisemaps:
+                    return "UnusedNoisemaps";
+                case Water_FieldIndex.Opacity:
+                    return "Opacity";
+                case Water_FieldIndex.Flags:
+                    return "Flags";
+                case Water_FieldIndex.MNAM:
+                    return "MNAM";
+                case Water_FieldIndex.Material:
+                    return "Material";
+                case Water_FieldIndex.OpenSound:
+                    return "OpenSound";
+                case Water_FieldIndex.Spell:
+                    return "Spell";
+                case Water_FieldIndex.ImageSpace:
+                    return "ImageSpace";
+                case Water_FieldIndex.DamagePerSecond:
+                    return "DamagePerSecond";
+                case Water_FieldIndex.Unknown:
+                    return "Unknown";
+                case Water_FieldIndex.SpecularSunPower:
+                    return "SpecularSunPower";
+                case Water_FieldIndex.WaterReflectivity:
+                    return "WaterReflectivity";
+                case Water_FieldIndex.WaterFresnel:
+                    return "WaterFresnel";
+                case Water_FieldIndex.Unknown2:
+                    return "Unknown2";
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                    return "FogAboveWaterDistanceNearPlane";
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                    return "FogAboveWaterDistanceFarPlane";
+                case Water_FieldIndex.ShallowColor:
+                    return "ShallowColor";
+                case Water_FieldIndex.DeepColor:
+                    return "DeepColor";
+                case Water_FieldIndex.ReflectionColor:
+                    return "ReflectionColor";
+                case Water_FieldIndex.Unknown3:
+                    return "Unknown3";
+                case Water_FieldIndex.DisplacementStartingSize:
+                    return "DisplacementStartingSize";
+                case Water_FieldIndex.DisplacementFoce:
+                    return "DisplacementFoce";
+                case Water_FieldIndex.DisplacementVelocity:
+                    return "DisplacementVelocity";
+                case Water_FieldIndex.DisplacementFalloff:
+                    return "DisplacementFalloff";
+                case Water_FieldIndex.DisplacementDampner:
+                    return "DisplacementDampner";
+                case Water_FieldIndex.Unknown4:
+                    return "Unknown4";
+                case Water_FieldIndex.NoiseFalloff:
+                    return "NoiseFalloff";
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                    return "NoiseLayerOneWindDirection";
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                    return "NoiseLayerTwoWindDirection";
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                    return "NoiseLayerThreeWindDirection";
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                    return "NoiseLayerOneWindSpeed";
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                    return "NoiseLayerTwoWindSpeed";
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                    return "NoiseLayerThreeWindSpeed";
+                case Water_FieldIndex.Unknown5:
+                    return "Unknown5";
+                case Water_FieldIndex.FogAboveWaterAmount:
+                    return "FogAboveWaterAmount";
+                case Water_FieldIndex.Unknown6:
+                    return "Unknown6";
+                case Water_FieldIndex.FogUnderWaterAmount:
+                    return "FogUnderWaterAmount";
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                    return "FogUnderWaterDistanceNearPlane";
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                    return "FogUnderWaterDistanceFarPlane";
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                    return "WaterRefractionMagnitude";
+                case Water_FieldIndex.SpecularPower:
+                    return "SpecularPower";
+                case Water_FieldIndex.Unknown7:
+                    return "Unknown7";
+                case Water_FieldIndex.SpecularRadius:
+                    return "SpecularRadius";
+                case Water_FieldIndex.SpecularBrightness:
+                    return "SpecularBrightness";
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                    return "NoiseLayerOneUvScale";
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                    return "NoiseLayerTwoUvScale";
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                    return "NoiseLayerThreeUvScale";
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                    return "NoiseLayerOneAmplitudeScale";
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                    return "NoiseLayerTwoAmplitudeScale";
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                    return "NoiseLayerThreeAmplitudeScale";
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                    return "WaterReflectionMagnitude";
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                    return "SpecularSunSparkleMagnitude";
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                    return "SpecularSunSpecularMagnitude";
+                case Water_FieldIndex.DepthReflections:
+                    return "DepthReflections";
+                case Water_FieldIndex.DepthRefraction:
+                    return "DepthRefraction";
+                case Water_FieldIndex.DepthNormals:
+                    return "DepthNormals";
+                case Water_FieldIndex.DepthSpecularLighting:
+                    return "DepthSpecularLighting";
+                case Water_FieldIndex.SpecularSunSparklePower:
+                    return "SpecularSunSparklePower";
+                case Water_FieldIndex.GNAM:
+                    return "GNAM";
+                case Water_FieldIndex.LinearVelocity:
+                    return "LinearVelocity";
+                case Water_FieldIndex.AngularVelocity:
+                    return "AngularVelocity";
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                    return "NoiseLayerOneTexture";
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                    return "NoiseLayerTwoTexture";
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                    return "NoiseLayerThreeTexture";
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +3820,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                case Water_FieldIndex.UnusedNoisemaps:
+                case Water_FieldIndex.Opacity:
+                case Water_FieldIndex.Flags:
+                case Water_FieldIndex.MNAM:
+                case Water_FieldIndex.Material:
+                case Water_FieldIndex.OpenSound:
+                case Water_FieldIndex.Spell:
+                case Water_FieldIndex.ImageSpace:
+                case Water_FieldIndex.DamagePerSecond:
+                case Water_FieldIndex.Unknown:
+                case Water_FieldIndex.SpecularSunPower:
+                case Water_FieldIndex.WaterReflectivity:
+                case Water_FieldIndex.WaterFresnel:
+                case Water_FieldIndex.Unknown2:
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                case Water_FieldIndex.ShallowColor:
+                case Water_FieldIndex.DeepColor:
+                case Water_FieldIndex.ReflectionColor:
+                case Water_FieldIndex.Unknown3:
+                case Water_FieldIndex.DisplacementStartingSize:
+                case Water_FieldIndex.DisplacementFoce:
+                case Water_FieldIndex.DisplacementVelocity:
+                case Water_FieldIndex.DisplacementFalloff:
+                case Water_FieldIndex.DisplacementDampner:
+                case Water_FieldIndex.Unknown4:
+                case Water_FieldIndex.NoiseFalloff:
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                case Water_FieldIndex.Unknown5:
+                case Water_FieldIndex.FogAboveWaterAmount:
+                case Water_FieldIndex.Unknown6:
+                case Water_FieldIndex.FogUnderWaterAmount:
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                case Water_FieldIndex.SpecularPower:
+                case Water_FieldIndex.Unknown7:
+                case Water_FieldIndex.SpecularRadius:
+                case Water_FieldIndex.SpecularBrightness:
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                case Water_FieldIndex.DepthReflections:
+                case Water_FieldIndex.DepthRefraction:
+                case Water_FieldIndex.DepthNormals:
+                case Water_FieldIndex.DepthSpecularLighting:
+                case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.GNAM:
+                case Water_FieldIndex.LinearVelocity:
+                case Water_FieldIndex.AngularVelocity:
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +3897,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                case Water_FieldIndex.UnusedNoisemaps:
+                case Water_FieldIndex.Opacity:
+                case Water_FieldIndex.Flags:
+                case Water_FieldIndex.MNAM:
+                case Water_FieldIndex.Material:
+                case Water_FieldIndex.OpenSound:
+                case Water_FieldIndex.Spell:
+                case Water_FieldIndex.ImageSpace:
+                case Water_FieldIndex.DamagePerSecond:
+                case Water_FieldIndex.Unknown:
+                case Water_FieldIndex.SpecularSunPower:
+                case Water_FieldIndex.WaterReflectivity:
+                case Water_FieldIndex.WaterFresnel:
+                case Water_FieldIndex.Unknown2:
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                case Water_FieldIndex.ShallowColor:
+                case Water_FieldIndex.DeepColor:
+                case Water_FieldIndex.ReflectionColor:
+                case Water_FieldIndex.Unknown3:
+                case Water_FieldIndex.DisplacementStartingSize:
+                case Water_FieldIndex.DisplacementFoce:
+                case Water_FieldIndex.DisplacementVelocity:
+                case Water_FieldIndex.DisplacementFalloff:
+                case Water_FieldIndex.DisplacementDampner:
+                case Water_FieldIndex.Unknown4:
+                case Water_FieldIndex.NoiseFalloff:
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                case Water_FieldIndex.Unknown5:
+                case Water_FieldIndex.FogAboveWaterAmount:
+                case Water_FieldIndex.Unknown6:
+                case Water_FieldIndex.FogUnderWaterAmount:
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                case Water_FieldIndex.SpecularPower:
+                case Water_FieldIndex.Unknown7:
+                case Water_FieldIndex.SpecularRadius:
+                case Water_FieldIndex.SpecularBrightness:
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                case Water_FieldIndex.DepthReflections:
+                case Water_FieldIndex.DepthRefraction:
+                case Water_FieldIndex.DepthNormals:
+                case Water_FieldIndex.DepthSpecularLighting:
+                case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.GNAM:
+                case Water_FieldIndex.LinearVelocity:
+                case Water_FieldIndex.AngularVelocity:
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,14 +3974,163 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Water_FieldIndex.UnusedNoisemaps:
+                    return typeof(ExtendedList<String>);
+                case Water_FieldIndex.Opacity:
+                    return typeof(Byte);
+                case Water_FieldIndex.Flags:
+                    return typeof(Water.Flag);
+                case Water_FieldIndex.MNAM:
+                    return typeof(MemorySlice<Byte>);
+                case Water_FieldIndex.Material:
+                    return typeof(FormLinkNullable<MaterialType>);
+                case Water_FieldIndex.OpenSound:
+                    return typeof(FormLinkNullable<SoundDescriptor>);
+                case Water_FieldIndex.Spell:
+                    return typeof(FormLinkNullable<Spell>);
+                case Water_FieldIndex.ImageSpace:
+                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
+                case Water_FieldIndex.DamagePerSecond:
+                    return typeof(UInt16);
+                case Water_FieldIndex.Unknown:
+                    return typeof(MemorySlice<Byte>);
+                case Water_FieldIndex.SpecularSunPower:
+                    return typeof(Single);
+                case Water_FieldIndex.WaterReflectivity:
+                    return typeof(Single);
+                case Water_FieldIndex.WaterFresnel:
+                    return typeof(Single);
+                case Water_FieldIndex.Unknown2:
+                    return typeof(Int32);
+                case Water_FieldIndex.FogAboveWaterDistanceNearPlane:
+                    return typeof(Single);
+                case Water_FieldIndex.FogAboveWaterDistanceFarPlane:
+                    return typeof(Single);
+                case Water_FieldIndex.ShallowColor:
+                    return typeof(Color);
+                case Water_FieldIndex.DeepColor:
+                    return typeof(Color);
+                case Water_FieldIndex.ReflectionColor:
+                    return typeof(Color);
+                case Water_FieldIndex.Unknown3:
+                    return typeof(MemorySlice<Byte>);
+                case Water_FieldIndex.DisplacementStartingSize:
+                    return typeof(Single);
+                case Water_FieldIndex.DisplacementFoce:
+                    return typeof(Single);
+                case Water_FieldIndex.DisplacementVelocity:
+                    return typeof(Single);
+                case Water_FieldIndex.DisplacementFalloff:
+                    return typeof(Single);
+                case Water_FieldIndex.DisplacementDampner:
+                    return typeof(Single);
+                case Water_FieldIndex.Unknown4:
+                    return typeof(Int32);
+                case Water_FieldIndex.NoiseFalloff:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerOneWindDirection:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerTwoWindDirection:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerThreeWindDirection:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerOneWindSpeed:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerTwoWindSpeed:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerThreeWindSpeed:
+                    return typeof(Single);
+                case Water_FieldIndex.Unknown5:
+                    return typeof(MemorySlice<Byte>);
+                case Water_FieldIndex.FogAboveWaterAmount:
+                    return typeof(Single);
+                case Water_FieldIndex.Unknown6:
+                    return typeof(Int32);
+                case Water_FieldIndex.FogUnderWaterAmount:
+                    return typeof(Single);
+                case Water_FieldIndex.FogUnderWaterDistanceNearPlane:
+                    return typeof(Single);
+                case Water_FieldIndex.FogUnderWaterDistanceFarPlane:
+                    return typeof(Single);
+                case Water_FieldIndex.WaterRefractionMagnitude:
+                    return typeof(Single);
+                case Water_FieldIndex.SpecularPower:
+                    return typeof(Single);
+                case Water_FieldIndex.Unknown7:
+                    return typeof(Int32);
+                case Water_FieldIndex.SpecularRadius:
+                    return typeof(Single);
+                case Water_FieldIndex.SpecularBrightness:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerOneUvScale:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerTwoUvScale:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerThreeUvScale:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerOneAmplitudeScale:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                    return typeof(Single);
+                case Water_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                    return typeof(Single);
+                case Water_FieldIndex.WaterReflectionMagnitude:
+                    return typeof(Single);
+                case Water_FieldIndex.SpecularSunSparkleMagnitude:
+                    return typeof(Single);
+                case Water_FieldIndex.SpecularSunSpecularMagnitude:
+                    return typeof(Single);
+                case Water_FieldIndex.DepthReflections:
+                    return typeof(Single);
+                case Water_FieldIndex.DepthRefraction:
+                    return typeof(Single);
+                case Water_FieldIndex.DepthNormals:
+                    return typeof(Single);
+                case Water_FieldIndex.DepthSpecularLighting:
+                    return typeof(Single);
+                case Water_FieldIndex.SpecularSunSparklePower:
+                    return typeof(Single);
+                case Water_FieldIndex.GNAM:
+                    return typeof(MemorySlice<Byte>);
+                case Water_FieldIndex.LinearVelocity:
+                    return typeof(P3Float);
+                case Water_FieldIndex.AngularVelocity:
+                    return typeof(P3Float);
+                case Water_FieldIndex.NoiseLayerOneTexture:
+                    return typeof(String);
+                case Water_FieldIndex.NoiseLayerTwoTexture:
+                    return typeof(String);
+                case Water_FieldIndex.NoiseLayerThreeTexture:
+                    return typeof(String);
+                case Water_FieldIndex.DNAMDataTypeState:
+                    return typeof(Water.DNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WaterXmlWriteTranslation);
-        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
-        public static readonly RecordType TriggeringRecordType = ACTI_HEADER;
+        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
+        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
+        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
+        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
+        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
+        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
+        public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
+        public static readonly RecordType NAM4_HEADER = new RecordType("NAM4");
+        public static readonly RecordType TriggeringRecordType = WATR_HEADER;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1005,6 +4173,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWaterInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.UnusedNoisemaps.Clear();
+            item.Opacity = default;
+            item.Flags = default;
+            item.MNAM = default;
+            item.Material = FormLinkNullable<MaterialType>.Null;
+            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Spell = FormLinkNullable<Spell>.Null;
+            item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.DamagePerSecond = default;
+            item.Unknown = new byte[16];
+            item.SpecularSunPower = default;
+            item.WaterReflectivity = default;
+            item.WaterFresnel = default;
+            item.Unknown2 = default;
+            item.FogAboveWaterDistanceNearPlane = default;
+            item.FogAboveWaterDistanceFarPlane = default;
+            item.ShallowColor = default;
+            item.DeepColor = default;
+            item.ReflectionColor = default;
+            item.Unknown3 = new byte[20];
+            item.DisplacementStartingSize = default;
+            item.DisplacementFoce = default;
+            item.DisplacementVelocity = default;
+            item.DisplacementFalloff = default;
+            item.DisplacementDampner = default;
+            item.Unknown4 = default;
+            item.NoiseFalloff = default;
+            item.NoiseLayerOneWindDirection = default;
+            item.NoiseLayerTwoWindDirection = default;
+            item.NoiseLayerThreeWindDirection = default;
+            item.NoiseLayerOneWindSpeed = default;
+            item.NoiseLayerTwoWindSpeed = default;
+            item.NoiseLayerThreeWindSpeed = default;
+            item.Unknown5 = new byte[8];
+            item.FogAboveWaterAmount = default;
+            item.Unknown6 = default;
+            item.FogUnderWaterAmount = default;
+            item.FogUnderWaterDistanceNearPlane = default;
+            item.FogUnderWaterDistanceFarPlane = default;
+            item.WaterRefractionMagnitude = default;
+            item.SpecularPower = default;
+            item.Unknown7 = default;
+            item.SpecularRadius = default;
+            item.SpecularBrightness = default;
+            item.NoiseLayerOneUvScale = default;
+            item.NoiseLayerTwoUvScale = default;
+            item.NoiseLayerThreeUvScale = default;
+            item.NoiseLayerOneAmplitudeScale = default;
+            item.NoiseLayerTwoAmplitudeScale = default;
+            item.NoiseLayerThreeAmplitudeScale = default;
+            item.WaterReflectionMagnitude = default;
+            item.SpecularSunSparkleMagnitude = default;
+            item.SpecularSunSpecularMagnitude = default;
+            item.DepthReflections = default;
+            item.DepthRefraction = default;
+            item.DepthNormals = default;
+            item.DepthSpecularLighting = default;
+            item.SpecularSunSparklePower = default;
+            item.GNAM = default;
+            item.LinearVelocity = default;
+            item.AngularVelocity = default;
+            item.NoiseLayerOneTexture = default;
+            item.NoiseLayerTwoTexture = default;
+            item.NoiseLayerThreeTexture = default;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1162,6 +4396,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.UnusedNoisemaps = item.UnusedNoisemaps.CollectionEqualsHelper(
+                rhs.UnusedNoisemaps,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.Opacity = item.Opacity == rhs.Opacity;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.MNAM = MemorySliceExt.Equal(item.MNAM, rhs.MNAM);
+            ret.Material = object.Equals(item.Material, rhs.Material);
+            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
+            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.DamagePerSecond = item.DamagePerSecond == rhs.DamagePerSecond;
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.SpecularSunPower = item.SpecularSunPower.EqualsWithin(rhs.SpecularSunPower);
+            ret.WaterReflectivity = item.WaterReflectivity.EqualsWithin(rhs.WaterReflectivity);
+            ret.WaterFresnel = item.WaterFresnel.EqualsWithin(rhs.WaterFresnel);
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.FogAboveWaterDistanceNearPlane = item.FogAboveWaterDistanceNearPlane.EqualsWithin(rhs.FogAboveWaterDistanceNearPlane);
+            ret.FogAboveWaterDistanceFarPlane = item.FogAboveWaterDistanceFarPlane.EqualsWithin(rhs.FogAboveWaterDistanceFarPlane);
+            ret.ShallowColor = item.ShallowColor.ColorOnlyEquals(rhs.ShallowColor);
+            ret.DeepColor = item.DeepColor.ColorOnlyEquals(rhs.DeepColor);
+            ret.ReflectionColor = item.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor);
+            ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
+            ret.DisplacementStartingSize = item.DisplacementStartingSize.EqualsWithin(rhs.DisplacementStartingSize);
+            ret.DisplacementFoce = item.DisplacementFoce.EqualsWithin(rhs.DisplacementFoce);
+            ret.DisplacementVelocity = item.DisplacementVelocity.EqualsWithin(rhs.DisplacementVelocity);
+            ret.DisplacementFalloff = item.DisplacementFalloff.EqualsWithin(rhs.DisplacementFalloff);
+            ret.DisplacementDampner = item.DisplacementDampner.EqualsWithin(rhs.DisplacementDampner);
+            ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
+            ret.NoiseFalloff = item.NoiseFalloff.EqualsWithin(rhs.NoiseFalloff);
+            ret.NoiseLayerOneWindDirection = item.NoiseLayerOneWindDirection.EqualsWithin(rhs.NoiseLayerOneWindDirection);
+            ret.NoiseLayerTwoWindDirection = item.NoiseLayerTwoWindDirection.EqualsWithin(rhs.NoiseLayerTwoWindDirection);
+            ret.NoiseLayerThreeWindDirection = item.NoiseLayerThreeWindDirection.EqualsWithin(rhs.NoiseLayerThreeWindDirection);
+            ret.NoiseLayerOneWindSpeed = item.NoiseLayerOneWindSpeed.EqualsWithin(rhs.NoiseLayerOneWindSpeed);
+            ret.NoiseLayerTwoWindSpeed = item.NoiseLayerTwoWindSpeed.EqualsWithin(rhs.NoiseLayerTwoWindSpeed);
+            ret.NoiseLayerThreeWindSpeed = item.NoiseLayerThreeWindSpeed.EqualsWithin(rhs.NoiseLayerThreeWindSpeed);
+            ret.Unknown5 = MemoryExtensions.SequenceEqual(item.Unknown5.Span, rhs.Unknown5.Span);
+            ret.FogAboveWaterAmount = item.FogAboveWaterAmount.EqualsWithin(rhs.FogAboveWaterAmount);
+            ret.Unknown6 = item.Unknown6 == rhs.Unknown6;
+            ret.FogUnderWaterAmount = item.FogUnderWaterAmount.EqualsWithin(rhs.FogUnderWaterAmount);
+            ret.FogUnderWaterDistanceNearPlane = item.FogUnderWaterDistanceNearPlane.EqualsWithin(rhs.FogUnderWaterDistanceNearPlane);
+            ret.FogUnderWaterDistanceFarPlane = item.FogUnderWaterDistanceFarPlane.EqualsWithin(rhs.FogUnderWaterDistanceFarPlane);
+            ret.WaterRefractionMagnitude = item.WaterRefractionMagnitude.EqualsWithin(rhs.WaterRefractionMagnitude);
+            ret.SpecularPower = item.SpecularPower.EqualsWithin(rhs.SpecularPower);
+            ret.Unknown7 = item.Unknown7 == rhs.Unknown7;
+            ret.SpecularRadius = item.SpecularRadius.EqualsWithin(rhs.SpecularRadius);
+            ret.SpecularBrightness = item.SpecularBrightness.EqualsWithin(rhs.SpecularBrightness);
+            ret.NoiseLayerOneUvScale = item.NoiseLayerOneUvScale.EqualsWithin(rhs.NoiseLayerOneUvScale);
+            ret.NoiseLayerTwoUvScale = item.NoiseLayerTwoUvScale.EqualsWithin(rhs.NoiseLayerTwoUvScale);
+            ret.NoiseLayerThreeUvScale = item.NoiseLayerThreeUvScale.EqualsWithin(rhs.NoiseLayerThreeUvScale);
+            ret.NoiseLayerOneAmplitudeScale = item.NoiseLayerOneAmplitudeScale.EqualsWithin(rhs.NoiseLayerOneAmplitudeScale);
+            ret.NoiseLayerTwoAmplitudeScale = item.NoiseLayerTwoAmplitudeScale.EqualsWithin(rhs.NoiseLayerTwoAmplitudeScale);
+            ret.NoiseLayerThreeAmplitudeScale = item.NoiseLayerThreeAmplitudeScale.EqualsWithin(rhs.NoiseLayerThreeAmplitudeScale);
+            ret.WaterReflectionMagnitude = item.WaterReflectionMagnitude.EqualsWithin(rhs.WaterReflectionMagnitude);
+            ret.SpecularSunSparkleMagnitude = item.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude);
+            ret.SpecularSunSpecularMagnitude = item.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude);
+            ret.DepthReflections = item.DepthReflections.EqualsWithin(rhs.DepthReflections);
+            ret.DepthRefraction = item.DepthRefraction.EqualsWithin(rhs.DepthRefraction);
+            ret.DepthNormals = item.DepthNormals.EqualsWithin(rhs.DepthNormals);
+            ret.DepthSpecularLighting = item.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting);
+            ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
+            ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
+            ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
+            ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
+            ret.NoiseLayerOneTexture = string.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
+            ret.NoiseLayerTwoTexture = string.Equals(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
+            ret.NoiseLayerThreeTexture = string.Equals(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1213,12 +4516,318 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.UnusedNoisemaps?.Overall ?? true)
+            {
+                fg.AppendLine("UnusedNoisemaps =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.UnusedNoisemaps)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Opacity ?? true)
+            {
+                fg.AppendItem(item.Opacity, "Opacity");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
+            {
+                fg.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.MNAM ?? true)
+                && item.MNAM.TryGet(out var MNAMItem))
+            {
+                fg.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
+            }
+            if ((printMask?.Material ?? true)
+                && item.Material.TryGet(out var MaterialItem))
+            {
+                fg.AppendItem(MaterialItem, "Material");
+            }
+            if ((printMask?.OpenSound ?? true)
+                && item.OpenSound.TryGet(out var OpenSoundItem))
+            {
+                fg.AppendItem(OpenSoundItem, "OpenSound");
+            }
+            if ((printMask?.Spell ?? true)
+                && item.Spell.TryGet(out var SpellItem))
+            {
+                fg.AppendItem(SpellItem, "Spell");
+            }
+            if ((printMask?.ImageSpace ?? true)
+                && item.ImageSpace.TryGet(out var ImageSpaceItem))
+            {
+                fg.AppendItem(ImageSpaceItem, "ImageSpace");
+            }
+            if ((printMask?.DamagePerSecond ?? true)
+                && item.DamagePerSecond.TryGet(out var DamagePerSecondItem))
+            {
+                fg.AppendItem(DamagePerSecondItem, "DamagePerSecond");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.SpecularSunPower ?? true)
+            {
+                fg.AppendItem(item.SpecularSunPower, "SpecularSunPower");
+            }
+            if (printMask?.WaterReflectivity ?? true)
+            {
+                fg.AppendItem(item.WaterReflectivity, "WaterReflectivity");
+            }
+            if (printMask?.WaterFresnel ?? true)
+            {
+                fg.AppendItem(item.WaterFresnel, "WaterFresnel");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
+            {
+                fg.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+            }
+            if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
+            {
+                fg.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+            }
+            if (printMask?.ShallowColor ?? true)
+            {
+                fg.AppendItem(item.ShallowColor, "ShallowColor");
+            }
+            if (printMask?.DeepColor ?? true)
+            {
+                fg.AppendItem(item.DeepColor, "DeepColor");
+            }
+            if (printMask?.ReflectionColor ?? true)
+            {
+                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+            }
+            if (printMask?.DisplacementStartingSize ?? true)
+            {
+                fg.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
+            }
+            if (printMask?.DisplacementFoce ?? true)
+            {
+                fg.AppendItem(item.DisplacementFoce, "DisplacementFoce");
+            }
+            if (printMask?.DisplacementVelocity ?? true)
+            {
+                fg.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
+            }
+            if (printMask?.DisplacementFalloff ?? true)
+            {
+                fg.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
+            }
+            if (printMask?.DisplacementDampner ?? true)
+            {
+                fg.AppendItem(item.DisplacementDampner, "DisplacementDampner");
+            }
+            if (printMask?.Unknown4 ?? true)
+            {
+                fg.AppendItem(item.Unknown4, "Unknown4");
+            }
+            if (printMask?.NoiseFalloff ?? true)
+            {
+                fg.AppendItem(item.NoiseFalloff, "NoiseFalloff");
+            }
+            if (printMask?.NoiseLayerOneWindDirection ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+            }
+            if (printMask?.NoiseLayerTwoWindDirection ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+            }
+            if (printMask?.NoiseLayerThreeWindDirection ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+            }
+            if (printMask?.NoiseLayerOneWindSpeed ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+            }
+            if (printMask?.NoiseLayerTwoWindSpeed ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+            }
+            if (printMask?.NoiseLayerThreeWindSpeed ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+            }
+            if (printMask?.Unknown5 ?? true)
+            {
+                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(item.Unknown5)}");
+            }
+            if (printMask?.FogAboveWaterAmount ?? true)
+            {
+                fg.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
+            }
+            if (printMask?.Unknown6 ?? true)
+            {
+                fg.AppendItem(item.Unknown6, "Unknown6");
+            }
+            if (printMask?.FogUnderWaterAmount ?? true)
+            {
+                fg.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
+            }
+            if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
+            {
+                fg.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+            }
+            if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
+            {
+                fg.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+            }
+            if (printMask?.WaterRefractionMagnitude ?? true)
+            {
+                fg.AppendItem(item.WaterRefractionMagnitude, "WaterRefractionMagnitude");
+            }
+            if (printMask?.SpecularPower ?? true)
+            {
+                fg.AppendItem(item.SpecularPower, "SpecularPower");
+            }
+            if (printMask?.Unknown7 ?? true)
+            {
+                fg.AppendItem(item.Unknown7, "Unknown7");
+            }
+            if (printMask?.SpecularRadius ?? true)
+            {
+                fg.AppendItem(item.SpecularRadius, "SpecularRadius");
+            }
+            if (printMask?.SpecularBrightness ?? true)
+            {
+                fg.AppendItem(item.SpecularBrightness, "SpecularBrightness");
+            }
+            if (printMask?.NoiseLayerOneUvScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+            }
+            if (printMask?.NoiseLayerTwoUvScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+            }
+            if (printMask?.NoiseLayerThreeUvScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+            }
+            if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+            }
+            if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+            }
+            if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
+            {
+                fg.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+            }
+            if (printMask?.WaterReflectionMagnitude ?? true)
+            {
+                fg.AppendItem(item.WaterReflectionMagnitude, "WaterReflectionMagnitude");
+            }
+            if (printMask?.SpecularSunSparkleMagnitude ?? true)
+            {
+                fg.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+            }
+            if (printMask?.SpecularSunSpecularMagnitude ?? true)
+            {
+                fg.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+            }
+            if (printMask?.DepthReflections ?? true)
+            {
+                fg.AppendItem(item.DepthReflections, "DepthReflections");
+            }
+            if (printMask?.DepthRefraction ?? true)
+            {
+                fg.AppendItem(item.DepthRefraction, "DepthRefraction");
+            }
+            if (printMask?.DepthNormals ?? true)
+            {
+                fg.AppendItem(item.DepthNormals, "DepthNormals");
+            }
+            if (printMask?.DepthSpecularLighting ?? true)
+            {
+                fg.AppendItem(item.DepthSpecularLighting, "DepthSpecularLighting");
+            }
+            if (printMask?.SpecularSunSparklePower ?? true)
+            {
+                fg.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
+            }
+            if ((printMask?.GNAM ?? true)
+                && item.GNAM.TryGet(out var GNAMItem))
+            {
+                fg.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+            }
+            if ((printMask?.LinearVelocity ?? true)
+                && item.LinearVelocity.TryGet(out var LinearVelocityItem))
+            {
+                fg.AppendItem(LinearVelocityItem, "LinearVelocity");
+            }
+            if ((printMask?.AngularVelocity ?? true)
+                && item.AngularVelocity.TryGet(out var AngularVelocityItem))
+            {
+                fg.AppendItem(AngularVelocityItem, "AngularVelocity");
+            }
+            if ((printMask?.NoiseLayerOneTexture ?? true)
+                && item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureItem))
+            {
+                fg.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
+            }
+            if ((printMask?.NoiseLayerTwoTexture ?? true)
+                && item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureItem))
+            {
+                fg.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
+            }
+            if ((printMask?.NoiseLayerThreeTexture ?? true)
+                && item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureItem))
+            {
+                fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IWaterGetter item,
             Water.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.MNAM.HasValue && checkMask.MNAM.Value != (item.MNAM != null)) return false;
+            if (checkMask.Material.HasValue && checkMask.Material.Value != (item.Material.FormKey != null)) return false;
+            if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != (item.OpenSound.FormKey != null)) return false;
+            if (checkMask.Spell.HasValue && checkMask.Spell.Value != (item.Spell.FormKey != null)) return false;
+            if (checkMask.ImageSpace.HasValue && checkMask.ImageSpace.Value != (item.ImageSpace.FormKey != null)) return false;
+            if (checkMask.DamagePerSecond.HasValue && checkMask.DamagePerSecond.Value != (item.DamagePerSecond != null)) return false;
+            if (checkMask.GNAM.HasValue && checkMask.GNAM.Value != (item.GNAM != null)) return false;
+            if (checkMask.LinearVelocity.HasValue && checkMask.LinearVelocity.Value != (item.LinearVelocity != null)) return false;
+            if (checkMask.AngularVelocity.HasValue && checkMask.AngularVelocity.Value != (item.AngularVelocity != null)) return false;
+            if (checkMask.NoiseLayerOneTexture.HasValue && checkMask.NoiseLayerOneTexture.Value != (item.NoiseLayerOneTexture != null)) return false;
+            if (checkMask.NoiseLayerTwoTexture.HasValue && checkMask.NoiseLayerTwoTexture.Value != (item.NoiseLayerTwoTexture != null)) return false;
+            if (checkMask.NoiseLayerThreeTexture.HasValue && checkMask.NoiseLayerThreeTexture.Value != (item.NoiseLayerThreeTexture != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1228,6 +4837,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterGetter item,
             Water.Mask<bool> mask)
         {
+            mask.Name = (item.Name != null);
+            mask.UnusedNoisemaps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.Opacity = true;
+            mask.Flags = (item.Flags != null);
+            mask.MNAM = (item.MNAM != null);
+            mask.Material = (item.Material.FormKey != null);
+            mask.OpenSound = (item.OpenSound.FormKey != null);
+            mask.Spell = (item.Spell.FormKey != null);
+            mask.ImageSpace = (item.ImageSpace.FormKey != null);
+            mask.DamagePerSecond = (item.DamagePerSecond != null);
+            mask.Unknown = true;
+            mask.SpecularSunPower = true;
+            mask.WaterReflectivity = true;
+            mask.WaterFresnel = true;
+            mask.Unknown2 = true;
+            mask.FogAboveWaterDistanceNearPlane = true;
+            mask.FogAboveWaterDistanceFarPlane = true;
+            mask.ShallowColor = true;
+            mask.DeepColor = true;
+            mask.ReflectionColor = true;
+            mask.Unknown3 = true;
+            mask.DisplacementStartingSize = true;
+            mask.DisplacementFoce = true;
+            mask.DisplacementVelocity = true;
+            mask.DisplacementFalloff = true;
+            mask.DisplacementDampner = true;
+            mask.Unknown4 = true;
+            mask.NoiseFalloff = true;
+            mask.NoiseLayerOneWindDirection = true;
+            mask.NoiseLayerTwoWindDirection = true;
+            mask.NoiseLayerThreeWindDirection = true;
+            mask.NoiseLayerOneWindSpeed = true;
+            mask.NoiseLayerTwoWindSpeed = true;
+            mask.NoiseLayerThreeWindSpeed = true;
+            mask.Unknown5 = true;
+            mask.FogAboveWaterAmount = true;
+            mask.Unknown6 = true;
+            mask.FogUnderWaterAmount = true;
+            mask.FogUnderWaterDistanceNearPlane = true;
+            mask.FogUnderWaterDistanceFarPlane = true;
+            mask.WaterRefractionMagnitude = true;
+            mask.SpecularPower = true;
+            mask.Unknown7 = true;
+            mask.SpecularRadius = true;
+            mask.SpecularBrightness = true;
+            mask.NoiseLayerOneUvScale = true;
+            mask.NoiseLayerTwoUvScale = true;
+            mask.NoiseLayerThreeUvScale = true;
+            mask.NoiseLayerOneAmplitudeScale = true;
+            mask.NoiseLayerTwoAmplitudeScale = true;
+            mask.NoiseLayerThreeAmplitudeScale = true;
+            mask.WaterReflectionMagnitude = true;
+            mask.SpecularSunSparkleMagnitude = true;
+            mask.SpecularSunSpecularMagnitude = true;
+            mask.DepthReflections = true;
+            mask.DepthRefraction = true;
+            mask.DepthNormals = true;
+            mask.DepthSpecularLighting = true;
+            mask.SpecularSunSparklePower = true;
+            mask.GNAM = (item.GNAM != null);
+            mask.LinearVelocity = (item.LinearVelocity != null);
+            mask.AngularVelocity = (item.AngularVelocity != null);
+            mask.NoiseLayerOneTexture = (item.NoiseLayerOneTexture != null);
+            mask.NoiseLayerTwoTexture = (item.NoiseLayerTwoTexture != null);
+            mask.NoiseLayerThreeTexture = (item.NoiseLayerThreeTexture != null);
+            mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1279,6 +4954,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.UnusedNoisemaps.SequenceEqual(rhs.UnusedNoisemaps)) return false;
+            if (lhs.Opacity != rhs.Opacity) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemorySliceExt.Equal(lhs.MNAM, rhs.MNAM)) return false;
+            if (!lhs.Material.Equals(rhs.Material)) return false;
+            if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
+            if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            if (lhs.DamagePerSecond != rhs.DamagePerSecond) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if (!lhs.SpecularSunPower.EqualsWithin(rhs.SpecularSunPower)) return false;
+            if (!lhs.WaterReflectivity.EqualsWithin(rhs.WaterReflectivity)) return false;
+            if (!lhs.WaterFresnel.EqualsWithin(rhs.WaterFresnel)) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (!lhs.FogAboveWaterDistanceNearPlane.EqualsWithin(rhs.FogAboveWaterDistanceNearPlane)) return false;
+            if (!lhs.FogAboveWaterDistanceFarPlane.EqualsWithin(rhs.FogAboveWaterDistanceFarPlane)) return false;
+            if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
+            if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
+            if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            if (!lhs.DisplacementStartingSize.EqualsWithin(rhs.DisplacementStartingSize)) return false;
+            if (!lhs.DisplacementFoce.EqualsWithin(rhs.DisplacementFoce)) return false;
+            if (!lhs.DisplacementVelocity.EqualsWithin(rhs.DisplacementVelocity)) return false;
+            if (!lhs.DisplacementFalloff.EqualsWithin(rhs.DisplacementFalloff)) return false;
+            if (!lhs.DisplacementDampner.EqualsWithin(rhs.DisplacementDampner)) return false;
+            if (lhs.Unknown4 != rhs.Unknown4) return false;
+            if (!lhs.NoiseFalloff.EqualsWithin(rhs.NoiseFalloff)) return false;
+            if (!lhs.NoiseLayerOneWindDirection.EqualsWithin(rhs.NoiseLayerOneWindDirection)) return false;
+            if (!lhs.NoiseLayerTwoWindDirection.EqualsWithin(rhs.NoiseLayerTwoWindDirection)) return false;
+            if (!lhs.NoiseLayerThreeWindDirection.EqualsWithin(rhs.NoiseLayerThreeWindDirection)) return false;
+            if (!lhs.NoiseLayerOneWindSpeed.EqualsWithin(rhs.NoiseLayerOneWindSpeed)) return false;
+            if (!lhs.NoiseLayerTwoWindSpeed.EqualsWithin(rhs.NoiseLayerTwoWindSpeed)) return false;
+            if (!lhs.NoiseLayerThreeWindSpeed.EqualsWithin(rhs.NoiseLayerThreeWindSpeed)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown5.Span, rhs.Unknown5.Span)) return false;
+            if (!lhs.FogAboveWaterAmount.EqualsWithin(rhs.FogAboveWaterAmount)) return false;
+            if (lhs.Unknown6 != rhs.Unknown6) return false;
+            if (!lhs.FogUnderWaterAmount.EqualsWithin(rhs.FogUnderWaterAmount)) return false;
+            if (!lhs.FogUnderWaterDistanceNearPlane.EqualsWithin(rhs.FogUnderWaterDistanceNearPlane)) return false;
+            if (!lhs.FogUnderWaterDistanceFarPlane.EqualsWithin(rhs.FogUnderWaterDistanceFarPlane)) return false;
+            if (!lhs.WaterRefractionMagnitude.EqualsWithin(rhs.WaterRefractionMagnitude)) return false;
+            if (!lhs.SpecularPower.EqualsWithin(rhs.SpecularPower)) return false;
+            if (lhs.Unknown7 != rhs.Unknown7) return false;
+            if (!lhs.SpecularRadius.EqualsWithin(rhs.SpecularRadius)) return false;
+            if (!lhs.SpecularBrightness.EqualsWithin(rhs.SpecularBrightness)) return false;
+            if (!lhs.NoiseLayerOneUvScale.EqualsWithin(rhs.NoiseLayerOneUvScale)) return false;
+            if (!lhs.NoiseLayerTwoUvScale.EqualsWithin(rhs.NoiseLayerTwoUvScale)) return false;
+            if (!lhs.NoiseLayerThreeUvScale.EqualsWithin(rhs.NoiseLayerThreeUvScale)) return false;
+            if (!lhs.NoiseLayerOneAmplitudeScale.EqualsWithin(rhs.NoiseLayerOneAmplitudeScale)) return false;
+            if (!lhs.NoiseLayerTwoAmplitudeScale.EqualsWithin(rhs.NoiseLayerTwoAmplitudeScale)) return false;
+            if (!lhs.NoiseLayerThreeAmplitudeScale.EqualsWithin(rhs.NoiseLayerThreeAmplitudeScale)) return false;
+            if (!lhs.WaterReflectionMagnitude.EqualsWithin(rhs.WaterReflectionMagnitude)) return false;
+            if (!lhs.SpecularSunSparkleMagnitude.EqualsWithin(rhs.SpecularSunSparkleMagnitude)) return false;
+            if (!lhs.SpecularSunSpecularMagnitude.EqualsWithin(rhs.SpecularSunSpecularMagnitude)) return false;
+            if (!lhs.DepthReflections.EqualsWithin(rhs.DepthReflections)) return false;
+            if (!lhs.DepthRefraction.EqualsWithin(rhs.DepthRefraction)) return false;
+            if (!lhs.DepthNormals.EqualsWithin(rhs.DepthNormals)) return false;
+            if (!lhs.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting)) return false;
+            if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
+            if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
+            if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
+            if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
+            if (!string.Equals(lhs.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
+            if (!string.Equals(lhs.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
+            if (!string.Equals(lhs.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
         
@@ -1303,6 +5044,114 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.UnusedNoisemaps);
+            hash.Add(item.Opacity);
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.MNAM.TryGet(out var MNAMItem))
+            {
+                hash.Add(MNAMItem);
+            }
+            if (item.Material.TryGet(out var Materialitem))
+            {
+                hash.Add(Materialitem);
+            }
+            if (item.OpenSound.TryGet(out var OpenSounditem))
+            {
+                hash.Add(OpenSounditem);
+            }
+            if (item.Spell.TryGet(out var Spellitem))
+            {
+                hash.Add(Spellitem);
+            }
+            if (item.ImageSpace.TryGet(out var ImageSpaceitem))
+            {
+                hash.Add(ImageSpaceitem);
+            }
+            if (item.DamagePerSecond.TryGet(out var DamagePerSeconditem))
+            {
+                hash.Add(DamagePerSeconditem);
+            }
+            hash.Add(item.Unknown);
+            hash.Add(item.SpecularSunPower);
+            hash.Add(item.WaterReflectivity);
+            hash.Add(item.WaterFresnel);
+            hash.Add(item.Unknown2);
+            hash.Add(item.FogAboveWaterDistanceNearPlane);
+            hash.Add(item.FogAboveWaterDistanceFarPlane);
+            hash.Add(item.ShallowColor);
+            hash.Add(item.DeepColor);
+            hash.Add(item.ReflectionColor);
+            hash.Add(item.Unknown3);
+            hash.Add(item.DisplacementStartingSize);
+            hash.Add(item.DisplacementFoce);
+            hash.Add(item.DisplacementVelocity);
+            hash.Add(item.DisplacementFalloff);
+            hash.Add(item.DisplacementDampner);
+            hash.Add(item.Unknown4);
+            hash.Add(item.NoiseFalloff);
+            hash.Add(item.NoiseLayerOneWindDirection);
+            hash.Add(item.NoiseLayerTwoWindDirection);
+            hash.Add(item.NoiseLayerThreeWindDirection);
+            hash.Add(item.NoiseLayerOneWindSpeed);
+            hash.Add(item.NoiseLayerTwoWindSpeed);
+            hash.Add(item.NoiseLayerThreeWindSpeed);
+            hash.Add(item.Unknown5);
+            hash.Add(item.FogAboveWaterAmount);
+            hash.Add(item.Unknown6);
+            hash.Add(item.FogUnderWaterAmount);
+            hash.Add(item.FogUnderWaterDistanceNearPlane);
+            hash.Add(item.FogUnderWaterDistanceFarPlane);
+            hash.Add(item.WaterRefractionMagnitude);
+            hash.Add(item.SpecularPower);
+            hash.Add(item.Unknown7);
+            hash.Add(item.SpecularRadius);
+            hash.Add(item.SpecularBrightness);
+            hash.Add(item.NoiseLayerOneUvScale);
+            hash.Add(item.NoiseLayerTwoUvScale);
+            hash.Add(item.NoiseLayerThreeUvScale);
+            hash.Add(item.NoiseLayerOneAmplitudeScale);
+            hash.Add(item.NoiseLayerTwoAmplitudeScale);
+            hash.Add(item.NoiseLayerThreeAmplitudeScale);
+            hash.Add(item.WaterReflectionMagnitude);
+            hash.Add(item.SpecularSunSparkleMagnitude);
+            hash.Add(item.SpecularSunSpecularMagnitude);
+            hash.Add(item.DepthReflections);
+            hash.Add(item.DepthRefraction);
+            hash.Add(item.DepthNormals);
+            hash.Add(item.DepthSpecularLighting);
+            hash.Add(item.SpecularSunSparklePower);
+            if (item.GNAM.TryGet(out var GNAMItem))
+            {
+                hash.Add(GNAMItem);
+            }
+            if (item.LinearVelocity.TryGet(out var LinearVelocityitem))
+            {
+                hash.Add(LinearVelocityitem);
+            }
+            if (item.AngularVelocity.TryGet(out var AngularVelocityitem))
+            {
+                hash.Add(AngularVelocityitem);
+            }
+            if (item.NoiseLayerOneTexture.TryGet(out var NoiseLayerOneTextureitem))
+            {
+                hash.Add(NoiseLayerOneTextureitem);
+            }
+            if (item.NoiseLayerTwoTexture.TryGet(out var NoiseLayerTwoTextureitem))
+            {
+                hash.Add(NoiseLayerTwoTextureitem);
+            }
+            if (item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureitem))
+            {
+                hash.Add(NoiseLayerThreeTextureitem);
+            }
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1331,6 +5180,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Material.FormKey.TryGet(out var MaterialKey))
+            {
+                yield return MaterialKey;
+            }
+            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            {
+                yield return OpenSoundKey;
+            }
+            if (obj.Spell.FormKey.TryGet(out var SpellKey))
+            {
+                yield return SpellKey;
+            }
+            if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
+            {
+                yield return ImageSpaceKey;
             }
             yield break;
         }
@@ -1379,6 +5244,297 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.UnusedNoisemaps) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.UnusedNoisemaps);
+                try
+                {
+                    item.UnusedNoisemaps.SetTo(rhs.UnusedNoisemaps);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                item.Opacity = rhs.Opacity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
+            {
+                if(rhs.MNAM.TryGet(out var MNAMrhs))
+                {
+                    item.MNAM = MNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.MNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                item.Material = rhs.Material.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
+            {
+                item.OpenSound = rhs.OpenSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
+            {
+                item.Spell = rhs.Spell.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace = rhs.ImageSpace.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
+            {
+                item.DamagePerSecond = rhs.DamagePerSecond;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunPower) ?? true))
+            {
+                item.SpecularSunPower = rhs.SpecularSunPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectivity) ?? true))
+            {
+                item.WaterReflectivity = rhs.WaterReflectivity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaterFresnel) ?? true))
+            {
+                item.WaterFresnel = rhs.WaterFresnel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceNearPlane) ?? true))
+            {
+                item.FogAboveWaterDistanceNearPlane = rhs.FogAboveWaterDistanceNearPlane;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceFarPlane) ?? true))
+            {
+                item.FogAboveWaterDistanceFarPlane = rhs.FogAboveWaterDistanceFarPlane;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
+            {
+                item.ShallowColor = rhs.ShallowColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
+            {
+                item.DeepColor = rhs.DeepColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
+            {
+                item.ReflectionColor = rhs.ReflectionColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementStartingSize) ?? true))
+            {
+                item.DisplacementStartingSize = rhs.DisplacementStartingSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFoce) ?? true))
+            {
+                item.DisplacementFoce = rhs.DisplacementFoce;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementVelocity) ?? true))
+            {
+                item.DisplacementVelocity = rhs.DisplacementVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFalloff) ?? true))
+            {
+                item.DisplacementFalloff = rhs.DisplacementFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementDampner) ?? true))
+            {
+                item.DisplacementDampner = rhs.DisplacementDampner;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown4) ?? true))
+            {
+                item.Unknown4 = rhs.Unknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFalloff) ?? true))
+            {
+                item.NoiseFalloff = rhs.NoiseFalloff;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindDirection) ?? true))
+            {
+                item.NoiseLayerOneWindDirection = rhs.NoiseLayerOneWindDirection;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindDirection) ?? true))
+            {
+                item.NoiseLayerTwoWindDirection = rhs.NoiseLayerTwoWindDirection;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindDirection) ?? true))
+            {
+                item.NoiseLayerThreeWindDirection = rhs.NoiseLayerThreeWindDirection;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindSpeed) ?? true))
+            {
+                item.NoiseLayerOneWindSpeed = rhs.NoiseLayerOneWindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindSpeed) ?? true))
+            {
+                item.NoiseLayerTwoWindSpeed = rhs.NoiseLayerTwoWindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindSpeed) ?? true))
+            {
+                item.NoiseLayerThreeWindSpeed = rhs.NoiseLayerThreeWindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown5) ?? true))
+            {
+                item.Unknown5 = rhs.Unknown5.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterAmount) ?? true))
+            {
+                item.FogAboveWaterAmount = rhs.FogAboveWaterAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown6) ?? true))
+            {
+                item.Unknown6 = rhs.Unknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterAmount) ?? true))
+            {
+                item.FogUnderWaterAmount = rhs.FogUnderWaterAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceNearPlane) ?? true))
+            {
+                item.FogUnderWaterDistanceNearPlane = rhs.FogUnderWaterDistanceNearPlane;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceFarPlane) ?? true))
+            {
+                item.FogUnderWaterDistanceFarPlane = rhs.FogUnderWaterDistanceFarPlane;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaterRefractionMagnitude) ?? true))
+            {
+                item.WaterRefractionMagnitude = rhs.WaterRefractionMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularPower) ?? true))
+            {
+                item.SpecularPower = rhs.SpecularPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown7) ?? true))
+            {
+                item.Unknown7 = rhs.Unknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularRadius) ?? true))
+            {
+                item.SpecularRadius = rhs.SpecularRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularBrightness) ?? true))
+            {
+                item.SpecularBrightness = rhs.SpecularBrightness;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneUvScale) ?? true))
+            {
+                item.NoiseLayerOneUvScale = rhs.NoiseLayerOneUvScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoUvScale) ?? true))
+            {
+                item.NoiseLayerTwoUvScale = rhs.NoiseLayerTwoUvScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeUvScale) ?? true))
+            {
+                item.NoiseLayerThreeUvScale = rhs.NoiseLayerThreeUvScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneAmplitudeScale) ?? true))
+            {
+                item.NoiseLayerOneAmplitudeScale = rhs.NoiseLayerOneAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale) ?? true))
+            {
+                item.NoiseLayerTwoAmplitudeScale = rhs.NoiseLayerTwoAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale) ?? true))
+            {
+                item.NoiseLayerThreeAmplitudeScale = rhs.NoiseLayerThreeAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectionMagnitude) ?? true))
+            {
+                item.WaterReflectionMagnitude = rhs.WaterReflectionMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
+            {
+                item.SpecularSunSparkleMagnitude = rhs.SpecularSunSparkleMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
+            {
+                item.SpecularSunSpecularMagnitude = rhs.SpecularSunSpecularMagnitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DepthReflections) ?? true))
+            {
+                item.DepthReflections = rhs.DepthReflections;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DepthRefraction) ?? true))
+            {
+                item.DepthRefraction = rhs.DepthRefraction;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DepthNormals) ?? true))
+            {
+                item.DepthNormals = rhs.DepthNormals;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DepthSpecularLighting) ?? true))
+            {
+                item.DepthSpecularLighting = rhs.DepthSpecularLighting;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
+            {
+                item.SpecularSunSparklePower = rhs.SpecularSunSparklePower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
+            {
+                if(rhs.GNAM.TryGet(out var GNAMrhs))
+                {
+                    item.GNAM = GNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.GNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                item.LinearVelocity = rhs.LinearVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                item.AngularVelocity = rhs.AngularVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneTexture) ?? true))
+            {
+                item.NoiseLayerOneTexture = rhs.NoiseLayerOneTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoTexture) ?? true))
+            {
+                item.NoiseLayerTwoTexture = rhs.NoiseLayerTwoTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
+            {
+                item.NoiseLayerThreeTexture = rhs.NoiseLayerThreeTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1521,6 +5677,623 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Water_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.UnusedNoisemaps) ?? true))
+            {
+                ListXmlTranslation<String>.Instance.Write(
+                    node: node,
+                    name: nameof(item.UnusedNoisemaps),
+                    item: item.UnusedNoisemaps,
+                    fieldIndex: (int)Water_FieldIndex.UnusedNoisemaps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.UnusedNoisemaps),
+                    transl: (XElement subNode, String subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Opacity),
+                    item: item.Opacity,
+                    fieldIndex: (int)Water_FieldIndex.Opacity,
+                    errorMask: errorMask);
+            }
+            if ((item.Flags != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Water.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Water_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.MNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MNAM),
+                    item: item.MNAM.Value,
+                    fieldIndex: (int)Water_FieldIndex.MNAM,
+                    errorMask: errorMask);
+            }
+            if ((item.Material.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Material),
+                    item: item.Material.FormKey.Value,
+                    fieldIndex: (int)Water_FieldIndex.Material,
+                    errorMask: errorMask);
+            }
+            if ((item.OpenSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.OpenSound),
+                    item: item.OpenSound.FormKey.Value,
+                    fieldIndex: (int)Water_FieldIndex.OpenSound,
+                    errorMask: errorMask);
+            }
+            if ((item.Spell.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Spell),
+                    item: item.Spell.FormKey.Value,
+                    fieldIndex: (int)Water_FieldIndex.Spell,
+                    errorMask: errorMask);
+            }
+            if ((item.ImageSpace.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImageSpace),
+                    item: item.ImageSpace.FormKey.Value,
+                    fieldIndex: (int)Water_FieldIndex.ImageSpace,
+                    errorMask: errorMask);
+            }
+            if ((item.DamagePerSecond != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DamagePerSecond),
+                    item: item.DamagePerSecond.Value,
+                    fieldIndex: (int)Water_FieldIndex.DamagePerSecond,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Water_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunPower) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularSunPower),
+                    item: item.SpecularSunPower,
+                    fieldIndex: (int)Water_FieldIndex.SpecularSunPower,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectivity) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterReflectivity),
+                    item: item.WaterReflectivity,
+                    fieldIndex: (int)Water_FieldIndex.WaterReflectivity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterFresnel) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterFresnel),
+                    item: item.WaterFresnel,
+                    fieldIndex: (int)Water_FieldIndex.WaterFresnel,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown2) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)Water_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceNearPlane) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogAboveWaterDistanceNearPlane),
+                    item: item.FogAboveWaterDistanceNearPlane,
+                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterDistanceNearPlane,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceFarPlane) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogAboveWaterDistanceFarPlane),
+                    item: item.FogAboveWaterDistanceFarPlane,
+                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterDistanceFarPlane,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ShallowColor),
+                    item: item.ShallowColor,
+                    fieldIndex: (int)Water_FieldIndex.ShallowColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DeepColor),
+                    item: item.DeepColor,
+                    fieldIndex: (int)Water_FieldIndex.DeepColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReflectionColor),
+                    item: item.ReflectionColor,
+                    fieldIndex: (int)Water_FieldIndex.ReflectionColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown3) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown3),
+                    item: item.Unknown3,
+                    fieldIndex: (int)Water_FieldIndex.Unknown3,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementStartingSize) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplacementStartingSize),
+                    item: item.DisplacementStartingSize,
+                    fieldIndex: (int)Water_FieldIndex.DisplacementStartingSize,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFoce) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplacementFoce),
+                    item: item.DisplacementFoce,
+                    fieldIndex: (int)Water_FieldIndex.DisplacementFoce,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementVelocity) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplacementVelocity),
+                    item: item.DisplacementVelocity,
+                    fieldIndex: (int)Water_FieldIndex.DisplacementVelocity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFalloff) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplacementFalloff),
+                    item: item.DisplacementFalloff,
+                    fieldIndex: (int)Water_FieldIndex.DisplacementFalloff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementDampner) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplacementDampner),
+                    item: item.DisplacementDampner,
+                    fieldIndex: (int)Water_FieldIndex.DisplacementDampner,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown4) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4),
+                    item: item.Unknown4,
+                    fieldIndex: (int)Water_FieldIndex.Unknown4,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFalloff) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseFalloff),
+                    item: item.NoiseFalloff,
+                    fieldIndex: (int)Water_FieldIndex.NoiseFalloff,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindDirection) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerOneWindDirection),
+                    item: item.NoiseLayerOneWindDirection,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneWindDirection,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindDirection) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerTwoWindDirection),
+                    item: item.NoiseLayerTwoWindDirection,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoWindDirection,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindDirection) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerThreeWindDirection),
+                    item: item.NoiseLayerThreeWindDirection,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeWindDirection,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindSpeed) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerOneWindSpeed),
+                    item: item.NoiseLayerOneWindSpeed,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneWindSpeed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindSpeed) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerTwoWindSpeed),
+                    item: item.NoiseLayerTwoWindSpeed,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoWindSpeed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindSpeed) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerThreeWindSpeed),
+                    item: item.NoiseLayerThreeWindSpeed,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeWindSpeed,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown5) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown5),
+                    item: item.Unknown5,
+                    fieldIndex: (int)Water_FieldIndex.Unknown5,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterAmount) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogAboveWaterAmount),
+                    item: item.FogAboveWaterAmount,
+                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterAmount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown6) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown6),
+                    item: item.Unknown6,
+                    fieldIndex: (int)Water_FieldIndex.Unknown6,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterAmount) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogUnderWaterAmount),
+                    item: item.FogUnderWaterAmount,
+                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterAmount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceNearPlane) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogUnderWaterDistanceNearPlane),
+                    item: item.FogUnderWaterDistanceNearPlane,
+                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterDistanceNearPlane,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceFarPlane) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogUnderWaterDistanceFarPlane),
+                    item: item.FogUnderWaterDistanceFarPlane,
+                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterDistanceFarPlane,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterRefractionMagnitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterRefractionMagnitude),
+                    item: item.WaterRefractionMagnitude,
+                    fieldIndex: (int)Water_FieldIndex.WaterRefractionMagnitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularPower) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularPower),
+                    item: item.SpecularPower,
+                    fieldIndex: (int)Water_FieldIndex.SpecularPower,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown7) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown7),
+                    item: item.Unknown7,
+                    fieldIndex: (int)Water_FieldIndex.Unknown7,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularRadius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularRadius),
+                    item: item.SpecularRadius,
+                    fieldIndex: (int)Water_FieldIndex.SpecularRadius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularBrightness) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularBrightness),
+                    item: item.SpecularBrightness,
+                    fieldIndex: (int)Water_FieldIndex.SpecularBrightness,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneUvScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerOneUvScale),
+                    item: item.NoiseLayerOneUvScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneUvScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoUvScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerTwoUvScale),
+                    item: item.NoiseLayerTwoUvScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoUvScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeUvScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerThreeUvScale),
+                    item: item.NoiseLayerThreeUvScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeUvScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneAmplitudeScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerOneAmplitudeScale),
+                    item: item.NoiseLayerOneAmplitudeScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneAmplitudeScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerTwoAmplitudeScale),
+                    item: item.NoiseLayerTwoAmplitudeScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerThreeAmplitudeScale),
+                    item: item.NoiseLayerThreeAmplitudeScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectionMagnitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterReflectionMagnitude),
+                    item: item.WaterReflectionMagnitude,
+                    fieldIndex: (int)Water_FieldIndex.WaterReflectionMagnitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularSunSparkleMagnitude),
+                    item: item.SpecularSunSparkleMagnitude,
+                    fieldIndex: (int)Water_FieldIndex.SpecularSunSparkleMagnitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularSunSpecularMagnitude),
+                    item: item.SpecularSunSpecularMagnitude,
+                    fieldIndex: (int)Water_FieldIndex.SpecularSunSpecularMagnitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthReflections) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthReflections),
+                    item: item.DepthReflections,
+                    fieldIndex: (int)Water_FieldIndex.DepthReflections,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthRefraction) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthRefraction),
+                    item: item.DepthRefraction,
+                    fieldIndex: (int)Water_FieldIndex.DepthRefraction,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthNormals) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthNormals),
+                    item: item.DepthNormals,
+                    fieldIndex: (int)Water_FieldIndex.DepthNormals,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthSpecularLighting) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthSpecularLighting),
+                    item: item.DepthSpecularLighting,
+                    fieldIndex: (int)Water_FieldIndex.DepthSpecularLighting,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpecularSunSparklePower),
+                    item: item.SpecularSunSparklePower,
+                    fieldIndex: (int)Water_FieldIndex.SpecularSunSparklePower,
+                    errorMask: errorMask);
+            }
+            if ((item.GNAM != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.GNAM),
+                    item: item.GNAM.Value,
+                    fieldIndex: (int)Water_FieldIndex.GNAM,
+                    errorMask: errorMask);
+            }
+            if ((item.LinearVelocity != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LinearVelocity),
+                    item: item.LinearVelocity.Value,
+                    fieldIndex: (int)Water_FieldIndex.LinearVelocity,
+                    errorMask: errorMask);
+            }
+            if ((item.AngularVelocity != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AngularVelocity),
+                    item: item.AngularVelocity.Value,
+                    fieldIndex: (int)Water_FieldIndex.AngularVelocity,
+                    errorMask: errorMask);
+            }
+            if ((item.NoiseLayerOneTexture != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneTexture) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerOneTexture),
+                    item: item.NoiseLayerOneTexture,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneTexture,
+                    errorMask: errorMask);
+            }
+            if ((item.NoiseLayerTwoTexture != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoTexture) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerTwoTexture),
+                    item: item.NoiseLayerTwoTexture,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoTexture,
+                    errorMask: errorMask);
+            }
+            if ((item.NoiseLayerThreeTexture != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseLayerThreeTexture),
+                    item: item.NoiseLayerThreeTexture,
+                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeTexture,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Water.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)Water_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1628,6 +6401,1209 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Name":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnusedNoisemaps":
+                    errorMask?.PushIndex((int)Water_FieldIndex.UnusedNoisemaps);
+                    try
+                    {
+                        if (ListXmlTranslation<String>.Instance.Parse(
+                            node: node,
+                            enumer: out var UnusedNoisemapsItem,
+                            transl: StringXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.UnusedNoisemaps.SetTo(UnusedNoisemapsItem);
+                        }
+                        else
+                        {
+                            item.UnusedNoisemaps.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Opacity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
+                    try
+                    {
+                        item.Opacity = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Water.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MNAM":
+                    errorMask?.PushIndex((int)Water_FieldIndex.MNAM);
+                    try
+                    {
+                        item.MNAM = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Material":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Material);
+                    try
+                    {
+                        item.Material = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OpenSound":
+                    errorMask?.PushIndex((int)Water_FieldIndex.OpenSound);
+                    try
+                    {
+                        item.OpenSound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Spell":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Spell);
+                    try
+                    {
+                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImageSpace":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ImageSpace);
+                    try
+                    {
+                        item.ImageSpace = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DamagePerSecond":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DamagePerSecond);
+                    try
+                    {
+                        item.DamagePerSecond = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 16,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularSunPower":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunPower);
+                    try
+                    {
+                        item.SpecularSunPower = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterReflectivity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaterReflectivity);
+                    try
+                    {
+                        item.WaterReflectivity = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterFresnel":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaterFresnel);
+                    try
+                    {
+                        item.WaterFresnel = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown2":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown2);
+                    try
+                    {
+                        item.Unknown2 = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogAboveWaterDistanceNearPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterDistanceNearPlane);
+                    try
+                    {
+                        item.FogAboveWaterDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogAboveWaterDistanceFarPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterDistanceFarPlane);
+                    try
+                    {
+                        item.FogAboveWaterDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ShallowColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
+                    try
+                    {
+                        item.ShallowColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DeepColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
+                    try
+                    {
+                        item.DeepColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReflectionColor":
+                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
+                    try
+                    {
+                        item.ReflectionColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown3":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown3);
+                    try
+                    {
+                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 20,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementStartingSize":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementStartingSize);
+                    try
+                    {
+                        item.DisplacementStartingSize = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementFoce":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementFoce);
+                    try
+                    {
+                        item.DisplacementFoce = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementVelocity);
+                    try
+                    {
+                        item.DisplacementVelocity = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementFalloff":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementFalloff);
+                    try
+                    {
+                        item.DisplacementFalloff = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementDampner":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementDampner);
+                    try
+                    {
+                        item.DisplacementDampner = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown4);
+                    try
+                    {
+                        item.Unknown4 = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseFalloff":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseFalloff);
+                    try
+                    {
+                        item.NoiseFalloff = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerOneWindDirection":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneWindDirection);
+                    try
+                    {
+                        item.NoiseLayerOneWindDirection = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerTwoWindDirection":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoWindDirection);
+                    try
+                    {
+                        item.NoiseLayerTwoWindDirection = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerThreeWindDirection":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeWindDirection);
+                    try
+                    {
+                        item.NoiseLayerThreeWindDirection = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerOneWindSpeed":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneWindSpeed);
+                    try
+                    {
+                        item.NoiseLayerOneWindSpeed = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerTwoWindSpeed":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoWindSpeed);
+                    try
+                    {
+                        item.NoiseLayerTwoWindSpeed = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerThreeWindSpeed":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeWindSpeed);
+                    try
+                    {
+                        item.NoiseLayerThreeWindSpeed = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown5":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown5);
+                    try
+                    {
+                        item.Unknown5 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 8,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogAboveWaterAmount":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterAmount);
+                    try
+                    {
+                        item.FogAboveWaterAmount = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown6":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown6);
+                    try
+                    {
+                        item.Unknown6 = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogUnderWaterAmount":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterAmount);
+                    try
+                    {
+                        item.FogUnderWaterAmount = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogUnderWaterDistanceNearPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterDistanceNearPlane);
+                    try
+                    {
+                        item.FogUnderWaterDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogUnderWaterDistanceFarPlane":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterDistanceFarPlane);
+                    try
+                    {
+                        item.FogUnderWaterDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterRefractionMagnitude":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaterRefractionMagnitude);
+                    try
+                    {
+                        item.WaterRefractionMagnitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularPower":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularPower);
+                    try
+                    {
+                        item.SpecularPower = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown7":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown7);
+                    try
+                    {
+                        item.Unknown7 = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularRadius":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularRadius);
+                    try
+                    {
+                        item.SpecularRadius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularBrightness":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularBrightness);
+                    try
+                    {
+                        item.SpecularBrightness = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerOneUvScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneUvScale);
+                    try
+                    {
+                        item.NoiseLayerOneUvScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerTwoUvScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoUvScale);
+                    try
+                    {
+                        item.NoiseLayerTwoUvScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerThreeUvScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeUvScale);
+                    try
+                    {
+                        item.NoiseLayerThreeUvScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerOneAmplitudeScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneAmplitudeScale);
+                    try
+                    {
+                        item.NoiseLayerOneAmplitudeScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerTwoAmplitudeScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale);
+                    try
+                    {
+                        item.NoiseLayerTwoAmplitudeScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerThreeAmplitudeScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale);
+                    try
+                    {
+                        item.NoiseLayerThreeAmplitudeScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterReflectionMagnitude":
+                    errorMask?.PushIndex((int)Water_FieldIndex.WaterReflectionMagnitude);
+                    try
+                    {
+                        item.WaterReflectionMagnitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularSunSparkleMagnitude":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSparkleMagnitude);
+                    try
+                    {
+                        item.SpecularSunSparkleMagnitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularSunSpecularMagnitude":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSpecularMagnitude);
+                    try
+                    {
+                        item.SpecularSunSpecularMagnitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthReflections":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DepthReflections);
+                    try
+                    {
+                        item.DepthReflections = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthRefraction":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DepthRefraction);
+                    try
+                    {
+                        item.DepthRefraction = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthNormals":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DepthNormals);
+                    try
+                    {
+                        item.DepthNormals = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthSpecularLighting":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DepthSpecularLighting);
+                    try
+                    {
+                        item.DepthSpecularLighting = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpecularSunSparklePower":
+                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSparklePower);
+                    try
+                    {
+                        item.SpecularSunSparklePower = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseFlowmapScale":
+                    break;
+                case "GNAM":
+                    errorMask?.PushIndex((int)Water_FieldIndex.GNAM);
+                    try
+                    {
+                        item.GNAM = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LinearVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.LinearVelocity);
+                    try
+                    {
+                        item.LinearVelocity = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AngularVelocity":
+                    errorMask?.PushIndex((int)Water_FieldIndex.AngularVelocity);
+                    try
+                    {
+                        item.AngularVelocity = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerOneTexture":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneTexture);
+                    try
+                    {
+                        item.NoiseLayerOneTexture = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerTwoTexture":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                    try
+                    {
+                        item.NoiseLayerTwoTexture = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NoiseLayerThreeTexture":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                    try
+                    {
+                        item.NoiseLayerThreeTexture = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)Water_FieldIndex.DNAMDataTypeState);
+                    try
+                    {
+                        item.DNAMDataTypeState = EnumXmlTranslation<Water.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1714,6 +7690,239 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IWaterGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IWaterGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.WritePerItem(
+                writer: writer,
+                items: item.UnusedNoisemaps,
+                recordType: recordTypeConverter.ConvertToCustom(Water_Registration.NNAM_HEADER),
+                transl: StringBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Opacity,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER));
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MNAM,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Material,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OpenSound,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Spell,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.XNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpace,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.INAM_HEADER));
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DamagePerSecond,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DNAM_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunPower);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WaterReflectivity);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WaterFresnel);
+                writer.Write(item.Unknown2);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogAboveWaterDistanceNearPlane);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogAboveWaterDistanceFarPlane);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ShallowColor);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DeepColor);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ReflectionColor);
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown3);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisplacementStartingSize);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisplacementFoce);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisplacementVelocity);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisplacementFalloff);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisplacementDampner);
+                writer.Write(item.Unknown4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseFalloff);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerOneWindDirection);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerTwoWindDirection);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerThreeWindDirection);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerOneWindSpeed);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerTwoWindSpeed);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerThreeWindSpeed);
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown5);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogAboveWaterAmount);
+                writer.Write(item.Unknown6);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderWaterAmount);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderWaterDistanceNearPlane);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogUnderWaterDistanceFarPlane);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WaterRefractionMagnitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularPower);
+                writer.Write(item.Unknown7);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularRadius);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularBrightness);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerOneUvScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerTwoUvScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerThreeUvScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerOneAmplitudeScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerTwoAmplitudeScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerThreeAmplitudeScale);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WaterReflectionMagnitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSparkleMagnitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSpecularMagnitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DepthReflections);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DepthRefraction);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DepthNormals);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DepthSpecularLighting);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpecularSunSparklePower);
+            }
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.GNAM,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.GNAM_HEADER));
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LinearVelocity,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM0_HEADER));
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AngularVelocity,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM1_HEADER));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NoiseLayerOneTexture,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM2_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NoiseLayerTwoTexture,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM3_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NoiseLayerThreeTexture,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM4_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
@@ -1721,13 +7930,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Water_Registration.ACTI_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1773,7 +7982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
-        public override RecordType RecordType => Water_Registration.ACTI_HEADER;
+        public override RecordType RecordType => Water_Registration.WATR_HEADER;
         public static void FillBinaryStructs(
             IWaterInternal item,
             MutagenFrame frame)
@@ -1781,6 +7990,197 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IWaterInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                }
+                case 0x4D414E4E: // NNAM
+                {
+                    item.UnusedNoisemaps.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Water_Registration.NNAM_HEADER,
+                            transl: StringBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Opacity = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DamagePerSecond = frame.ReadUInt16();
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(16));
+                    item.SpecularSunPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaterReflectivity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaterFresnel = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown2 = dataFrame.ReadInt32();
+                    item.FogAboveWaterDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogAboveWaterDistanceFarPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ShallowColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.DeepColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.ReflectionColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(20));
+                    item.DisplacementStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementFoce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown4 = dataFrame.ReadInt32();
+                    item.NoiseFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerOneWindDirection = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerTwoWindDirection = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerThreeWindDirection = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerOneWindSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerTwoWindSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerThreeWindSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown5 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(8));
+                    item.FogAboveWaterAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown6 = dataFrame.ReadInt32();
+                    item.FogUnderWaterAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogUnderWaterDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogUnderWaterDistanceFarPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaterRefractionMagnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SpecularPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown7 = dataFrame.ReadInt32();
+                    item.SpecularRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SpecularBrightness = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerOneUvScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerTwoUvScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerThreeUvScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerOneAmplitudeScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerTwoAmplitudeScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NoiseLayerThreeAmplitudeScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaterReflectionMagnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SpecularSunSparkleMagnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SpecularSunSpecularMagnitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DepthReflections = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DepthRefraction = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DepthNormals = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DepthSpecularLighting = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SpecularSunSparklePower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LinearVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AngularVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NoiseLayerOneTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                }
+                case 0x334D414E: // NAM3
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NoiseLayerTwoTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                }
+                case 0x344D414E: // NAM4
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NoiseLayerThreeTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
 
     }
@@ -1818,6 +8218,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1844,6 +8250,318 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = ListExt.Empty<String>();
+        #region Opacity
+        private int? _OpacityLocation;
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag?);
+        #endregion
+        #region MNAM
+        private int? _MNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? MNAM => _MNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Material
+        private int? _MaterialLocation;
+        public bool Material_IsSet => _MaterialLocation.HasValue;
+        public IFormLinkNullable<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region Spell
+        private int? _SpellLocation;
+        public bool Spell_IsSet => _SpellLocation.HasValue;
+        public IFormLinkNullable<ISpellGetter> Spell => _SpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        #endregion
+        #region ImageSpace
+        private int? _ImageSpaceLocation;
+        public bool ImageSpace_IsSet => _ImageSpaceLocation.HasValue;
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        #region DamagePerSecond
+        private int? _DamagePerSecondLocation;
+        public UInt16? DamagePerSecond => _DamagePerSecondLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DamagePerSecondLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        private int? _DNAMLocation;
+        public Water.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region Unknown
+        private int _UnknownLocation => _DNAMLocation!.Value + 0x0;
+        private bool _Unknown_IsSet => _DNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 16).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
+        #region SpecularSunPower
+        private int _SpecularSunPowerLocation => _DNAMLocation!.Value + 0x10;
+        private bool _SpecularSunPower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunPower => _SpecularSunPower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunPowerLocation, 4)) : default;
+        #endregion
+        #region WaterReflectivity
+        private int _WaterReflectivityLocation => _DNAMLocation!.Value + 0x14;
+        private bool _WaterReflectivity_IsSet => _DNAMLocation.HasValue;
+        public Single WaterReflectivity => _WaterReflectivity_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterReflectivityLocation, 4)) : default;
+        #endregion
+        #region WaterFresnel
+        private int _WaterFresnelLocation => _DNAMLocation!.Value + 0x18;
+        private bool _WaterFresnel_IsSet => _DNAMLocation.HasValue;
+        public Single WaterFresnel => _WaterFresnel_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterFresnelLocation, 4)) : default;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DNAMLocation!.Value + 0x1C;
+        private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
+        public Int32 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown2Location, 4)) : default;
+        #endregion
+        #region FogAboveWaterDistanceNearPlane
+        private int _FogAboveWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x20;
+        private bool _FogAboveWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
+        public Single FogAboveWaterDistanceNearPlane => _FogAboveWaterDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterDistanceNearPlaneLocation, 4)) : default;
+        #endregion
+        #region FogAboveWaterDistanceFarPlane
+        private int _FogAboveWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x24;
+        private bool _FogAboveWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
+        public Single FogAboveWaterDistanceFarPlane => _FogAboveWaterDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterDistanceFarPlaneLocation, 4)) : default;
+        #endregion
+        #region ShallowColor
+        private int _ShallowColorLocation => _DNAMLocation!.Value + 0x28;
+        private bool _ShallowColor_IsSet => _DNAMLocation.HasValue;
+        public Color ShallowColor => _ShallowColor_IsSet ? _data.Slice(_ShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region DeepColor
+        private int _DeepColorLocation => _DNAMLocation!.Value + 0x2C;
+        private bool _DeepColor_IsSet => _DNAMLocation.HasValue;
+        public Color DeepColor => _DeepColor_IsSet ? _data.Slice(_DeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region ReflectionColor
+        private int _ReflectionColorLocation => _DNAMLocation!.Value + 0x30;
+        private bool _ReflectionColor_IsSet => _DNAMLocation.HasValue;
+        public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Slice(_ReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region Unknown3
+        private int _Unknown3Location => _DNAMLocation!.Value + 0x34;
+        private bool _Unknown3_IsSet => _DNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 20).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
+        #region DisplacementStartingSize
+        private int _DisplacementStartingSizeLocation => _DNAMLocation!.Value + 0x48;
+        private bool _DisplacementStartingSize_IsSet => _DNAMLocation.HasValue;
+        public Single DisplacementStartingSize => _DisplacementStartingSize_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementStartingSizeLocation, 4)) : default;
+        #endregion
+        #region DisplacementFoce
+        private int _DisplacementFoceLocation => _DNAMLocation!.Value + 0x4C;
+        private bool _DisplacementFoce_IsSet => _DNAMLocation.HasValue;
+        public Single DisplacementFoce => _DisplacementFoce_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementFoceLocation, 4)) : default;
+        #endregion
+        #region DisplacementVelocity
+        private int _DisplacementVelocityLocation => _DNAMLocation!.Value + 0x50;
+        private bool _DisplacementVelocity_IsSet => _DNAMLocation.HasValue;
+        public Single DisplacementVelocity => _DisplacementVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementVelocityLocation, 4)) : default;
+        #endregion
+        #region DisplacementFalloff
+        private int _DisplacementFalloffLocation => _DNAMLocation!.Value + 0x54;
+        private bool _DisplacementFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single DisplacementFalloff => _DisplacementFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementFalloffLocation, 4)) : default;
+        #endregion
+        #region DisplacementDampner
+        private int _DisplacementDampnerLocation => _DNAMLocation!.Value + 0x58;
+        private bool _DisplacementDampner_IsSet => _DNAMLocation.HasValue;
+        public Single DisplacementDampner => _DisplacementDampner_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementDampnerLocation, 4)) : default;
+        #endregion
+        #region Unknown4
+        private int _Unknown4Location => _DNAMLocation!.Value + 0x5C;
+        private bool _Unknown4_IsSet => _DNAMLocation.HasValue;
+        public Int32 Unknown4 => _Unknown4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown4Location, 4)) : default;
+        #endregion
+        #region NoiseFalloff
+        private int _NoiseFalloffLocation => _DNAMLocation!.Value + 0x60;
+        private bool _NoiseFalloff_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseFalloff => _NoiseFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseFalloffLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerOneWindDirection
+        private int _NoiseLayerOneWindDirectionLocation => _DNAMLocation!.Value + 0x64;
+        private bool _NoiseLayerOneWindDirection_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerOneWindDirection => _NoiseLayerOneWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneWindDirectionLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerTwoWindDirection
+        private int _NoiseLayerTwoWindDirectionLocation => _DNAMLocation!.Value + 0x68;
+        private bool _NoiseLayerTwoWindDirection_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerTwoWindDirection => _NoiseLayerTwoWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoWindDirectionLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerThreeWindDirection
+        private int _NoiseLayerThreeWindDirectionLocation => _DNAMLocation!.Value + 0x6C;
+        private bool _NoiseLayerThreeWindDirection_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerThreeWindDirection => _NoiseLayerThreeWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeWindDirectionLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerOneWindSpeed
+        private int _NoiseLayerOneWindSpeedLocation => _DNAMLocation!.Value + 0x70;
+        private bool _NoiseLayerOneWindSpeed_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerOneWindSpeed => _NoiseLayerOneWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneWindSpeedLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerTwoWindSpeed
+        private int _NoiseLayerTwoWindSpeedLocation => _DNAMLocation!.Value + 0x74;
+        private bool _NoiseLayerTwoWindSpeed_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerTwoWindSpeed => _NoiseLayerTwoWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoWindSpeedLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerThreeWindSpeed
+        private int _NoiseLayerThreeWindSpeedLocation => _DNAMLocation!.Value + 0x78;
+        private bool _NoiseLayerThreeWindSpeed_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerThreeWindSpeed => _NoiseLayerThreeWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeWindSpeedLocation, 4)) : default;
+        #endregion
+        #region Unknown5
+        private int _Unknown5Location => _DNAMLocation!.Value + 0x7C;
+        private bool _Unknown5_IsSet => _DNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unknown5 => _Unknown5_IsSet ? _data.Span.Slice(_Unknown5Location, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
+        #region FogAboveWaterAmount
+        private int _FogAboveWaterAmountLocation => _DNAMLocation!.Value + 0x84;
+        private bool _FogAboveWaterAmount_IsSet => _DNAMLocation.HasValue;
+        public Single FogAboveWaterAmount => _FogAboveWaterAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterAmountLocation, 4)) : default;
+        #endregion
+        #region Unknown6
+        private int _Unknown6Location => _DNAMLocation!.Value + 0x88;
+        private bool _Unknown6_IsSet => _DNAMLocation.HasValue;
+        public Int32 Unknown6 => _Unknown6_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown6Location, 4)) : default;
+        #endregion
+        #region FogUnderWaterAmount
+        private int _FogUnderWaterAmountLocation => _DNAMLocation!.Value + 0x8C;
+        private bool _FogUnderWaterAmount_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderWaterAmount => _FogUnderWaterAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterAmountLocation, 4)) : default;
+        #endregion
+        #region FogUnderWaterDistanceNearPlane
+        private int _FogUnderWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x90;
+        private bool _FogUnderWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderWaterDistanceNearPlane => _FogUnderWaterDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterDistanceNearPlaneLocation, 4)) : default;
+        #endregion
+        #region FogUnderWaterDistanceFarPlane
+        private int _FogUnderWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x94;
+        private bool _FogUnderWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
+        public Single FogUnderWaterDistanceFarPlane => _FogUnderWaterDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterDistanceFarPlaneLocation, 4)) : default;
+        #endregion
+        #region WaterRefractionMagnitude
+        private int _WaterRefractionMagnitudeLocation => _DNAMLocation!.Value + 0x98;
+        private bool _WaterRefractionMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single WaterRefractionMagnitude => _WaterRefractionMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterRefractionMagnitudeLocation, 4)) : default;
+        #endregion
+        #region SpecularPower
+        private int _SpecularPowerLocation => _DNAMLocation!.Value + 0x9C;
+        private bool _SpecularPower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularPower => _SpecularPower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularPowerLocation, 4)) : default;
+        #endregion
+        #region Unknown7
+        private int _Unknown7Location => _DNAMLocation!.Value + 0xA0;
+        private bool _Unknown7_IsSet => _DNAMLocation.HasValue;
+        public Int32 Unknown7 => _Unknown7_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown7Location, 4)) : default;
+        #endregion
+        #region SpecularRadius
+        private int _SpecularRadiusLocation => _DNAMLocation!.Value + 0xA4;
+        private bool _SpecularRadius_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularRadius => _SpecularRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularRadiusLocation, 4)) : default;
+        #endregion
+        #region SpecularBrightness
+        private int _SpecularBrightnessLocation => _DNAMLocation!.Value + 0xA8;
+        private bool _SpecularBrightness_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularBrightness => _SpecularBrightness_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularBrightnessLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerOneUvScale
+        private int _NoiseLayerOneUvScaleLocation => _DNAMLocation!.Value + 0xAC;
+        private bool _NoiseLayerOneUvScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerOneUvScale => _NoiseLayerOneUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneUvScaleLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerTwoUvScale
+        private int _NoiseLayerTwoUvScaleLocation => _DNAMLocation!.Value + 0xB0;
+        private bool _NoiseLayerTwoUvScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerTwoUvScale => _NoiseLayerTwoUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoUvScaleLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerThreeUvScale
+        private int _NoiseLayerThreeUvScaleLocation => _DNAMLocation!.Value + 0xB4;
+        private bool _NoiseLayerThreeUvScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerThreeUvScale => _NoiseLayerThreeUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeUvScaleLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerOneAmplitudeScale
+        private int _NoiseLayerOneAmplitudeScaleLocation => _DNAMLocation!.Value + 0xB8;
+        private bool _NoiseLayerOneAmplitudeScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerOneAmplitudeScale => _NoiseLayerOneAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneAmplitudeScaleLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerTwoAmplitudeScale
+        private int _NoiseLayerTwoAmplitudeScaleLocation => _DNAMLocation!.Value + 0xBC;
+        private bool _NoiseLayerTwoAmplitudeScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerTwoAmplitudeScale => _NoiseLayerTwoAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoAmplitudeScaleLocation, 4)) : default;
+        #endregion
+        #region NoiseLayerThreeAmplitudeScale
+        private int _NoiseLayerThreeAmplitudeScaleLocation => _DNAMLocation!.Value + 0xC0;
+        private bool _NoiseLayerThreeAmplitudeScale_IsSet => _DNAMLocation.HasValue;
+        public Single NoiseLayerThreeAmplitudeScale => _NoiseLayerThreeAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeAmplitudeScaleLocation, 4)) : default;
+        #endregion
+        #region WaterReflectionMagnitude
+        private int _WaterReflectionMagnitudeLocation => _DNAMLocation!.Value + 0xC4;
+        private bool _WaterReflectionMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single WaterReflectionMagnitude => _WaterReflectionMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterReflectionMagnitudeLocation, 4)) : default;
+        #endregion
+        #region SpecularSunSparkleMagnitude
+        private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value + 0xC8;
+        private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSparkleMagnitudeLocation, 4)) : default;
+        #endregion
+        #region SpecularSunSpecularMagnitude
+        private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value + 0xCC;
+        private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSpecularMagnitudeLocation, 4)) : default;
+        #endregion
+        #region DepthReflections
+        private int _DepthReflectionsLocation => _DNAMLocation!.Value + 0xD0;
+        private bool _DepthReflections_IsSet => _DNAMLocation.HasValue;
+        public Single DepthReflections => _DepthReflections_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthReflectionsLocation, 4)) : default;
+        #endregion
+        #region DepthRefraction
+        private int _DepthRefractionLocation => _DNAMLocation!.Value + 0xD4;
+        private bool _DepthRefraction_IsSet => _DNAMLocation.HasValue;
+        public Single DepthRefraction => _DepthRefraction_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthRefractionLocation, 4)) : default;
+        #endregion
+        #region DepthNormals
+        private int _DepthNormalsLocation => _DNAMLocation!.Value + 0xD8;
+        private bool _DepthNormals_IsSet => _DNAMLocation.HasValue;
+        public Single DepthNormals => _DepthNormals_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthNormalsLocation, 4)) : default;
+        #endregion
+        #region DepthSpecularLighting
+        private int _DepthSpecularLightingLocation => _DNAMLocation!.Value + 0xDC;
+        private bool _DepthSpecularLighting_IsSet => _DNAMLocation.HasValue;
+        public Single DepthSpecularLighting => _DepthSpecularLighting_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthSpecularLightingLocation, 4)) : default;
+        #endregion
+        #region SpecularSunSparklePower
+        private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value + 0xE0;
+        private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
+        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSparklePowerLocation, 4)) : default;
+        #endregion
+        #region GNAM
+        private int? _GNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LinearVelocity
+        private int? _LinearVelocityLocation;
+        public P3Float? LinearVelocity => _LinearVelocityLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _LinearVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region AngularVelocity
+        private int? _AngularVelocityLocation;
+        public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region NoiseLayerOneTexture
+        private int? _NoiseLayerOneTextureLocation;
+        public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region NoiseLayerTwoTexture
+        private int? _NoiseLayerTwoTextureLocation;
+        public String? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region NoiseLayerThreeTexture
+        private int? _NoiseLayerThreeTextureLocation;
+        public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1896,6 +8614,122 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                }
+                case 0x4D414E4E: // NNAM
+                {
+                    this.UnusedNoisemaps = BinaryOverlayList<String>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: false,
+                            recordTypeConverter: recordTypeConverter));
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                }
+                case 0x4D414E41: // ANAM
+                {
+                    _OpacityLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    _MNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                }
+                case 0x4D414E54: // TNAM
+                {
+                    _MaterialLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _OpenSoundLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                }
+                case 0x4D414E58: // XNAM
+                {
+                    _SpellLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    _ImageSpaceLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DamagePerSecondLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                }
+                case 0x4D414E47: // GNAM
+                {
+                    _GNAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    _LinearVelocityLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                }
+                case 0x314D414E: // NAM1
+                {
+                    _AngularVelocityLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                }
+                case 0x324D414E: // NAM2
+                {
+                    _NoiseLayerOneTextureLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                }
+                case 0x334D414E: // NAM3
+                {
+                    _NoiseLayerTwoTextureLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                }
+                case 0x344D414E: // NAM4
+                {
+                    _NoiseLayerThreeTextureLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(
