@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessPackages(stream, formID, recType, loc);
             ProcessShaders(stream, formID, recType, loc);
             ProcessExplosions(stream, formID, recType, loc);
+            ProcessImageSpaceAdapters(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -848,6 +849,59 @@ namespace Mutagen.Bethesda.Tests
 
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                for (int i = 0; i < 6; i++)
+                {
+                    ProcessFormIDOverflow(stream, loc: null);
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
+        }
+
+        private void ProcessImageSpaceAdapters(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!ImageSpaceAdapter_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            int subLoc = 0;
+            void ProcessKeyframe(int contentLen)
+            {
+                stream.Position = loc.Min + stream.MetaData.Constants.MajorConstants.HeaderLength + subLoc;
+                stream.Position += stream.MetaData.Constants.SubConstants.HeaderLength;
+                var endPos = stream.Position + contentLen;
+                while (stream.Position < endPos)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
+
+            while (subLoc < majorFrame.Content.Length)
+            {
+                var subRecord = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(subLoc));
+                switch (subRecord.RecordTypeInt)
+                {
+                    case RecordTypeInts.QIAD:
+                    case RecordTypeInts.RIAD:
+                        ProcessKeyframe(subRecord.ContentLength);
+                        break;
+                    default:
+                        break;
+                }
+                subLoc += subRecord.TotalLength;
+            }
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)

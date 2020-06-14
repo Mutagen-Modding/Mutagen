@@ -29,11 +29,16 @@ namespace Mutagen.Bethesda
         /// The type as an integer
         /// </summary>
         public readonly int TypeInt;
-        
+
         /// <summary>
         /// The type as a four character string
         /// </summary>
         public string Type => GetStringType(this.TypeInt);
+
+        /// <summary>
+        /// The type as a four character string, checking that all characters are printable
+        /// </summary>
+        public string CheckedType => GetCheckedStringType(this.TypeInt);
 
         /// <summary>
         /// Constructor taking in an integer
@@ -154,6 +159,25 @@ namespace Mutagen.Bethesda
                 chars[2] = (char)(state >> 16 & 0x000000FF);
                 chars[3] = (char)(state >> 24 & 0x000000FF);
             });
+        }
+
+        /// <summary>
+        /// Converts an integer to its string RecordType representation.
+        /// If unprintable characters are encountered, they will be modified
+        /// </summary>
+        /// <param name="typeInt">Integer to convert</param>
+        /// <returns>Character string</returns>
+        public static string GetCheckedStringType(int typeInt)
+        {
+            var ret = GetStringType(typeInt);
+            for (int i = ret.Length - 1; i >= 0; i--)
+            {
+                var b = (byte)ret[i];
+                if (b > 0x14) continue;
+                ret = ret.Remove(i, 1);
+                ret = ret.Insert(i, $"_{b:X}_");
+            }
+            return ret;
         }
 
         /// <summary>

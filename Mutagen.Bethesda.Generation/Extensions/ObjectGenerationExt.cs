@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
         {
-            return $"RecordTypes.{recType.Type}";
+            return $"RecordTypes.{recType.CheckedType}";
         }
 
         public static bool StructHasBeenSet(this ObjectGeneration objGen)

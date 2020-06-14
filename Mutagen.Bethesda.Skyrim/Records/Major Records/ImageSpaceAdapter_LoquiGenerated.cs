@@ -49,6 +49,794 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public ImageSpaceAdapter.Flag Flags { get; set; } = default;
+        #endregion
+        #region Duration
+        public Single Duration { get; set; } = default;
+        #endregion
+        #region RadialBlurFlags
+        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; } = default;
+        #endregion
+        #region RadialBlurCenter
+        public P2Float RadialBlurCenter { get; set; } = default;
+        #endregion
+        #region DepthOfFieldFlags
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; } = default;
+        #endregion
+        #region BlurRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _BlurRadius;
+        public ExtendedList<KeyFrame>? BlurRadius
+        {
+            get => this._BlurRadius;
+            set => this._BlurRadius = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.BlurRadius => _BlurRadius;
+        #endregion
+
+        #endregion
+        #region DoubleVisionStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DoubleVisionStrength;
+        public ExtendedList<KeyFrame>? DoubleVisionStrength
+        {
+            get => this._DoubleVisionStrength;
+            set => this._DoubleVisionStrength = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DoubleVisionStrength => _DoubleVisionStrength;
+        #endregion
+
+        #endregion
+        #region TintColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ColorFrame>? _TintColor;
+        public ExtendedList<ColorFrame>? TintColor
+        {
+            get => this._TintColor;
+            set => this._TintColor = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IColorFrameGetter>? IImageSpaceAdapterGetter.TintColor => _TintColor;
+        #endregion
+
+        #endregion
+        #region FadeColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ColorFrame>? _FadeColor;
+        public ExtendedList<ColorFrame>? FadeColor
+        {
+            get => this._FadeColor;
+            set => this._FadeColor = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IColorFrameGetter>? IImageSpaceAdapterGetter.FadeColor => _FadeColor;
+        #endregion
+
+        #endregion
+        #region RadialBlurStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _RadialBlurStrength;
+        public ExtendedList<KeyFrame>? RadialBlurStrength
+        {
+            get => this._RadialBlurStrength;
+            set => this._RadialBlurStrength = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.RadialBlurStrength => _RadialBlurStrength;
+        #endregion
+
+        #endregion
+        #region RadialBlurRampUp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _RadialBlurRampUp;
+        public ExtendedList<KeyFrame>? RadialBlurRampUp
+        {
+            get => this._RadialBlurRampUp;
+            set => this._RadialBlurRampUp = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.RadialBlurRampUp => _RadialBlurRampUp;
+        #endregion
+
+        #endregion
+        #region RadialBlurStart
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _RadialBlurStart;
+        public ExtendedList<KeyFrame>? RadialBlurStart
+        {
+            get => this._RadialBlurStart;
+            set => this._RadialBlurStart = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.RadialBlurStart => _RadialBlurStart;
+        #endregion
+
+        #endregion
+        #region RadialBlurRampDown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _RadialBlurRampDown;
+        public ExtendedList<KeyFrame>? RadialBlurRampDown
+        {
+            get => this._RadialBlurRampDown;
+            set => this._RadialBlurRampDown = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.RadialBlurRampDown => _RadialBlurRampDown;
+        #endregion
+
+        #endregion
+        #region RadialBlurDownStart
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _RadialBlurDownStart;
+        public ExtendedList<KeyFrame>? RadialBlurDownStart
+        {
+            get => this._RadialBlurDownStart;
+            set => this._RadialBlurDownStart = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.RadialBlurDownStart => _RadialBlurDownStart;
+        #endregion
+
+        #endregion
+        #region DepthOfFieldStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DepthOfFieldStrength;
+        public ExtendedList<KeyFrame>? DepthOfFieldStrength
+        {
+            get => this._DepthOfFieldStrength;
+            set => this._DepthOfFieldStrength = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldStrength => _DepthOfFieldStrength;
+        #endregion
+
+        #endregion
+        #region DepthOfFieldDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DepthOfFieldDistance;
+        public ExtendedList<KeyFrame>? DepthOfFieldDistance
+        {
+            get => this._DepthOfFieldDistance;
+            set => this._DepthOfFieldDistance = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldDistance => _DepthOfFieldDistance;
+        #endregion
+
+        #endregion
+        #region DepthOfFieldRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _DepthOfFieldRange;
+        public ExtendedList<KeyFrame>? DepthOfFieldRange
+        {
+            get => this._DepthOfFieldRange;
+            set => this._DepthOfFieldRange = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.DepthOfFieldRange => _DepthOfFieldRange;
+        #endregion
+
+        #endregion
+        #region MotionBlurStrength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _MotionBlurStrength;
+        public ExtendedList<KeyFrame>? MotionBlurStrength
+        {
+            get => this._MotionBlurStrength;
+            set => this._MotionBlurStrength = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.MotionBlurStrength => _MotionBlurStrength;
+        #endregion
+
+        #endregion
+        #region HdrEyeAdaptSpeedMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedMult;
+        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult
+        {
+            get => this._HdrEyeAdaptSpeedMult;
+            set => this._HdrEyeAdaptSpeedMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrEyeAdaptSpeedMult => _HdrEyeAdaptSpeedMult;
+        #endregion
+
+        #endregion
+        #region HdrEyeAdaptSpeedAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedAdd;
+        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd
+        {
+            get => this._HdrEyeAdaptSpeedAdd;
+            set => this._HdrEyeAdaptSpeedAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrEyeAdaptSpeedAdd => _HdrEyeAdaptSpeedAdd;
+        #endregion
+
+        #endregion
+        #region HdrBloomBlurRadiusMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusMult;
+        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult
+        {
+            get => this._HdrBloomBlurRadiusMult;
+            set => this._HdrBloomBlurRadiusMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomBlurRadiusMult => _HdrBloomBlurRadiusMult;
+        #endregion
+
+        #endregion
+        #region HdrBloomBlurRadiusAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusAdd;
+        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd
+        {
+            get => this._HdrBloomBlurRadiusAdd;
+            set => this._HdrBloomBlurRadiusAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomBlurRadiusAdd => _HdrBloomBlurRadiusAdd;
+        #endregion
+
+        #endregion
+        #region HdrBloomThresholdMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomThresholdMult;
+        public ExtendedList<KeyFrame>? HdrBloomThresholdMult
+        {
+            get => this._HdrBloomThresholdMult;
+            set => this._HdrBloomThresholdMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomThresholdMult => _HdrBloomThresholdMult;
+        #endregion
+
+        #endregion
+        #region HdrBloomThresholdAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomThresholdAdd;
+        public ExtendedList<KeyFrame>? HdrBloomThresholdAdd
+        {
+            get => this._HdrBloomThresholdAdd;
+            set => this._HdrBloomThresholdAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomThresholdAdd => _HdrBloomThresholdAdd;
+        #endregion
+
+        #endregion
+        #region HdrBloomScaleMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomScaleMult;
+        public ExtendedList<KeyFrame>? HdrBloomScaleMult
+        {
+            get => this._HdrBloomScaleMult;
+            set => this._HdrBloomScaleMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomScaleMult => _HdrBloomScaleMult;
+        #endregion
+
+        #endregion
+        #region HdrBloomScaleAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrBloomScaleAdd;
+        public ExtendedList<KeyFrame>? HdrBloomScaleAdd
+        {
+            get => this._HdrBloomScaleAdd;
+            set => this._HdrBloomScaleAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrBloomScaleAdd => _HdrBloomScaleAdd;
+        #endregion
+
+        #endregion
+        #region HdrTargetLumMinMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrTargetLumMinMult;
+        public ExtendedList<KeyFrame>? HdrTargetLumMinMult
+        {
+            get => this._HdrTargetLumMinMult;
+            set => this._HdrTargetLumMinMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrTargetLumMinMult => _HdrTargetLumMinMult;
+        #endregion
+
+        #endregion
+        #region HdrTargetLumMinAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrTargetLumMinAdd;
+        public ExtendedList<KeyFrame>? HdrTargetLumMinAdd
+        {
+            get => this._HdrTargetLumMinAdd;
+            set => this._HdrTargetLumMinAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrTargetLumMinAdd => _HdrTargetLumMinAdd;
+        #endregion
+
+        #endregion
+        #region HdrTargetLumMaxMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrTargetLumMaxMult;
+        public ExtendedList<KeyFrame>? HdrTargetLumMaxMult
+        {
+            get => this._HdrTargetLumMaxMult;
+            set => this._HdrTargetLumMaxMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrTargetLumMaxMult => _HdrTargetLumMaxMult;
+        #endregion
+
+        #endregion
+        #region HdrTargetLumMaxAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrTargetLumMaxAdd;
+        public ExtendedList<KeyFrame>? HdrTargetLumMaxAdd
+        {
+            get => this._HdrTargetLumMaxAdd;
+            set => this._HdrTargetLumMaxAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrTargetLumMaxAdd => _HdrTargetLumMaxAdd;
+        #endregion
+
+        #endregion
+        #region HdrSunlightScaleMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrSunlightScaleMult;
+        public ExtendedList<KeyFrame>? HdrSunlightScaleMult
+        {
+            get => this._HdrSunlightScaleMult;
+            set => this._HdrSunlightScaleMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrSunlightScaleMult => _HdrSunlightScaleMult;
+        #endregion
+
+        #endregion
+        #region HdrSunlightScaleAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrSunlightScaleAdd;
+        public ExtendedList<KeyFrame>? HdrSunlightScaleAdd
+        {
+            get => this._HdrSunlightScaleAdd;
+            set => this._HdrSunlightScaleAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrSunlightScaleAdd => _HdrSunlightScaleAdd;
+        #endregion
+
+        #endregion
+        #region HdrSkyScaleMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrSkyScaleMult;
+        public ExtendedList<KeyFrame>? HdrSkyScaleMult
+        {
+            get => this._HdrSkyScaleMult;
+            set => this._HdrSkyScaleMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrSkyScaleMult => _HdrSkyScaleMult;
+        #endregion
+
+        #endregion
+        #region HdrSkyScaleAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _HdrSkyScaleAdd;
+        public ExtendedList<KeyFrame>? HdrSkyScaleAdd
+        {
+            get => this._HdrSkyScaleAdd;
+            set => this._HdrSkyScaleAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.HdrSkyScaleAdd => _HdrSkyScaleAdd;
+        #endregion
+
+        #endregion
+        #region Unknown08
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown08;
+        public ExtendedList<KeyFrame>? Unknown08
+        {
+            get => this._Unknown08;
+            set => this._Unknown08 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown08 => _Unknown08;
+        #endregion
+
+        #endregion
+        #region Unknown48
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown48;
+        public ExtendedList<KeyFrame>? Unknown48
+        {
+            get => this._Unknown48;
+            set => this._Unknown48 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown48 => _Unknown48;
+        #endregion
+
+        #endregion
+        #region Unknown09
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown09;
+        public ExtendedList<KeyFrame>? Unknown09
+        {
+            get => this._Unknown09;
+            set => this._Unknown09 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown09 => _Unknown09;
+        #endregion
+
+        #endregion
+        #region Unknown49
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown49;
+        public ExtendedList<KeyFrame>? Unknown49
+        {
+            get => this._Unknown49;
+            set => this._Unknown49 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown49 => _Unknown49;
+        #endregion
+
+        #endregion
+        #region Unknown0A
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0A;
+        public ExtendedList<KeyFrame>? Unknown0A
+        {
+            get => this._Unknown0A;
+            set => this._Unknown0A = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0A => _Unknown0A;
+        #endregion
+
+        #endregion
+        #region Unknown4A
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4A;
+        public ExtendedList<KeyFrame>? Unknown4A
+        {
+            get => this._Unknown4A;
+            set => this._Unknown4A = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4A => _Unknown4A;
+        #endregion
+
+        #endregion
+        #region Unknown0B
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0B;
+        public ExtendedList<KeyFrame>? Unknown0B
+        {
+            get => this._Unknown0B;
+            set => this._Unknown0B = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0B => _Unknown0B;
+        #endregion
+
+        #endregion
+        #region Unknown4B
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4B;
+        public ExtendedList<KeyFrame>? Unknown4B
+        {
+            get => this._Unknown4B;
+            set => this._Unknown4B = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4B => _Unknown4B;
+        #endregion
+
+        #endregion
+        #region Unknown0C
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0C;
+        public ExtendedList<KeyFrame>? Unknown0C
+        {
+            get => this._Unknown0C;
+            set => this._Unknown0C = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0C => _Unknown0C;
+        #endregion
+
+        #endregion
+        #region Unknown4C
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4C;
+        public ExtendedList<KeyFrame>? Unknown4C
+        {
+            get => this._Unknown4C;
+            set => this._Unknown4C = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4C => _Unknown4C;
+        #endregion
+
+        #endregion
+        #region Unknown0D
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0D;
+        public ExtendedList<KeyFrame>? Unknown0D
+        {
+            get => this._Unknown0D;
+            set => this._Unknown0D = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0D => _Unknown0D;
+        #endregion
+
+        #endregion
+        #region Unknown4D
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4D;
+        public ExtendedList<KeyFrame>? Unknown4D
+        {
+            get => this._Unknown4D;
+            set => this._Unknown4D = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4D => _Unknown4D;
+        #endregion
+
+        #endregion
+        #region Unknown0E
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0E;
+        public ExtendedList<KeyFrame>? Unknown0E
+        {
+            get => this._Unknown0E;
+            set => this._Unknown0E = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0E => _Unknown0E;
+        #endregion
+
+        #endregion
+        #region Unknown4E
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4E;
+        public ExtendedList<KeyFrame>? Unknown4E
+        {
+            get => this._Unknown4E;
+            set => this._Unknown4E = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4E => _Unknown4E;
+        #endregion
+
+        #endregion
+        #region Unknown0F
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown0F;
+        public ExtendedList<KeyFrame>? Unknown0F
+        {
+            get => this._Unknown0F;
+            set => this._Unknown0F = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown0F => _Unknown0F;
+        #endregion
+
+        #endregion
+        #region Unknown4F
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown4F;
+        public ExtendedList<KeyFrame>? Unknown4F
+        {
+            get => this._Unknown4F;
+            set => this._Unknown4F = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown4F => _Unknown4F;
+        #endregion
+
+        #endregion
+        #region Unknown10
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown10;
+        public ExtendedList<KeyFrame>? Unknown10
+        {
+            get => this._Unknown10;
+            set => this._Unknown10 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown10 => _Unknown10;
+        #endregion
+
+        #endregion
+        #region Unknown50
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown50;
+        public ExtendedList<KeyFrame>? Unknown50
+        {
+            get => this._Unknown50;
+            set => this._Unknown50 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown50 => _Unknown50;
+        #endregion
+
+        #endregion
+        #region CinematicSaturationMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicSaturationMult;
+        public ExtendedList<KeyFrame>? CinematicSaturationMult
+        {
+            get => this._CinematicSaturationMult;
+            set => this._CinematicSaturationMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicSaturationMult => _CinematicSaturationMult;
+        #endregion
+
+        #endregion
+        #region CinematicSaturationAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicSaturationAdd;
+        public ExtendedList<KeyFrame>? CinematicSaturationAdd
+        {
+            get => this._CinematicSaturationAdd;
+            set => this._CinematicSaturationAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicSaturationAdd => _CinematicSaturationAdd;
+        #endregion
+
+        #endregion
+        #region CinematicBrightnessMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicBrightnessMult;
+        public ExtendedList<KeyFrame>? CinematicBrightnessMult
+        {
+            get => this._CinematicBrightnessMult;
+            set => this._CinematicBrightnessMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicBrightnessMult => _CinematicBrightnessMult;
+        #endregion
+
+        #endregion
+        #region CinematicBrightnessAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicBrightnessAdd;
+        public ExtendedList<KeyFrame>? CinematicBrightnessAdd
+        {
+            get => this._CinematicBrightnessAdd;
+            set => this._CinematicBrightnessAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicBrightnessAdd => _CinematicBrightnessAdd;
+        #endregion
+
+        #endregion
+        #region CinematicContrastMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicContrastMult;
+        public ExtendedList<KeyFrame>? CinematicContrastMult
+        {
+            get => this._CinematicContrastMult;
+            set => this._CinematicContrastMult = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicContrastMult => _CinematicContrastMult;
+        #endregion
+
+        #endregion
+        #region CinematicContrastAdd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _CinematicContrastAdd;
+        public ExtendedList<KeyFrame>? CinematicContrastAdd
+        {
+            get => this._CinematicContrastAdd;
+            set => this._CinematicContrastAdd = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.CinematicContrastAdd => _CinematicContrastAdd;
+        #endregion
+
+        #endregion
+        #region Unknown14
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown14;
+        public ExtendedList<KeyFrame>? Unknown14
+        {
+            get => this._Unknown14;
+            set => this._Unknown14 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown14 => _Unknown14;
+        #endregion
+
+        #endregion
+        #region Unknown54
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<KeyFrame>? _Unknown54;
+        public ExtendedList<KeyFrame>? Unknown54
+        {
+            get => this._Unknown54;
+            set => this._Unknown54 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IKeyFrameGetter>? IImageSpaceAdapterGetter.Unknown54 => _Unknown54;
+        #endregion
+
+        #endregion
+        #region DNAMDataTypeState
+        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +1007,67 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
+                this.Duration = initialValue;
+                this.RadialBlurFlags = initialValue;
+                this.RadialBlurCenter = initialValue;
+                this.DepthOfFieldFlags = initialValue;
+                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
+                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
+                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +1076,68 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Flags,
+                TItem Duration,
+                TItem RadialBlurFlags,
+                TItem RadialBlurCenter,
+                TItem DepthOfFieldFlags,
+                TItem BlurRadius,
+                TItem DoubleVisionStrength,
+                TItem TintColor,
+                TItem FadeColor,
+                TItem RadialBlurStrength,
+                TItem RadialBlurRampUp,
+                TItem RadialBlurStart,
+                TItem RadialBlurRampDown,
+                TItem RadialBlurDownStart,
+                TItem DepthOfFieldStrength,
+                TItem DepthOfFieldDistance,
+                TItem DepthOfFieldRange,
+                TItem MotionBlurStrength,
+                TItem HdrEyeAdaptSpeedMult,
+                TItem HdrEyeAdaptSpeedAdd,
+                TItem HdrBloomBlurRadiusMult,
+                TItem HdrBloomBlurRadiusAdd,
+                TItem HdrBloomThresholdMult,
+                TItem HdrBloomThresholdAdd,
+                TItem HdrBloomScaleMult,
+                TItem HdrBloomScaleAdd,
+                TItem HdrTargetLumMinMult,
+                TItem HdrTargetLumMinAdd,
+                TItem HdrTargetLumMaxMult,
+                TItem HdrTargetLumMaxAdd,
+                TItem HdrSunlightScaleMult,
+                TItem HdrSunlightScaleAdd,
+                TItem HdrSkyScaleMult,
+                TItem HdrSkyScaleAdd,
+                TItem Unknown08,
+                TItem Unknown48,
+                TItem Unknown09,
+                TItem Unknown49,
+                TItem Unknown0A,
+                TItem Unknown4A,
+                TItem Unknown0B,
+                TItem Unknown4B,
+                TItem Unknown0C,
+                TItem Unknown4C,
+                TItem Unknown0D,
+                TItem Unknown4D,
+                TItem Unknown0E,
+                TItem Unknown4E,
+                TItem Unknown0F,
+                TItem Unknown4F,
+                TItem Unknown10,
+                TItem Unknown50,
+                TItem CinematicSaturationMult,
+                TItem CinematicSaturationAdd,
+                TItem CinematicBrightnessMult,
+                TItem CinematicBrightnessAdd,
+                TItem CinematicContrastMult,
+                TItem CinematicContrastAdd,
+                TItem Unknown14,
+                TItem Unknown54,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +1146,67 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Flags = Flags;
+                this.Duration = Duration;
+                this.RadialBlurFlags = RadialBlurFlags;
+                this.RadialBlurCenter = RadialBlurCenter;
+                this.DepthOfFieldFlags = DepthOfFieldFlags;
+                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DoubleVisionStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(TintColor, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
+                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(FadeColor, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
+                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampUp, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStart, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampDown, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurDownStart, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldDistance, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldRange, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(MotionBlurStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown08, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown48, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown09, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown49, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0A, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4A, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0B, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4B, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0C, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4C, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0D, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4D, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0E, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4E, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0F, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4F, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown10, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown50, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown14, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown54, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +1215,70 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
+            public TItem Duration;
+            public TItem RadialBlurFlags;
+            public TItem RadialBlurCenter;
+            public TItem DepthOfFieldFlags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? BlurRadius;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DoubleVisionStrength;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>? TintColor;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>? FadeColor;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? RadialBlurStrength;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? RadialBlurRampUp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? RadialBlurStart;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? RadialBlurRampDown;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? RadialBlurDownStart;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldStrength;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldDistance;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DepthOfFieldRange;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? MotionBlurStrength;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrEyeAdaptSpeedMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrEyeAdaptSpeedAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomBlurRadiusMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomBlurRadiusAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomThresholdMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomThresholdAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomScaleMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrBloomScaleAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrTargetLumMinMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrTargetLumMinAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrTargetLumMaxMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrTargetLumMaxAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrSunlightScaleMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrSunlightScaleAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrSkyScaleMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? HdrSkyScaleAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown08;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown48;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown09;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown49;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0A;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4A;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0B;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4B;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0C;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4C;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0D;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4D;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0E;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4E;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown0F;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown4F;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown10;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown50;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicSaturationMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicSaturationAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicBrightnessMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicBrightnessAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicContrastMult;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicContrastAdd;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown14;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? Unknown54;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +1292,133 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Duration, rhs.Duration)) return false;
+                if (!object.Equals(this.RadialBlurFlags, rhs.RadialBlurFlags)) return false;
+                if (!object.Equals(this.RadialBlurCenter, rhs.RadialBlurCenter)) return false;
+                if (!object.Equals(this.DepthOfFieldFlags, rhs.DepthOfFieldFlags)) return false;
+                if (!object.Equals(this.BlurRadius, rhs.BlurRadius)) return false;
+                if (!object.Equals(this.DoubleVisionStrength, rhs.DoubleVisionStrength)) return false;
+                if (!object.Equals(this.TintColor, rhs.TintColor)) return false;
+                if (!object.Equals(this.FadeColor, rhs.FadeColor)) return false;
+                if (!object.Equals(this.RadialBlurStrength, rhs.RadialBlurStrength)) return false;
+                if (!object.Equals(this.RadialBlurRampUp, rhs.RadialBlurRampUp)) return false;
+                if (!object.Equals(this.RadialBlurStart, rhs.RadialBlurStart)) return false;
+                if (!object.Equals(this.RadialBlurRampDown, rhs.RadialBlurRampDown)) return false;
+                if (!object.Equals(this.RadialBlurDownStart, rhs.RadialBlurDownStart)) return false;
+                if (!object.Equals(this.DepthOfFieldStrength, rhs.DepthOfFieldStrength)) return false;
+                if (!object.Equals(this.DepthOfFieldDistance, rhs.DepthOfFieldDistance)) return false;
+                if (!object.Equals(this.DepthOfFieldRange, rhs.DepthOfFieldRange)) return false;
+                if (!object.Equals(this.MotionBlurStrength, rhs.MotionBlurStrength)) return false;
+                if (!object.Equals(this.HdrEyeAdaptSpeedMult, rhs.HdrEyeAdaptSpeedMult)) return false;
+                if (!object.Equals(this.HdrEyeAdaptSpeedAdd, rhs.HdrEyeAdaptSpeedAdd)) return false;
+                if (!object.Equals(this.HdrBloomBlurRadiusMult, rhs.HdrBloomBlurRadiusMult)) return false;
+                if (!object.Equals(this.HdrBloomBlurRadiusAdd, rhs.HdrBloomBlurRadiusAdd)) return false;
+                if (!object.Equals(this.HdrBloomThresholdMult, rhs.HdrBloomThresholdMult)) return false;
+                if (!object.Equals(this.HdrBloomThresholdAdd, rhs.HdrBloomThresholdAdd)) return false;
+                if (!object.Equals(this.HdrBloomScaleMult, rhs.HdrBloomScaleMult)) return false;
+                if (!object.Equals(this.HdrBloomScaleAdd, rhs.HdrBloomScaleAdd)) return false;
+                if (!object.Equals(this.HdrTargetLumMinMult, rhs.HdrTargetLumMinMult)) return false;
+                if (!object.Equals(this.HdrTargetLumMinAdd, rhs.HdrTargetLumMinAdd)) return false;
+                if (!object.Equals(this.HdrTargetLumMaxMult, rhs.HdrTargetLumMaxMult)) return false;
+                if (!object.Equals(this.HdrTargetLumMaxAdd, rhs.HdrTargetLumMaxAdd)) return false;
+                if (!object.Equals(this.HdrSunlightScaleMult, rhs.HdrSunlightScaleMult)) return false;
+                if (!object.Equals(this.HdrSunlightScaleAdd, rhs.HdrSunlightScaleAdd)) return false;
+                if (!object.Equals(this.HdrSkyScaleMult, rhs.HdrSkyScaleMult)) return false;
+                if (!object.Equals(this.HdrSkyScaleAdd, rhs.HdrSkyScaleAdd)) return false;
+                if (!object.Equals(this.Unknown08, rhs.Unknown08)) return false;
+                if (!object.Equals(this.Unknown48, rhs.Unknown48)) return false;
+                if (!object.Equals(this.Unknown09, rhs.Unknown09)) return false;
+                if (!object.Equals(this.Unknown49, rhs.Unknown49)) return false;
+                if (!object.Equals(this.Unknown0A, rhs.Unknown0A)) return false;
+                if (!object.Equals(this.Unknown4A, rhs.Unknown4A)) return false;
+                if (!object.Equals(this.Unknown0B, rhs.Unknown0B)) return false;
+                if (!object.Equals(this.Unknown4B, rhs.Unknown4B)) return false;
+                if (!object.Equals(this.Unknown0C, rhs.Unknown0C)) return false;
+                if (!object.Equals(this.Unknown4C, rhs.Unknown4C)) return false;
+                if (!object.Equals(this.Unknown0D, rhs.Unknown0D)) return false;
+                if (!object.Equals(this.Unknown4D, rhs.Unknown4D)) return false;
+                if (!object.Equals(this.Unknown0E, rhs.Unknown0E)) return false;
+                if (!object.Equals(this.Unknown4E, rhs.Unknown4E)) return false;
+                if (!object.Equals(this.Unknown0F, rhs.Unknown0F)) return false;
+                if (!object.Equals(this.Unknown4F, rhs.Unknown4F)) return false;
+                if (!object.Equals(this.Unknown10, rhs.Unknown10)) return false;
+                if (!object.Equals(this.Unknown50, rhs.Unknown50)) return false;
+                if (!object.Equals(this.CinematicSaturationMult, rhs.CinematicSaturationMult)) return false;
+                if (!object.Equals(this.CinematicSaturationAdd, rhs.CinematicSaturationAdd)) return false;
+                if (!object.Equals(this.CinematicBrightnessMult, rhs.CinematicBrightnessMult)) return false;
+                if (!object.Equals(this.CinematicBrightnessAdd, rhs.CinematicBrightnessAdd)) return false;
+                if (!object.Equals(this.CinematicContrastMult, rhs.CinematicContrastMult)) return false;
+                if (!object.Equals(this.CinematicContrastAdd, rhs.CinematicContrastAdd)) return false;
+                if (!object.Equals(this.Unknown14, rhs.Unknown14)) return false;
+                if (!object.Equals(this.Unknown54, rhs.Unknown54)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.Duration);
+                hash.Add(this.RadialBlurFlags);
+                hash.Add(this.RadialBlurCenter);
+                hash.Add(this.DepthOfFieldFlags);
+                hash.Add(this.BlurRadius);
+                hash.Add(this.DoubleVisionStrength);
+                hash.Add(this.TintColor);
+                hash.Add(this.FadeColor);
+                hash.Add(this.RadialBlurStrength);
+                hash.Add(this.RadialBlurRampUp);
+                hash.Add(this.RadialBlurStart);
+                hash.Add(this.RadialBlurRampDown);
+                hash.Add(this.RadialBlurDownStart);
+                hash.Add(this.DepthOfFieldStrength);
+                hash.Add(this.DepthOfFieldDistance);
+                hash.Add(this.DepthOfFieldRange);
+                hash.Add(this.MotionBlurStrength);
+                hash.Add(this.HdrEyeAdaptSpeedMult);
+                hash.Add(this.HdrEyeAdaptSpeedAdd);
+                hash.Add(this.HdrBloomBlurRadiusMult);
+                hash.Add(this.HdrBloomBlurRadiusAdd);
+                hash.Add(this.HdrBloomThresholdMult);
+                hash.Add(this.HdrBloomThresholdAdd);
+                hash.Add(this.HdrBloomScaleMult);
+                hash.Add(this.HdrBloomScaleAdd);
+                hash.Add(this.HdrTargetLumMinMult);
+                hash.Add(this.HdrTargetLumMinAdd);
+                hash.Add(this.HdrTargetLumMaxMult);
+                hash.Add(this.HdrTargetLumMaxAdd);
+                hash.Add(this.HdrSunlightScaleMult);
+                hash.Add(this.HdrSunlightScaleAdd);
+                hash.Add(this.HdrSkyScaleMult);
+                hash.Add(this.HdrSkyScaleAdd);
+                hash.Add(this.Unknown08);
+                hash.Add(this.Unknown48);
+                hash.Add(this.Unknown09);
+                hash.Add(this.Unknown49);
+                hash.Add(this.Unknown0A);
+                hash.Add(this.Unknown4A);
+                hash.Add(this.Unknown0B);
+                hash.Add(this.Unknown4B);
+                hash.Add(this.Unknown0C);
+                hash.Add(this.Unknown4C);
+                hash.Add(this.Unknown0D);
+                hash.Add(this.Unknown4D);
+                hash.Add(this.Unknown0E);
+                hash.Add(this.Unknown4E);
+                hash.Add(this.Unknown0F);
+                hash.Add(this.Unknown4F);
+                hash.Add(this.Unknown10);
+                hash.Add(this.Unknown50);
+                hash.Add(this.CinematicSaturationMult);
+                hash.Add(this.CinematicSaturationAdd);
+                hash.Add(this.CinematicBrightnessMult);
+                hash.Add(this.CinematicBrightnessAdd);
+                hash.Add(this.CinematicContrastMult);
+                hash.Add(this.CinematicContrastAdd);
+                hash.Add(this.Unknown14);
+                hash.Add(this.Unknown54);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +1429,672 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Duration)) return false;
+                if (!eval(this.RadialBlurFlags)) return false;
+                if (!eval(this.RadialBlurCenter)) return false;
+                if (!eval(this.DepthOfFieldFlags)) return false;
+                if (this.BlurRadius != null)
+                {
+                    if (!eval(this.BlurRadius.Overall)) return false;
+                    if (this.BlurRadius.Specific != null)
+                    {
+                        foreach (var item in this.BlurRadius.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DoubleVisionStrength != null)
+                {
+                    if (!eval(this.DoubleVisionStrength.Overall)) return false;
+                    if (this.DoubleVisionStrength.Specific != null)
+                    {
+                        foreach (var item in this.DoubleVisionStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.TintColor != null)
+                {
+                    if (!eval(this.TintColor.Overall)) return false;
+                    if (this.TintColor.Specific != null)
+                    {
+                        foreach (var item in this.TintColor.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FadeColor != null)
+                {
+                    if (!eval(this.FadeColor.Overall)) return false;
+                    if (this.FadeColor.Specific != null)
+                    {
+                        foreach (var item in this.FadeColor.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurStrength != null)
+                {
+                    if (!eval(this.RadialBlurStrength.Overall)) return false;
+                    if (this.RadialBlurStrength.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurRampUp != null)
+                {
+                    if (!eval(this.RadialBlurRampUp.Overall)) return false;
+                    if (this.RadialBlurRampUp.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurRampUp.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurStart != null)
+                {
+                    if (!eval(this.RadialBlurStart.Overall)) return false;
+                    if (this.RadialBlurStart.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurStart.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurRampDown != null)
+                {
+                    if (!eval(this.RadialBlurRampDown.Overall)) return false;
+                    if (this.RadialBlurRampDown.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurRampDown.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurDownStart != null)
+                {
+                    if (!eval(this.RadialBlurDownStart.Overall)) return false;
+                    if (this.RadialBlurDownStart.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurDownStart.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldStrength != null)
+                {
+                    if (!eval(this.DepthOfFieldStrength.Overall)) return false;
+                    if (this.DepthOfFieldStrength.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldDistance != null)
+                {
+                    if (!eval(this.DepthOfFieldDistance.Overall)) return false;
+                    if (this.DepthOfFieldDistance.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldDistance.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldRange != null)
+                {
+                    if (!eval(this.DepthOfFieldRange.Overall)) return false;
+                    if (this.DepthOfFieldRange.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldRange.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.MotionBlurStrength != null)
+                {
+                    if (!eval(this.MotionBlurStrength.Overall)) return false;
+                    if (this.MotionBlurStrength.Specific != null)
+                    {
+                        foreach (var item in this.MotionBlurStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrEyeAdaptSpeedMult != null)
+                {
+                    if (!eval(this.HdrEyeAdaptSpeedMult.Overall)) return false;
+                    if (this.HdrEyeAdaptSpeedMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrEyeAdaptSpeedMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrEyeAdaptSpeedAdd != null)
+                {
+                    if (!eval(this.HdrEyeAdaptSpeedAdd.Overall)) return false;
+                    if (this.HdrEyeAdaptSpeedAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrEyeAdaptSpeedAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomBlurRadiusMult != null)
+                {
+                    if (!eval(this.HdrBloomBlurRadiusMult.Overall)) return false;
+                    if (this.HdrBloomBlurRadiusMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomBlurRadiusMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomBlurRadiusAdd != null)
+                {
+                    if (!eval(this.HdrBloomBlurRadiusAdd.Overall)) return false;
+                    if (this.HdrBloomBlurRadiusAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomBlurRadiusAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomThresholdMult != null)
+                {
+                    if (!eval(this.HdrBloomThresholdMult.Overall)) return false;
+                    if (this.HdrBloomThresholdMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomThresholdMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomThresholdAdd != null)
+                {
+                    if (!eval(this.HdrBloomThresholdAdd.Overall)) return false;
+                    if (this.HdrBloomThresholdAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomThresholdAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomScaleMult != null)
+                {
+                    if (!eval(this.HdrBloomScaleMult.Overall)) return false;
+                    if (this.HdrBloomScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomScaleAdd != null)
+                {
+                    if (!eval(this.HdrBloomScaleAdd.Overall)) return false;
+                    if (this.HdrBloomScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMinMult != null)
+                {
+                    if (!eval(this.HdrTargetLumMinMult.Overall)) return false;
+                    if (this.HdrTargetLumMinMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMinMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMinAdd != null)
+                {
+                    if (!eval(this.HdrTargetLumMinAdd.Overall)) return false;
+                    if (this.HdrTargetLumMinAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMinAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMaxMult != null)
+                {
+                    if (!eval(this.HdrTargetLumMaxMult.Overall)) return false;
+                    if (this.HdrTargetLumMaxMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMaxMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMaxAdd != null)
+                {
+                    if (!eval(this.HdrTargetLumMaxAdd.Overall)) return false;
+                    if (this.HdrTargetLumMaxAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMaxAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSunlightScaleMult != null)
+                {
+                    if (!eval(this.HdrSunlightScaleMult.Overall)) return false;
+                    if (this.HdrSunlightScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrSunlightScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSunlightScaleAdd != null)
+                {
+                    if (!eval(this.HdrSunlightScaleAdd.Overall)) return false;
+                    if (this.HdrSunlightScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrSunlightScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSkyScaleMult != null)
+                {
+                    if (!eval(this.HdrSkyScaleMult.Overall)) return false;
+                    if (this.HdrSkyScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrSkyScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSkyScaleAdd != null)
+                {
+                    if (!eval(this.HdrSkyScaleAdd.Overall)) return false;
+                    if (this.HdrSkyScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrSkyScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown08 != null)
+                {
+                    if (!eval(this.Unknown08.Overall)) return false;
+                    if (this.Unknown08.Specific != null)
+                    {
+                        foreach (var item in this.Unknown08.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown48 != null)
+                {
+                    if (!eval(this.Unknown48.Overall)) return false;
+                    if (this.Unknown48.Specific != null)
+                    {
+                        foreach (var item in this.Unknown48.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown09 != null)
+                {
+                    if (!eval(this.Unknown09.Overall)) return false;
+                    if (this.Unknown09.Specific != null)
+                    {
+                        foreach (var item in this.Unknown09.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown49 != null)
+                {
+                    if (!eval(this.Unknown49.Overall)) return false;
+                    if (this.Unknown49.Specific != null)
+                    {
+                        foreach (var item in this.Unknown49.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0A != null)
+                {
+                    if (!eval(this.Unknown0A.Overall)) return false;
+                    if (this.Unknown0A.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0A.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4A != null)
+                {
+                    if (!eval(this.Unknown4A.Overall)) return false;
+                    if (this.Unknown4A.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4A.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0B != null)
+                {
+                    if (!eval(this.Unknown0B.Overall)) return false;
+                    if (this.Unknown0B.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0B.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4B != null)
+                {
+                    if (!eval(this.Unknown4B.Overall)) return false;
+                    if (this.Unknown4B.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4B.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0C != null)
+                {
+                    if (!eval(this.Unknown0C.Overall)) return false;
+                    if (this.Unknown0C.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0C.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4C != null)
+                {
+                    if (!eval(this.Unknown4C.Overall)) return false;
+                    if (this.Unknown4C.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4C.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0D != null)
+                {
+                    if (!eval(this.Unknown0D.Overall)) return false;
+                    if (this.Unknown0D.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0D.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4D != null)
+                {
+                    if (!eval(this.Unknown4D.Overall)) return false;
+                    if (this.Unknown4D.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4D.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0E != null)
+                {
+                    if (!eval(this.Unknown0E.Overall)) return false;
+                    if (this.Unknown0E.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0E.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4E != null)
+                {
+                    if (!eval(this.Unknown4E.Overall)) return false;
+                    if (this.Unknown4E.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4E.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0F != null)
+                {
+                    if (!eval(this.Unknown0F.Overall)) return false;
+                    if (this.Unknown0F.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0F.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4F != null)
+                {
+                    if (!eval(this.Unknown4F.Overall)) return false;
+                    if (this.Unknown4F.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4F.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown10 != null)
+                {
+                    if (!eval(this.Unknown10.Overall)) return false;
+                    if (this.Unknown10.Specific != null)
+                    {
+                        foreach (var item in this.Unknown10.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown50 != null)
+                {
+                    if (!eval(this.Unknown50.Overall)) return false;
+                    if (this.Unknown50.Specific != null)
+                    {
+                        foreach (var item in this.Unknown50.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicSaturationMult != null)
+                {
+                    if (!eval(this.CinematicSaturationMult.Overall)) return false;
+                    if (this.CinematicSaturationMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicSaturationMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicSaturationAdd != null)
+                {
+                    if (!eval(this.CinematicSaturationAdd.Overall)) return false;
+                    if (this.CinematicSaturationAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicSaturationAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicBrightnessMult != null)
+                {
+                    if (!eval(this.CinematicBrightnessMult.Overall)) return false;
+                    if (this.CinematicBrightnessMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicBrightnessMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicBrightnessAdd != null)
+                {
+                    if (!eval(this.CinematicBrightnessAdd.Overall)) return false;
+                    if (this.CinematicBrightnessAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicBrightnessAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicContrastMult != null)
+                {
+                    if (!eval(this.CinematicContrastMult.Overall)) return false;
+                    if (this.CinematicContrastMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicContrastMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicContrastAdd != null)
+                {
+                    if (!eval(this.CinematicContrastAdd.Overall)) return false;
+                    if (this.CinematicContrastAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicContrastAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown14 != null)
+                {
+                    if (!eval(this.Unknown14.Overall)) return false;
+                    if (this.Unknown14.Specific != null)
+                    {
+                        foreach (var item in this.Unknown14.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown54 != null)
+                {
+                    if (!eval(this.Unknown54.Overall)) return false;
+                    if (this.Unknown54.Specific != null)
+                    {
+                        foreach (var item in this.Unknown54.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +2103,672 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Duration)) return true;
+                if (eval(this.RadialBlurFlags)) return true;
+                if (eval(this.RadialBlurCenter)) return true;
+                if (eval(this.DepthOfFieldFlags)) return true;
+                if (this.BlurRadius != null)
+                {
+                    if (eval(this.BlurRadius.Overall)) return true;
+                    if (this.BlurRadius.Specific != null)
+                    {
+                        foreach (var item in this.BlurRadius.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DoubleVisionStrength != null)
+                {
+                    if (eval(this.DoubleVisionStrength.Overall)) return true;
+                    if (this.DoubleVisionStrength.Specific != null)
+                    {
+                        foreach (var item in this.DoubleVisionStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.TintColor != null)
+                {
+                    if (eval(this.TintColor.Overall)) return true;
+                    if (this.TintColor.Specific != null)
+                    {
+                        foreach (var item in this.TintColor.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FadeColor != null)
+                {
+                    if (eval(this.FadeColor.Overall)) return true;
+                    if (this.FadeColor.Specific != null)
+                    {
+                        foreach (var item in this.FadeColor.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurStrength != null)
+                {
+                    if (eval(this.RadialBlurStrength.Overall)) return true;
+                    if (this.RadialBlurStrength.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurRampUp != null)
+                {
+                    if (eval(this.RadialBlurRampUp.Overall)) return true;
+                    if (this.RadialBlurRampUp.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurRampUp.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurStart != null)
+                {
+                    if (eval(this.RadialBlurStart.Overall)) return true;
+                    if (this.RadialBlurStart.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurStart.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurRampDown != null)
+                {
+                    if (eval(this.RadialBlurRampDown.Overall)) return true;
+                    if (this.RadialBlurRampDown.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurRampDown.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RadialBlurDownStart != null)
+                {
+                    if (eval(this.RadialBlurDownStart.Overall)) return true;
+                    if (this.RadialBlurDownStart.Specific != null)
+                    {
+                        foreach (var item in this.RadialBlurDownStart.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldStrength != null)
+                {
+                    if (eval(this.DepthOfFieldStrength.Overall)) return true;
+                    if (this.DepthOfFieldStrength.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldDistance != null)
+                {
+                    if (eval(this.DepthOfFieldDistance.Overall)) return true;
+                    if (this.DepthOfFieldDistance.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldDistance.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.DepthOfFieldRange != null)
+                {
+                    if (eval(this.DepthOfFieldRange.Overall)) return true;
+                    if (this.DepthOfFieldRange.Specific != null)
+                    {
+                        foreach (var item in this.DepthOfFieldRange.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.MotionBlurStrength != null)
+                {
+                    if (eval(this.MotionBlurStrength.Overall)) return true;
+                    if (this.MotionBlurStrength.Specific != null)
+                    {
+                        foreach (var item in this.MotionBlurStrength.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrEyeAdaptSpeedMult != null)
+                {
+                    if (eval(this.HdrEyeAdaptSpeedMult.Overall)) return true;
+                    if (this.HdrEyeAdaptSpeedMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrEyeAdaptSpeedMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrEyeAdaptSpeedAdd != null)
+                {
+                    if (eval(this.HdrEyeAdaptSpeedAdd.Overall)) return true;
+                    if (this.HdrEyeAdaptSpeedAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrEyeAdaptSpeedAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomBlurRadiusMult != null)
+                {
+                    if (eval(this.HdrBloomBlurRadiusMult.Overall)) return true;
+                    if (this.HdrBloomBlurRadiusMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomBlurRadiusMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomBlurRadiusAdd != null)
+                {
+                    if (eval(this.HdrBloomBlurRadiusAdd.Overall)) return true;
+                    if (this.HdrBloomBlurRadiusAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomBlurRadiusAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomThresholdMult != null)
+                {
+                    if (eval(this.HdrBloomThresholdMult.Overall)) return true;
+                    if (this.HdrBloomThresholdMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomThresholdMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomThresholdAdd != null)
+                {
+                    if (eval(this.HdrBloomThresholdAdd.Overall)) return true;
+                    if (this.HdrBloomThresholdAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomThresholdAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomScaleMult != null)
+                {
+                    if (eval(this.HdrBloomScaleMult.Overall)) return true;
+                    if (this.HdrBloomScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrBloomScaleAdd != null)
+                {
+                    if (eval(this.HdrBloomScaleAdd.Overall)) return true;
+                    if (this.HdrBloomScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrBloomScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMinMult != null)
+                {
+                    if (eval(this.HdrTargetLumMinMult.Overall)) return true;
+                    if (this.HdrTargetLumMinMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMinMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMinAdd != null)
+                {
+                    if (eval(this.HdrTargetLumMinAdd.Overall)) return true;
+                    if (this.HdrTargetLumMinAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMinAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMaxMult != null)
+                {
+                    if (eval(this.HdrTargetLumMaxMult.Overall)) return true;
+                    if (this.HdrTargetLumMaxMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMaxMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrTargetLumMaxAdd != null)
+                {
+                    if (eval(this.HdrTargetLumMaxAdd.Overall)) return true;
+                    if (this.HdrTargetLumMaxAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrTargetLumMaxAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSunlightScaleMult != null)
+                {
+                    if (eval(this.HdrSunlightScaleMult.Overall)) return true;
+                    if (this.HdrSunlightScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrSunlightScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSunlightScaleAdd != null)
+                {
+                    if (eval(this.HdrSunlightScaleAdd.Overall)) return true;
+                    if (this.HdrSunlightScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrSunlightScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSkyScaleMult != null)
+                {
+                    if (eval(this.HdrSkyScaleMult.Overall)) return true;
+                    if (this.HdrSkyScaleMult.Specific != null)
+                    {
+                        foreach (var item in this.HdrSkyScaleMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.HdrSkyScaleAdd != null)
+                {
+                    if (eval(this.HdrSkyScaleAdd.Overall)) return true;
+                    if (this.HdrSkyScaleAdd.Specific != null)
+                    {
+                        foreach (var item in this.HdrSkyScaleAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown08 != null)
+                {
+                    if (eval(this.Unknown08.Overall)) return true;
+                    if (this.Unknown08.Specific != null)
+                    {
+                        foreach (var item in this.Unknown08.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown48 != null)
+                {
+                    if (eval(this.Unknown48.Overall)) return true;
+                    if (this.Unknown48.Specific != null)
+                    {
+                        foreach (var item in this.Unknown48.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown09 != null)
+                {
+                    if (eval(this.Unknown09.Overall)) return true;
+                    if (this.Unknown09.Specific != null)
+                    {
+                        foreach (var item in this.Unknown09.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown49 != null)
+                {
+                    if (eval(this.Unknown49.Overall)) return true;
+                    if (this.Unknown49.Specific != null)
+                    {
+                        foreach (var item in this.Unknown49.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0A != null)
+                {
+                    if (eval(this.Unknown0A.Overall)) return true;
+                    if (this.Unknown0A.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0A.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4A != null)
+                {
+                    if (eval(this.Unknown4A.Overall)) return true;
+                    if (this.Unknown4A.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4A.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0B != null)
+                {
+                    if (eval(this.Unknown0B.Overall)) return true;
+                    if (this.Unknown0B.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0B.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4B != null)
+                {
+                    if (eval(this.Unknown4B.Overall)) return true;
+                    if (this.Unknown4B.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4B.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0C != null)
+                {
+                    if (eval(this.Unknown0C.Overall)) return true;
+                    if (this.Unknown0C.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0C.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4C != null)
+                {
+                    if (eval(this.Unknown4C.Overall)) return true;
+                    if (this.Unknown4C.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4C.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0D != null)
+                {
+                    if (eval(this.Unknown0D.Overall)) return true;
+                    if (this.Unknown0D.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0D.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4D != null)
+                {
+                    if (eval(this.Unknown4D.Overall)) return true;
+                    if (this.Unknown4D.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4D.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0E != null)
+                {
+                    if (eval(this.Unknown0E.Overall)) return true;
+                    if (this.Unknown0E.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0E.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4E != null)
+                {
+                    if (eval(this.Unknown4E.Overall)) return true;
+                    if (this.Unknown4E.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4E.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown0F != null)
+                {
+                    if (eval(this.Unknown0F.Overall)) return true;
+                    if (this.Unknown0F.Specific != null)
+                    {
+                        foreach (var item in this.Unknown0F.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown4F != null)
+                {
+                    if (eval(this.Unknown4F.Overall)) return true;
+                    if (this.Unknown4F.Specific != null)
+                    {
+                        foreach (var item in this.Unknown4F.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown10 != null)
+                {
+                    if (eval(this.Unknown10.Overall)) return true;
+                    if (this.Unknown10.Specific != null)
+                    {
+                        foreach (var item in this.Unknown10.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown50 != null)
+                {
+                    if (eval(this.Unknown50.Overall)) return true;
+                    if (this.Unknown50.Specific != null)
+                    {
+                        foreach (var item in this.Unknown50.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicSaturationMult != null)
+                {
+                    if (eval(this.CinematicSaturationMult.Overall)) return true;
+                    if (this.CinematicSaturationMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicSaturationMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicSaturationAdd != null)
+                {
+                    if (eval(this.CinematicSaturationAdd.Overall)) return true;
+                    if (this.CinematicSaturationAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicSaturationAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicBrightnessMult != null)
+                {
+                    if (eval(this.CinematicBrightnessMult.Overall)) return true;
+                    if (this.CinematicBrightnessMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicBrightnessMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicBrightnessAdd != null)
+                {
+                    if (eval(this.CinematicBrightnessAdd.Overall)) return true;
+                    if (this.CinematicBrightnessAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicBrightnessAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicContrastMult != null)
+                {
+                    if (eval(this.CinematicContrastMult.Overall)) return true;
+                    if (this.CinematicContrastMult.Specific != null)
+                    {
+                        foreach (var item in this.CinematicContrastMult.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CinematicContrastAdd != null)
+                {
+                    if (eval(this.CinematicContrastAdd.Overall)) return true;
+                    if (this.CinematicContrastAdd.Specific != null)
+                    {
+                        foreach (var item in this.CinematicContrastAdd.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown14 != null)
+                {
+                    if (eval(this.Unknown14.Overall)) return true;
+                    if (this.Unknown14.Specific != null)
+                    {
+                        foreach (var item in this.Unknown14.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Unknown54 != null)
+                {
+                    if (eval(this.Unknown54.Overall)) return true;
+                    if (this.Unknown54.Specific != null)
+                    {
+                        foreach (var item in this.Unknown54.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +2784,837 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
+                obj.Duration = eval(this.Duration);
+                obj.RadialBlurFlags = eval(this.RadialBlurFlags);
+                obj.RadialBlurCenter = eval(this.RadialBlurCenter);
+                obj.DepthOfFieldFlags = eval(this.DepthOfFieldFlags);
+                if (BlurRadius != null)
+                {
+                    obj.BlurRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.BlurRadius.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (BlurRadius.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.BlurRadius.Specific = l;
+                        foreach (var item in BlurRadius.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DoubleVisionStrength != null)
+                {
+                    obj.DoubleVisionStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DoubleVisionStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DoubleVisionStrength.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DoubleVisionStrength.Specific = l;
+                        foreach (var item in DoubleVisionStrength.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (TintColor != null)
+                {
+                    obj.TintColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.TintColor.Overall), Enumerable.Empty<MaskItemIndexed<R, ColorFrame.Mask<R>?>>());
+                    if (TintColor.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
+                        obj.TintColor.Specific = l;
+                        foreach (var item in TintColor.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (FadeColor != null)
+                {
+                    obj.FadeColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.FadeColor.Overall), Enumerable.Empty<MaskItemIndexed<R, ColorFrame.Mask<R>?>>());
+                    if (FadeColor.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
+                        obj.FadeColor.Specific = l;
+                        foreach (var item in FadeColor.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RadialBlurStrength != null)
+                {
+                    obj.RadialBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (RadialBlurStrength.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.RadialBlurStrength.Specific = l;
+                        foreach (var item in RadialBlurStrength.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RadialBlurRampUp != null)
+                {
+                    obj.RadialBlurRampUp = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampUp.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (RadialBlurRampUp.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.RadialBlurRampUp.Specific = l;
+                        foreach (var item in RadialBlurRampUp.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RadialBlurStart != null)
+                {
+                    obj.RadialBlurStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStart.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (RadialBlurStart.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.RadialBlurStart.Specific = l;
+                        foreach (var item in RadialBlurStart.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RadialBlurRampDown != null)
+                {
+                    obj.RadialBlurRampDown = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampDown.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (RadialBlurRampDown.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.RadialBlurRampDown.Specific = l;
+                        foreach (var item in RadialBlurRampDown.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RadialBlurDownStart != null)
+                {
+                    obj.RadialBlurDownStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurDownStart.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (RadialBlurDownStart.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.RadialBlurDownStart.Specific = l;
+                        foreach (var item in RadialBlurDownStart.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DepthOfFieldStrength != null)
+                {
+                    obj.DepthOfFieldStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DepthOfFieldStrength.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DepthOfFieldStrength.Specific = l;
+                        foreach (var item in DepthOfFieldStrength.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DepthOfFieldDistance != null)
+                {
+                    obj.DepthOfFieldDistance = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldDistance.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DepthOfFieldDistance.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DepthOfFieldDistance.Specific = l;
+                        foreach (var item in DepthOfFieldDistance.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (DepthOfFieldRange != null)
+                {
+                    obj.DepthOfFieldRange = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldRange.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (DepthOfFieldRange.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.DepthOfFieldRange.Specific = l;
+                        foreach (var item in DepthOfFieldRange.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (MotionBlurStrength != null)
+                {
+                    obj.MotionBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.MotionBlurStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (MotionBlurStrength.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.MotionBlurStrength.Specific = l;
+                        foreach (var item in MotionBlurStrength.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrEyeAdaptSpeedMult != null)
+                {
+                    obj.HdrEyeAdaptSpeedMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrEyeAdaptSpeedMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrEyeAdaptSpeedMult.Specific = l;
+                        foreach (var item in HdrEyeAdaptSpeedMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrEyeAdaptSpeedAdd != null)
+                {
+                    obj.HdrEyeAdaptSpeedAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrEyeAdaptSpeedAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrEyeAdaptSpeedAdd.Specific = l;
+                        foreach (var item in HdrEyeAdaptSpeedAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomBlurRadiusMult != null)
+                {
+                    obj.HdrBloomBlurRadiusMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomBlurRadiusMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomBlurRadiusMult.Specific = l;
+                        foreach (var item in HdrBloomBlurRadiusMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomBlurRadiusAdd != null)
+                {
+                    obj.HdrBloomBlurRadiusAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomBlurRadiusAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomBlurRadiusAdd.Specific = l;
+                        foreach (var item in HdrBloomBlurRadiusAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomThresholdMult != null)
+                {
+                    obj.HdrBloomThresholdMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomThresholdMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomThresholdMult.Specific = l;
+                        foreach (var item in HdrBloomThresholdMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomThresholdAdd != null)
+                {
+                    obj.HdrBloomThresholdAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomThresholdAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomThresholdAdd.Specific = l;
+                        foreach (var item in HdrBloomThresholdAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomScaleMult != null)
+                {
+                    obj.HdrBloomScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomScaleMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomScaleMult.Specific = l;
+                        foreach (var item in HdrBloomScaleMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrBloomScaleAdd != null)
+                {
+                    obj.HdrBloomScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrBloomScaleAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrBloomScaleAdd.Specific = l;
+                        foreach (var item in HdrBloomScaleAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrTargetLumMinMult != null)
+                {
+                    obj.HdrTargetLumMinMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrTargetLumMinMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrTargetLumMinMult.Specific = l;
+                        foreach (var item in HdrTargetLumMinMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrTargetLumMinAdd != null)
+                {
+                    obj.HdrTargetLumMinAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrTargetLumMinAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrTargetLumMinAdd.Specific = l;
+                        foreach (var item in HdrTargetLumMinAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrTargetLumMaxMult != null)
+                {
+                    obj.HdrTargetLumMaxMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrTargetLumMaxMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrTargetLumMaxMult.Specific = l;
+                        foreach (var item in HdrTargetLumMaxMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrTargetLumMaxAdd != null)
+                {
+                    obj.HdrTargetLumMaxAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrTargetLumMaxAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrTargetLumMaxAdd.Specific = l;
+                        foreach (var item in HdrTargetLumMaxAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrSunlightScaleMult != null)
+                {
+                    obj.HdrSunlightScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrSunlightScaleMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrSunlightScaleMult.Specific = l;
+                        foreach (var item in HdrSunlightScaleMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrSunlightScaleAdd != null)
+                {
+                    obj.HdrSunlightScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrSunlightScaleAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrSunlightScaleAdd.Specific = l;
+                        foreach (var item in HdrSunlightScaleAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrSkyScaleMult != null)
+                {
+                    obj.HdrSkyScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrSkyScaleMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrSkyScaleMult.Specific = l;
+                        foreach (var item in HdrSkyScaleMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (HdrSkyScaleAdd != null)
+                {
+                    obj.HdrSkyScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (HdrSkyScaleAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.HdrSkyScaleAdd.Specific = l;
+                        foreach (var item in HdrSkyScaleAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown08 != null)
+                {
+                    obj.Unknown08 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown08.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown08.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown08.Specific = l;
+                        foreach (var item in Unknown08.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown48 != null)
+                {
+                    obj.Unknown48 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown48.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown48.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown48.Specific = l;
+                        foreach (var item in Unknown48.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown09 != null)
+                {
+                    obj.Unknown09 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown09.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown09.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown09.Specific = l;
+                        foreach (var item in Unknown09.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown49 != null)
+                {
+                    obj.Unknown49 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown49.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown49.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown49.Specific = l;
+                        foreach (var item in Unknown49.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0A != null)
+                {
+                    obj.Unknown0A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0A.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0A.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0A.Specific = l;
+                        foreach (var item in Unknown0A.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4A != null)
+                {
+                    obj.Unknown4A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4A.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4A.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4A.Specific = l;
+                        foreach (var item in Unknown4A.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0B != null)
+                {
+                    obj.Unknown0B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0B.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0B.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0B.Specific = l;
+                        foreach (var item in Unknown0B.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4B != null)
+                {
+                    obj.Unknown4B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4B.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4B.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4B.Specific = l;
+                        foreach (var item in Unknown4B.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0C != null)
+                {
+                    obj.Unknown0C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0C.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0C.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0C.Specific = l;
+                        foreach (var item in Unknown0C.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4C != null)
+                {
+                    obj.Unknown4C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4C.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4C.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4C.Specific = l;
+                        foreach (var item in Unknown4C.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0D != null)
+                {
+                    obj.Unknown0D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0D.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0D.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0D.Specific = l;
+                        foreach (var item in Unknown0D.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4D != null)
+                {
+                    obj.Unknown4D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4D.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4D.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4D.Specific = l;
+                        foreach (var item in Unknown4D.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0E != null)
+                {
+                    obj.Unknown0E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0E.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0E.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0E.Specific = l;
+                        foreach (var item in Unknown0E.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4E != null)
+                {
+                    obj.Unknown4E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4E.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4E.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4E.Specific = l;
+                        foreach (var item in Unknown4E.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown0F != null)
+                {
+                    obj.Unknown0F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0F.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown0F.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown0F.Specific = l;
+                        foreach (var item in Unknown0F.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown4F != null)
+                {
+                    obj.Unknown4F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4F.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown4F.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown4F.Specific = l;
+                        foreach (var item in Unknown4F.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown10 != null)
+                {
+                    obj.Unknown10 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown10.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown10.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown10.Specific = l;
+                        foreach (var item in Unknown10.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown50 != null)
+                {
+                    obj.Unknown50 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown50.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown50.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown50.Specific = l;
+                        foreach (var item in Unknown50.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicSaturationMult != null)
+                {
+                    obj.CinematicSaturationMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicSaturationMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicSaturationMult.Specific = l;
+                        foreach (var item in CinematicSaturationMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicSaturationAdd != null)
+                {
+                    obj.CinematicSaturationAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicSaturationAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicSaturationAdd.Specific = l;
+                        foreach (var item in CinematicSaturationAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicBrightnessMult != null)
+                {
+                    obj.CinematicBrightnessMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicBrightnessMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicBrightnessMult.Specific = l;
+                        foreach (var item in CinematicBrightnessMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicBrightnessAdd != null)
+                {
+                    obj.CinematicBrightnessAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicBrightnessAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicBrightnessAdd.Specific = l;
+                        foreach (var item in CinematicBrightnessAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicContrastMult != null)
+                {
+                    obj.CinematicContrastMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicContrastMult.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicContrastMult.Specific = l;
+                        foreach (var item in CinematicContrastMult.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CinematicContrastAdd != null)
+                {
+                    obj.CinematicContrastAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (CinematicContrastAdd.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.CinematicContrastAdd.Specific = l;
+                        foreach (var item in CinematicContrastAdd.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown14 != null)
+                {
+                    obj.Unknown14 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown14.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown14.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown14.Specific = l;
+                        foreach (var item in Unknown14.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Unknown54 != null)
+                {
+                    obj.Unknown54 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown54.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    if (Unknown54.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
+                        obj.Unknown54.Specific = l;
+                        foreach (var item in Unknown54.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -317,6 +3637,1295 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Duration ?? true)
+                    {
+                        fg.AppendItem(Duration, "Duration");
+                    }
+                    if (printMask?.RadialBlurFlags ?? true)
+                    {
+                        fg.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                    }
+                    if (printMask?.RadialBlurCenter ?? true)
+                    {
+                        fg.AppendItem(RadialBlurCenter, "RadialBlurCenter");
+                    }
+                    if (printMask?.DepthOfFieldFlags ?? true)
+                    {
+                        fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                    }
+                    if ((printMask?.BlurRadius?.Overall ?? true)
+                        && BlurRadius.TryGet(out var BlurRadiusItem))
+                    {
+                        fg.AppendLine("BlurRadius =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(BlurRadiusItem.Overall);
+                            if (BlurRadiusItem.Specific != null)
+                            {
+                                foreach (var subItem in BlurRadiusItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.DoubleVisionStrength?.Overall ?? true)
+                        && DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+                    {
+                        fg.AppendLine("DoubleVisionStrength =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DoubleVisionStrengthItem.Overall);
+                            if (DoubleVisionStrengthItem.Specific != null)
+                            {
+                                foreach (var subItem in DoubleVisionStrengthItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.TintColor?.Overall ?? true)
+                        && TintColor.TryGet(out var TintColorItem))
+                    {
+                        fg.AppendLine("TintColor =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(TintColorItem.Overall);
+                            if (TintColorItem.Specific != null)
+                            {
+                                foreach (var subItem in TintColorItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.FadeColor?.Overall ?? true)
+                        && FadeColor.TryGet(out var FadeColorItem))
+                    {
+                        fg.AppendLine("FadeColor =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(FadeColorItem.Overall);
+                            if (FadeColorItem.Specific != null)
+                            {
+                                foreach (var subItem in FadeColorItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RadialBlurStrength?.Overall ?? true)
+                        && RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+                    {
+                        fg.AppendLine("RadialBlurStrength =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RadialBlurStrengthItem.Overall);
+                            if (RadialBlurStrengthItem.Specific != null)
+                            {
+                                foreach (var subItem in RadialBlurStrengthItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RadialBlurRampUp?.Overall ?? true)
+                        && RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+                    {
+                        fg.AppendLine("RadialBlurRampUp =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RadialBlurRampUpItem.Overall);
+                            if (RadialBlurRampUpItem.Specific != null)
+                            {
+                                foreach (var subItem in RadialBlurRampUpItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RadialBlurStart?.Overall ?? true)
+                        && RadialBlurStart.TryGet(out var RadialBlurStartItem))
+                    {
+                        fg.AppendLine("RadialBlurStart =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RadialBlurStartItem.Overall);
+                            if (RadialBlurStartItem.Specific != null)
+                            {
+                                foreach (var subItem in RadialBlurStartItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RadialBlurRampDown?.Overall ?? true)
+                        && RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+                    {
+                        fg.AppendLine("RadialBlurRampDown =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RadialBlurRampDownItem.Overall);
+                            if (RadialBlurRampDownItem.Specific != null)
+                            {
+                                foreach (var subItem in RadialBlurRampDownItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RadialBlurDownStart?.Overall ?? true)
+                        && RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+                    {
+                        fg.AppendLine("RadialBlurDownStart =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RadialBlurDownStartItem.Overall);
+                            if (RadialBlurDownStartItem.Specific != null)
+                            {
+                                foreach (var subItem in RadialBlurDownStartItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
+                        && DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+                    {
+                        fg.AppendLine("DepthOfFieldStrength =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DepthOfFieldStrengthItem.Overall);
+                            if (DepthOfFieldStrengthItem.Specific != null)
+                            {
+                                foreach (var subItem in DepthOfFieldStrengthItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
+                        && DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+                    {
+                        fg.AppendLine("DepthOfFieldDistance =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DepthOfFieldDistanceItem.Overall);
+                            if (DepthOfFieldDistanceItem.Specific != null)
+                            {
+                                foreach (var subItem in DepthOfFieldDistanceItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.DepthOfFieldRange?.Overall ?? true)
+                        && DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+                    {
+                        fg.AppendLine("DepthOfFieldRange =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(DepthOfFieldRangeItem.Overall);
+                            if (DepthOfFieldRangeItem.Specific != null)
+                            {
+                                foreach (var subItem in DepthOfFieldRangeItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.MotionBlurStrength?.Overall ?? true)
+                        && MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+                    {
+                        fg.AppendLine("MotionBlurStrength =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MotionBlurStrengthItem.Overall);
+                            if (MotionBlurStrengthItem.Specific != null)
+                            {
+                                foreach (var subItem in MotionBlurStrengthItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
+                        && HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+                    {
+                        fg.AppendLine("HdrEyeAdaptSpeedMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
+                            if (HdrEyeAdaptSpeedMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrEyeAdaptSpeedMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
+                        && HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+                    {
+                        fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
+                            if (HdrEyeAdaptSpeedAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrEyeAdaptSpeedAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
+                        && HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+                    {
+                        fg.AppendLine("HdrBloomBlurRadiusMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
+                            if (HdrBloomBlurRadiusMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomBlurRadiusMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
+                        && HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+                    {
+                        fg.AppendLine("HdrBloomBlurRadiusAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
+                            if (HdrBloomBlurRadiusAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomBlurRadiusAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
+                        && HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+                    {
+                        fg.AppendLine("HdrBloomThresholdMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomThresholdMultItem.Overall);
+                            if (HdrBloomThresholdMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomThresholdMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
+                        && HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+                    {
+                        fg.AppendLine("HdrBloomThresholdAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomThresholdAddItem.Overall);
+                            if (HdrBloomThresholdAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomThresholdAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
+                        && HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+                    {
+                        fg.AppendLine("HdrBloomScaleMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomScaleMultItem.Overall);
+                            if (HdrBloomScaleMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomScaleMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
+                        && HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+                    {
+                        fg.AppendLine("HdrBloomScaleAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrBloomScaleAddItem.Overall);
+                            if (HdrBloomScaleAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrBloomScaleAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
+                        && HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+                    {
+                        fg.AppendLine("HdrTargetLumMinMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrTargetLumMinMultItem.Overall);
+                            if (HdrTargetLumMinMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrTargetLumMinMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
+                        && HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+                    {
+                        fg.AppendLine("HdrTargetLumMinAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrTargetLumMinAddItem.Overall);
+                            if (HdrTargetLumMinAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrTargetLumMinAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
+                        && HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+                    {
+                        fg.AppendLine("HdrTargetLumMaxMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrTargetLumMaxMultItem.Overall);
+                            if (HdrTargetLumMaxMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrTargetLumMaxMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
+                        && HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+                    {
+                        fg.AppendLine("HdrTargetLumMaxAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrTargetLumMaxAddItem.Overall);
+                            if (HdrTargetLumMaxAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrTargetLumMaxAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
+                        && HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+                    {
+                        fg.AppendLine("HdrSunlightScaleMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrSunlightScaleMultItem.Overall);
+                            if (HdrSunlightScaleMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrSunlightScaleMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
+                        && HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+                    {
+                        fg.AppendLine("HdrSunlightScaleAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrSunlightScaleAddItem.Overall);
+                            if (HdrSunlightScaleAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrSunlightScaleAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
+                        && HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+                    {
+                        fg.AppendLine("HdrSkyScaleMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrSkyScaleMultItem.Overall);
+                            if (HdrSkyScaleMultItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrSkyScaleMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
+                        && HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+                    {
+                        fg.AppendLine("HdrSkyScaleAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(HdrSkyScaleAddItem.Overall);
+                            if (HdrSkyScaleAddItem.Specific != null)
+                            {
+                                foreach (var subItem in HdrSkyScaleAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown08?.Overall ?? true)
+                        && Unknown08.TryGet(out var Unknown08Item))
+                    {
+                        fg.AppendLine("Unknown08 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown08Item.Overall);
+                            if (Unknown08Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown08Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown48?.Overall ?? true)
+                        && Unknown48.TryGet(out var Unknown48Item))
+                    {
+                        fg.AppendLine("Unknown48 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown48Item.Overall);
+                            if (Unknown48Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown48Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown09?.Overall ?? true)
+                        && Unknown09.TryGet(out var Unknown09Item))
+                    {
+                        fg.AppendLine("Unknown09 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown09Item.Overall);
+                            if (Unknown09Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown09Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown49?.Overall ?? true)
+                        && Unknown49.TryGet(out var Unknown49Item))
+                    {
+                        fg.AppendLine("Unknown49 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown49Item.Overall);
+                            if (Unknown49Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown49Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0A?.Overall ?? true)
+                        && Unknown0A.TryGet(out var Unknown0AItem))
+                    {
+                        fg.AppendLine("Unknown0A =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0AItem.Overall);
+                            if (Unknown0AItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0AItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4A?.Overall ?? true)
+                        && Unknown4A.TryGet(out var Unknown4AItem))
+                    {
+                        fg.AppendLine("Unknown4A =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4AItem.Overall);
+                            if (Unknown4AItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4AItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0B?.Overall ?? true)
+                        && Unknown0B.TryGet(out var Unknown0BItem))
+                    {
+                        fg.AppendLine("Unknown0B =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0BItem.Overall);
+                            if (Unknown0BItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0BItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4B?.Overall ?? true)
+                        && Unknown4B.TryGet(out var Unknown4BItem))
+                    {
+                        fg.AppendLine("Unknown4B =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4BItem.Overall);
+                            if (Unknown4BItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4BItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0C?.Overall ?? true)
+                        && Unknown0C.TryGet(out var Unknown0CItem))
+                    {
+                        fg.AppendLine("Unknown0C =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0CItem.Overall);
+                            if (Unknown0CItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0CItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4C?.Overall ?? true)
+                        && Unknown4C.TryGet(out var Unknown4CItem))
+                    {
+                        fg.AppendLine("Unknown4C =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4CItem.Overall);
+                            if (Unknown4CItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4CItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0D?.Overall ?? true)
+                        && Unknown0D.TryGet(out var Unknown0DItem))
+                    {
+                        fg.AppendLine("Unknown0D =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0DItem.Overall);
+                            if (Unknown0DItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0DItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4D?.Overall ?? true)
+                        && Unknown4D.TryGet(out var Unknown4DItem))
+                    {
+                        fg.AppendLine("Unknown4D =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4DItem.Overall);
+                            if (Unknown4DItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4DItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0E?.Overall ?? true)
+                        && Unknown0E.TryGet(out var Unknown0EItem))
+                    {
+                        fg.AppendLine("Unknown0E =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0EItem.Overall);
+                            if (Unknown0EItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0EItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4E?.Overall ?? true)
+                        && Unknown4E.TryGet(out var Unknown4EItem))
+                    {
+                        fg.AppendLine("Unknown4E =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4EItem.Overall);
+                            if (Unknown4EItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4EItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown0F?.Overall ?? true)
+                        && Unknown0F.TryGet(out var Unknown0FItem))
+                    {
+                        fg.AppendLine("Unknown0F =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown0FItem.Overall);
+                            if (Unknown0FItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown0FItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown4F?.Overall ?? true)
+                        && Unknown4F.TryGet(out var Unknown4FItem))
+                    {
+                        fg.AppendLine("Unknown4F =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown4FItem.Overall);
+                            if (Unknown4FItem.Specific != null)
+                            {
+                                foreach (var subItem in Unknown4FItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown10?.Overall ?? true)
+                        && Unknown10.TryGet(out var Unknown10Item))
+                    {
+                        fg.AppendLine("Unknown10 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown10Item.Overall);
+                            if (Unknown10Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown10Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown50?.Overall ?? true)
+                        && Unknown50.TryGet(out var Unknown50Item))
+                    {
+                        fg.AppendLine("Unknown50 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown50Item.Overall);
+                            if (Unknown50Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown50Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicSaturationMult?.Overall ?? true)
+                        && CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+                    {
+                        fg.AppendLine("CinematicSaturationMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicSaturationMultItem.Overall);
+                            if (CinematicSaturationMultItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicSaturationMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
+                        && CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+                    {
+                        fg.AppendLine("CinematicSaturationAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicSaturationAddItem.Overall);
+                            if (CinematicSaturationAddItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicSaturationAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
+                        && CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+                    {
+                        fg.AppendLine("CinematicBrightnessMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicBrightnessMultItem.Overall);
+                            if (CinematicBrightnessMultItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicBrightnessMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
+                        && CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+                    {
+                        fg.AppendLine("CinematicBrightnessAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicBrightnessAddItem.Overall);
+                            if (CinematicBrightnessAddItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicBrightnessAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicContrastMult?.Overall ?? true)
+                        && CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+                    {
+                        fg.AppendLine("CinematicContrastMult =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicContrastMultItem.Overall);
+                            if (CinematicContrastMultItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicContrastMultItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.CinematicContrastAdd?.Overall ?? true)
+                        && CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+                    {
+                        fg.AppendLine("CinematicContrastAdd =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CinematicContrastAddItem.Overall);
+                            if (CinematicContrastAddItem.Specific != null)
+                            {
+                                foreach (var subItem in CinematicContrastAddItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown14?.Overall ?? true)
+                        && Unknown14.TryGet(out var Unknown14Item))
+                    {
+                        fg.AppendLine("Unknown14 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown14Item.Overall);
+                            if (Unknown14Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown14Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Unknown54?.Overall ?? true)
+                        && Unknown54.TryGet(out var Unknown54Item))
+                    {
+                        fg.AppendLine("Unknown54 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(Unknown54Item.Overall);
+                            if (Unknown54Item.Specific != null)
+                            {
+                                foreach (var subItem in Unknown54Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +4937,198 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            public Exception? Duration;
+            public Exception? RadialBlurFlags;
+            public Exception? RadialBlurCenter;
+            public Exception? DepthOfFieldFlags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? BlurRadius;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DoubleVisionStrength;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>? TintColor;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>? FadeColor;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? RadialBlurStrength;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? RadialBlurRampUp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? RadialBlurStart;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? RadialBlurRampDown;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? RadialBlurDownStart;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldStrength;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldDistance;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DepthOfFieldRange;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? MotionBlurStrength;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrEyeAdaptSpeedMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrEyeAdaptSpeedAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomBlurRadiusMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomBlurRadiusAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomThresholdMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomThresholdAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomScaleMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrBloomScaleAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrTargetLumMinMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrTargetLumMinAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrTargetLumMaxMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrTargetLumMaxAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrSunlightScaleMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrSunlightScaleAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrSkyScaleMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? HdrSkyScaleAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown08;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown48;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown09;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown49;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0A;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4A;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0B;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4B;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0C;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4C;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0D;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4D;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0E;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4E;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown0F;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown4F;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown10;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown50;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicSaturationMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicSaturationAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicBrightnessMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicBrightnessAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicContrastMult;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicContrastAdd;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown14;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? Unknown54;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpaceAdapter_FieldIndex.Flags:
+                        return Flags;
+                    case ImageSpaceAdapter_FieldIndex.Duration:
+                        return Duration;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                        return RadialBlurFlags;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                        return RadialBlurCenter;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                        return DepthOfFieldFlags;
+                    case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                        return BlurRadius;
+                    case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                        return DoubleVisionStrength;
+                    case ImageSpaceAdapter_FieldIndex.TintColor:
+                        return TintColor;
+                    case ImageSpaceAdapter_FieldIndex.FadeColor:
+                        return FadeColor;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                        return RadialBlurStrength;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                        return RadialBlurRampUp;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                        return RadialBlurStart;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                        return RadialBlurRampDown;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                        return RadialBlurDownStart;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                        return DepthOfFieldStrength;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                        return DepthOfFieldDistance;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                        return DepthOfFieldRange;
+                    case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                        return MotionBlurStrength;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                        return HdrEyeAdaptSpeedMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                        return HdrEyeAdaptSpeedAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                        return HdrBloomBlurRadiusMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                        return HdrBloomBlurRadiusAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                        return HdrBloomThresholdMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                        return HdrBloomThresholdAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                        return HdrBloomScaleMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                        return HdrBloomScaleAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                        return HdrTargetLumMinMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                        return HdrTargetLumMinAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                        return HdrTargetLumMaxMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                        return HdrTargetLumMaxAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                        return HdrSunlightScaleMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                        return HdrSunlightScaleAdd;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                        return HdrSkyScaleMult;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                        return HdrSkyScaleAdd;
+                    case ImageSpaceAdapter_FieldIndex.Unknown08:
+                        return Unknown08;
+                    case ImageSpaceAdapter_FieldIndex.Unknown48:
+                        return Unknown48;
+                    case ImageSpaceAdapter_FieldIndex.Unknown09:
+                        return Unknown09;
+                    case ImageSpaceAdapter_FieldIndex.Unknown49:
+                        return Unknown49;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                        return Unknown0A;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                        return Unknown4A;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                        return Unknown0B;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                        return Unknown4B;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                        return Unknown0C;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                        return Unknown4C;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                        return Unknown0D;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                        return Unknown4D;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                        return Unknown0E;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                        return Unknown4E;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                        return Unknown0F;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                        return Unknown4F;
+                    case ImageSpaceAdapter_FieldIndex.Unknown10:
+                        return Unknown10;
+                    case ImageSpaceAdapter_FieldIndex.Unknown50:
+                        return Unknown50;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                        return CinematicSaturationMult;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                        return CinematicSaturationAdd;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                        return CinematicBrightnessMult;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                        return CinematicBrightnessAdd;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                        return CinematicContrastMult;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                        return CinematicContrastAdd;
+                    case ImageSpaceAdapter_FieldIndex.Unknown14:
+                        return Unknown14;
+                    case ImageSpaceAdapter_FieldIndex.Unknown54:
+                        return Unknown54;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +5139,189 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpaceAdapter_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Duration:
+                        this.Duration = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                        this.RadialBlurFlags = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                        this.RadialBlurCenter = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                        this.DepthOfFieldFlags = ex;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                        this.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                        this.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.TintColor:
+                        this.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.FadeColor:
+                        this.FadeColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                        this.RadialBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                        this.RadialBlurRampUp = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                        this.RadialBlurStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                        this.RadialBlurRampDown = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                        this.RadialBlurDownStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                        this.DepthOfFieldStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                        this.DepthOfFieldDistance = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                        this.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                        this.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                        this.HdrEyeAdaptSpeedMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                        this.HdrEyeAdaptSpeedAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                        this.HdrBloomBlurRadiusMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                        this.HdrBloomBlurRadiusAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                        this.HdrBloomThresholdMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                        this.HdrBloomThresholdAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                        this.HdrBloomScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                        this.HdrBloomScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                        this.HdrTargetLumMinMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                        this.HdrTargetLumMinAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                        this.HdrTargetLumMaxMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                        this.HdrTargetLumMaxAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                        this.HdrSunlightScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                        this.HdrSunlightScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                        this.HdrSkyScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                        this.HdrSkyScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown08:
+                        this.Unknown08 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown48:
+                        this.Unknown48 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown09:
+                        this.Unknown09 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown49:
+                        this.Unknown49 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                        this.Unknown0A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                        this.Unknown4A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                        this.Unknown0B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                        this.Unknown4B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                        this.Unknown0C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                        this.Unknown4C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                        this.Unknown0D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                        this.Unknown4D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                        this.Unknown0E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                        this.Unknown4E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                        this.Unknown0F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                        this.Unknown4F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown10:
+                        this.Unknown10 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown50:
+                        this.Unknown50 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                        this.CinematicSaturationMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                        this.CinematicSaturationAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                        this.CinematicBrightnessMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                        this.CinematicBrightnessAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                        this.CinematicContrastMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                        this.CinematicContrastAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown14:
+                        this.Unknown14 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown54:
+                        this.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +5333,189 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
+                    case ImageSpaceAdapter_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Duration:
+                        this.Duration = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                        this.RadialBlurFlags = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                        this.RadialBlurCenter = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                        this.DepthOfFieldFlags = (Exception?)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                        this.BlurRadius = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                        this.DoubleVisionStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.TintColor:
+                        this.TintColor = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.FadeColor:
+                        this.FadeColor = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                        this.RadialBlurStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                        this.RadialBlurRampUp = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                        this.RadialBlurStart = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                        this.RadialBlurRampDown = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                        this.RadialBlurDownStart = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                        this.DepthOfFieldStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                        this.DepthOfFieldDistance = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                        this.DepthOfFieldRange = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                        this.MotionBlurStrength = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                        this.HdrEyeAdaptSpeedMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                        this.HdrEyeAdaptSpeedAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                        this.HdrBloomBlurRadiusMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                        this.HdrBloomBlurRadiusAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                        this.HdrBloomThresholdMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                        this.HdrBloomThresholdAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                        this.HdrBloomScaleMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                        this.HdrBloomScaleAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                        this.HdrTargetLumMinMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                        this.HdrTargetLumMinAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                        this.HdrTargetLumMaxMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                        this.HdrTargetLumMaxAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                        this.HdrSunlightScaleMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                        this.HdrSunlightScaleAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                        this.HdrSkyScaleMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                        this.HdrSkyScaleAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown08:
+                        this.Unknown08 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown48:
+                        this.Unknown48 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown09:
+                        this.Unknown09 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown49:
+                        this.Unknown49 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                        this.Unknown0A = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                        this.Unknown4A = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                        this.Unknown0B = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                        this.Unknown4B = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                        this.Unknown0C = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                        this.Unknown4C = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                        this.Unknown0D = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                        this.Unknown4D = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                        this.Unknown0E = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                        this.Unknown4E = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                        this.Unknown0F = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                        this.Unknown4F = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown10:
+                        this.Unknown10 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown50:
+                        this.Unknown50 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                        this.CinematicSaturationMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                        this.CinematicSaturationAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                        this.CinematicBrightnessMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                        this.CinematicBrightnessAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                        this.CinematicContrastMult = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                        this.CinematicContrastAdd = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown14:
+                        this.Unknown14 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.Unknown54:
+                        this.Unknown54 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
+                        break;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +5525,67 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (Duration != null) return true;
+                if (RadialBlurFlags != null) return true;
+                if (RadialBlurCenter != null) return true;
+                if (DepthOfFieldFlags != null) return true;
+                if (BlurRadius != null) return true;
+                if (DoubleVisionStrength != null) return true;
+                if (TintColor != null) return true;
+                if (FadeColor != null) return true;
+                if (RadialBlurStrength != null) return true;
+                if (RadialBlurRampUp != null) return true;
+                if (RadialBlurStart != null) return true;
+                if (RadialBlurRampDown != null) return true;
+                if (RadialBlurDownStart != null) return true;
+                if (DepthOfFieldStrength != null) return true;
+                if (DepthOfFieldDistance != null) return true;
+                if (DepthOfFieldRange != null) return true;
+                if (MotionBlurStrength != null) return true;
+                if (HdrEyeAdaptSpeedMult != null) return true;
+                if (HdrEyeAdaptSpeedAdd != null) return true;
+                if (HdrBloomBlurRadiusMult != null) return true;
+                if (HdrBloomBlurRadiusAdd != null) return true;
+                if (HdrBloomThresholdMult != null) return true;
+                if (HdrBloomThresholdAdd != null) return true;
+                if (HdrBloomScaleMult != null) return true;
+                if (HdrBloomScaleAdd != null) return true;
+                if (HdrTargetLumMinMult != null) return true;
+                if (HdrTargetLumMinAdd != null) return true;
+                if (HdrTargetLumMaxMult != null) return true;
+                if (HdrTargetLumMaxAdd != null) return true;
+                if (HdrSunlightScaleMult != null) return true;
+                if (HdrSunlightScaleAdd != null) return true;
+                if (HdrSkyScaleMult != null) return true;
+                if (HdrSkyScaleAdd != null) return true;
+                if (Unknown08 != null) return true;
+                if (Unknown48 != null) return true;
+                if (Unknown09 != null) return true;
+                if (Unknown49 != null) return true;
+                if (Unknown0A != null) return true;
+                if (Unknown4A != null) return true;
+                if (Unknown0B != null) return true;
+                if (Unknown4B != null) return true;
+                if (Unknown0C != null) return true;
+                if (Unknown4C != null) return true;
+                if (Unknown0D != null) return true;
+                if (Unknown4D != null) return true;
+                if (Unknown0E != null) return true;
+                if (Unknown4E != null) return true;
+                if (Unknown0F != null) return true;
+                if (Unknown4F != null) return true;
+                if (Unknown10 != null) return true;
+                if (Unknown50 != null) return true;
+                if (CinematicSaturationMult != null) return true;
+                if (CinematicSaturationAdd != null) return true;
+                if (CinematicBrightnessMult != null) return true;
+                if (CinematicBrightnessAdd != null) return true;
+                if (CinematicContrastMult != null) return true;
+                if (CinematicContrastAdd != null) return true;
+                if (Unknown14 != null) return true;
+                if (Unknown54 != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +5621,1222 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Duration, "Duration");
+                fg.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                fg.AppendItem(RadialBlurCenter, "RadialBlurCenter");
+                fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                if (BlurRadius.TryGet(out var BlurRadiusItem))
+                {
+                    fg.AppendLine("BlurRadius =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(BlurRadiusItem.Overall);
+                        if (BlurRadiusItem.Specific != null)
+                        {
+                            foreach (var subItem in BlurRadiusItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+                {
+                    fg.AppendLine("DoubleVisionStrength =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DoubleVisionStrengthItem.Overall);
+                        if (DoubleVisionStrengthItem.Specific != null)
+                        {
+                            foreach (var subItem in DoubleVisionStrengthItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (TintColor.TryGet(out var TintColorItem))
+                {
+                    fg.AppendLine("TintColor =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(TintColorItem.Overall);
+                        if (TintColorItem.Specific != null)
+                        {
+                            foreach (var subItem in TintColorItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (FadeColor.TryGet(out var FadeColorItem))
+                {
+                    fg.AppendLine("FadeColor =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(FadeColorItem.Overall);
+                        if (FadeColorItem.Specific != null)
+                        {
+                            foreach (var subItem in FadeColorItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+                {
+                    fg.AppendLine("RadialBlurStrength =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RadialBlurStrengthItem.Overall);
+                        if (RadialBlurStrengthItem.Specific != null)
+                        {
+                            foreach (var subItem in RadialBlurStrengthItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+                {
+                    fg.AppendLine("RadialBlurRampUp =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RadialBlurRampUpItem.Overall);
+                        if (RadialBlurRampUpItem.Specific != null)
+                        {
+                            foreach (var subItem in RadialBlurRampUpItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RadialBlurStart.TryGet(out var RadialBlurStartItem))
+                {
+                    fg.AppendLine("RadialBlurStart =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RadialBlurStartItem.Overall);
+                        if (RadialBlurStartItem.Specific != null)
+                        {
+                            foreach (var subItem in RadialBlurStartItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+                {
+                    fg.AppendLine("RadialBlurRampDown =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RadialBlurRampDownItem.Overall);
+                        if (RadialBlurRampDownItem.Specific != null)
+                        {
+                            foreach (var subItem in RadialBlurRampDownItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+                {
+                    fg.AppendLine("RadialBlurDownStart =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RadialBlurDownStartItem.Overall);
+                        if (RadialBlurDownStartItem.Specific != null)
+                        {
+                            foreach (var subItem in RadialBlurDownStartItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+                {
+                    fg.AppendLine("DepthOfFieldStrength =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DepthOfFieldStrengthItem.Overall);
+                        if (DepthOfFieldStrengthItem.Specific != null)
+                        {
+                            foreach (var subItem in DepthOfFieldStrengthItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+                {
+                    fg.AppendLine("DepthOfFieldDistance =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DepthOfFieldDistanceItem.Overall);
+                        if (DepthOfFieldDistanceItem.Specific != null)
+                        {
+                            foreach (var subItem in DepthOfFieldDistanceItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+                {
+                    fg.AppendLine("DepthOfFieldRange =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(DepthOfFieldRangeItem.Overall);
+                        if (DepthOfFieldRangeItem.Specific != null)
+                        {
+                            foreach (var subItem in DepthOfFieldRangeItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+                {
+                    fg.AppendLine("MotionBlurStrength =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MotionBlurStrengthItem.Overall);
+                        if (MotionBlurStrengthItem.Specific != null)
+                        {
+                            foreach (var subItem in MotionBlurStrengthItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+                {
+                    fg.AppendLine("HdrEyeAdaptSpeedMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
+                        if (HdrEyeAdaptSpeedMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrEyeAdaptSpeedMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+                {
+                    fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
+                        if (HdrEyeAdaptSpeedAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrEyeAdaptSpeedAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+                {
+                    fg.AppendLine("HdrBloomBlurRadiusMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
+                        if (HdrBloomBlurRadiusMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomBlurRadiusMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+                {
+                    fg.AppendLine("HdrBloomBlurRadiusAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
+                        if (HdrBloomBlurRadiusAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomBlurRadiusAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+                {
+                    fg.AppendLine("HdrBloomThresholdMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomThresholdMultItem.Overall);
+                        if (HdrBloomThresholdMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomThresholdMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+                {
+                    fg.AppendLine("HdrBloomThresholdAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomThresholdAddItem.Overall);
+                        if (HdrBloomThresholdAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomThresholdAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+                {
+                    fg.AppendLine("HdrBloomScaleMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomScaleMultItem.Overall);
+                        if (HdrBloomScaleMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomScaleMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+                {
+                    fg.AppendLine("HdrBloomScaleAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrBloomScaleAddItem.Overall);
+                        if (HdrBloomScaleAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrBloomScaleAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+                {
+                    fg.AppendLine("HdrTargetLumMinMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrTargetLumMinMultItem.Overall);
+                        if (HdrTargetLumMinMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrTargetLumMinMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+                {
+                    fg.AppendLine("HdrTargetLumMinAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrTargetLumMinAddItem.Overall);
+                        if (HdrTargetLumMinAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrTargetLumMinAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+                {
+                    fg.AppendLine("HdrTargetLumMaxMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrTargetLumMaxMultItem.Overall);
+                        if (HdrTargetLumMaxMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrTargetLumMaxMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+                {
+                    fg.AppendLine("HdrTargetLumMaxAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrTargetLumMaxAddItem.Overall);
+                        if (HdrTargetLumMaxAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrTargetLumMaxAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+                {
+                    fg.AppendLine("HdrSunlightScaleMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrSunlightScaleMultItem.Overall);
+                        if (HdrSunlightScaleMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrSunlightScaleMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+                {
+                    fg.AppendLine("HdrSunlightScaleAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrSunlightScaleAddItem.Overall);
+                        if (HdrSunlightScaleAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrSunlightScaleAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+                {
+                    fg.AppendLine("HdrSkyScaleMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrSkyScaleMultItem.Overall);
+                        if (HdrSkyScaleMultItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrSkyScaleMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+                {
+                    fg.AppendLine("HdrSkyScaleAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(HdrSkyScaleAddItem.Overall);
+                        if (HdrSkyScaleAddItem.Specific != null)
+                        {
+                            foreach (var subItem in HdrSkyScaleAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown08.TryGet(out var Unknown08Item))
+                {
+                    fg.AppendLine("Unknown08 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown08Item.Overall);
+                        if (Unknown08Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown08Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown48.TryGet(out var Unknown48Item))
+                {
+                    fg.AppendLine("Unknown48 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown48Item.Overall);
+                        if (Unknown48Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown48Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown09.TryGet(out var Unknown09Item))
+                {
+                    fg.AppendLine("Unknown09 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown09Item.Overall);
+                        if (Unknown09Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown09Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown49.TryGet(out var Unknown49Item))
+                {
+                    fg.AppendLine("Unknown49 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown49Item.Overall);
+                        if (Unknown49Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown49Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0A.TryGet(out var Unknown0AItem))
+                {
+                    fg.AppendLine("Unknown0A =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0AItem.Overall);
+                        if (Unknown0AItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0AItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4A.TryGet(out var Unknown4AItem))
+                {
+                    fg.AppendLine("Unknown4A =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4AItem.Overall);
+                        if (Unknown4AItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4AItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0B.TryGet(out var Unknown0BItem))
+                {
+                    fg.AppendLine("Unknown0B =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0BItem.Overall);
+                        if (Unknown0BItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0BItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4B.TryGet(out var Unknown4BItem))
+                {
+                    fg.AppendLine("Unknown4B =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4BItem.Overall);
+                        if (Unknown4BItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4BItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0C.TryGet(out var Unknown0CItem))
+                {
+                    fg.AppendLine("Unknown0C =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0CItem.Overall);
+                        if (Unknown0CItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0CItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4C.TryGet(out var Unknown4CItem))
+                {
+                    fg.AppendLine("Unknown4C =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4CItem.Overall);
+                        if (Unknown4CItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4CItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0D.TryGet(out var Unknown0DItem))
+                {
+                    fg.AppendLine("Unknown0D =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0DItem.Overall);
+                        if (Unknown0DItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0DItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4D.TryGet(out var Unknown4DItem))
+                {
+                    fg.AppendLine("Unknown4D =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4DItem.Overall);
+                        if (Unknown4DItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4DItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0E.TryGet(out var Unknown0EItem))
+                {
+                    fg.AppendLine("Unknown0E =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0EItem.Overall);
+                        if (Unknown0EItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0EItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4E.TryGet(out var Unknown4EItem))
+                {
+                    fg.AppendLine("Unknown4E =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4EItem.Overall);
+                        if (Unknown4EItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4EItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown0F.TryGet(out var Unknown0FItem))
+                {
+                    fg.AppendLine("Unknown0F =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown0FItem.Overall);
+                        if (Unknown0FItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown0FItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown4F.TryGet(out var Unknown4FItem))
+                {
+                    fg.AppendLine("Unknown4F =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown4FItem.Overall);
+                        if (Unknown4FItem.Specific != null)
+                        {
+                            foreach (var subItem in Unknown4FItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown10.TryGet(out var Unknown10Item))
+                {
+                    fg.AppendLine("Unknown10 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown10Item.Overall);
+                        if (Unknown10Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown10Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown50.TryGet(out var Unknown50Item))
+                {
+                    fg.AppendLine("Unknown50 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown50Item.Overall);
+                        if (Unknown50Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown50Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+                {
+                    fg.AppendLine("CinematicSaturationMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicSaturationMultItem.Overall);
+                        if (CinematicSaturationMultItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicSaturationMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+                {
+                    fg.AppendLine("CinematicSaturationAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicSaturationAddItem.Overall);
+                        if (CinematicSaturationAddItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicSaturationAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+                {
+                    fg.AppendLine("CinematicBrightnessMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicBrightnessMultItem.Overall);
+                        if (CinematicBrightnessMultItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicBrightnessMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+                {
+                    fg.AppendLine("CinematicBrightnessAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicBrightnessAddItem.Overall);
+                        if (CinematicBrightnessAddItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicBrightnessAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+                {
+                    fg.AppendLine("CinematicContrastMult =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicContrastMultItem.Overall);
+                        if (CinematicContrastMultItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicContrastMultItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+                {
+                    fg.AppendLine("CinematicContrastAdd =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CinematicContrastAddItem.Overall);
+                        if (CinematicContrastAddItem.Specific != null)
+                        {
+                            foreach (var subItem in CinematicContrastAddItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown14.TryGet(out var Unknown14Item))
+                {
+                    fg.AppendLine("Unknown14 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown14Item.Overall);
+                        if (Unknown14Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown14Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Unknown54.TryGet(out var Unknown54Item))
+                {
+                    fg.AppendLine("Unknown54 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(Unknown54Item.Overall);
+                        if (Unknown54Item.Specific != null)
+                        {
+                            foreach (var subItem in Unknown54Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -407,6 +6845,67 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Duration = this.Duration.Combine(rhs.Duration);
+                ret.RadialBlurFlags = this.RadialBlurFlags.Combine(rhs.RadialBlurFlags);
+                ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
+                ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
+                ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
+                ret.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DoubleVisionStrength?.Overall, rhs.DoubleVisionStrength?.Overall), ExceptionExt.Combine(this.DoubleVisionStrength?.Specific, rhs.DoubleVisionStrength?.Specific));
+                ret.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.TintColor?.Overall, rhs.TintColor?.Overall), ExceptionExt.Combine(this.TintColor?.Specific, rhs.TintColor?.Specific));
+                ret.FadeColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.FadeColor?.Overall, rhs.FadeColor?.Overall), ExceptionExt.Combine(this.FadeColor?.Specific, rhs.FadeColor?.Specific));
+                ret.RadialBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurStrength?.Overall, rhs.RadialBlurStrength?.Overall), ExceptionExt.Combine(this.RadialBlurStrength?.Specific, rhs.RadialBlurStrength?.Specific));
+                ret.RadialBlurRampUp = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurRampUp?.Overall, rhs.RadialBlurRampUp?.Overall), ExceptionExt.Combine(this.RadialBlurRampUp?.Specific, rhs.RadialBlurRampUp?.Specific));
+                ret.RadialBlurStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurStart?.Overall, rhs.RadialBlurStart?.Overall), ExceptionExt.Combine(this.RadialBlurStart?.Specific, rhs.RadialBlurStart?.Specific));
+                ret.RadialBlurRampDown = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurRampDown?.Overall, rhs.RadialBlurRampDown?.Overall), ExceptionExt.Combine(this.RadialBlurRampDown?.Specific, rhs.RadialBlurRampDown?.Specific));
+                ret.RadialBlurDownStart = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.RadialBlurDownStart?.Overall, rhs.RadialBlurDownStart?.Overall), ExceptionExt.Combine(this.RadialBlurDownStart?.Specific, rhs.RadialBlurDownStart?.Specific));
+                ret.DepthOfFieldStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldStrength?.Overall, rhs.DepthOfFieldStrength?.Overall), ExceptionExt.Combine(this.DepthOfFieldStrength?.Specific, rhs.DepthOfFieldStrength?.Specific));
+                ret.DepthOfFieldDistance = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldDistance?.Overall, rhs.DepthOfFieldDistance?.Overall), ExceptionExt.Combine(this.DepthOfFieldDistance?.Specific, rhs.DepthOfFieldDistance?.Specific));
+                ret.DepthOfFieldRange = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.DepthOfFieldRange?.Overall, rhs.DepthOfFieldRange?.Overall), ExceptionExt.Combine(this.DepthOfFieldRange?.Specific, rhs.DepthOfFieldRange?.Specific));
+                ret.MotionBlurStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.MotionBlurStrength?.Overall, rhs.MotionBlurStrength?.Overall), ExceptionExt.Combine(this.MotionBlurStrength?.Specific, rhs.MotionBlurStrength?.Specific));
+                ret.HdrEyeAdaptSpeedMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Overall, rhs.HdrEyeAdaptSpeedMult?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedMult?.Specific, rhs.HdrEyeAdaptSpeedMult?.Specific));
+                ret.HdrEyeAdaptSpeedAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Overall, rhs.HdrEyeAdaptSpeedAdd?.Overall), ExceptionExt.Combine(this.HdrEyeAdaptSpeedAdd?.Specific, rhs.HdrEyeAdaptSpeedAdd?.Specific));
+                ret.HdrBloomBlurRadiusMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Overall, rhs.HdrBloomBlurRadiusMult?.Overall), ExceptionExt.Combine(this.HdrBloomBlurRadiusMult?.Specific, rhs.HdrBloomBlurRadiusMult?.Specific));
+                ret.HdrBloomBlurRadiusAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Overall, rhs.HdrBloomBlurRadiusAdd?.Overall), ExceptionExt.Combine(this.HdrBloomBlurRadiusAdd?.Specific, rhs.HdrBloomBlurRadiusAdd?.Specific));
+                ret.HdrBloomThresholdMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomThresholdMult?.Overall, rhs.HdrBloomThresholdMult?.Overall), ExceptionExt.Combine(this.HdrBloomThresholdMult?.Specific, rhs.HdrBloomThresholdMult?.Specific));
+                ret.HdrBloomThresholdAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Overall, rhs.HdrBloomThresholdAdd?.Overall), ExceptionExt.Combine(this.HdrBloomThresholdAdd?.Specific, rhs.HdrBloomThresholdAdd?.Specific));
+                ret.HdrBloomScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomScaleMult?.Overall, rhs.HdrBloomScaleMult?.Overall), ExceptionExt.Combine(this.HdrBloomScaleMult?.Specific, rhs.HdrBloomScaleMult?.Specific));
+                ret.HdrBloomScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrBloomScaleAdd?.Overall, rhs.HdrBloomScaleAdd?.Overall), ExceptionExt.Combine(this.HdrBloomScaleAdd?.Specific, rhs.HdrBloomScaleAdd?.Specific));
+                ret.HdrTargetLumMinMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMinMult?.Overall, rhs.HdrTargetLumMinMult?.Overall), ExceptionExt.Combine(this.HdrTargetLumMinMult?.Specific, rhs.HdrTargetLumMinMult?.Specific));
+                ret.HdrTargetLumMinAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Overall, rhs.HdrTargetLumMinAdd?.Overall), ExceptionExt.Combine(this.HdrTargetLumMinAdd?.Specific, rhs.HdrTargetLumMinAdd?.Specific));
+                ret.HdrTargetLumMaxMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Overall, rhs.HdrTargetLumMaxMult?.Overall), ExceptionExt.Combine(this.HdrTargetLumMaxMult?.Specific, rhs.HdrTargetLumMaxMult?.Specific));
+                ret.HdrTargetLumMaxAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Overall, rhs.HdrTargetLumMaxAdd?.Overall), ExceptionExt.Combine(this.HdrTargetLumMaxAdd?.Specific, rhs.HdrTargetLumMaxAdd?.Specific));
+                ret.HdrSunlightScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSunlightScaleMult?.Overall, rhs.HdrSunlightScaleMult?.Overall), ExceptionExt.Combine(this.HdrSunlightScaleMult?.Specific, rhs.HdrSunlightScaleMult?.Specific));
+                ret.HdrSunlightScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Overall, rhs.HdrSunlightScaleAdd?.Overall), ExceptionExt.Combine(this.HdrSunlightScaleAdd?.Specific, rhs.HdrSunlightScaleAdd?.Specific));
+                ret.HdrSkyScaleMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSkyScaleMult?.Overall, rhs.HdrSkyScaleMult?.Overall), ExceptionExt.Combine(this.HdrSkyScaleMult?.Specific, rhs.HdrSkyScaleMult?.Specific));
+                ret.HdrSkyScaleAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.HdrSkyScaleAdd?.Overall, rhs.HdrSkyScaleAdd?.Overall), ExceptionExt.Combine(this.HdrSkyScaleAdd?.Specific, rhs.HdrSkyScaleAdd?.Specific));
+                ret.Unknown08 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown08?.Overall, rhs.Unknown08?.Overall), ExceptionExt.Combine(this.Unknown08?.Specific, rhs.Unknown08?.Specific));
+                ret.Unknown48 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown48?.Overall, rhs.Unknown48?.Overall), ExceptionExt.Combine(this.Unknown48?.Specific, rhs.Unknown48?.Specific));
+                ret.Unknown09 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown09?.Overall, rhs.Unknown09?.Overall), ExceptionExt.Combine(this.Unknown09?.Specific, rhs.Unknown09?.Specific));
+                ret.Unknown49 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown49?.Overall, rhs.Unknown49?.Overall), ExceptionExt.Combine(this.Unknown49?.Specific, rhs.Unknown49?.Specific));
+                ret.Unknown0A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0A?.Overall, rhs.Unknown0A?.Overall), ExceptionExt.Combine(this.Unknown0A?.Specific, rhs.Unknown0A?.Specific));
+                ret.Unknown4A = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4A?.Overall, rhs.Unknown4A?.Overall), ExceptionExt.Combine(this.Unknown4A?.Specific, rhs.Unknown4A?.Specific));
+                ret.Unknown0B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0B?.Overall, rhs.Unknown0B?.Overall), ExceptionExt.Combine(this.Unknown0B?.Specific, rhs.Unknown0B?.Specific));
+                ret.Unknown4B = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4B?.Overall, rhs.Unknown4B?.Overall), ExceptionExt.Combine(this.Unknown4B?.Specific, rhs.Unknown4B?.Specific));
+                ret.Unknown0C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0C?.Overall, rhs.Unknown0C?.Overall), ExceptionExt.Combine(this.Unknown0C?.Specific, rhs.Unknown0C?.Specific));
+                ret.Unknown4C = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4C?.Overall, rhs.Unknown4C?.Overall), ExceptionExt.Combine(this.Unknown4C?.Specific, rhs.Unknown4C?.Specific));
+                ret.Unknown0D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0D?.Overall, rhs.Unknown0D?.Overall), ExceptionExt.Combine(this.Unknown0D?.Specific, rhs.Unknown0D?.Specific));
+                ret.Unknown4D = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4D?.Overall, rhs.Unknown4D?.Overall), ExceptionExt.Combine(this.Unknown4D?.Specific, rhs.Unknown4D?.Specific));
+                ret.Unknown0E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0E?.Overall, rhs.Unknown0E?.Overall), ExceptionExt.Combine(this.Unknown0E?.Specific, rhs.Unknown0E?.Specific));
+                ret.Unknown4E = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4E?.Overall, rhs.Unknown4E?.Overall), ExceptionExt.Combine(this.Unknown4E?.Specific, rhs.Unknown4E?.Specific));
+                ret.Unknown0F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown0F?.Overall, rhs.Unknown0F?.Overall), ExceptionExt.Combine(this.Unknown0F?.Specific, rhs.Unknown0F?.Specific));
+                ret.Unknown4F = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown4F?.Overall, rhs.Unknown4F?.Overall), ExceptionExt.Combine(this.Unknown4F?.Specific, rhs.Unknown4F?.Specific));
+                ret.Unknown10 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown10?.Overall, rhs.Unknown10?.Overall), ExceptionExt.Combine(this.Unknown10?.Specific, rhs.Unknown10?.Specific));
+                ret.Unknown50 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown50?.Overall, rhs.Unknown50?.Overall), ExceptionExt.Combine(this.Unknown50?.Specific, rhs.Unknown50?.Specific));
+                ret.CinematicSaturationMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicSaturationMult?.Overall, rhs.CinematicSaturationMult?.Overall), ExceptionExt.Combine(this.CinematicSaturationMult?.Specific, rhs.CinematicSaturationMult?.Specific));
+                ret.CinematicSaturationAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicSaturationAdd?.Overall, rhs.CinematicSaturationAdd?.Overall), ExceptionExt.Combine(this.CinematicSaturationAdd?.Specific, rhs.CinematicSaturationAdd?.Specific));
+                ret.CinematicBrightnessMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicBrightnessMult?.Overall, rhs.CinematicBrightnessMult?.Overall), ExceptionExt.Combine(this.CinematicBrightnessMult?.Specific, rhs.CinematicBrightnessMult?.Specific));
+                ret.CinematicBrightnessAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicBrightnessAdd?.Overall, rhs.CinematicBrightnessAdd?.Overall), ExceptionExt.Combine(this.CinematicBrightnessAdd?.Specific, rhs.CinematicBrightnessAdd?.Specific));
+                ret.CinematicContrastMult = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicContrastMult?.Overall, rhs.CinematicContrastMult?.Overall), ExceptionExt.Combine(this.CinematicContrastMult?.Specific, rhs.CinematicContrastMult?.Specific));
+                ret.CinematicContrastAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.CinematicContrastAdd?.Overall, rhs.CinematicContrastAdd?.Overall), ExceptionExt.Combine(this.CinematicContrastAdd?.Specific, rhs.CinematicContrastAdd?.Specific));
+                ret.Unknown14 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown14?.Overall, rhs.Unknown14?.Overall), ExceptionExt.Combine(this.Unknown14?.Specific, rhs.Unknown14?.Specific));
+                ret.Unknown54 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.Unknown54?.Overall, rhs.Unknown54?.Overall), ExceptionExt.Combine(this.Unknown54?.Specific, rhs.Unknown54?.Specific));
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,14 +6927,204 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            public bool Duration;
+            public bool RadialBlurFlags;
+            public bool RadialBlurCenter;
+            public bool DepthOfFieldFlags;
+            public MaskItem<bool, KeyFrame.TranslationMask?> BlurRadius;
+            public MaskItem<bool, KeyFrame.TranslationMask?> DoubleVisionStrength;
+            public MaskItem<bool, ColorFrame.TranslationMask?> TintColor;
+            public MaskItem<bool, ColorFrame.TranslationMask?> FadeColor;
+            public MaskItem<bool, KeyFrame.TranslationMask?> RadialBlurStrength;
+            public MaskItem<bool, KeyFrame.TranslationMask?> RadialBlurRampUp;
+            public MaskItem<bool, KeyFrame.TranslationMask?> RadialBlurStart;
+            public MaskItem<bool, KeyFrame.TranslationMask?> RadialBlurRampDown;
+            public MaskItem<bool, KeyFrame.TranslationMask?> RadialBlurDownStart;
+            public MaskItem<bool, KeyFrame.TranslationMask?> DepthOfFieldStrength;
+            public MaskItem<bool, KeyFrame.TranslationMask?> DepthOfFieldDistance;
+            public MaskItem<bool, KeyFrame.TranslationMask?> DepthOfFieldRange;
+            public MaskItem<bool, KeyFrame.TranslationMask?> MotionBlurStrength;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrEyeAdaptSpeedMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrEyeAdaptSpeedAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomBlurRadiusMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomBlurRadiusAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomThresholdMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomThresholdAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomScaleMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrBloomScaleAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrTargetLumMinMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrTargetLumMinAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrTargetLumMaxMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrTargetLumMaxAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrSunlightScaleMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrSunlightScaleAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrSkyScaleMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> HdrSkyScaleAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown08;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown48;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown09;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown49;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0A;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4A;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0B;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4B;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0C;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4C;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0D;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4D;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0E;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4E;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown0F;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown4F;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown10;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown50;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicSaturationMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicSaturationAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicBrightnessMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicBrightnessAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicContrastMult;
+            public MaskItem<bool, KeyFrame.TranslationMask?> CinematicContrastAdd;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown14;
+            public MaskItem<bool, KeyFrame.TranslationMask?> Unknown54;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Flags = defaultOn;
+                this.Duration = defaultOn;
+                this.RadialBlurFlags = defaultOn;
+                this.RadialBlurCenter = defaultOn;
+                this.DepthOfFieldFlags = defaultOn;
+                this.BlurRadius = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.DoubleVisionStrength = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.TintColor = new MaskItem<bool, ColorFrame.TranslationMask?>(defaultOn, null);
+                this.FadeColor = new MaskItem<bool, ColorFrame.TranslationMask?>(defaultOn, null);
+                this.RadialBlurStrength = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.RadialBlurRampUp = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.RadialBlurStart = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.RadialBlurRampDown = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.RadialBlurDownStart = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.DepthOfFieldStrength = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.DepthOfFieldDistance = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.DepthOfFieldRange = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.MotionBlurStrength = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrEyeAdaptSpeedMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrEyeAdaptSpeedAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomBlurRadiusMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomBlurRadiusAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomThresholdMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomThresholdAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomScaleMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrBloomScaleAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrTargetLumMinMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrTargetLumMinAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrTargetLumMaxMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrTargetLumMaxAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrSunlightScaleMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrSunlightScaleAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrSkyScaleMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.HdrSkyScaleAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown08 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown48 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown09 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown49 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0A = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4A = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0B = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4B = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0C = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4C = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0D = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4D = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0E = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4E = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown0F = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown4F = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown10 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown50 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicSaturationMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicSaturationAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicBrightnessMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicBrightnessAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicContrastMult = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.CinematicContrastAdd = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown14 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.Unknown54 = new MaskItem<bool, KeyFrame.TranslationMask?>(defaultOn, null);
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+                ret.Add((Duration, null));
+                ret.Add((RadialBlurFlags, null));
+                ret.Add((RadialBlurCenter, null));
+                ret.Add((DepthOfFieldFlags, null));
+                ret.Add((BlurRadius?.Overall ?? true, BlurRadius?.Specific?.GetCrystal()));
+                ret.Add((DoubleVisionStrength?.Overall ?? true, DoubleVisionStrength?.Specific?.GetCrystal()));
+                ret.Add((TintColor?.Overall ?? true, TintColor?.Specific?.GetCrystal()));
+                ret.Add((FadeColor?.Overall ?? true, FadeColor?.Specific?.GetCrystal()));
+                ret.Add((RadialBlurStrength?.Overall ?? true, RadialBlurStrength?.Specific?.GetCrystal()));
+                ret.Add((RadialBlurRampUp?.Overall ?? true, RadialBlurRampUp?.Specific?.GetCrystal()));
+                ret.Add((RadialBlurStart?.Overall ?? true, RadialBlurStart?.Specific?.GetCrystal()));
+                ret.Add((RadialBlurRampDown?.Overall ?? true, RadialBlurRampDown?.Specific?.GetCrystal()));
+                ret.Add((RadialBlurDownStart?.Overall ?? true, RadialBlurDownStart?.Specific?.GetCrystal()));
+                ret.Add((DepthOfFieldStrength?.Overall ?? true, DepthOfFieldStrength?.Specific?.GetCrystal()));
+                ret.Add((DepthOfFieldDistance?.Overall ?? true, DepthOfFieldDistance?.Specific?.GetCrystal()));
+                ret.Add((DepthOfFieldRange?.Overall ?? true, DepthOfFieldRange?.Specific?.GetCrystal()));
+                ret.Add((MotionBlurStrength?.Overall ?? true, MotionBlurStrength?.Specific?.GetCrystal()));
+                ret.Add((HdrEyeAdaptSpeedMult?.Overall ?? true, HdrEyeAdaptSpeedMult?.Specific?.GetCrystal()));
+                ret.Add((HdrEyeAdaptSpeedAdd?.Overall ?? true, HdrEyeAdaptSpeedAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomBlurRadiusMult?.Overall ?? true, HdrBloomBlurRadiusMult?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomBlurRadiusAdd?.Overall ?? true, HdrBloomBlurRadiusAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomThresholdMult?.Overall ?? true, HdrBloomThresholdMult?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomThresholdAdd?.Overall ?? true, HdrBloomThresholdAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomScaleMult?.Overall ?? true, HdrBloomScaleMult?.Specific?.GetCrystal()));
+                ret.Add((HdrBloomScaleAdd?.Overall ?? true, HdrBloomScaleAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrTargetLumMinMult?.Overall ?? true, HdrTargetLumMinMult?.Specific?.GetCrystal()));
+                ret.Add((HdrTargetLumMinAdd?.Overall ?? true, HdrTargetLumMinAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrTargetLumMaxMult?.Overall ?? true, HdrTargetLumMaxMult?.Specific?.GetCrystal()));
+                ret.Add((HdrTargetLumMaxAdd?.Overall ?? true, HdrTargetLumMaxAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrSunlightScaleMult?.Overall ?? true, HdrSunlightScaleMult?.Specific?.GetCrystal()));
+                ret.Add((HdrSunlightScaleAdd?.Overall ?? true, HdrSunlightScaleAdd?.Specific?.GetCrystal()));
+                ret.Add((HdrSkyScaleMult?.Overall ?? true, HdrSkyScaleMult?.Specific?.GetCrystal()));
+                ret.Add((HdrSkyScaleAdd?.Overall ?? true, HdrSkyScaleAdd?.Specific?.GetCrystal()));
+                ret.Add((Unknown08?.Overall ?? true, Unknown08?.Specific?.GetCrystal()));
+                ret.Add((Unknown48?.Overall ?? true, Unknown48?.Specific?.GetCrystal()));
+                ret.Add((Unknown09?.Overall ?? true, Unknown09?.Specific?.GetCrystal()));
+                ret.Add((Unknown49?.Overall ?? true, Unknown49?.Specific?.GetCrystal()));
+                ret.Add((Unknown0A?.Overall ?? true, Unknown0A?.Specific?.GetCrystal()));
+                ret.Add((Unknown4A?.Overall ?? true, Unknown4A?.Specific?.GetCrystal()));
+                ret.Add((Unknown0B?.Overall ?? true, Unknown0B?.Specific?.GetCrystal()));
+                ret.Add((Unknown4B?.Overall ?? true, Unknown4B?.Specific?.GetCrystal()));
+                ret.Add((Unknown0C?.Overall ?? true, Unknown0C?.Specific?.GetCrystal()));
+                ret.Add((Unknown4C?.Overall ?? true, Unknown4C?.Specific?.GetCrystal()));
+                ret.Add((Unknown0D?.Overall ?? true, Unknown0D?.Specific?.GetCrystal()));
+                ret.Add((Unknown4D?.Overall ?? true, Unknown4D?.Specific?.GetCrystal()));
+                ret.Add((Unknown0E?.Overall ?? true, Unknown0E?.Specific?.GetCrystal()));
+                ret.Add((Unknown4E?.Overall ?? true, Unknown4E?.Specific?.GetCrystal()));
+                ret.Add((Unknown0F?.Overall ?? true, Unknown0F?.Specific?.GetCrystal()));
+                ret.Add((Unknown4F?.Overall ?? true, Unknown4F?.Specific?.GetCrystal()));
+                ret.Add((Unknown10?.Overall ?? true, Unknown10?.Specific?.GetCrystal()));
+                ret.Add((Unknown50?.Overall ?? true, Unknown50?.Specific?.GetCrystal()));
+                ret.Add((CinematicSaturationMult?.Overall ?? true, CinematicSaturationMult?.Specific?.GetCrystal()));
+                ret.Add((CinematicSaturationAdd?.Overall ?? true, CinematicSaturationAdd?.Specific?.GetCrystal()));
+                ret.Add((CinematicBrightnessMult?.Overall ?? true, CinematicBrightnessMult?.Specific?.GetCrystal()));
+                ret.Add((CinematicBrightnessAdd?.Overall ?? true, CinematicBrightnessAdd?.Specific?.GetCrystal()));
+                ret.Add((CinematicContrastMult?.Overall ?? true, CinematicContrastMult?.Specific?.GetCrystal()));
+                ret.Add((CinematicContrastAdd?.Overall ?? true, CinematicContrastAdd?.Specific?.GetCrystal()));
+                ret.Add((Unknown14?.Overall ?? true, Unknown14?.Specific?.GetCrystal()));
+                ret.Add((Unknown54?.Overall ?? true, Unknown54?.Specific?.GetCrystal()));
+                ret.Add((DNAMDataTypeState, null));
+            }
         }
         #endregion
 
@@ -458,6 +7147,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -520,6 +7213,67 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IImageSpaceAdapterInternal>
     {
+        new ImageSpaceAdapter.Flag Flags { get; set; }
+        new Single Duration { get; set; }
+        new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
+        new P2Float RadialBlurCenter { get; set; }
+        new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
+        new ExtendedList<KeyFrame>? BlurRadius { get; set; }
+        new ExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
+        new ExtendedList<ColorFrame>? TintColor { get; set; }
+        new ExtendedList<ColorFrame>? FadeColor { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurStrength { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurRampUp { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurStart { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurRampDown { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurDownStart { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
+        new ExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
+        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomThresholdMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomThresholdAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMinMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMinAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMaxMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMaxAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrSunlightScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrSunlightScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrSkyScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrSkyScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? Unknown08 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown48 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown09 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown49 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0A { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4A { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0B { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4B { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0C { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4C { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0D { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4D { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0E { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4E { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0F { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4F { get; set; }
+        new ExtendedList<KeyFrame>? Unknown10 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown50 { get; set; }
+        new ExtendedList<KeyFrame>? CinematicSaturationMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicSaturationAdd { get; set; }
+        new ExtendedList<KeyFrame>? CinematicBrightnessMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
+        new ExtendedList<KeyFrame>? CinematicContrastMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
+        new ExtendedList<KeyFrame>? Unknown14 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown54 { get; set; }
+        new ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IImageSpaceAdapterInternal :
@@ -536,6 +7290,67 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
+        ImageSpaceAdapter.Flag Flags { get; }
+        Single Duration { get; }
+        ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
+        P2Float RadialBlurCenter { get; }
+        ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; }
+        IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; }
+        IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; }
+        IReadOnlyList<IColorFrameGetter>? TintColor { get; }
+        IReadOnlyList<IColorFrameGetter>? FadeColor { get; }
+        IReadOnlyList<IKeyFrameGetter>? RadialBlurStrength { get; }
+        IReadOnlyList<IKeyFrameGetter>? RadialBlurRampUp { get; }
+        IReadOnlyList<IKeyFrameGetter>? RadialBlurStart { get; }
+        IReadOnlyList<IKeyFrameGetter>? RadialBlurRampDown { get; }
+        IReadOnlyList<IKeyFrameGetter>? RadialBlurDownStart { get; }
+        IReadOnlyList<IKeyFrameGetter>? DepthOfFieldStrength { get; }
+        IReadOnlyList<IKeyFrameGetter>? DepthOfFieldDistance { get; }
+        IReadOnlyList<IKeyFrameGetter>? DepthOfFieldRange { get; }
+        IReadOnlyList<IKeyFrameGetter>? MotionBlurStrength { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomBlurRadiusMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomBlurRadiusAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomThresholdMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomThresholdAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomScaleMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrBloomScaleAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMinMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMinAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMaxMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMaxAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrSunlightScaleMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrSunlightScaleAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrSkyScaleMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? HdrSkyScaleAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown08 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown48 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown09 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown49 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0A { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4A { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0B { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4B { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0C { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4C { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0D { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4D { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0E { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4E { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown0F { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown4F { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown10 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown50 { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicSaturationMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicSaturationAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicBrightnessMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicBrightnessAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicContrastMult { get; }
+        IReadOnlyList<IKeyFrameGetter>? CinematicContrastAdd { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown14 { get; }
+        IReadOnlyList<IKeyFrameGetter>? Unknown54 { get; }
+        ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -836,6 +7651,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Flags = 6,
+        Duration = 7,
+        RadialBlurFlags = 8,
+        RadialBlurCenter = 9,
+        DepthOfFieldFlags = 10,
+        BlurRadius = 11,
+        DoubleVisionStrength = 12,
+        TintColor = 13,
+        FadeColor = 14,
+        RadialBlurStrength = 15,
+        RadialBlurRampUp = 16,
+        RadialBlurStart = 17,
+        RadialBlurRampDown = 18,
+        RadialBlurDownStart = 19,
+        DepthOfFieldStrength = 20,
+        DepthOfFieldDistance = 21,
+        DepthOfFieldRange = 22,
+        MotionBlurStrength = 23,
+        HdrEyeAdaptSpeedMult = 24,
+        HdrEyeAdaptSpeedAdd = 25,
+        HdrBloomBlurRadiusMult = 26,
+        HdrBloomBlurRadiusAdd = 27,
+        HdrBloomThresholdMult = 28,
+        HdrBloomThresholdAdd = 29,
+        HdrBloomScaleMult = 30,
+        HdrBloomScaleAdd = 31,
+        HdrTargetLumMinMult = 32,
+        HdrTargetLumMinAdd = 33,
+        HdrTargetLumMaxMult = 34,
+        HdrTargetLumMaxAdd = 35,
+        HdrSunlightScaleMult = 36,
+        HdrSunlightScaleAdd = 37,
+        HdrSkyScaleMult = 38,
+        HdrSkyScaleAdd = 39,
+        Unknown08 = 40,
+        Unknown48 = 41,
+        Unknown09 = 42,
+        Unknown49 = 43,
+        Unknown0A = 44,
+        Unknown4A = 45,
+        Unknown0B = 46,
+        Unknown4B = 47,
+        Unknown0C = 48,
+        Unknown4C = 49,
+        Unknown0D = 50,
+        Unknown4D = 51,
+        Unknown0E = 52,
+        Unknown4E = 53,
+        Unknown0F = 54,
+        Unknown4F = 55,
+        Unknown10 = 56,
+        Unknown50 = 57,
+        CinematicSaturationMult = 58,
+        CinematicSaturationAdd = 59,
+        CinematicBrightnessMult = 60,
+        CinematicBrightnessAdd = 61,
+        CinematicContrastMult = 62,
+        CinematicContrastAdd = 63,
+        Unknown14 = 64,
+        Unknown54 = 65,
+        DNAMDataTypeState = 66,
     }
     #endregion
 
@@ -853,9 +7729,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b65ec92e-e1e5-4524-91a3-9dc25d0cafed";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 61;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 67;
 
         public static readonly Type MaskType = typeof(ImageSpaceAdapter.Mask<>);
 
@@ -885,6 +7761,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "FLAGS":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Flags;
+                case "DURATION":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Duration;
+                case "RADIALBLURFLAGS":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurFlags;
+                case "RADIALBLURCENTER":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurCenter;
+                case "DEPTHOFFIELDFLAGS":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
+                case "BLURRADIUS":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.BlurRadius;
+                case "DOUBLEVISIONSTRENGTH":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
+                case "TINTCOLOR":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.TintColor;
+                case "FADECOLOR":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.FadeColor;
+                case "RADIALBLURSTRENGTH":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
+                case "RADIALBLURRAMPUP":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
+                case "RADIALBLURSTART":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
+                case "RADIALBLURRAMPDOWN":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
+                case "RADIALBLURDOWNSTART":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
+                case "DEPTHOFFIELDSTRENGTH":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
+                case "DEPTHOFFIELDDISTANCE":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
+                case "DEPTHOFFIELDRANGE":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
+                case "MOTIONBLURSTRENGTH":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
+                case "HDREYEADAPTSPEEDMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
+                case "HDREYEADAPTSPEEDADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
+                case "HDRBLOOMBLURRADIUSMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
+                case "HDRBLOOMBLURRADIUSADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
+                case "HDRBLOOMTHRESHOLDMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
+                case "HDRBLOOMTHRESHOLDADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
+                case "HDRBLOOMSCALEMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
+                case "HDRBLOOMSCALEADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
+                case "HDRTARGETLUMMINMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
+                case "HDRTARGETLUMMINADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
+                case "HDRTARGETLUMMAXMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
+                case "HDRTARGETLUMMAXADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
+                case "HDRSUNLIGHTSCALEMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
+                case "HDRSUNLIGHTSCALEADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
+                case "HDRSKYSCALEMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
+                case "HDRSKYSCALEADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
+                case "UNKNOWN08":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown08;
+                case "UNKNOWN48":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown48;
+                case "UNKNOWN09":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown09;
+                case "UNKNOWN49":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown49;
+                case "UNKNOWN0A":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0A;
+                case "UNKNOWN4A":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4A;
+                case "UNKNOWN0B":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0B;
+                case "UNKNOWN4B":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4B;
+                case "UNKNOWN0C":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0C;
+                case "UNKNOWN4C":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4C;
+                case "UNKNOWN0D":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0D;
+                case "UNKNOWN4D":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4D;
+                case "UNKNOWN0E":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0E;
+                case "UNKNOWN4E":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4E;
+                case "UNKNOWN0F":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown0F;
+                case "UNKNOWN4F":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown4F;
+                case "UNKNOWN10":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown10;
+                case "UNKNOWN50":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown50;
+                case "CINEMATICSATURATIONMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
+                case "CINEMATICSATURATIONADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
+                case "CINEMATICBRIGHTNESSMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
+                case "CINEMATICBRIGHTNESSADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
+                case "CINEMATICCONTRASTMULT":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
+                case "CINEMATICCONTRASTADD":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
+                case "UNKNOWN14":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown14;
+                case "UNKNOWN54":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.Unknown54;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +7893,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                    return true;
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +7966,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                    return true;
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +8039,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +8111,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                    return "Flags";
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                    return "Duration";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                    return "RadialBlurFlags";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                    return "RadialBlurCenter";
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                    return "DepthOfFieldFlags";
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                    return "BlurRadius";
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                    return "DoubleVisionStrength";
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                    return "TintColor";
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                    return "FadeColor";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                    return "RadialBlurStrength";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                    return "RadialBlurRampUp";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                    return "RadialBlurStart";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                    return "RadialBlurRampDown";
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                    return "RadialBlurDownStart";
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                    return "DepthOfFieldStrength";
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                    return "DepthOfFieldDistance";
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                    return "DepthOfFieldRange";
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                    return "MotionBlurStrength";
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                    return "HdrEyeAdaptSpeedMult";
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                    return "HdrEyeAdaptSpeedAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                    return "HdrBloomBlurRadiusMult";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                    return "HdrBloomBlurRadiusAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                    return "HdrBloomThresholdMult";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                    return "HdrBloomThresholdAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                    return "HdrBloomScaleMult";
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                    return "HdrBloomScaleAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                    return "HdrTargetLumMinMult";
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                    return "HdrTargetLumMinAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                    return "HdrTargetLumMaxMult";
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                    return "HdrTargetLumMaxAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                    return "HdrSunlightScaleMult";
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                    return "HdrSunlightScaleAdd";
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                    return "HdrSkyScaleMult";
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                    return "HdrSkyScaleAdd";
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                    return "Unknown08";
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                    return "Unknown48";
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                    return "Unknown09";
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                    return "Unknown49";
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                    return "Unknown0A";
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                    return "Unknown4A";
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                    return "Unknown0B";
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                    return "Unknown4B";
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                    return "Unknown0C";
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                    return "Unknown4C";
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                    return "Unknown0D";
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                    return "Unknown4D";
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                    return "Unknown0E";
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                    return "Unknown4E";
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                    return "Unknown0F";
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                    return "Unknown4F";
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                    return "Unknown10";
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                    return "Unknown50";
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                    return "CinematicSaturationMult";
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                    return "CinematicSaturationAdd";
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                    return "CinematicBrightnessMult";
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                    return "CinematicBrightnessAdd";
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                    return "CinematicContrastMult";
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                    return "CinematicContrastAdd";
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                    return "Unknown14";
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                    return "Unknown54";
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +8243,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +8315,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +8387,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
             switch (enu)
             {
+                case ImageSpaceAdapter_FieldIndex.Flags:
+                    return typeof(ImageSpaceAdapter.Flag);
+                case ImageSpaceAdapter_FieldIndex.Duration:
+                    return typeof(Single);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
+                    return typeof(ImageSpaceAdapter.RadialBlurFlag);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
+                    return typeof(P2Float);
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
+                    return typeof(ImageSpaceAdapter.DepthOfFieldFlag);
+                case ImageSpaceAdapter_FieldIndex.BlurRadius:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.TintColor:
+                    return typeof(ExtendedList<ColorFrame>);
+                case ImageSpaceAdapter_FieldIndex.FadeColor:
+                    return typeof(ExtendedList<ColorFrame>);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown08:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown48:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown09:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown49:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0A:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4A:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0B:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4B:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0C:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4C:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0D:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4D:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0E:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4E:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown0F:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown4F:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown10:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown50:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown14:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.Unknown54:
+                    return typeof(ExtendedList<KeyFrame>);
+                case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                    return typeof(ImageSpaceAdapter.DNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1004,6 +8558,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IImageSpaceAdapterInternal item)
         {
             ClearPartial();
+            item.Flags = default;
+            item.Duration = default;
+            item.RadialBlurFlags = default;
+            item.RadialBlurCenter = default;
+            item.DepthOfFieldFlags = default;
+            item.BlurRadius = null;
+            item.DoubleVisionStrength = null;
+            item.TintColor = null;
+            item.FadeColor = null;
+            item.RadialBlurStrength = null;
+            item.RadialBlurRampUp = null;
+            item.RadialBlurStart = null;
+            item.RadialBlurRampDown = null;
+            item.RadialBlurDownStart = null;
+            item.DepthOfFieldStrength = null;
+            item.DepthOfFieldDistance = null;
+            item.DepthOfFieldRange = null;
+            item.MotionBlurStrength = null;
+            item.HdrEyeAdaptSpeedMult = null;
+            item.HdrEyeAdaptSpeedAdd = null;
+            item.HdrBloomBlurRadiusMult = null;
+            item.HdrBloomBlurRadiusAdd = null;
+            item.HdrBloomThresholdMult = null;
+            item.HdrBloomThresholdAdd = null;
+            item.HdrBloomScaleMult = null;
+            item.HdrBloomScaleAdd = null;
+            item.HdrTargetLumMinMult = null;
+            item.HdrTargetLumMinAdd = null;
+            item.HdrTargetLumMaxMult = null;
+            item.HdrTargetLumMaxAdd = null;
+            item.HdrSunlightScaleMult = null;
+            item.HdrSunlightScaleAdd = null;
+            item.HdrSkyScaleMult = null;
+            item.HdrSkyScaleAdd = null;
+            item.Unknown08 = null;
+            item.Unknown48 = null;
+            item.Unknown09 = null;
+            item.Unknown49 = null;
+            item.Unknown0A = null;
+            item.Unknown4A = null;
+            item.Unknown0B = null;
+            item.Unknown4B = null;
+            item.Unknown0C = null;
+            item.Unknown4C = null;
+            item.Unknown0D = null;
+            item.Unknown4D = null;
+            item.Unknown0E = null;
+            item.Unknown4E = null;
+            item.Unknown0F = null;
+            item.Unknown4F = null;
+            item.Unknown10 = null;
+            item.Unknown50 = null;
+            item.CinematicSaturationMult = null;
+            item.CinematicSaturationAdd = null;
+            item.CinematicBrightnessMult = null;
+            item.CinematicBrightnessAdd = null;
+            item.CinematicContrastMult = null;
+            item.CinematicContrastAdd = null;
+            item.Unknown14 = null;
+            item.Unknown54 = null;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1161,6 +8776,232 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
+            ret.RadialBlurFlags = item.RadialBlurFlags == rhs.RadialBlurFlags;
+            ret.RadialBlurCenter = item.RadialBlurCenter.Equals(rhs.RadialBlurCenter);
+            ret.DepthOfFieldFlags = item.DepthOfFieldFlags == rhs.DepthOfFieldFlags;
+            ret.BlurRadius = item.BlurRadius.CollectionEqualsHelper(
+                rhs.BlurRadius,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DoubleVisionStrength = item.DoubleVisionStrength.CollectionEqualsHelper(
+                rhs.DoubleVisionStrength,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.TintColor = item.TintColor.CollectionEqualsHelper(
+                rhs.TintColor,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FadeColor = item.FadeColor.CollectionEqualsHelper(
+                rhs.FadeColor,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RadialBlurStrength = item.RadialBlurStrength.CollectionEqualsHelper(
+                rhs.RadialBlurStrength,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RadialBlurRampUp = item.RadialBlurRampUp.CollectionEqualsHelper(
+                rhs.RadialBlurRampUp,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RadialBlurStart = item.RadialBlurStart.CollectionEqualsHelper(
+                rhs.RadialBlurStart,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RadialBlurRampDown = item.RadialBlurRampDown.CollectionEqualsHelper(
+                rhs.RadialBlurRampDown,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RadialBlurDownStart = item.RadialBlurDownStart.CollectionEqualsHelper(
+                rhs.RadialBlurDownStart,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DepthOfFieldStrength = item.DepthOfFieldStrength.CollectionEqualsHelper(
+                rhs.DepthOfFieldStrength,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DepthOfFieldDistance = item.DepthOfFieldDistance.CollectionEqualsHelper(
+                rhs.DepthOfFieldDistance,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DepthOfFieldRange = item.DepthOfFieldRange.CollectionEqualsHelper(
+                rhs.DepthOfFieldRange,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.MotionBlurStrength = item.MotionBlurStrength.CollectionEqualsHelper(
+                rhs.MotionBlurStrength,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrEyeAdaptSpeedMult = item.HdrEyeAdaptSpeedMult.CollectionEqualsHelper(
+                rhs.HdrEyeAdaptSpeedMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrEyeAdaptSpeedAdd = item.HdrEyeAdaptSpeedAdd.CollectionEqualsHelper(
+                rhs.HdrEyeAdaptSpeedAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomBlurRadiusMult = item.HdrBloomBlurRadiusMult.CollectionEqualsHelper(
+                rhs.HdrBloomBlurRadiusMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomBlurRadiusAdd = item.HdrBloomBlurRadiusAdd.CollectionEqualsHelper(
+                rhs.HdrBloomBlurRadiusAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomThresholdMult = item.HdrBloomThresholdMult.CollectionEqualsHelper(
+                rhs.HdrBloomThresholdMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomThresholdAdd = item.HdrBloomThresholdAdd.CollectionEqualsHelper(
+                rhs.HdrBloomThresholdAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomScaleMult = item.HdrBloomScaleMult.CollectionEqualsHelper(
+                rhs.HdrBloomScaleMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrBloomScaleAdd = item.HdrBloomScaleAdd.CollectionEqualsHelper(
+                rhs.HdrBloomScaleAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrTargetLumMinMult = item.HdrTargetLumMinMult.CollectionEqualsHelper(
+                rhs.HdrTargetLumMinMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrTargetLumMinAdd = item.HdrTargetLumMinAdd.CollectionEqualsHelper(
+                rhs.HdrTargetLumMinAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrTargetLumMaxMult = item.HdrTargetLumMaxMult.CollectionEqualsHelper(
+                rhs.HdrTargetLumMaxMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrTargetLumMaxAdd = item.HdrTargetLumMaxAdd.CollectionEqualsHelper(
+                rhs.HdrTargetLumMaxAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrSunlightScaleMult = item.HdrSunlightScaleMult.CollectionEqualsHelper(
+                rhs.HdrSunlightScaleMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrSunlightScaleAdd = item.HdrSunlightScaleAdd.CollectionEqualsHelper(
+                rhs.HdrSunlightScaleAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrSkyScaleMult = item.HdrSkyScaleMult.CollectionEqualsHelper(
+                rhs.HdrSkyScaleMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.HdrSkyScaleAdd = item.HdrSkyScaleAdd.CollectionEqualsHelper(
+                rhs.HdrSkyScaleAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown08 = item.Unknown08.CollectionEqualsHelper(
+                rhs.Unknown08,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown48 = item.Unknown48.CollectionEqualsHelper(
+                rhs.Unknown48,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown09 = item.Unknown09.CollectionEqualsHelper(
+                rhs.Unknown09,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown49 = item.Unknown49.CollectionEqualsHelper(
+                rhs.Unknown49,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0A = item.Unknown0A.CollectionEqualsHelper(
+                rhs.Unknown0A,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4A = item.Unknown4A.CollectionEqualsHelper(
+                rhs.Unknown4A,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0B = item.Unknown0B.CollectionEqualsHelper(
+                rhs.Unknown0B,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4B = item.Unknown4B.CollectionEqualsHelper(
+                rhs.Unknown4B,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0C = item.Unknown0C.CollectionEqualsHelper(
+                rhs.Unknown0C,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4C = item.Unknown4C.CollectionEqualsHelper(
+                rhs.Unknown4C,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0D = item.Unknown0D.CollectionEqualsHelper(
+                rhs.Unknown0D,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4D = item.Unknown4D.CollectionEqualsHelper(
+                rhs.Unknown4D,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0E = item.Unknown0E.CollectionEqualsHelper(
+                rhs.Unknown0E,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4E = item.Unknown4E.CollectionEqualsHelper(
+                rhs.Unknown4E,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown0F = item.Unknown0F.CollectionEqualsHelper(
+                rhs.Unknown0F,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown4F = item.Unknown4F.CollectionEqualsHelper(
+                rhs.Unknown4F,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown10 = item.Unknown10.CollectionEqualsHelper(
+                rhs.Unknown10,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown50 = item.Unknown50.CollectionEqualsHelper(
+                rhs.Unknown50,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicSaturationMult = item.CinematicSaturationMult.CollectionEqualsHelper(
+                rhs.CinematicSaturationMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicSaturationAdd = item.CinematicSaturationAdd.CollectionEqualsHelper(
+                rhs.CinematicSaturationAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicBrightnessMult = item.CinematicBrightnessMult.CollectionEqualsHelper(
+                rhs.CinematicBrightnessMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicBrightnessAdd = item.CinematicBrightnessAdd.CollectionEqualsHelper(
+                rhs.CinematicBrightnessAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicContrastMult = item.CinematicContrastMult.CollectionEqualsHelper(
+                rhs.CinematicContrastMult,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CinematicContrastAdd = item.CinematicContrastAdd.CollectionEqualsHelper(
+                rhs.CinematicContrastAdd,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown14 = item.Unknown14.CollectionEqualsHelper(
+                rhs.Unknown14,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Unknown54 = item.Unknown54.CollectionEqualsHelper(
+                rhs.Unknown54,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,12 +9053,1136 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Duration ?? true)
+            {
+                fg.AppendItem(item.Duration, "Duration");
+            }
+            if (printMask?.RadialBlurFlags ?? true)
+            {
+                fg.AppendItem(item.RadialBlurFlags, "RadialBlurFlags");
+            }
+            if (printMask?.RadialBlurCenter ?? true)
+            {
+                fg.AppendItem(item.RadialBlurCenter, "RadialBlurCenter");
+            }
+            if (printMask?.DepthOfFieldFlags ?? true)
+            {
+                fg.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
+            }
+            if ((printMask?.BlurRadius?.Overall ?? true)
+                && item.BlurRadius.TryGet(out var BlurRadiusItem))
+            {
+                fg.AppendLine("BlurRadius =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in BlurRadiusItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.DoubleVisionStrength?.Overall ?? true)
+                && item.DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+            {
+                fg.AppendLine("DoubleVisionStrength =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in DoubleVisionStrengthItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.TintColor?.Overall ?? true)
+                && item.TintColor.TryGet(out var TintColorItem))
+            {
+                fg.AppendLine("TintColor =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in TintColorItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.FadeColor?.Overall ?? true)
+                && item.FadeColor.TryGet(out var FadeColorItem))
+            {
+                fg.AppendLine("FadeColor =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in FadeColorItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RadialBlurStrength?.Overall ?? true)
+                && item.RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+            {
+                fg.AppendLine("RadialBlurStrength =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in RadialBlurStrengthItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RadialBlurRampUp?.Overall ?? true)
+                && item.RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+            {
+                fg.AppendLine("RadialBlurRampUp =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in RadialBlurRampUpItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RadialBlurStart?.Overall ?? true)
+                && item.RadialBlurStart.TryGet(out var RadialBlurStartItem))
+            {
+                fg.AppendLine("RadialBlurStart =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in RadialBlurStartItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RadialBlurRampDown?.Overall ?? true)
+                && item.RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+            {
+                fg.AppendLine("RadialBlurRampDown =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in RadialBlurRampDownItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.RadialBlurDownStart?.Overall ?? true)
+                && item.RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+            {
+                fg.AppendLine("RadialBlurDownStart =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in RadialBlurDownStartItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
+                && item.DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+            {
+                fg.AppendLine("DepthOfFieldStrength =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in DepthOfFieldStrengthItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
+                && item.DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+            {
+                fg.AppendLine("DepthOfFieldDistance =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in DepthOfFieldDistanceItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.DepthOfFieldRange?.Overall ?? true)
+                && item.DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+            {
+                fg.AppendLine("DepthOfFieldRange =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in DepthOfFieldRangeItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.MotionBlurStrength?.Overall ?? true)
+                && item.MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+            {
+                fg.AppendLine("MotionBlurStrength =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in MotionBlurStrengthItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
+                && item.HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+            {
+                fg.AppendLine("HdrEyeAdaptSpeedMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrEyeAdaptSpeedMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
+                && item.HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+            {
+                fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrEyeAdaptSpeedAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
+                && item.HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+            {
+                fg.AppendLine("HdrBloomBlurRadiusMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomBlurRadiusMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
+                && item.HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+            {
+                fg.AppendLine("HdrBloomBlurRadiusAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomBlurRadiusAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
+                && item.HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+            {
+                fg.AppendLine("HdrBloomThresholdMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomThresholdMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
+                && item.HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+            {
+                fg.AppendLine("HdrBloomThresholdAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomThresholdAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
+                && item.HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+            {
+                fg.AppendLine("HdrBloomScaleMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomScaleMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
+                && item.HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+            {
+                fg.AppendLine("HdrBloomScaleAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrBloomScaleAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
+                && item.HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+            {
+                fg.AppendLine("HdrTargetLumMinMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrTargetLumMinMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
+                && item.HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+            {
+                fg.AppendLine("HdrTargetLumMinAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrTargetLumMinAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
+                && item.HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+            {
+                fg.AppendLine("HdrTargetLumMaxMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrTargetLumMaxMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
+                && item.HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+            {
+                fg.AppendLine("HdrTargetLumMaxAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrTargetLumMaxAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
+                && item.HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+            {
+                fg.AppendLine("HdrSunlightScaleMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrSunlightScaleMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
+                && item.HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+            {
+                fg.AppendLine("HdrSunlightScaleAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrSunlightScaleAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
+                && item.HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+            {
+                fg.AppendLine("HdrSkyScaleMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrSkyScaleMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
+                && item.HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+            {
+                fg.AppendLine("HdrSkyScaleAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in HdrSkyScaleAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown08?.Overall ?? true)
+                && item.Unknown08.TryGet(out var Unknown08Item))
+            {
+                fg.AppendLine("Unknown08 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown08Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown48?.Overall ?? true)
+                && item.Unknown48.TryGet(out var Unknown48Item))
+            {
+                fg.AppendLine("Unknown48 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown48Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown09?.Overall ?? true)
+                && item.Unknown09.TryGet(out var Unknown09Item))
+            {
+                fg.AppendLine("Unknown09 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown09Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown49?.Overall ?? true)
+                && item.Unknown49.TryGet(out var Unknown49Item))
+            {
+                fg.AppendLine("Unknown49 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown49Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0A?.Overall ?? true)
+                && item.Unknown0A.TryGet(out var Unknown0AItem))
+            {
+                fg.AppendLine("Unknown0A =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0AItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4A?.Overall ?? true)
+                && item.Unknown4A.TryGet(out var Unknown4AItem))
+            {
+                fg.AppendLine("Unknown4A =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4AItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0B?.Overall ?? true)
+                && item.Unknown0B.TryGet(out var Unknown0BItem))
+            {
+                fg.AppendLine("Unknown0B =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0BItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4B?.Overall ?? true)
+                && item.Unknown4B.TryGet(out var Unknown4BItem))
+            {
+                fg.AppendLine("Unknown4B =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4BItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0C?.Overall ?? true)
+                && item.Unknown0C.TryGet(out var Unknown0CItem))
+            {
+                fg.AppendLine("Unknown0C =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0CItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4C?.Overall ?? true)
+                && item.Unknown4C.TryGet(out var Unknown4CItem))
+            {
+                fg.AppendLine("Unknown4C =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4CItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0D?.Overall ?? true)
+                && item.Unknown0D.TryGet(out var Unknown0DItem))
+            {
+                fg.AppendLine("Unknown0D =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0DItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4D?.Overall ?? true)
+                && item.Unknown4D.TryGet(out var Unknown4DItem))
+            {
+                fg.AppendLine("Unknown4D =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4DItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0E?.Overall ?? true)
+                && item.Unknown0E.TryGet(out var Unknown0EItem))
+            {
+                fg.AppendLine("Unknown0E =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0EItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4E?.Overall ?? true)
+                && item.Unknown4E.TryGet(out var Unknown4EItem))
+            {
+                fg.AppendLine("Unknown4E =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4EItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown0F?.Overall ?? true)
+                && item.Unknown0F.TryGet(out var Unknown0FItem))
+            {
+                fg.AppendLine("Unknown0F =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown0FItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown4F?.Overall ?? true)
+                && item.Unknown4F.TryGet(out var Unknown4FItem))
+            {
+                fg.AppendLine("Unknown4F =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown4FItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown10?.Overall ?? true)
+                && item.Unknown10.TryGet(out var Unknown10Item))
+            {
+                fg.AppendLine("Unknown10 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown10Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown50?.Overall ?? true)
+                && item.Unknown50.TryGet(out var Unknown50Item))
+            {
+                fg.AppendLine("Unknown50 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown50Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicSaturationMult?.Overall ?? true)
+                && item.CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+            {
+                fg.AppendLine("CinematicSaturationMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicSaturationMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
+                && item.CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+            {
+                fg.AppendLine("CinematicSaturationAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicSaturationAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
+                && item.CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+            {
+                fg.AppendLine("CinematicBrightnessMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicBrightnessMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
+                && item.CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+            {
+                fg.AppendLine("CinematicBrightnessAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicBrightnessAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicContrastMult?.Overall ?? true)
+                && item.CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+            {
+                fg.AppendLine("CinematicContrastMult =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicContrastMultItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.CinematicContrastAdd?.Overall ?? true)
+                && item.CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+            {
+                fg.AppendLine("CinematicContrastAdd =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CinematicContrastAddItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown14?.Overall ?? true)
+                && item.Unknown14.TryGet(out var Unknown14Item))
+            {
+                fg.AppendLine("Unknown14 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown14Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Unknown54?.Overall ?? true)
+                && item.Unknown54.TryGet(out var Unknown54Item))
+            {
+                fg.AppendLine("Unknown54 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in Unknown54Item)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IImageSpaceAdapterGetter item,
             ImageSpaceAdapter.Mask<bool?> checkMask)
         {
+            if (checkMask.BlurRadius?.Overall.HasValue ?? false && checkMask.BlurRadius!.Overall.Value != (item.BlurRadius != null)) return false;
+            if (checkMask.DoubleVisionStrength?.Overall.HasValue ?? false && checkMask.DoubleVisionStrength!.Overall.Value != (item.DoubleVisionStrength != null)) return false;
+            if (checkMask.TintColor?.Overall.HasValue ?? false && checkMask.TintColor!.Overall.Value != (item.TintColor != null)) return false;
+            if (checkMask.FadeColor?.Overall.HasValue ?? false && checkMask.FadeColor!.Overall.Value != (item.FadeColor != null)) return false;
+            if (checkMask.RadialBlurStrength?.Overall.HasValue ?? false && checkMask.RadialBlurStrength!.Overall.Value != (item.RadialBlurStrength != null)) return false;
+            if (checkMask.RadialBlurRampUp?.Overall.HasValue ?? false && checkMask.RadialBlurRampUp!.Overall.Value != (item.RadialBlurRampUp != null)) return false;
+            if (checkMask.RadialBlurStart?.Overall.HasValue ?? false && checkMask.RadialBlurStart!.Overall.Value != (item.RadialBlurStart != null)) return false;
+            if (checkMask.RadialBlurRampDown?.Overall.HasValue ?? false && checkMask.RadialBlurRampDown!.Overall.Value != (item.RadialBlurRampDown != null)) return false;
+            if (checkMask.RadialBlurDownStart?.Overall.HasValue ?? false && checkMask.RadialBlurDownStart!.Overall.Value != (item.RadialBlurDownStart != null)) return false;
+            if (checkMask.DepthOfFieldStrength?.Overall.HasValue ?? false && checkMask.DepthOfFieldStrength!.Overall.Value != (item.DepthOfFieldStrength != null)) return false;
+            if (checkMask.DepthOfFieldDistance?.Overall.HasValue ?? false && checkMask.DepthOfFieldDistance!.Overall.Value != (item.DepthOfFieldDistance != null)) return false;
+            if (checkMask.DepthOfFieldRange?.Overall.HasValue ?? false && checkMask.DepthOfFieldRange!.Overall.Value != (item.DepthOfFieldRange != null)) return false;
+            if (checkMask.MotionBlurStrength?.Overall.HasValue ?? false && checkMask.MotionBlurStrength!.Overall.Value != (item.MotionBlurStrength != null)) return false;
+            if (checkMask.HdrEyeAdaptSpeedMult?.Overall.HasValue ?? false && checkMask.HdrEyeAdaptSpeedMult!.Overall.Value != (item.HdrEyeAdaptSpeedMult != null)) return false;
+            if (checkMask.HdrEyeAdaptSpeedAdd?.Overall.HasValue ?? false && checkMask.HdrEyeAdaptSpeedAdd!.Overall.Value != (item.HdrEyeAdaptSpeedAdd != null)) return false;
+            if (checkMask.HdrBloomBlurRadiusMult?.Overall.HasValue ?? false && checkMask.HdrBloomBlurRadiusMult!.Overall.Value != (item.HdrBloomBlurRadiusMult != null)) return false;
+            if (checkMask.HdrBloomBlurRadiusAdd?.Overall.HasValue ?? false && checkMask.HdrBloomBlurRadiusAdd!.Overall.Value != (item.HdrBloomBlurRadiusAdd != null)) return false;
+            if (checkMask.HdrBloomThresholdMult?.Overall.HasValue ?? false && checkMask.HdrBloomThresholdMult!.Overall.Value != (item.HdrBloomThresholdMult != null)) return false;
+            if (checkMask.HdrBloomThresholdAdd?.Overall.HasValue ?? false && checkMask.HdrBloomThresholdAdd!.Overall.Value != (item.HdrBloomThresholdAdd != null)) return false;
+            if (checkMask.HdrBloomScaleMult?.Overall.HasValue ?? false && checkMask.HdrBloomScaleMult!.Overall.Value != (item.HdrBloomScaleMult != null)) return false;
+            if (checkMask.HdrBloomScaleAdd?.Overall.HasValue ?? false && checkMask.HdrBloomScaleAdd!.Overall.Value != (item.HdrBloomScaleAdd != null)) return false;
+            if (checkMask.HdrTargetLumMinMult?.Overall.HasValue ?? false && checkMask.HdrTargetLumMinMult!.Overall.Value != (item.HdrTargetLumMinMult != null)) return false;
+            if (checkMask.HdrTargetLumMinAdd?.Overall.HasValue ?? false && checkMask.HdrTargetLumMinAdd!.Overall.Value != (item.HdrTargetLumMinAdd != null)) return false;
+            if (checkMask.HdrTargetLumMaxMult?.Overall.HasValue ?? false && checkMask.HdrTargetLumMaxMult!.Overall.Value != (item.HdrTargetLumMaxMult != null)) return false;
+            if (checkMask.HdrTargetLumMaxAdd?.Overall.HasValue ?? false && checkMask.HdrTargetLumMaxAdd!.Overall.Value != (item.HdrTargetLumMaxAdd != null)) return false;
+            if (checkMask.HdrSunlightScaleMult?.Overall.HasValue ?? false && checkMask.HdrSunlightScaleMult!.Overall.Value != (item.HdrSunlightScaleMult != null)) return false;
+            if (checkMask.HdrSunlightScaleAdd?.Overall.HasValue ?? false && checkMask.HdrSunlightScaleAdd!.Overall.Value != (item.HdrSunlightScaleAdd != null)) return false;
+            if (checkMask.HdrSkyScaleMult?.Overall.HasValue ?? false && checkMask.HdrSkyScaleMult!.Overall.Value != (item.HdrSkyScaleMult != null)) return false;
+            if (checkMask.HdrSkyScaleAdd?.Overall.HasValue ?? false && checkMask.HdrSkyScaleAdd!.Overall.Value != (item.HdrSkyScaleAdd != null)) return false;
+            if (checkMask.Unknown08?.Overall.HasValue ?? false && checkMask.Unknown08!.Overall.Value != (item.Unknown08 != null)) return false;
+            if (checkMask.Unknown48?.Overall.HasValue ?? false && checkMask.Unknown48!.Overall.Value != (item.Unknown48 != null)) return false;
+            if (checkMask.Unknown09?.Overall.HasValue ?? false && checkMask.Unknown09!.Overall.Value != (item.Unknown09 != null)) return false;
+            if (checkMask.Unknown49?.Overall.HasValue ?? false && checkMask.Unknown49!.Overall.Value != (item.Unknown49 != null)) return false;
+            if (checkMask.Unknown0A?.Overall.HasValue ?? false && checkMask.Unknown0A!.Overall.Value != (item.Unknown0A != null)) return false;
+            if (checkMask.Unknown4A?.Overall.HasValue ?? false && checkMask.Unknown4A!.Overall.Value != (item.Unknown4A != null)) return false;
+            if (checkMask.Unknown0B?.Overall.HasValue ?? false && checkMask.Unknown0B!.Overall.Value != (item.Unknown0B != null)) return false;
+            if (checkMask.Unknown4B?.Overall.HasValue ?? false && checkMask.Unknown4B!.Overall.Value != (item.Unknown4B != null)) return false;
+            if (checkMask.Unknown0C?.Overall.HasValue ?? false && checkMask.Unknown0C!.Overall.Value != (item.Unknown0C != null)) return false;
+            if (checkMask.Unknown4C?.Overall.HasValue ?? false && checkMask.Unknown4C!.Overall.Value != (item.Unknown4C != null)) return false;
+            if (checkMask.Unknown0D?.Overall.HasValue ?? false && checkMask.Unknown0D!.Overall.Value != (item.Unknown0D != null)) return false;
+            if (checkMask.Unknown4D?.Overall.HasValue ?? false && checkMask.Unknown4D!.Overall.Value != (item.Unknown4D != null)) return false;
+            if (checkMask.Unknown0E?.Overall.HasValue ?? false && checkMask.Unknown0E!.Overall.Value != (item.Unknown0E != null)) return false;
+            if (checkMask.Unknown4E?.Overall.HasValue ?? false && checkMask.Unknown4E!.Overall.Value != (item.Unknown4E != null)) return false;
+            if (checkMask.Unknown0F?.Overall.HasValue ?? false && checkMask.Unknown0F!.Overall.Value != (item.Unknown0F != null)) return false;
+            if (checkMask.Unknown4F?.Overall.HasValue ?? false && checkMask.Unknown4F!.Overall.Value != (item.Unknown4F != null)) return false;
+            if (checkMask.Unknown10?.Overall.HasValue ?? false && checkMask.Unknown10!.Overall.Value != (item.Unknown10 != null)) return false;
+            if (checkMask.Unknown50?.Overall.HasValue ?? false && checkMask.Unknown50!.Overall.Value != (item.Unknown50 != null)) return false;
+            if (checkMask.CinematicSaturationMult?.Overall.HasValue ?? false && checkMask.CinematicSaturationMult!.Overall.Value != (item.CinematicSaturationMult != null)) return false;
+            if (checkMask.CinematicSaturationAdd?.Overall.HasValue ?? false && checkMask.CinematicSaturationAdd!.Overall.Value != (item.CinematicSaturationAdd != null)) return false;
+            if (checkMask.CinematicBrightnessMult?.Overall.HasValue ?? false && checkMask.CinematicBrightnessMult!.Overall.Value != (item.CinematicBrightnessMult != null)) return false;
+            if (checkMask.CinematicBrightnessAdd?.Overall.HasValue ?? false && checkMask.CinematicBrightnessAdd!.Overall.Value != (item.CinematicBrightnessAdd != null)) return false;
+            if (checkMask.CinematicContrastMult?.Overall.HasValue ?? false && checkMask.CinematicContrastMult!.Overall.Value != (item.CinematicContrastMult != null)) return false;
+            if (checkMask.CinematicContrastAdd?.Overall.HasValue ?? false && checkMask.CinematicContrastAdd!.Overall.Value != (item.CinematicContrastAdd != null)) return false;
+            if (checkMask.Unknown14?.Overall.HasValue ?? false && checkMask.Unknown14!.Overall.Value != (item.Unknown14 != null)) return false;
+            if (checkMask.Unknown54?.Overall.HasValue ?? false && checkMask.Unknown54!.Overall.Value != (item.Unknown54 != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1227,6 +10192,232 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceAdapterGetter item,
             ImageSpaceAdapter.Mask<bool> mask)
         {
+            mask.Flags = true;
+            mask.Duration = true;
+            mask.RadialBlurFlags = true;
+            mask.RadialBlurCenter = true;
+            mask.DepthOfFieldFlags = true;
+            if (item.BlurRadius.TryGet(out var BlurRadiusItem))
+            {
+                mask.BlurRadius = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, BlurRadiusItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
+            {
+                mask.DoubleVisionStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DoubleVisionStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.TintColor.TryGet(out var TintColorItem))
+            {
+                mask.TintColor = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ColorFrame.Mask<bool>?>>?>(true, TintColorItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ColorFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.FadeColor.TryGet(out var FadeColorItem))
+            {
+                mask.FadeColor = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ColorFrame.Mask<bool>?>>?>(true, FadeColorItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ColorFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
+            {
+                mask.RadialBlurStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
+            {
+                mask.RadialBlurRampUp = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurRampUpItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.RadialBlurStart.TryGet(out var RadialBlurStartItem))
+            {
+                mask.RadialBlurStart = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurStartItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
+            {
+                mask.RadialBlurRampDown = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurRampDownItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
+            {
+                mask.RadialBlurDownStart = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurDownStartItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
+            {
+                mask.DepthOfFieldStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
+            {
+                mask.DepthOfFieldDistance = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldDistanceItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
+            {
+                mask.DepthOfFieldRange = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldRangeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
+            {
+                mask.MotionBlurStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, MotionBlurStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
+            {
+                mask.HdrEyeAdaptSpeedMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrEyeAdaptSpeedMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
+            {
+                mask.HdrEyeAdaptSpeedAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrEyeAdaptSpeedAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
+            {
+                mask.HdrBloomBlurRadiusMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomBlurRadiusMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
+            {
+                mask.HdrBloomBlurRadiusAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomBlurRadiusAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
+            {
+                mask.HdrBloomThresholdMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomThresholdMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
+            {
+                mask.HdrBloomThresholdAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomThresholdAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
+            {
+                mask.HdrBloomScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
+            {
+                mask.HdrBloomScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
+            {
+                mask.HdrTargetLumMinMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMinMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
+            {
+                mask.HdrTargetLumMinAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMinAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
+            {
+                mask.HdrTargetLumMaxMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMaxMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
+            {
+                mask.HdrTargetLumMaxAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMaxAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
+            {
+                mask.HdrSunlightScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSunlightScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
+            {
+                mask.HdrSunlightScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSunlightScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
+            {
+                mask.HdrSkyScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSkyScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
+            {
+                mask.HdrSkyScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSkyScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown08.TryGet(out var Unknown08Item))
+            {
+                mask.Unknown08 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown08Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown48.TryGet(out var Unknown48Item))
+            {
+                mask.Unknown48 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown48Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown09.TryGet(out var Unknown09Item))
+            {
+                mask.Unknown09 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown09Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown49.TryGet(out var Unknown49Item))
+            {
+                mask.Unknown49 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown49Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0A.TryGet(out var Unknown0AItem))
+            {
+                mask.Unknown0A = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0AItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4A.TryGet(out var Unknown4AItem))
+            {
+                mask.Unknown4A = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4AItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0B.TryGet(out var Unknown0BItem))
+            {
+                mask.Unknown0B = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0BItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4B.TryGet(out var Unknown4BItem))
+            {
+                mask.Unknown4B = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4BItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0C.TryGet(out var Unknown0CItem))
+            {
+                mask.Unknown0C = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0CItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4C.TryGet(out var Unknown4CItem))
+            {
+                mask.Unknown4C = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4CItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0D.TryGet(out var Unknown0DItem))
+            {
+                mask.Unknown0D = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0DItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4D.TryGet(out var Unknown4DItem))
+            {
+                mask.Unknown4D = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4DItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0E.TryGet(out var Unknown0EItem))
+            {
+                mask.Unknown0E = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0EItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4E.TryGet(out var Unknown4EItem))
+            {
+                mask.Unknown4E = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4EItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown0F.TryGet(out var Unknown0FItem))
+            {
+                mask.Unknown0F = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0FItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown4F.TryGet(out var Unknown4FItem))
+            {
+                mask.Unknown4F = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4FItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown10.TryGet(out var Unknown10Item))
+            {
+                mask.Unknown10 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown10Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown50.TryGet(out var Unknown50Item))
+            {
+                mask.Unknown50 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown50Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
+            {
+                mask.CinematicSaturationMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicSaturationMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
+            {
+                mask.CinematicSaturationAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicSaturationAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
+            {
+                mask.CinematicBrightnessMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicBrightnessMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
+            {
+                mask.CinematicBrightnessAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicBrightnessAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
+            {
+                mask.CinematicContrastMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicContrastMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
+            {
+                mask.CinematicContrastAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicContrastAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown14.TryGet(out var Unknown14Item))
+            {
+                mask.Unknown14 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown14Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.Unknown54.TryGet(out var Unknown54Item))
+            {
+                mask.Unknown54 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown54Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +10469,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
+            if (lhs.RadialBlurFlags != rhs.RadialBlurFlags) return false;
+            if (!lhs.RadialBlurCenter.Equals(rhs.RadialBlurCenter)) return false;
+            if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
+            if (!lhs.BlurRadius.SequenceEqual(rhs.BlurRadius)) return false;
+            if (!lhs.DoubleVisionStrength.SequenceEqual(rhs.DoubleVisionStrength)) return false;
+            if (!lhs.TintColor.SequenceEqual(rhs.TintColor)) return false;
+            if (!lhs.FadeColor.SequenceEqual(rhs.FadeColor)) return false;
+            if (!lhs.RadialBlurStrength.SequenceEqual(rhs.RadialBlurStrength)) return false;
+            if (!lhs.RadialBlurRampUp.SequenceEqual(rhs.RadialBlurRampUp)) return false;
+            if (!lhs.RadialBlurStart.SequenceEqual(rhs.RadialBlurStart)) return false;
+            if (!lhs.RadialBlurRampDown.SequenceEqual(rhs.RadialBlurRampDown)) return false;
+            if (!lhs.RadialBlurDownStart.SequenceEqual(rhs.RadialBlurDownStart)) return false;
+            if (!lhs.DepthOfFieldStrength.SequenceEqual(rhs.DepthOfFieldStrength)) return false;
+            if (!lhs.DepthOfFieldDistance.SequenceEqual(rhs.DepthOfFieldDistance)) return false;
+            if (!lhs.DepthOfFieldRange.SequenceEqual(rhs.DepthOfFieldRange)) return false;
+            if (!lhs.MotionBlurStrength.SequenceEqual(rhs.MotionBlurStrength)) return false;
+            if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqual(rhs.HdrEyeAdaptSpeedMult)) return false;
+            if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqual(rhs.HdrEyeAdaptSpeedAdd)) return false;
+            if (!lhs.HdrBloomBlurRadiusMult.SequenceEqual(rhs.HdrBloomBlurRadiusMult)) return false;
+            if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqual(rhs.HdrBloomBlurRadiusAdd)) return false;
+            if (!lhs.HdrBloomThresholdMult.SequenceEqual(rhs.HdrBloomThresholdMult)) return false;
+            if (!lhs.HdrBloomThresholdAdd.SequenceEqual(rhs.HdrBloomThresholdAdd)) return false;
+            if (!lhs.HdrBloomScaleMult.SequenceEqual(rhs.HdrBloomScaleMult)) return false;
+            if (!lhs.HdrBloomScaleAdd.SequenceEqual(rhs.HdrBloomScaleAdd)) return false;
+            if (!lhs.HdrTargetLumMinMult.SequenceEqual(rhs.HdrTargetLumMinMult)) return false;
+            if (!lhs.HdrTargetLumMinAdd.SequenceEqual(rhs.HdrTargetLumMinAdd)) return false;
+            if (!lhs.HdrTargetLumMaxMult.SequenceEqual(rhs.HdrTargetLumMaxMult)) return false;
+            if (!lhs.HdrTargetLumMaxAdd.SequenceEqual(rhs.HdrTargetLumMaxAdd)) return false;
+            if (!lhs.HdrSunlightScaleMult.SequenceEqual(rhs.HdrSunlightScaleMult)) return false;
+            if (!lhs.HdrSunlightScaleAdd.SequenceEqual(rhs.HdrSunlightScaleAdd)) return false;
+            if (!lhs.HdrSkyScaleMult.SequenceEqual(rhs.HdrSkyScaleMult)) return false;
+            if (!lhs.HdrSkyScaleAdd.SequenceEqual(rhs.HdrSkyScaleAdd)) return false;
+            if (!lhs.Unknown08.SequenceEqual(rhs.Unknown08)) return false;
+            if (!lhs.Unknown48.SequenceEqual(rhs.Unknown48)) return false;
+            if (!lhs.Unknown09.SequenceEqual(rhs.Unknown09)) return false;
+            if (!lhs.Unknown49.SequenceEqual(rhs.Unknown49)) return false;
+            if (!lhs.Unknown0A.SequenceEqual(rhs.Unknown0A)) return false;
+            if (!lhs.Unknown4A.SequenceEqual(rhs.Unknown4A)) return false;
+            if (!lhs.Unknown0B.SequenceEqual(rhs.Unknown0B)) return false;
+            if (!lhs.Unknown4B.SequenceEqual(rhs.Unknown4B)) return false;
+            if (!lhs.Unknown0C.SequenceEqual(rhs.Unknown0C)) return false;
+            if (!lhs.Unknown4C.SequenceEqual(rhs.Unknown4C)) return false;
+            if (!lhs.Unknown0D.SequenceEqual(rhs.Unknown0D)) return false;
+            if (!lhs.Unknown4D.SequenceEqual(rhs.Unknown4D)) return false;
+            if (!lhs.Unknown0E.SequenceEqual(rhs.Unknown0E)) return false;
+            if (!lhs.Unknown4E.SequenceEqual(rhs.Unknown4E)) return false;
+            if (!lhs.Unknown0F.SequenceEqual(rhs.Unknown0F)) return false;
+            if (!lhs.Unknown4F.SequenceEqual(rhs.Unknown4F)) return false;
+            if (!lhs.Unknown10.SequenceEqual(rhs.Unknown10)) return false;
+            if (!lhs.Unknown50.SequenceEqual(rhs.Unknown50)) return false;
+            if (!lhs.CinematicSaturationMult.SequenceEqual(rhs.CinematicSaturationMult)) return false;
+            if (!lhs.CinematicSaturationAdd.SequenceEqual(rhs.CinematicSaturationAdd)) return false;
+            if (!lhs.CinematicBrightnessMult.SequenceEqual(rhs.CinematicBrightnessMult)) return false;
+            if (!lhs.CinematicBrightnessAdd.SequenceEqual(rhs.CinematicBrightnessAdd)) return false;
+            if (!lhs.CinematicContrastMult.SequenceEqual(rhs.CinematicContrastMult)) return false;
+            if (!lhs.CinematicContrastAdd.SequenceEqual(rhs.CinematicContrastAdd)) return false;
+            if (!lhs.Unknown14.SequenceEqual(rhs.Unknown14)) return false;
+            if (!lhs.Unknown54.SequenceEqual(rhs.Unknown54)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
         
@@ -1302,6 +10554,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Flags);
+            hash.Add(item.Duration);
+            hash.Add(item.RadialBlurFlags);
+            hash.Add(item.RadialBlurCenter);
+            hash.Add(item.DepthOfFieldFlags);
+            hash.Add(item.BlurRadius);
+            hash.Add(item.DoubleVisionStrength);
+            hash.Add(item.TintColor);
+            hash.Add(item.FadeColor);
+            hash.Add(item.RadialBlurStrength);
+            hash.Add(item.RadialBlurRampUp);
+            hash.Add(item.RadialBlurStart);
+            hash.Add(item.RadialBlurRampDown);
+            hash.Add(item.RadialBlurDownStart);
+            hash.Add(item.DepthOfFieldStrength);
+            hash.Add(item.DepthOfFieldDistance);
+            hash.Add(item.DepthOfFieldRange);
+            hash.Add(item.MotionBlurStrength);
+            hash.Add(item.HdrEyeAdaptSpeedMult);
+            hash.Add(item.HdrEyeAdaptSpeedAdd);
+            hash.Add(item.HdrBloomBlurRadiusMult);
+            hash.Add(item.HdrBloomBlurRadiusAdd);
+            hash.Add(item.HdrBloomThresholdMult);
+            hash.Add(item.HdrBloomThresholdAdd);
+            hash.Add(item.HdrBloomScaleMult);
+            hash.Add(item.HdrBloomScaleAdd);
+            hash.Add(item.HdrTargetLumMinMult);
+            hash.Add(item.HdrTargetLumMinAdd);
+            hash.Add(item.HdrTargetLumMaxMult);
+            hash.Add(item.HdrTargetLumMaxAdd);
+            hash.Add(item.HdrSunlightScaleMult);
+            hash.Add(item.HdrSunlightScaleAdd);
+            hash.Add(item.HdrSkyScaleMult);
+            hash.Add(item.HdrSkyScaleAdd);
+            hash.Add(item.Unknown08);
+            hash.Add(item.Unknown48);
+            hash.Add(item.Unknown09);
+            hash.Add(item.Unknown49);
+            hash.Add(item.Unknown0A);
+            hash.Add(item.Unknown4A);
+            hash.Add(item.Unknown0B);
+            hash.Add(item.Unknown4B);
+            hash.Add(item.Unknown0C);
+            hash.Add(item.Unknown4C);
+            hash.Add(item.Unknown0D);
+            hash.Add(item.Unknown4D);
+            hash.Add(item.Unknown0E);
+            hash.Add(item.Unknown4E);
+            hash.Add(item.Unknown0F);
+            hash.Add(item.Unknown4F);
+            hash.Add(item.Unknown10);
+            hash.Add(item.Unknown50);
+            hash.Add(item.CinematicSaturationMult);
+            hash.Add(item.CinematicSaturationAdd);
+            hash.Add(item.CinematicBrightnessMult);
+            hash.Add(item.CinematicBrightnessAdd);
+            hash.Add(item.CinematicContrastMult);
+            hash.Add(item.CinematicContrastAdd);
+            hash.Add(item.Unknown14);
+            hash.Add(item.Unknown54);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1378,6 +10691,1790 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
+            {
+                item.Duration = rhs.Duration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            {
+                item.RadialBlurFlags = rhs.RadialBlurFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
+            {
+                item.RadialBlurCenter = rhs.RadialBlurCenter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
+            {
+                item.DepthOfFieldFlags = rhs.DepthOfFieldFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                try
+                {
+                    if ((rhs.BlurRadius != null))
+                    {
+                        item.BlurRadius = 
+                            rhs.BlurRadius
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.BlurRadius = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                try
+                {
+                    if ((rhs.DoubleVisionStrength != null))
+                    {
+                        item.DoubleVisionStrength = 
+                            rhs.DoubleVisionStrength
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DoubleVisionStrength = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                try
+                {
+                    if ((rhs.TintColor != null))
+                    {
+                        item.TintColor = 
+                            rhs.TintColor
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ColorFrame>();
+                    }
+                    else
+                    {
+                        item.TintColor = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                try
+                {
+                    if ((rhs.FadeColor != null))
+                    {
+                        item.FadeColor = 
+                            rhs.FadeColor
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ColorFrame>();
+                    }
+                    else
+                    {
+                        item.FadeColor = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                try
+                {
+                    if ((rhs.RadialBlurStrength != null))
+                    {
+                        item.RadialBlurStrength = 
+                            rhs.RadialBlurStrength
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.RadialBlurStrength = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                try
+                {
+                    if ((rhs.RadialBlurRampUp != null))
+                    {
+                        item.RadialBlurRampUp = 
+                            rhs.RadialBlurRampUp
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.RadialBlurRampUp = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                try
+                {
+                    if ((rhs.RadialBlurStart != null))
+                    {
+                        item.RadialBlurStart = 
+                            rhs.RadialBlurStart
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.RadialBlurStart = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                try
+                {
+                    if ((rhs.RadialBlurRampDown != null))
+                    {
+                        item.RadialBlurRampDown = 
+                            rhs.RadialBlurRampDown
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.RadialBlurRampDown = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                try
+                {
+                    if ((rhs.RadialBlurDownStart != null))
+                    {
+                        item.RadialBlurDownStart = 
+                            rhs.RadialBlurDownStart
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.RadialBlurDownStart = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                try
+                {
+                    if ((rhs.DepthOfFieldStrength != null))
+                    {
+                        item.DepthOfFieldStrength = 
+                            rhs.DepthOfFieldStrength
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DepthOfFieldStrength = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                try
+                {
+                    if ((rhs.DepthOfFieldDistance != null))
+                    {
+                        item.DepthOfFieldDistance = 
+                            rhs.DepthOfFieldDistance
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DepthOfFieldDistance = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                try
+                {
+                    if ((rhs.DepthOfFieldRange != null))
+                    {
+                        item.DepthOfFieldRange = 
+                            rhs.DepthOfFieldRange
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.DepthOfFieldRange = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                try
+                {
+                    if ((rhs.MotionBlurStrength != null))
+                    {
+                        item.MotionBlurStrength = 
+                            rhs.MotionBlurStrength
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.MotionBlurStrength = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                try
+                {
+                    if ((rhs.HdrEyeAdaptSpeedMult != null))
+                    {
+                        item.HdrEyeAdaptSpeedMult = 
+                            rhs.HdrEyeAdaptSpeedMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrEyeAdaptSpeedMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                try
+                {
+                    if ((rhs.HdrEyeAdaptSpeedAdd != null))
+                    {
+                        item.HdrEyeAdaptSpeedAdd = 
+                            rhs.HdrEyeAdaptSpeedAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrEyeAdaptSpeedAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                try
+                {
+                    if ((rhs.HdrBloomBlurRadiusMult != null))
+                    {
+                        item.HdrBloomBlurRadiusMult = 
+                            rhs.HdrBloomBlurRadiusMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomBlurRadiusMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                try
+                {
+                    if ((rhs.HdrBloomBlurRadiusAdd != null))
+                    {
+                        item.HdrBloomBlurRadiusAdd = 
+                            rhs.HdrBloomBlurRadiusAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomBlurRadiusAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                try
+                {
+                    if ((rhs.HdrBloomThresholdMult != null))
+                    {
+                        item.HdrBloomThresholdMult = 
+                            rhs.HdrBloomThresholdMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomThresholdMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                try
+                {
+                    if ((rhs.HdrBloomThresholdAdd != null))
+                    {
+                        item.HdrBloomThresholdAdd = 
+                            rhs.HdrBloomThresholdAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomThresholdAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                try
+                {
+                    if ((rhs.HdrBloomScaleMult != null))
+                    {
+                        item.HdrBloomScaleMult = 
+                            rhs.HdrBloomScaleMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomScaleMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                try
+                {
+                    if ((rhs.HdrBloomScaleAdd != null))
+                    {
+                        item.HdrBloomScaleAdd = 
+                            rhs.HdrBloomScaleAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrBloomScaleAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                try
+                {
+                    if ((rhs.HdrTargetLumMinMult != null))
+                    {
+                        item.HdrTargetLumMinMult = 
+                            rhs.HdrTargetLumMinMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrTargetLumMinMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                try
+                {
+                    if ((rhs.HdrTargetLumMinAdd != null))
+                    {
+                        item.HdrTargetLumMinAdd = 
+                            rhs.HdrTargetLumMinAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrTargetLumMinAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                try
+                {
+                    if ((rhs.HdrTargetLumMaxMult != null))
+                    {
+                        item.HdrTargetLumMaxMult = 
+                            rhs.HdrTargetLumMaxMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrTargetLumMaxMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                try
+                {
+                    if ((rhs.HdrTargetLumMaxAdd != null))
+                    {
+                        item.HdrTargetLumMaxAdd = 
+                            rhs.HdrTargetLumMaxAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrTargetLumMaxAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                try
+                {
+                    if ((rhs.HdrSunlightScaleMult != null))
+                    {
+                        item.HdrSunlightScaleMult = 
+                            rhs.HdrSunlightScaleMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrSunlightScaleMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                try
+                {
+                    if ((rhs.HdrSunlightScaleAdd != null))
+                    {
+                        item.HdrSunlightScaleAdd = 
+                            rhs.HdrSunlightScaleAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrSunlightScaleAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                try
+                {
+                    if ((rhs.HdrSkyScaleMult != null))
+                    {
+                        item.HdrSkyScaleMult = 
+                            rhs.HdrSkyScaleMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrSkyScaleMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                try
+                {
+                    if ((rhs.HdrSkyScaleAdd != null))
+                    {
+                        item.HdrSkyScaleAdd = 
+                            rhs.HdrSkyScaleAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.HdrSkyScaleAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                try
+                {
+                    if ((rhs.Unknown08 != null))
+                    {
+                        item.Unknown08 = 
+                            rhs.Unknown08
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown08 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                try
+                {
+                    if ((rhs.Unknown48 != null))
+                    {
+                        item.Unknown48 = 
+                            rhs.Unknown48
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown48 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                try
+                {
+                    if ((rhs.Unknown09 != null))
+                    {
+                        item.Unknown09 = 
+                            rhs.Unknown09
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown09 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                try
+                {
+                    if ((rhs.Unknown49 != null))
+                    {
+                        item.Unknown49 = 
+                            rhs.Unknown49
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown49 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                try
+                {
+                    if ((rhs.Unknown0A != null))
+                    {
+                        item.Unknown0A = 
+                            rhs.Unknown0A
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0A = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                try
+                {
+                    if ((rhs.Unknown4A != null))
+                    {
+                        item.Unknown4A = 
+                            rhs.Unknown4A
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4A = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                try
+                {
+                    if ((rhs.Unknown0B != null))
+                    {
+                        item.Unknown0B = 
+                            rhs.Unknown0B
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0B = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                try
+                {
+                    if ((rhs.Unknown4B != null))
+                    {
+                        item.Unknown4B = 
+                            rhs.Unknown4B
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4B = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                try
+                {
+                    if ((rhs.Unknown0C != null))
+                    {
+                        item.Unknown0C = 
+                            rhs.Unknown0C
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0C = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                try
+                {
+                    if ((rhs.Unknown4C != null))
+                    {
+                        item.Unknown4C = 
+                            rhs.Unknown4C
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4C = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                try
+                {
+                    if ((rhs.Unknown0D != null))
+                    {
+                        item.Unknown0D = 
+                            rhs.Unknown0D
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0D = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                try
+                {
+                    if ((rhs.Unknown4D != null))
+                    {
+                        item.Unknown4D = 
+                            rhs.Unknown4D
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4D = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                try
+                {
+                    if ((rhs.Unknown0E != null))
+                    {
+                        item.Unknown0E = 
+                            rhs.Unknown0E
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0E = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                try
+                {
+                    if ((rhs.Unknown4E != null))
+                    {
+                        item.Unknown4E = 
+                            rhs.Unknown4E
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4E = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                try
+                {
+                    if ((rhs.Unknown0F != null))
+                    {
+                        item.Unknown0F = 
+                            rhs.Unknown0F
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown0F = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                try
+                {
+                    if ((rhs.Unknown4F != null))
+                    {
+                        item.Unknown4F = 
+                            rhs.Unknown4F
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown4F = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                try
+                {
+                    if ((rhs.Unknown10 != null))
+                    {
+                        item.Unknown10 = 
+                            rhs.Unknown10
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown10 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                try
+                {
+                    if ((rhs.Unknown50 != null))
+                    {
+                        item.Unknown50 = 
+                            rhs.Unknown50
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown50 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                try
+                {
+                    if ((rhs.CinematicSaturationMult != null))
+                    {
+                        item.CinematicSaturationMult = 
+                            rhs.CinematicSaturationMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicSaturationMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                try
+                {
+                    if ((rhs.CinematicSaturationAdd != null))
+                    {
+                        item.CinematicSaturationAdd = 
+                            rhs.CinematicSaturationAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicSaturationAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                try
+                {
+                    if ((rhs.CinematicBrightnessMult != null))
+                    {
+                        item.CinematicBrightnessMult = 
+                            rhs.CinematicBrightnessMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicBrightnessMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                try
+                {
+                    if ((rhs.CinematicBrightnessAdd != null))
+                    {
+                        item.CinematicBrightnessAdd = 
+                            rhs.CinematicBrightnessAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicBrightnessAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                try
+                {
+                    if ((rhs.CinematicContrastMult != null))
+                    {
+                        item.CinematicContrastMult = 
+                            rhs.CinematicContrastMult
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicContrastMult = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                try
+                {
+                    if ((rhs.CinematicContrastAdd != null))
+                    {
+                        item.CinematicContrastAdd = 
+                            rhs.CinematicContrastAdd
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.CinematicContrastAdd = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                try
+                {
+                    if ((rhs.Unknown14 != null))
+                    {
+                        item.Unknown14 = 
+                            rhs.Unknown14
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown14 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
+            {
+                errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                try
+                {
+                    if ((rhs.Unknown54 != null))
+                    {
+                        item.Unknown54 = 
+                            rhs.Unknown54
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<KeyFrame>();
+                    }
+                    else
+                    {
+                        item.Unknown54 = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +12617,1215 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<ImageSpaceAdapter.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Duration),
+                    item: item.Duration,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Duration,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            {
+                EnumXmlTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurFlags),
+                    item: item.RadialBlurFlags,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
+            {
+                P2FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurCenter),
+                    item: item.RadialBlurCenter,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
+            {
+                EnumXmlTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthOfFieldFlags),
+                    item: item.DepthOfFieldFlags,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags,
+                    errorMask: errorMask);
+            }
+            if ((item.BlurRadius != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BlurRadius),
+                    item: item.BlurRadius,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.BlurRadius,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.DoubleVisionStrength != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DoubleVisionStrength),
+                    item: item.DoubleVisionStrength,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.TintColor != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
+            {
+                ListXmlTranslation<IColorFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TintColor),
+                    item: item.TintColor,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.TintColor,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor),
+                    transl: (XElement subNode, IColorFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ColorFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.FadeColor != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
+            {
+                ListXmlTranslation<IColorFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.FadeColor),
+                    item: item.FadeColor,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.FadeColor,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor),
+                    transl: (XElement subNode, IColorFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ColorFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RadialBlurStrength != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurStrength),
+                    item: item.RadialBlurStrength,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RadialBlurRampUp != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurRampUp),
+                    item: item.RadialBlurRampUp,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RadialBlurStart != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurStart),
+                    item: item.RadialBlurStart,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RadialBlurRampDown != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurRampDown),
+                    item: item.RadialBlurRampDown,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.RadialBlurDownStart != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadialBlurDownStart),
+                    item: item.RadialBlurDownStart,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.DepthOfFieldStrength != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthOfFieldStrength),
+                    item: item.DepthOfFieldStrength,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.DepthOfFieldDistance != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthOfFieldDistance),
+                    item: item.DepthOfFieldDistance,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.DepthOfFieldRange != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DepthOfFieldRange),
+                    item: item.DepthOfFieldRange,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.MotionBlurStrength != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MotionBlurStrength),
+                    item: item.MotionBlurStrength,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrEyeAdaptSpeedMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrEyeAdaptSpeedMult),
+                    item: item.HdrEyeAdaptSpeedMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrEyeAdaptSpeedAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrEyeAdaptSpeedAdd),
+                    item: item.HdrEyeAdaptSpeedAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomBlurRadiusMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomBlurRadiusMult),
+                    item: item.HdrBloomBlurRadiusMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomBlurRadiusAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomBlurRadiusAdd),
+                    item: item.HdrBloomBlurRadiusAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomThresholdMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomThresholdMult),
+                    item: item.HdrBloomThresholdMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomThresholdAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomThresholdAdd),
+                    item: item.HdrBloomThresholdAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomScaleMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomScaleMult),
+                    item: item.HdrBloomScaleMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrBloomScaleAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrBloomScaleAdd),
+                    item: item.HdrBloomScaleAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrTargetLumMinMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrTargetLumMinMult),
+                    item: item.HdrTargetLumMinMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrTargetLumMinAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrTargetLumMinAdd),
+                    item: item.HdrTargetLumMinAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrTargetLumMaxMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrTargetLumMaxMult),
+                    item: item.HdrTargetLumMaxMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrTargetLumMaxAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrTargetLumMaxAdd),
+                    item: item.HdrTargetLumMaxAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrSunlightScaleMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrSunlightScaleMult),
+                    item: item.HdrSunlightScaleMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrSunlightScaleAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrSunlightScaleAdd),
+                    item: item.HdrSunlightScaleAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrSkyScaleMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrSkyScaleMult),
+                    item: item.HdrSkyScaleMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.HdrSkyScaleAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HdrSkyScaleAdd),
+                    item: item.HdrSkyScaleAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown08 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown08),
+                    item: item.Unknown08,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown08,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown48 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown48),
+                    item: item.Unknown48,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown48,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown09 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown09),
+                    item: item.Unknown09,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown09,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown49 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown49),
+                    item: item.Unknown49,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown49,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0A != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0A),
+                    item: item.Unknown0A,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0A,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4A != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4A),
+                    item: item.Unknown4A,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4A,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0B != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0B),
+                    item: item.Unknown0B,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0B,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4B != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4B),
+                    item: item.Unknown4B,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4B,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0C != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0C),
+                    item: item.Unknown0C,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0C,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4C != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4C),
+                    item: item.Unknown4C,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4C,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0D != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0D),
+                    item: item.Unknown0D,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0D,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4D != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4D),
+                    item: item.Unknown4D,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4D,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0E != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0E),
+                    item: item.Unknown0E,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0E,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4E != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4E),
+                    item: item.Unknown4E,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4E,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown0F != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0F),
+                    item: item.Unknown0F,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0F,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown4F != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown4F),
+                    item: item.Unknown4F,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4F,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown10 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown10),
+                    item: item.Unknown10,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown10,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown50 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown50),
+                    item: item.Unknown50,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown50,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicSaturationMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicSaturationMult),
+                    item: item.CinematicSaturationMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicSaturationAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicSaturationAdd),
+                    item: item.CinematicSaturationAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicBrightnessMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicBrightnessMult),
+                    item: item.CinematicBrightnessMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicBrightnessAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicBrightnessAdd),
+                    item: item.CinematicBrightnessAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicContrastMult != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicContrastMult),
+                    item: item.CinematicContrastMult,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.CinematicContrastAdd != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CinematicContrastAdd),
+                    item: item.CinematicContrastAdd,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown14 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown14),
+                    item: item.Unknown14,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown14,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Unknown54 != null)
+                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
+            {
+                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown54),
+                    item: item.Unknown54,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown54,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54),
+                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ImageSpaceAdapter.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1627,6 +13933,1654 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Flags":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Duration":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Duration);
+                    try
+                    {
+                        item.Duration = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurFlags":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags);
+                    try
+                    {
+                        item.RadialBlurFlags = EnumXmlTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurCenter":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter);
+                    try
+                    {
+                        item.RadialBlurCenter = P2FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthOfFieldFlags":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
+                    try
+                    {
+                        item.DepthOfFieldFlags = EnumXmlTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlurRadius":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var BlurRadiusItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.BlurRadius = BlurRadiusItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.BlurRadius = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DoubleVisionStrength":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var DoubleVisionStrengthItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.DoubleVisionStrength = DoubleVisionStrengthItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.DoubleVisionStrength = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TintColor":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                    try
+                    {
+                        if (ListXmlTranslation<ColorFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var TintColorItem,
+                            transl: LoquiXmlTranslation<ColorFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.TintColor = TintColorItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.TintColor = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FadeColor":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                    try
+                    {
+                        if (ListXmlTranslation<ColorFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var FadeColorItem,
+                            transl: LoquiXmlTranslation<ColorFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.FadeColor = FadeColorItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.FadeColor = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurStrength":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var RadialBlurStrengthItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RadialBlurStrength = RadialBlurStrengthItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.RadialBlurStrength = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurRampUp":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var RadialBlurRampUpItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RadialBlurRampUp = RadialBlurRampUpItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.RadialBlurRampUp = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurStart":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var RadialBlurStartItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RadialBlurStart = RadialBlurStartItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.RadialBlurStart = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurRampDown":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var RadialBlurRampDownItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RadialBlurRampDown = RadialBlurRampDownItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.RadialBlurRampDown = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadialBlurDownStart":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var RadialBlurDownStartItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RadialBlurDownStart = RadialBlurDownStartItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.RadialBlurDownStart = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthOfFieldStrength":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var DepthOfFieldStrengthItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.DepthOfFieldStrength = DepthOfFieldStrengthItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.DepthOfFieldStrength = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthOfFieldDistance":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var DepthOfFieldDistanceItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.DepthOfFieldDistance = DepthOfFieldDistanceItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.DepthOfFieldDistance = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DepthOfFieldRange":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var DepthOfFieldRangeItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.DepthOfFieldRange = DepthOfFieldRangeItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.DepthOfFieldRange = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MotionBlurStrength":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var MotionBlurStrengthItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.MotionBlurStrength = MotionBlurStrengthItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.MotionBlurStrength = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrEyeAdaptSpeedMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrEyeAdaptSpeedMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrEyeAdaptSpeedMult = HdrEyeAdaptSpeedMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrEyeAdaptSpeedMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrEyeAdaptSpeedAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrEyeAdaptSpeedAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrEyeAdaptSpeedAdd = HdrEyeAdaptSpeedAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrEyeAdaptSpeedAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomBlurRadiusMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomBlurRadiusMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomBlurRadiusMult = HdrBloomBlurRadiusMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomBlurRadiusMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomBlurRadiusAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomBlurRadiusAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomBlurRadiusAdd = HdrBloomBlurRadiusAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomBlurRadiusAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomThresholdMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomThresholdMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomThresholdMult = HdrBloomThresholdMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomThresholdMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomThresholdAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomThresholdAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomThresholdAdd = HdrBloomThresholdAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomThresholdAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomScaleMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomScaleMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomScaleMult = HdrBloomScaleMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomScaleMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBloomScaleAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrBloomScaleAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrBloomScaleAdd = HdrBloomScaleAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrBloomScaleAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTargetLumMinMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrTargetLumMinMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrTargetLumMinMult = HdrTargetLumMinMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrTargetLumMinMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTargetLumMinAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrTargetLumMinAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrTargetLumMinAdd = HdrTargetLumMinAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrTargetLumMinAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTargetLumMaxMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrTargetLumMaxMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrTargetLumMaxMult = HdrTargetLumMaxMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrTargetLumMaxMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTargetLumMaxAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrTargetLumMaxAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrTargetLumMaxAdd = HdrTargetLumMaxAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrTargetLumMaxAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrSunlightScaleMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrSunlightScaleMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrSunlightScaleMult = HdrSunlightScaleMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrSunlightScaleMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrSunlightScaleAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrSunlightScaleAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrSunlightScaleAdd = HdrSunlightScaleAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrSunlightScaleAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrSkyScaleMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrSkyScaleMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrSkyScaleMult = HdrSkyScaleMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrSkyScaleMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrSkyScaleAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var HdrSkyScaleAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.HdrSkyScaleAdd = HdrSkyScaleAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.HdrSkyScaleAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown08":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown08Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown08 = Unknown08Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown08 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown48":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown48Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown48 = Unknown48Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown48 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown09":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown09Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown09 = Unknown09Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown09 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown49":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown49Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown49 = Unknown49Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown49 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0A":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0AItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0A = Unknown0AItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0A = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4A":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4AItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4A = Unknown4AItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4A = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0B":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0BItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0B = Unknown0BItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0B = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4B":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4BItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4B = Unknown4BItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4B = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0C":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0CItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0C = Unknown0CItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0C = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4C":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4CItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4C = Unknown4CItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4C = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0D":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0DItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0D = Unknown0DItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0D = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4D":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4DItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4D = Unknown4DItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4D = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0E":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0EItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0E = Unknown0EItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0E = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4E":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4EItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4E = Unknown4EItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4E = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown0F":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown0FItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown0F = Unknown0FItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown0F = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown4F":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown4FItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown4F = Unknown4FItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown4F = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown10":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown10Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown10 = Unknown10Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown10 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown50":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown50Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown50 = Unknown50Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown50 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicSaturationMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicSaturationMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicSaturationMult = CinematicSaturationMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicSaturationMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicSaturationAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicSaturationAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicSaturationAdd = CinematicSaturationAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicSaturationAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicBrightnessMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicBrightnessMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicBrightnessMult = CinematicBrightnessMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicBrightnessMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicBrightnessAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicBrightnessAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicBrightnessAdd = CinematicBrightnessAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicBrightnessAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicContrastMult":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicContrastMultItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicContrastMult = CinematicContrastMultItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicContrastMult = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CinematicContrastAdd":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var CinematicContrastAddItem,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CinematicContrastAdd = CinematicContrastAddItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CinematicContrastAdd = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown14":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown14Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown14 = Unknown14Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown14 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown54":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                    try
+                    {
+                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
+                            node: node,
+                            enumer: out var Unknown54Item,
+                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Unknown54 = Unknown54Item.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Unknown54 = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState);
+                    try
+                    {
+                        item.DNAMDataTypeState = EnumXmlTranslation<ImageSpaceAdapter.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +15667,755 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
 
+        static partial void WriteBinaryCounts1Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts1(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts1Custom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryCounts2Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts2(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryCounts3Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts3(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts3Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IImageSpaceAdapterGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IImageSpaceAdapterGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Duration);
+                ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
+                    writer: writer,
+                    item: item);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Write(
+                    writer,
+                    item.RadialBlurFlags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RadialBlurCenter);
+                ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
+                    writer: writer,
+                    item: item);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Write(
+                    writer,
+                    item.DepthOfFieldFlags,
+                    length: 4);
+                ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts3(
+                    writer: writer,
+                    item: item);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.BlurRadius,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DoubleVisionStrength,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.TintColor,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.FadeColor,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.RadialBlurStrength,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.RadialBlurRampUp,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.RadialBlurStart,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.RadialBlurRampDown,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.RadialBlurDownStart,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DepthOfFieldStrength,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DepthOfFieldDistance,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.DepthOfFieldRange,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.MotionBlurStrength,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrEyeAdaptSpeedMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._0_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrEyeAdaptSpeedAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.@IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomBlurRadiusMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._1_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomBlurRadiusAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.AIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomThresholdMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._2_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomThresholdAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomScaleMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._3_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrBloomScaleAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.CIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrTargetLumMinMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._4_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrTargetLumMinAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrTargetLumMaxMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._5_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrTargetLumMaxAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.EIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrSunlightScaleMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._6_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrSunlightScaleAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.FIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrSkyScaleMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._7_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.HdrSkyScaleAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.GIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown08,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._8_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown48,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.HIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown09,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._9_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown49,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.IIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0A,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._A_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4A,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.JIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0B,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._B_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4B,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0C,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._C_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4C,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0D,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._D_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4D,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.MIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0E,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._E_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4E,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown0F,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._F_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown4F,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.OIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown10,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._10_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown50,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicSaturationMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._11_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicSaturationAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.QIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicBrightnessMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._12_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicBrightnessAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicContrastMult,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._13_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.CinematicContrastAdd,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown14,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes._14_IAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+                writer: writer,
+                items: item.Unknown54,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TIAD),
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item,
@@ -1723,10 +16426,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.IMAD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1781,6 +16484,883 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
         }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IImageSpaceAdapterInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Duration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
+                        frame: dataFrame,
+                        item: item);
+                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.RadialBlurCenter = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
+                        frame: dataFrame,
+                        item: item);
+                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
+                        frame: dataFrame,
+                        item: item);
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BlurRadius = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DoubleVisionStrength = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TintColor = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out ColorFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<ColorFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<ColorFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FadeColor = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out ColorFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<ColorFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<ColorFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RadialBlurStrength = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RadialBlurRampUp = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RadialBlurStart = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RadialBlurRampDown = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RadialBlurDownStart = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DepthOfFieldStrength = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DepthOfFieldDistance = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DepthOfFieldRange = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MotionBlurStrength = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                }
+                case RecordTypeInts._0_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrEyeAdaptSpeedMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                }
+                case RecordTypeInts.@IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrEyeAdaptSpeedAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                }
+                case RecordTypeInts._1_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomBlurRadiusMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                }
+                case RecordTypeInts.AIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomBlurRadiusAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                }
+                case RecordTypeInts._2_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomThresholdMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                }
+                case RecordTypeInts.BIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomThresholdAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                }
+                case RecordTypeInts._3_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomScaleMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                }
+                case RecordTypeInts.CIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrBloomScaleAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                }
+                case RecordTypeInts._4_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrTargetLumMinMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                }
+                case RecordTypeInts.DIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrTargetLumMinAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                }
+                case RecordTypeInts._5_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrTargetLumMaxMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                }
+                case RecordTypeInts.EIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrTargetLumMaxAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                }
+                case RecordTypeInts._6_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrSunlightScaleMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                }
+                case RecordTypeInts.FIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrSunlightScaleAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                }
+                case RecordTypeInts._7_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrSkyScaleMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                }
+                case RecordTypeInts.GIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HdrSkyScaleAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                }
+                case RecordTypeInts._8_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown08 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                }
+                case RecordTypeInts.HIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown48 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                }
+                case RecordTypeInts._9_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown09 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                }
+                case RecordTypeInts.IIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown49 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                }
+                case RecordTypeInts._A_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0A = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                }
+                case RecordTypeInts.JIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4A = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                }
+                case RecordTypeInts._B_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0B = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                }
+                case RecordTypeInts.KIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4B = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                }
+                case RecordTypeInts._C_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0C = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                }
+                case RecordTypeInts.LIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4C = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                }
+                case RecordTypeInts._D_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0D = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                }
+                case RecordTypeInts.MIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4D = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                }
+                case RecordTypeInts._E_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0E = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                }
+                case RecordTypeInts.NIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4E = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                }
+                case RecordTypeInts._F_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown0F = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                }
+                case RecordTypeInts.OIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown4F = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                }
+                case RecordTypeInts._10_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown10 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                }
+                case RecordTypeInts.PIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown50 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                }
+                case RecordTypeInts._11_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicSaturationMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                }
+                case RecordTypeInts.QIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicSaturationAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                }
+                case RecordTypeInts._12_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicBrightnessMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                }
+                case RecordTypeInts.RIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicBrightnessAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                }
+                case RecordTypeInts._13_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicContrastMult = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                }
+                case RecordTypeInts.SIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CinematicContrastAdd = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                }
+                case RecordTypeInts._14_IAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown14 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                }
+                case RecordTypeInts.TIAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Unknown54 = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: (MutagenFrame r, out KeyFrame listSubItem) =>
+                            {
+                                return LoquiBinaryTranslation<KeyFrame>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!);
+                            })
+                        .ToExtendedList<KeyFrame>();
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
+        static partial void FillBinaryCounts1Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
+
+        static partial void FillBinaryCounts2Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
+
+        static partial void FillBinaryCounts3Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
 
     }
 
@@ -1843,6 +17423,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        private int? _DNAMLocation;
+        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public ImageSpaceAdapter.Flag Flags => _Flags_IsSet ? (ImageSpaceAdapter.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region Duration
+        private int _DurationLocation => _DNAMLocation!.Value + 0x4;
+        private bool _Duration_IsSet => _DNAMLocation.HasValue;
+        public Single Duration => _Duration_IsSet ? SpanExt.GetFloat(_data.Slice(_DurationLocation, 4)) : default;
+        #endregion
+        #region Counts1
+        partial void Counts1CustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region RadialBlurFlags
+        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value + 0xC8;
+        private bool _RadialBlurFlags_IsSet => _DNAMLocation.HasValue;
+        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags => _RadialBlurFlags_IsSet ? (ImageSpaceAdapter.RadialBlurFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_RadialBlurFlagsLocation, 0x4)) : default;
+        #endregion
+        #region RadialBlurCenter
+        private int _RadialBlurCenterLocation => _DNAMLocation!.Value + 0xCC;
+        private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
+        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
+        #endregion
+        #region Counts2
+        partial void Counts2CustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region DepthOfFieldFlags
+        private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value + 0xE0;
+        private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
+        #endregion
+        #region Counts3
+        partial void Counts3CustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        public IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; private set; }
+        public IReadOnlyList<IColorFrameGetter>? TintColor { get; private set; }
+        public IReadOnlyList<IColorFrameGetter>? FadeColor { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? RadialBlurStrength { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? RadialBlurRampUp { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? RadialBlurStart { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? RadialBlurRampDown { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? RadialBlurDownStart { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldStrength { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldDistance { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? DepthOfFieldRange { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? MotionBlurStrength { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrEyeAdaptSpeedAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomBlurRadiusMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomBlurRadiusAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomThresholdMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomThresholdAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomScaleMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrBloomScaleAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMinMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMinAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMaxMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrTargetLumMaxAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrSunlightScaleMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrSunlightScaleAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrSkyScaleMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? HdrSkyScaleAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown08 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown48 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown09 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown49 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0A { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4A { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0B { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4B { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0C { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4C { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0D { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4D { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0E { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4E { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown0F { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown4F { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown10 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown50 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicSaturationMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicSaturationAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicBrightnessMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicBrightnessAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicContrastMult { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? CinematicContrastAdd { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown14 { get; private set; }
+        public IReadOnlyList<IKeyFrameGetter>? Unknown54 { get; private set; }
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +17572,692 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.BlurRadius = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.DoubleVisionStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.TintColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 20,
+                        getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.FadeColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 20,
+                        getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RadialBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RadialBlurRampUp = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RadialBlurStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RadialBlurRampDown = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.RadialBlurDownStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.DepthOfFieldStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.DepthOfFieldDistance = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.DepthOfFieldRange = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                }
+                case RecordTypeInts.NAM4:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.MotionBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                }
+                case RecordTypeInts._0_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                }
+                case RecordTypeInts.@IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                }
+                case RecordTypeInts._1_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                }
+                case RecordTypeInts.AIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                }
+                case RecordTypeInts._2_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomThresholdMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                }
+                case RecordTypeInts.BIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomThresholdAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                }
+                case RecordTypeInts._3_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                }
+                case RecordTypeInts.CIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrBloomScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                }
+                case RecordTypeInts._4_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrTargetLumMinMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                }
+                case RecordTypeInts.DIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrTargetLumMinAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                }
+                case RecordTypeInts._5_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrTargetLumMaxMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                }
+                case RecordTypeInts.EIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                }
+                case RecordTypeInts._6_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrSunlightScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                }
+                case RecordTypeInts.FIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrSunlightScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                }
+                case RecordTypeInts._7_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrSkyScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                }
+                case RecordTypeInts.GIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.HdrSkyScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                }
+                case RecordTypeInts._8_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown08 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                }
+                case RecordTypeInts.HIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown48 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                }
+                case RecordTypeInts._9_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown09 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                }
+                case RecordTypeInts.IIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown49 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                }
+                case RecordTypeInts._A_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                }
+                case RecordTypeInts.JIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                }
+                case RecordTypeInts._B_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                }
+                case RecordTypeInts.KIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                }
+                case RecordTypeInts._C_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                }
+                case RecordTypeInts.LIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                }
+                case RecordTypeInts._D_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                }
+                case RecordTypeInts.MIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                }
+                case RecordTypeInts._E_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                }
+                case RecordTypeInts.NIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                }
+                case RecordTypeInts._F_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown0F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                }
+                case RecordTypeInts.OIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown4F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                }
+                case RecordTypeInts._10_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown10 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                }
+                case RecordTypeInts.PIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown50 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                }
+                case RecordTypeInts._11_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicSaturationMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                }
+                case RecordTypeInts.QIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicSaturationAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                }
+                case RecordTypeInts._12_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicBrightnessMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                }
+                case RecordTypeInts.RIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicBrightnessAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                }
+                case RecordTypeInts._13_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicContrastMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                }
+                case RecordTypeInts.SIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.CinematicContrastAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                }
+                case RecordTypeInts._14_IAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown14 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                }
+                case RecordTypeInts.TIAD:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Unknown54 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

@@ -18,10 +18,13 @@ namespace Mutagen.Bethesda.Generation
         public override Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
             var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
-            var recordAttr = node.GetAttribute("recordType");
-            if (recordAttr != null)
+            if (node.TryGetAttribute("recordType", out string recordAttr))
             {
                 data.RecordType = new RecordType(recordAttr);
+            }
+            else if (node.TryGetAttribute("recordTypeHex", out string recordAttrInt))
+            {
+                data.RecordType = new RecordType(Convert.ToInt32(recordAttrInt, 16));
             }
             if (node.TryGetAttribute("overflowRecordType", out var overflow))
             {
@@ -686,7 +689,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     foreach (var type in recordTypes.OrderBy(r => r.Type))
                     {
-                        fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type} = new {nameof(RecordType)}(0x{type.TypeInt:X});");
+                        fg.AppendLine($"public static readonly {nameof(RecordType)} {type.CheckedType} = new {nameof(RecordType)}(0x{type.TypeInt:X});");
                     }
                 }
             }
@@ -701,7 +704,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     foreach (var type in recordTypes.OrderBy(r => r.Type))
                     {
-                        fg.AppendLine($"public const int {type.Type} = 0x{type.TypeInt:X};");
+                        fg.AppendLine($"public const int {type.CheckedType} = 0x{type.TypeInt:X};");
                     }
                 }
             }

@@ -106,6 +106,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="recordTypeHex" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Integer representation used for record type
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="overflowRecordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
@@ -497,7 +504,7 @@
   </xs:complexType>
 
   <xs:complexType name="ZeroType">
-    <xs:attribute name="byteLength" type="xs:byte" use="required" />
+    <xs:attribute name="byteLength" type="xs:int" use="required" />
   </xs:complexType>
 
   <xs:complexType name="CustomLogic">
@@ -505,7 +512,7 @@
       <xs:element name="RecordType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
-    <xs:attribute name="byteLength" type="xs:byte" />
+    <xs:attribute name="byteLength" type="xs:int" />
     <xs:attribute name="recordType" type="xs:string" >
       <xs:annotation>
         <xs:documentation>
@@ -523,7 +530,7 @@
   </xs:complexType>
 
   <xs:complexType name="TransferType">
-    <xs:attribute name="byteLength" type="xs:byte" use="required" />
+    <xs:attribute name="byteLength" type="xs:int" use="required" />
   </xs:complexType>
 
   <xs:simpleType name="FormIDType" final="restriction" >

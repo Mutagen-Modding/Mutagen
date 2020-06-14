@@ -811,6 +811,9 @@
     <Compile Include="Records\Major Records\IdleMarker_LoquiGenerated.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ImageSpaceAdapter.cs">
+      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ImageSpaceAdapter_LoquiGenerated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
@@ -1722,6 +1725,12 @@
       <DependentUpon>SkyrimMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Warmup.cs" />
+    <Compile Include="Records\Major Records\KeyFrame_LoquiGenerated.cs">
+      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorFrame_LoquiGenerated.cs">
+      <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.13" />

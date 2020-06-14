@@ -2,11 +2,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public class RecordTypeInts
     {
+        public const int _9_IAD = 0x44414909;
+        public const int _A_IAD = 0x4441490A;
+        public const int _B_IAD = 0x4441490B;
+        public const int _C_IAD = 0x4441490C;
+        public const int _D_IAD = 0x4441490D;
+        public const int @IAD = 0x44414940;
         public const int AACT = 0x54434141;
         public const int ACBS = 0x53424341;
         public const int ACHR = 0x52484341;
         public const int ACTI = 0x49544341;
         public const int AHCM = 0x4D434841;
+        public const int AIAD = 0x44414941;
         public const int AIDT = 0x54444941;
         public const int ALCA = 0x41434C41;
         public const int ALCH = 0x48434C41;
@@ -45,6 +52,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int ATKR = 0x524B5441;
         public const int ATXT = 0x54585441;
         public const int BAMT = 0x544D4142;
+        public const int BIAD = 0x44414942;
         public const int BIDS = 0x53444942;
         public const int BMCT = 0x54434D42;
         public const int BNAM = 0x4D414E42;
@@ -53,6 +61,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int BPTD = 0x44545042;
         public const int BTXT = 0x54585442;
         public const int CELL = 0x4C4C4543;
+        public const int CIAD = 0x44414943;
         public const int CITC = 0x43544943;
         public const int CLAS = 0x53414C43;
         public const int CLFM = 0x4D464C43;
@@ -86,6 +95,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int DESC = 0x43534544;
         public const int DEST = 0x54534544;
         public const int DFTM = 0x4D544644;
+        public const int DIAD = 0x44414944;
         public const int DIAL = 0x4C414944;
         public const int DLBR = 0x52424C44;
         public const int DMDL = 0x4C444D44;
@@ -103,6 +113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int EFID = 0x44494645;
         public const int EFIT = 0x54494645;
         public const int EFSH = 0x48534645;
+        public const int EIAD = 0x44414945;
         public const int EITM = 0x4D544945;
         public const int ENAM = 0x4D414E45;
         public const int ENCH = 0x48434E45;
@@ -113,6 +124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int EXPL = 0x4C505845;
         public const int EYES = 0x53455945;
         public const int FACT = 0x54434146;
+        public const int FIAD = 0x44414946;
         public const int FLMV = 0x564D4C46;
         public const int FLOR = 0x524F4C46;
         public const int FLST = 0x54534C46;
@@ -124,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int FTST = 0x54535446;
         public const int FULL = 0x4C4C5546;
         public const int FURN = 0x4E525546;
+        public const int GIAD = 0x44414947;
         public const int GLOB = 0x424F4C47;
         public const int GMST = 0x54534D47;
         public const int GNAM = 0x4D414E47;
@@ -136,7 +149,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int HDPT = 0x54504448;
         public const int HEAD = 0x44414548;
         public const int HEDR = 0x52444548;
+        public const int HIAD = 0x44414948;
         public const int HNAM = 0x4D414E48;
+        public const int _0_IAD = 0x44414900;
+        public const int _1_IAD = 0x44414901;
+        public const int _2_IAD = 0x44414902;
+        public const int _3_IAD = 0x44414903;
+        public const int _4_IAD = 0x44414904;
+        public const int _5_IAD = 0x44414905;
+        public const int _6_IAD = 0x44414906;
+        public const int _7_IAD = 0x44414907;
+        public const int _8_IAD = 0x44414908;
+        public const int _E_IAD = 0x4441490E;
+        public const int _F_IAD = 0x4441490F;
+        public const int _10_IAD = 0x44414910;
+        public const int _11_IAD = 0x44414911;
+        public const int _12_IAD = 0x44414912;
+        public const int _13_IAD = 0x44414913;
+        public const int _14_IAD = 0x44414914;
         public const int ICO2 = 0x324F4349;
         public const int ICON = 0x4E4F4349;
         public const int IDLA = 0x414C4449;
@@ -146,6 +176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int IDLF = 0x464C4449;
         public const int IDLM = 0x4D4C4449;
         public const int IDLT = 0x544C4449;
+        public const int IIAD = 0x44414949;
         public const int IMAD = 0x44414D49;
         public const int IMGS = 0x53474D49;
         public const int IMSP = 0x50534D49;
@@ -157,9 +188,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int INTV = 0x56544E49;
         public const int IPDS = 0x53445049;
         public const int JAIL = 0x4C49414A;
+        public const int JIAD = 0x4441494A;
         public const int JNAM = 0x4D414E4A;
         public const int JOUT = 0x54554F4A;
         public const int KEYM = 0x4D59454B;
+        public const int KIAD = 0x4441494B;
         public const int KNAM = 0x4D414E4B;
         public const int KSIZ = 0x5A49534B;
         public const int KWDA = 0x4144574B;
@@ -169,6 +202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int LCTN = 0x4E54434C;
         public const int LENS = 0x534E454C;
         public const int LGTM = 0x4D54474C;
+        public const int LIAD = 0x4441494C;
         public const int LIGH = 0x4847494C;
         public const int LLCT = 0x54434C4C;
         public const int LNAM = 0x4D414E4C;
@@ -189,6 +223,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int MESG = 0x4753454D;
         public const int MGEF = 0x4645474D;
         public const int MHDT = 0x5444484D;
+        public const int MIAD = 0x4441494D;
         public const int MICO = 0x4F43494D;
         public const int MISC = 0x4353494D;
         public const int MNAM = 0x4D414E4D;
@@ -219,6 +254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int NAVI = 0x4956414E;
         public const int NAVM = 0x4D56414E;
         public const int NEXT = 0x5458454E;
+        public const int NIAD = 0x4441494E;
         public const int NNAM = 0x4D414E4E;
         public const int NPC_ = 0x5F43504E;
         public const int NVER = 0x5245564E;
@@ -229,6 +265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int OBND = 0x444E424F;
         public const int OCOR = 0x524F434F;
         public const int OFST = 0x5453464F;
+        public const int OIAD = 0x4441494F;
         public const int ONAM = 0x4D414E4F;
         public const int OTFT = 0x5446544F;
         public const int PACK = 0x4B434150;
@@ -247,6 +284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int PHTN = 0x4E544850;
         public const int PHWT = 0x54574850;
         public const int PHZD = 0x445A4850;
+        public const int PIAD = 0x44414950;
         public const int PKC2 = 0x32434B50;
         public const int PKCU = 0x55434B50;
         public const int PKDT = 0x54444B50;
@@ -264,6 +302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int PROJ = 0x4A4F5250;
         public const int PSDT = 0x54445350;
         public const int PTDA = 0x41445450;
+        public const int QIAD = 0x44414951;
         public const int QNAM = 0x4D414E51;
         public const int QOBJ = 0x4A424F51;
         public const int QSDT = 0x54445351;
@@ -284,6 +323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int REGN = 0x4E474552;
         public const int REVB = 0x42564552;
         public const int RFCT = 0x54434652;
+        public const int RIAD = 0x44414952;
         public const int RNAM = 0x4D414E52;
         public const int RNMV = 0x564D4E52;
         public const int RPLD = 0x444C5052;
@@ -296,6 +336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int SDSC = 0x43534453;
         public const int SHOU = 0x554F4853;
         public const int SHRT = 0x54524853;
+        public const int SIAD = 0x44414953;
         public const int SLCP = 0x50434C53;
         public const int SLGM = 0x4D474C53;
         public const int SNAM = 0x4D414E53;
@@ -320,6 +361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int TACT = 0x54434154;
         public const int TCLT = 0x544C4354;
         public const int TES4 = 0x34534554;
+        public const int TIAD = 0x44414954;
         public const int TIAS = 0x53414954;
         public const int TIFC = 0x43464954;
         public const int TINC = 0x434E4954;

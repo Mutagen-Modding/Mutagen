@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
-                                    fg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
+                                    fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
@@ -2578,7 +2578,7 @@ namespace Mutagen.Bethesda.Generation
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                     foreach (var trigger in gen.Key)
                                     {
-                                        fg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
+                                        fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                     }
                                     using (new BraceWrapper(fg))
                                     {
