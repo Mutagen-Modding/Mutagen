@@ -6044,14 +6044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EffectShaderXmlWriteTranslation);
-        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
-        public static readonly RecordType NAM7_HEADER = new RecordType("NAM7");
-        public static readonly RecordType NAM8_HEADER = new RecordType("NAM8");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = EFSH_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.EFSH;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -11120,29 +11113,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FillTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ParticleShaderTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HolesTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.NAM7_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM7),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MembranePaletteTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.NAM8_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ParticlePaletteTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.NAM9_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM9),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Unknown);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendMode>.Instance.Write(
@@ -11453,7 +11446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EffectShader_Registration.EFSH_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.EFSH),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -11505,7 +11498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
-        public override RecordType RecordType => EffectShader_Registration.EFSH_HEADER;
+        public override RecordType RecordType => RecordTypes.EFSH;
         public static void FillBinaryStructs(
             IEffectShaderInternal item,
             MutagenFrame frame)
@@ -11525,7 +11518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FillTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11533,7 +11526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ParticleShaderTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11541,7 +11534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HolesTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11549,7 +11542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MembranePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11557,7 +11550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ParticlePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11565,7 +11558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -12357,32 +12350,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _FillTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     _ParticleShaderTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     _HolesTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     _MembranePaletteTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     _ParticlePaletteTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;

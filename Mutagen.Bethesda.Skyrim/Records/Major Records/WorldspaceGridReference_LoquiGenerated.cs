@@ -1161,8 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceGridReferenceXmlWriteTranslation);
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType TriggeringRecordType = RNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceGridReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1245,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WorldspaceGridReference_Registration.RNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.RNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1922,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WorldspaceGridReference_Registration.RNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var majorMeta = frame.GetMajorRecord();
                 var nextHeader = majorMeta.RecordType;
-                if (nextHeader.Equals(ANavigationMesh_Registration.NAVM_HEADER))
+                if (nextHeader.Equals(RecordTypes.NAVM))
                 {
                     if (frame.MetaData.InWorldspace)
                     {
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     return true;
                 }
-                else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
+                else if (nextHeader.Equals(RecordTypes.LAND))
                 {
                     if (obj.Landscape != null)
                     {
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                     && (obj.Temporary?.Count ?? 0) == 0
                     && navMeshes.Count == 0
                     && landscape == null) return;
-                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer.Write(obj.UnknownGroupData);
                     if (obj.Persistent?.Count > 0)
                     {
-                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                        using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Skyrim
                         || navMeshes.Count > 0
                         || landscape != null)
                     {
-                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                        using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -360,16 +360,16 @@ namespace Mutagen.Bethesda.Skyrim
             static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
                 new HashSet<RecordType>()
                 {
-                    Cell_Registration.ACHR_HEADER,
-                    Cell_Registration.REFR_HEADER,
-                    APlacedTrap_Registration.PARW_HEADER,
-                    APlacedTrap_Registration.PBAR_HEADER,
-                    APlacedTrap_Registration.PBEA_HEADER,
-                    APlacedTrap_Registration.PCON_HEADER,
-                    APlacedTrap_Registration.PFLA_HEADER,
-                    APlacedTrap_Registration.PHZD_HEADER,
-                    APlacedTrap_Registration.PMIS_HEADER,
-                    APlacedTrap_Registration.PGRE_HEADER,
+                    RecordTypes.ACHR,
+                    RecordTypes.REFR,
+                    RecordTypes.PARW,
+                    RecordTypes.PBAR,
+                    RecordTypes.PBEA,
+                    RecordTypes.PCON,
+                    RecordTypes.PFLA,
+                    RecordTypes.PHZD,
+                    RecordTypes.PMIS,
+                    RecordTypes.PGRE,
                 });
 
             internal bool InsideWorldspace;
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
                 while (!stream.Complete)
                 {
                     var cellMeta = package.MetaData.Constants.GetMajorRecord(stream);
-                    if (cellMeta.RecordType != Cell_Registration.CELL_HEADER) break;
+                    if (cellMeta.RecordType != RecordTypes.CELL) break;
                     ret.Add(stream.Position - startingPos);
                     stream.Position += (int)cellMeta.TotalLength;
                     if (stream.Complete) break;

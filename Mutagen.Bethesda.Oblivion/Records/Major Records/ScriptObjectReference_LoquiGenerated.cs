@@ -983,8 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptObjectReferenceXmlWriteTranslation);
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
-        public static readonly RecordType TriggeringRecordType = SCRO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCRO;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptObjectReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1610,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference,
-                header: recordTypeConverter.ConvertToCustom(ScriptObjectReference_Registration.SCRO_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRO));
         }
 
         public void Write(
@@ -1669,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4F524353: // SCRO
+                case RecordTypeInts.SCRO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1811,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4F524353: // SCRO
+                case RecordTypeInts.SCRO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     _ReferenceLocation = (stream.Position - offset);

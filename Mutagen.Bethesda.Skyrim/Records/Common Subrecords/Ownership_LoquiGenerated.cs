@@ -1074,8 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(OwnershipXmlWriteTranslation);
-        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
-        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1083,8 +1081,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        XOWN_HEADER,
-                        XRNK_HEADER
+                        RecordTypes.XOWN,
+                        RecordTypes.XRNK
                     })
             );
         });
@@ -1778,11 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Owner,
-                header: recordTypeConverter.ConvertToCustom(Ownership_Registration.XOWN_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XOWN));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FactionRank,
-                header: recordTypeConverter.ConvertToCustom(Ownership_Registration.XRNK_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XRNK));
         }
 
         public void Write(
@@ -1830,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E574F58: // XOWN
+                case RecordTypeInts.XOWN:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.Owner) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1839,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ownership_FieldIndex.Owner);
                 }
-                case 0x4B4E5258: // XRNK
+                case RecordTypeInts.XRNK:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.FactionRank) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2003,13 +2001,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E574F58: // XOWN
+                case RecordTypeInts.XOWN:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.Owner) return TryGet<int?>.Failure;
                     _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ownership_FieldIndex.Owner);
                 }
-                case 0x4B4E5258: // XRNK
+                case RecordTypeInts.XRNK:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Ownership_FieldIndex.FactionRank) return TryGet<int?>.Failure;
                     _FactionRankLocation = (stream.Position - offset);

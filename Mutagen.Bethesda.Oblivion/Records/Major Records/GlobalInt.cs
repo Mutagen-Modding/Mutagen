@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
-                using (HeaderExport.Subrecord(writer, GlobalInt_Registration.FLTV_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
                 {
                     writer.Write((float)data);
                 }

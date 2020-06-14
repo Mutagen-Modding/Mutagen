@@ -1201,11 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PackageIdlesXmlWriteTranslation);
-        public static readonly RecordType IDLF_HEADER = new RecordType("IDLF");
-        public static readonly RecordType IDLT_HEADER = new RecordType("IDLT");
-        public static readonly RecordType IDLA_HEADER = new RecordType("IDLA");
-        public static readonly RecordType IDLC_HEADER = new RecordType("IDLC");
-        public static readonly RecordType TriggeringRecordType = IDLF_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IDLF;
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2002,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Type,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(PackageIdles_Registration.IDLF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
             PackageIdlesBinaryWriteTranslation.WriteBinaryTimerSetting(
                 writer: writer,
                 item: item);
@@ -2056,22 +2052,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x464C4449: // IDLF
+                case RecordTypeInts.IDLF:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<PackageIdles.Types>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
                 }
-                case 0x544C4449: // IDLT
+                case RecordTypeInts.IDLT:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryTimerSettingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
                 }
-                case 0x414C4449: // IDLA
-                case 0x434C4449: // IDLC
+                case RecordTypeInts.IDLA:
+                case RecordTypeInts.IDLC:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2253,13 +2249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x464C4449: // IDLF
+                case RecordTypeInts.IDLF:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
                     _TypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
                 }
-                case 0x544C4449: // IDLT
+                case RecordTypeInts.IDLT:
                 {
                     TimerSettingCustomParse(
                         stream: stream,
@@ -2267,8 +2263,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
                 }
-                case 0x414C4449: // IDLA
-                case 0x434C4449: // IDLC
+                case RecordTypeInts.IDLA:
+                case RecordTypeInts.IDLC:
                 {
                     AnimationsCustomParse(
                         stream: stream,

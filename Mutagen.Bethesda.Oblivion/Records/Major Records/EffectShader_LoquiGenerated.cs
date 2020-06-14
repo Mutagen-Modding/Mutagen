@@ -1132,11 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EffectShaderXmlWriteTranslation);
-        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = EFSH_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.EFSH;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2069,12 +2065,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FillTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ParticleShaderTexture,
-                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -2092,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EffectShader_Registration.EFSH_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.EFSH),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2144,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
-        public override RecordType RecordType => EffectShader_Registration.EFSH_HEADER;
+        public override RecordType RecordType => RecordTypes.EFSH;
         public static void FillBinaryStructs(
             IEffectShaderInternal item,
             MutagenFrame frame)
@@ -2164,7 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FillTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2172,7 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ParticleShaderTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2180,7 +2176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.EffectShaderData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.Data);
@@ -2332,17 +2328,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _FillTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     _ParticleShaderTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.Data);

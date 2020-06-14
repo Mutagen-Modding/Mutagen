@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EncounterZoneXmlWriteTranslation);
-        public static readonly RecordType ECZN_HEADER = new RecordType("ECZN");
-        public static readonly RecordType TriggeringRecordType = ECZN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ECZN;
         public static readonly Type BinaryWriteTranslation = typeof(EncounterZoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EncounterZone_Registration.ECZN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ECZN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static EncounterZoneBinaryCreateTranslation Instance = new EncounterZoneBinaryCreateTranslation();
 
-        public override RecordType RecordType => EncounterZone_Registration.ECZN_HEADER;
+        public override RecordType RecordType => RecordTypes.ECZN;
         public static void FillBinaryStructs(
             IEncounterZoneInternal item,
             MutagenFrame frame)

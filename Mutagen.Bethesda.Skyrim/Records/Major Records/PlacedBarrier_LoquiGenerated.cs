@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedBarrierXmlWriteTranslation);
-        public static readonly RecordType PBAR_HEADER = new RecordType("PBAR");
-        public static readonly RecordType TriggeringRecordType = PBAR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PBAR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedBarrierBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedBarrier_Registration.PBAR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PBAR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedBarrierBinaryCreateTranslation Instance = new PlacedBarrierBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedBarrier_Registration.PBAR_HEADER;
+        public override RecordType RecordType => RecordTypes.PBAR;
         public static void FillBinaryStructs(
             IPlacedBarrierInternal item,
             MutagenFrame frame)

@@ -1716,23 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FloraXmlWriteTranslation);
-        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType PFIG_HEADER = new RecordType("PFIG");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
-        public static readonly RecordType TriggeringRecordType = FLOR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FLOR;
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3307,7 +3291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -3327,9 +3311,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Flora_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Flora_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3339,24 +3323,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PNAM,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActivateTextOverride,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.RNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Ingredient,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PFIG));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HarvestSound,
-                header: recordTypeConverter.ConvertToCustom(Flora_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             if (item.Production.TryGet(out var ProductionItem))
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)ProductionItem).BinaryWriteTranslator).Write(
@@ -3373,7 +3357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Flora_Registration.FLOR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FLOR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3425,7 +3409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FloraBinaryCreateTranslation Instance = new FloraBinaryCreateTranslation();
 
-        public override RecordType RecordType => Flora_Registration.FLOR_HEADER;
+        public override RecordType RecordType => RecordTypes.FLOR;
         public static void FillBinaryStructs(
             IFloraInternal item,
             MutagenFrame frame)
@@ -3445,17 +3429,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3464,43 +3448,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Flora_Registration.KSIZ_HEADER,
-                            triggeringRecord: Flora_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.PNAM);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActivateTextOverride = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3508,13 +3492,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateTextOverride);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.FNAM);
                 }
-                case 0x47494650: // PFIG
+                case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3522,7 +3506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HarvestSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3530,7 +3514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.HarvestSound);
                 }
-                case 0x43504650: // PFPC
+                case RecordTypeInts.PFPC:
                 {
                     item.Production = Mutagen.Bethesda.Skyrim.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Production);
@@ -3719,22 +3703,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3742,9 +3726,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -3752,45 +3736,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Flora_Registration.KSIZ_HEADER,
-                        subrecordType: Flora_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.PNAM);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _ActivateTextOverrideLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateTextOverride);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.FNAM);
                 }
-                case 0x47494650: // PFIG
+                case RecordTypeInts.PFIG:
                 {
                     _IngredientLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _HarvestSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.HarvestSound);
                 }
-                case 0x43504650: // PFPC
+                case RecordTypeInts.PFPC:
                 {
                     _ProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Production);

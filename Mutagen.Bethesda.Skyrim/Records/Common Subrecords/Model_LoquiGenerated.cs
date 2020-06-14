@@ -1081,9 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ModelXmlWriteTranslation);
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODS_HEADER = new RecordType("MODS");
-        public static readonly RecordType TriggeringRecordType = MODL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1795,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
-                recordType: recordTypeConverter.ConvertToCustom(Model_Registration.MODS_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.MODS),
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, RecordTypeConverter? conv) =>
                 {
@@ -1857,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x53444F4D: // MODS
+                case RecordTypeInts.MODS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlternateTextures = 
@@ -2008,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x53444F4D: // MODS
+                case RecordTypeInts.MODS:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();

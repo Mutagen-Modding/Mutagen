@@ -1135,10 +1135,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PackageDataTopicXmlWriteTranslation);
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
-        public static readonly RecordType TPIC_HEADER = new RecordType("TPIC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1146,8 +1142,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        BNAM_HEADER,
-                        PNAM_HEADER
+                        RecordTypes.BNAM,
+                        RecordTypes.PNAM
                     })
             );
         });

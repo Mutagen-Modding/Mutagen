@@ -1380,8 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CellLightingXmlWriteTranslation);
-        public static readonly RecordType XCLL_HEADER = new RecordType("XCLL");
-        public static readonly RecordType TriggeringRecordType = XCLL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XCLL;
         public static readonly Type BinaryWriteTranslation = typeof(CellLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1471,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XCLL)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2366,7 +2365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CellLighting_Registration.XCLL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XCLL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

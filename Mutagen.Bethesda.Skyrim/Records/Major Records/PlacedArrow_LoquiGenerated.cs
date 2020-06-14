@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedArrowXmlWriteTranslation);
-        public static readonly RecordType PARW_HEADER = new RecordType("PARW");
-        public static readonly RecordType TriggeringRecordType = PARW_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PARW;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedArrowBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedArrow_Registration.PARW_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PARW),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedArrowBinaryCreateTranslation Instance = new PlacedArrowBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedArrow_Registration.PARW_HEADER;
+        public override RecordType RecordType => RecordTypes.PARW;
         public static void FillBinaryStructs(
             IPlacedArrowInternal item,
             MutagenFrame frame)

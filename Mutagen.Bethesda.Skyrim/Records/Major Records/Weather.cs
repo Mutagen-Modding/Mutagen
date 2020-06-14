@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 WeatherAmbientColors Parse()
                 {
                     var subMeta = frame.ReadSubrecord();
-                    if (subMeta.RecordType != Weather_Registration.DALC_HEADER)
+                    if (subMeta.RecordType != RecordTypes.DALC)
                     {
                         throw new ArgumentException();
                     }
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                     || HasAny(xSpeeds))
                 {
                     // Write YSpeeds
-                    using (HeaderExport.Subrecord(writer, Weather_Registration.RNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.RNAM))
                     {
                         for (int i = 0; i < ySpeeds.Length; i++)
                         {
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
 
                     // Write XSpeeds
-                    using (HeaderExport.Subrecord(writer, Weather_Registration.QNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.QNAM))
                     {
                         for (int i = 0; i < xSpeeds.Length; i++)
                         {
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Write colors
                 if (colors.Any(a => a != null))
                 {
-                    using (HeaderExport.Subrecord(writer, Weather_Registration.PNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.PNAM))
                     {
                         for (int i = 0; i < colors.Length; i++)
                         {
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Write alphas
                 if (alphas.Any(a => a != null))
                 {
-                    using (HeaderExport.Subrecord(writer, Weather_Registration.JNAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.JNAM))
                     {
                         for (int i = 0; i < alphas.Length; i++)
                         {
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!any) return;
 
-                using (HeaderExport.Subrecord(writer, Weather_Registration.NAM1_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.NAM1))
                 {
                     uint raw = 0;
                     uint index = 1;
@@ -355,19 +355,19 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 if (!item.DirectionalAmbientLightingColors.TryGet(out var colors)) return;
-                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {
                     colors.Sunrise.WriteToBinary(writer);
                 }
-                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {
                     colors.Day.WriteToBinary(writer);
                 }
-                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {
                     colors.Sunset.WriteToBinary(writer);
                 }
-                using (HeaderExport.Subrecord(writer, Weather_Registration.DALC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
                 {
                     colors.Night.WriteToBinary(writer);
                 }

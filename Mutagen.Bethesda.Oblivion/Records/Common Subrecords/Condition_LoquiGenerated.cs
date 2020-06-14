@@ -1352,8 +1352,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ConditionXmlWriteTranslation);
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1361,8 +1359,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        CTDA_HEADER,
-                        CTDT_HEADER
+                        RecordTypes.CTDA,
+                        RecordTypes.CTDT
                     })
             );
         });
@@ -1454,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CTDA)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2317,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CTDA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

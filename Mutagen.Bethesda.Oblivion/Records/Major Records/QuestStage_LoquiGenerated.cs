@@ -1161,14 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestStageXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType QSDT_HEADER = new RecordType("QSDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType TriggeringRecordType = INDX_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1907,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Stage,
-                header: recordTypeConverter.ConvertToCustom(QuestStage_Registration.INDX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILogEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.LogEntries,
@@ -1966,19 +1959,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
-                case 0x54445351: // QSDT
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                case 0x4D414E43: // CNAM
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.QSDT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LogEntry>.Instance.Parse(
@@ -2147,18 +2140,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
                     _StageLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
-                case 0x54445351: // QSDT
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
-                case 0x4D414E43: // CNAM
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.QSDT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
                         stream: stream,

@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (stream.Complete) return;
             var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
-            if (subMeta.RecordType != Road_Registration.PGRP_HEADER) return;
+            if (subMeta.RecordType != RecordTypes.PGRP) return;
             stream.Position += subMeta.HeaderLength;
             var pointBytes = stream.ReadMemory(subMeta.ContentLength);
             subMeta = _package.MetaData.Constants.GetSubrecord(stream);

@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoundOutputModelXmlWriteTranslation);
-        public static readonly RecordType SOPM_HEADER = new RecordType("SOPM");
-        public static readonly RecordType TriggeringRecordType = SOPM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SOPM;
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SoundOutputModel_Registration.SOPM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SOPM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SoundOutputModelBinaryCreateTranslation Instance = new SoundOutputModelBinaryCreateTranslation();
 
-        public override RecordType RecordType => SoundOutputModel_Registration.SOPM_HEADER;
+        public override RecordType RecordType => RecordTypes.SOPM;
         public static void FillBinaryStructs(
             ISoundOutputModelInternal item,
             MutagenFrame frame)

@@ -947,9 +947,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ASpellXmlWriteTranslation);
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -957,9 +954,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        LVSP_HEADER,
-                        SHOU_HEADER,
-                        SPEL_HEADER
+                        RecordTypes.LVSP,
+                        RecordTypes.SHOU,
+                        RecordTypes.SPEL
                     })
             );
         });

@@ -1103,8 +1103,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LeveledNpcEntryXmlWriteTranslation);
-        public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
-        public static readonly RecordType COED_HEADER = new RecordType("COED");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1112,8 +1110,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        LVLO_HEADER,
-                        COED_HEADER
+                        RecordTypes.LVLO,
+                        RecordTypes.COED
                     })
             );
         });
@@ -1941,13 +1939,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return TryGet<int?>.Failure;
                     item.Data = Mutagen.Bethesda.Skyrim.LeveledNpcEntryData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.Data);
                 }
-                case 0x44454F43: // COED
+                case RecordTypeInts.COED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
                     item.ExtraData = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
@@ -2111,13 +2109,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return TryGet<int?>.Failure;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.Data);
                 }
-                case 0x44454F43: // COED
+                case RecordTypeInts.COED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
                     _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos);

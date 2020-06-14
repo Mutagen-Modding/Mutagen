@@ -1066,9 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IconsXmlWriteTranslation);
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
-        public static readonly RecordType TriggeringRecordType = ICON_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ICON;
         public static readonly Type BinaryWriteTranslation = typeof(IconsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1749,12 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LargeIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Icons_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SmallIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Icons_Registration.MICO_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MICO),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1803,7 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Icons_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1812,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Icons_FieldIndex.LargeIconFilename);
                 }
-                case 0x4F43494D: // MICO
+                case RecordTypeInts.MICO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1970,13 +1968,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Icons_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
                     _LargeIconFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Icons_FieldIndex.LargeIconFilename);
                 }
-                case 0x4F43494D: // MICO
+                case RecordTypeInts.MICO:
                 {
                     _SmallIconFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Icons_FieldIndex.SmallIconFilename);

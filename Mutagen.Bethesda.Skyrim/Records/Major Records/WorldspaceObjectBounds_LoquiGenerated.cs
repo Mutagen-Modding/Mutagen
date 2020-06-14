@@ -1060,8 +1060,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceObjectBoundsXmlWriteTranslation);
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1069,8 +1067,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        NAM0_HEADER,
-                        NAM9_HEADER
+                        RecordTypes.NAM0,
+                        RecordTypes.NAM9
                     })
             );
         });
@@ -1824,7 +1822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return TryGet<int?>.Failure;
                     WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMinCustom(
@@ -1832,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Min);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return TryGet<int?>.Failure;
                     WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMaxCustom(
@@ -2004,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return TryGet<int?>.Failure;
                     MinCustomParse(
@@ -2013,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Min);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return TryGet<int?>.Failure;
                     MaxCustomParse(

@@ -950,8 +950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ATopicReferenceXmlWriteTranslation);
-        public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
-        public static readonly RecordType TriggeringRecordType = PDTO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PDTO;
         public static readonly Type BinaryWriteTranslation = typeof(ATopicReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1539,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ATopicReference_Registration.PDTO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PDTO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
             }

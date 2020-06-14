@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ArtObjectXmlWriteTranslation);
-        public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
-        public static readonly RecordType TriggeringRecordType = ARTO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ARTO;
         public static readonly Type BinaryWriteTranslation = typeof(ArtObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ArtObject_Registration.ARTO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ARTO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArtObjectBinaryCreateTranslation Instance = new ArtObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => ArtObject_Registration.ARTO_HEADER;
+        public override RecordType RecordType => RecordTypes.ARTO;
         public static void FillBinaryStructs(
             IArtObjectInternal item,
             MutagenFrame frame)

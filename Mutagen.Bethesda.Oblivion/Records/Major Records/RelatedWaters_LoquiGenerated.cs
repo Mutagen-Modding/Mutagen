@@ -1122,8 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RelatedWatersXmlWriteTranslation);
-        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType TriggeringRecordType = GNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GNAM;
         public static readonly Type BinaryWriteTranslation = typeof(RelatedWatersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1207,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RelatedWaters_Registration.GNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.GNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1857,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RelatedWaters_Registration.GNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

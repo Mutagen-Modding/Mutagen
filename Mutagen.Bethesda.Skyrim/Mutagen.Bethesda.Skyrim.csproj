@@ -1707,6 +1707,8 @@
       <DependentUpon>ModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Skyrim.cs" />
+    <Compile Include="Records\RecordTypeInts.cs" />
+    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Records\SkyrimMajorRecord.cs">
       <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
     </Compile>

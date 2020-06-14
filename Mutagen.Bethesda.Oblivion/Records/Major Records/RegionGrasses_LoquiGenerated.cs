@@ -1074,9 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionGrassesXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType RDGS_HEADER = new RecordType("RDGS");
-        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionGrassesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1776,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
-                recordType: recordTypeConverter.ConvertToCustom(RegionGrasses_Registration.RDGS_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDGS),
                 transl: (MutagenWriter subWriter, IFormLink<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -1841,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x53474452: // RDGS
+                case RecordTypeInts.RDGS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
@@ -1987,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x53474452: // RDGS
+                case RecordTypeInts.RDGS:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

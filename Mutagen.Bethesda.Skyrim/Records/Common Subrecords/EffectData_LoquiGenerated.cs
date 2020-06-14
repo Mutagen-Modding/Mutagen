@@ -1109,8 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EffectDataXmlWriteTranslation);
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType TriggeringRecordType = EFIT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.EFIT;
         public static readonly Type BinaryWriteTranslation = typeof(EffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(EffectData_Registration.EFIT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.EFIT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1837,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EffectData_Registration.EFIT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.EFIT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

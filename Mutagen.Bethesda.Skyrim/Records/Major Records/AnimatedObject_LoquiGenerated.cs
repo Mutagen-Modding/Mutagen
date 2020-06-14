@@ -1097,10 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AnimatedObjectXmlWriteTranslation);
-        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType TriggeringRecordType = ANIO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ANIO;
         public static readonly Type BinaryWriteTranslation = typeof(AnimatedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2003,7 +2000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UnloadEvent,
-                header: recordTypeConverter.ConvertToCustom(AnimatedObject_Registration.BNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -2014,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AnimatedObject_Registration.ANIO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ANIO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2066,7 +2063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => AnimatedObject_Registration.ANIO_HEADER;
+        public override RecordType RecordType => RecordTypes.ANIO;
         public static void FillBinaryStructs(
             IAnimatedObjectInternal item,
             MutagenFrame frame)
@@ -2086,14 +2083,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnloadEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2246,7 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2254,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _UnloadEventLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.UnloadEvent);

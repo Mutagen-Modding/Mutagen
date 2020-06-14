@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Generation
                     if (loquiGen.TryGetFieldData(out var data)
                         && data.MarkerType.HasValue)
                     {
-                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER)) {{ }}");
+                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
                     }
                     var needsHeaderWrite = false;
                     if (NeedsHeaderProcessing(loquiGen))

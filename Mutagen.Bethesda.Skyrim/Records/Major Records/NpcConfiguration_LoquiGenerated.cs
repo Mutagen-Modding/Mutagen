@@ -1476,8 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcConfigurationXmlWriteTranslation);
-        public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
-        public static readonly RecordType TriggeringRecordType = ACBS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ACBS;
         public static readonly Type BinaryWriteTranslation = typeof(NpcConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1569,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(NpcConfiguration_Registration.ACBS_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.ACBS)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2584,7 +2583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NpcConfiguration_Registration.ACBS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ACBS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

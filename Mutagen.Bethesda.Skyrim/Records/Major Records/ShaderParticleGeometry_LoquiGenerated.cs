@@ -1636,10 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ShaderParticleGeometryXmlWriteTranslation);
-        public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType TriggeringRecordType = SPGD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SPGD;
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2984,7 +2981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3024,7 +3021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ParticleTexture,
-                header: recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -3035,7 +3032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ShaderParticleGeometry_Registration.SPGD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SPGD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3087,7 +3084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ShaderParticleGeometryBinaryCreateTranslation Instance = new ShaderParticleGeometryBinaryCreateTranslation();
 
-        public override RecordType RecordType => ShaderParticleGeometry_Registration.SPGD_HEADER;
+        public override RecordType RecordType => RecordTypes.SPGD;
         public static void FillBinaryStructs(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame)
@@ -3107,7 +3104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3130,7 +3127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3338,7 +3335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
@@ -3348,7 +3345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _ParticleTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);

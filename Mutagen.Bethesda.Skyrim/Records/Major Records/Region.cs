@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
             {
                 var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
-                while (rdat.Equals(Region_Registration.RDAT_HEADER))
+                while (rdat.Equals(RecordTypes.RDAT))
                 {
                     ParseRegionData(frame, item);
                     if (frame.Complete) break;
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int len = rdatFrame.Header.TotalLength;
                 var subMeta = frame.Reader.GetSubrecord(offset: len);
                 var recType = subMeta.RecordType;
-                if (recType == RegionData_Registration.ICON_HEADER)
+                if (recType == RecordTypes.ICON)
                 {
                     len += subMeta.TotalLength;
                     // Skip icon subrecord for now
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int offset)
             {
                 var rdat = this._package.MetaData.Constants.GetSubrecord(stream);
-                while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
+                while (rdat.RecordType.Equals(RecordTypes.RDAT))
                 {
                     ParseRegionData(stream, offset);
                     if (stream.Complete) break;
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var contentMeta = this._package.MetaData.Constants.GetSubrecord(stream);
                     var recType = contentMeta.RecordType;
-                    if (recType == Region_Registration.ICON_HEADER)
+                    if (recType == RecordTypes.ICON)
                     {
                         var totalLen = contentMeta.TotalLength;
                         len += totalLen;

@@ -1696,16 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PackageBranchXmlWriteTranslation);
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CITC_HEADER = new RecordType("CITC");
-        public static readonly RecordType PRCB_HEADER = new RecordType("PRCB");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType PKC2_HEADER = new RecordType("PKC2");
-        public static readonly RecordType PFO2_HEADER = new RecordType("PFO2");
-        public static readonly RecordType PFOR_HEADER = new RecordType("PFOR");
-        public static readonly RecordType TriggeringRecordType = ANAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ANAM;
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2995,14 +2986,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BranchType,
-                header: recordTypeConverter.ConvertToCustom(PackageBranch_Registration.ANAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             PackageBranchBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
             if (item.Root.TryGet(out var RootItem))
             {
-                using (HeaderExport.Subrecord(writer, PackageBranch_Registration.PRCB_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.PRCB))
                 {
                     ((PackageRootBinaryWriteTranslation)((IBinaryItem)RootItem).BinaryWriteTranslator).Write(
                         item: RootItem,
@@ -3013,17 +3004,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ProcedureType,
-                header: recordTypeConverter.ConvertToCustom(PackageBranch_Registration.PNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<PackageBranch.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(PackageBranch_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Byte>.Instance.WritePerItem(
                 writer: writer,
                 items: item.DataInputIndices,
-                recordType: recordTypeConverter.ConvertToCustom(PackageBranch_Registration.PKC2_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
                 transl: ByteBinaryTranslation.Instance.Write);
             PackageBranchBinaryWriteTranslation.WriteBinaryFlagsOverride(
                 writer: writer,
@@ -3031,7 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
                 writer: writer,
                 items: item.Unknown,
-                recordType: recordTypeConverter.ConvertToCustom(PackageBranch_Registration.PFOR_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                 transl: ByteArrayBinaryTranslation.Instance.Write);
         }
 
@@ -3080,7 +3071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3089,21 +3080,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
                 }
-                case 0x41445443: // CTDA
-                case 0x43544943: // CITC
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
                 }
-                case 0x42435250: // PRCB
+                case RecordTypeInts.PRCB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.Root = Mutagen.Bethesda.Skyrim.PackageRoot.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ProcedureType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3111,34 +3102,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
                 }
-                case 0x32434B50: // PKC2
+                case RecordTypeInts.PKC2:
                 {
                     item.DataInputIndices.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Byte>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: PackageBranch_Registration.PKC2_HEADER,
+                            triggeringRecord: RecordTypes.PKC2,
                             transl: ByteBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
                 }
-                case 0x324F4650: // PFO2
+                case RecordTypeInts.PFO2:
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryFlagsOverrideCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
                 }
-                case 0x524F4650: // PFOR
+                case RecordTypeInts.PFOR:
                 {
                     item.Unknown.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: PackageBranch_Registration.PFOR_HEADER,
+                            triggeringRecord: RecordTypes.PFOR,
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
                 }
@@ -3328,14 +3319,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
                     _BranchTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
                 }
-                case 0x41445443: // CTDA
-                case 0x43544943: // CITC
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
                     ConditionsCustomParse(
                         stream: stream,
@@ -3345,7 +3336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
                 }
-                case 0x42435250: // PRCB
+                case RecordTypeInts.PRCB:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     this.Root = PackageRootBinaryOverlay.PackageRootFactory(
@@ -3354,17 +3345,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _ProcedureTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
                 }
-                case 0x32434B50: // PKC2
+                case RecordTypeInts.PKC2:
                 {
                     this.DataInputIndices = BinaryOverlayList<Byte>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3379,7 +3370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
                 }
-                case 0x324F4650: // PFO2
+                case RecordTypeInts.PFO2:
                 {
                     FlagsOverrideCustomParse(
                         stream,
@@ -3387,7 +3378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset);
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
                 }
-                case 0x524F4650: // PFOR
+                case RecordTypeInts.PFOR:
                 {
                     this.Unknown = BinaryOverlayList<ReadOnlyMemorySlice<Byte>>.FactoryByArray(
                         mem: stream.RemainingMemory,

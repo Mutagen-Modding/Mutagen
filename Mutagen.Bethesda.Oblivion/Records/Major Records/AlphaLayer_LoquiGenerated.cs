@@ -991,9 +991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AlphaLayerXmlWriteTranslation);
-        public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
-        public static readonly RecordType VTXT_HEADER = new RecordType("VTXT");
-        public static readonly RecordType TriggeringRecordType = ATXT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ATXT;
         public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("BTXT"),
@@ -1641,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AlphaLayerData,
-                header: recordTypeConverter.ConvertToCustom(AlphaLayer_Registration.VTXT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VTXT));
         }
 
         public void Write(
@@ -1694,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54585456: // VTXT
+                case RecordTypeInts.VTXT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -1832,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54585456: // VTXT
+                case RecordTypeInts.VTXT:
                 {
                     _AlphaLayerDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);

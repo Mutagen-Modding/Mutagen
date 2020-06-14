@@ -1159,10 +1159,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TintLayerXmlWriteTranslation);
-        public static readonly RecordType TINI_HEADER = new RecordType("TINI");
-        public static readonly RecordType TINC_HEADER = new RecordType("TINC");
-        public static readonly RecordType TINV_HEADER = new RecordType("TINV");
-        public static readonly RecordType TIAS_HEADER = new RecordType("TIAS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1170,10 +1166,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        TINI_HEADER,
-                        TINC_HEADER,
-                        TINV_HEADER,
-                        TIAS_HEADER
+                        RecordTypes.TINI,
+                        RecordTypes.TINC,
+                        RecordTypes.TINV,
+                        RecordTypes.TIAS
                     })
             );
         });
@@ -1955,21 +1951,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(TintLayer_Registration.TINI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(TintLayer_Registration.TINC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINC));
             FloatBinaryTranslation.Write(
                 writer: writer,
                 item: item.InterpolationValue,
                 integerType: FloatIntegerType.UInt,
                 multiplier: 1,
-                header: recordTypeConverter.ConvertToCustom(TintLayer_Registration.TINV_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINV));
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Preset,
-                header: recordTypeConverter.ConvertToCustom(TintLayer_Registration.TIAS_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TIAS));
         }
 
         public void Write(
@@ -2017,21 +2013,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x494E4954: // TINI
+                case RecordTypeInts.TINI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
                 }
-                case 0x434E4954: // TINC
+                case RecordTypeInts.TINC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
                 }
-                case 0x564E4954: // TINV
+                case RecordTypeInts.TINV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2041,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         multiplier: 1);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
                 }
-                case 0x53414954: // TIAS
+                case RecordTypeInts.TIAS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2206,25 +2202,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x494E4954: // TINI
+                case RecordTypeInts.TINI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Index);
                 }
-                case 0x434E4954: // TINC
+                case RecordTypeInts.TINC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Color) return TryGet<int?>.Failure;
                     _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.Color);
                 }
-                case 0x564E4954: // TINV
+                case RecordTypeInts.TINV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return TryGet<int?>.Failure;
                     _InterpolationValueLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
                 }
-                case 0x53414954: // TIAS
+                case RecordTypeInts.TIAS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.Preset) return TryGet<int?>.Failure;
                     _PresetLocation = (stream.Position - offset);

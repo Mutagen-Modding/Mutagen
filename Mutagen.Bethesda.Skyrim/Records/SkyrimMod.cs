@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (group.Records.Count == 0) return;
                 Stream[] streams = new Stream[group.Records.Count + 1];
                 byte[] groupBytes = new byte[GameConstants.Skyrim.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
                 {
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var subBlocks = block.SubBlocks;
                 Stream[] streams = new Stream[(subBlocks?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Skyrim.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
                 {
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     MasterReferences = masters
                 };
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
                 {
                     stream.Position += 8;
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Skyrim
                     MasterReferences = masters
                 };
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         using (HeaderExport.Header(
                             writer: writer,
-                            record: Worldspace_Registration.WRLD_HEADER,
+                            record: RecordTypes.WRLD,
                             type: ObjectType.Record))
                         {
                             WorldspaceBinaryWriteTranslation.WriteEmbedded(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                     var worldGroupTrib = new MemoryTributary();
                     var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
-                    worldGroupWriter.Write(Group_Registration.GRUP_HEADER.TypeInt);
+                    worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
                     worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
                         worldGroupWriter,
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var items = block.Items;
                 Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
                 {
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 };
                 Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
                 {
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var cuts = group.Records.Cut(CutCount).ToArray();
                 Stream[] subStreams = new Stream[cuts.Length + 1];
                 byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
-                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
+                BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
                 var bundle = new WritingBundle(GameConstants.Oblivion)
                 {

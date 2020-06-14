@@ -983,8 +983,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlaceXmlWriteTranslation);
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -992,8 +990,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        CELL_HEADER,
-                        WRLD_HEADER
+                        RecordTypes.CELL,
+                        RecordTypes.WRLD
                     })
             );
         });

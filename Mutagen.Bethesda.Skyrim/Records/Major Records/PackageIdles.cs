@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 3; i++)
                 {
                     var subRecord = frame.GetSubrecordFrame();
-                    if (subRecord.Header.RecordType == PackageIdles_Registration.IDLC_HEADER)
+                    if (subRecord.Header.RecordType == RecordTypes.IDLC)
                     {
                         // Counter start
                         if (subRecord.Content.Length != 1)
@@ -43,14 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
                         count = subRecord.Content[0];
                         frame.Position += subRecord.TotalLength;
                     }
-                    else if (subRecord.Header.RecordType == PackageIdles_Registration.IDLA_HEADER)
+                    else if (subRecord.Header.RecordType == RecordTypes.IDLA)
                     {
                         if (count == null)
                         {
                             item.Animations.SetTo(
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
-                                    triggeringRecord: PackageIdles_Registration.IDLA_HEADER,
+                                    triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                         }
                         else
@@ -59,11 +59,11 @@ namespace Mutagen.Bethesda.Skyrim
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
                                     amount: count.Value,
-                                    triggeringRecord: PackageIdles_Registration.IDLA_HEADER,
+                                    triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                         }
                     }
-                    else if (subRecord.Header.RecordType == PackageIdles_Registration.IDLT_HEADER)
+                    else if (subRecord.Header.RecordType == RecordTypes.IDLT)
                     {
                         item.TimerSetting = SpanExt.GetFloat(subRecord.Content);
                         frame.Position += subRecord.TotalLength;
@@ -85,17 +85,17 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
             {
                 var anims = item.Animations;
-                using (HeaderExport.Subrecord(writer, PackageIdles_Registration.IDLC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
                 {
                     writer.Write(anims.Count, 1);
                 }
 
-                using (HeaderExport.Subrecord(writer, PackageIdles_Registration.IDLT_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.IDLT))
                 {
                     writer.Write(item.TimerSetting);
                 }
 
-                using (HeaderExport.Subrecord(writer, PackageIdles_Registration.IDLA_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.IDLA))
                 {
                     foreach (var anim in anims)
                     {
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 3; i++)
                 {
                     var subRecord = _package.MetaData.Constants.GetSubrecordFrame(stream);
-                    if (subRecord.Header.RecordType == PackageIdles_Registration.IDLC_HEADER)
+                    if (subRecord.Header.RecordType == RecordTypes.IDLC)
                     {
                         // Counter start
                         if (subRecord.Content.Length != 1)
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                         count = subRecord.Content[0];
                         stream.Position += subRecord.TotalLength;
                     }
-                    else if (subRecord.Header.RecordType == PackageIdles_Registration.IDLA_HEADER)
+                    else if (subRecord.Header.RecordType == RecordTypes.IDLA)
                     {
                         if (count == null)
                         {
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
                             stream.Position += subLen;
                         }
                     }
-                    else if (subRecord.Header.RecordType == PackageIdles_Registration.IDLT_HEADER)
+                    else if (subRecord.Header.RecordType == RecordTypes.IDLT)
                     {
                         _timerSetting = SpanExt.GetFloat(subRecord.Content);
                         stream.Position += subRecord.TotalLength;

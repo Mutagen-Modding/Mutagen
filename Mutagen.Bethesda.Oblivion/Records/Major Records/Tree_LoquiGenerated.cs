@@ -1337,13 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TreeXmlWriteTranslation);
-        public static readonly RecordType TREE_HEADER = new RecordType("TREE");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType TriggeringRecordType = TREE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2496,12 +2490,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Tree_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
                 items: item.SpeedTreeSeeds,
-                recordType: recordTypeConverter.ConvertToCustom(Tree_Registration.SNAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 transl: UInt32BinaryTranslation.Instance.Write);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -2526,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Tree_Registration.TREE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TREE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2578,7 +2572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
-        public override RecordType RecordType => Tree_Registration.TREE_HEADER;
+        public override RecordType RecordType => RecordTypes.TREE;
         public static void FillBinaryStructs(
             ITreeInternal item,
             MutagenFrame frame)
@@ -2598,14 +2592,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2613,7 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SpeedTreeSeeds = 
@@ -2623,12 +2617,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<UInt32>();
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.TreeData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     item.BillboardDimensions = Mutagen.Bethesda.Oblivion.Dimensions.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
@@ -2783,7 +2777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2791,12 +2785,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -2808,12 +2802,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _BillboardDimensionsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);

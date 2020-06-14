@@ -1109,8 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DistantLODDataXmlWriteTranslation);
-        public static readonly RecordType XLOD_HEADER = new RecordType("XLOD");
-        public static readonly RecordType TriggeringRecordType = XLOD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XLOD;
         public static readonly Type BinaryWriteTranslation = typeof(DistantLODDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XLOD)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1841,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DistantLODData_Registration.XLOD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XLOD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

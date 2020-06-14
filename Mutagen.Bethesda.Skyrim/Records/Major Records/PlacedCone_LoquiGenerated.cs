@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedConeXmlWriteTranslation);
-        public static readonly RecordType PCON_HEADER = new RecordType("PCON");
-        public static readonly RecordType TriggeringRecordType = PCON_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PCON;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedConeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedCone_Registration.PCON_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PCON),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedConeBinaryCreateTranslation Instance = new PlacedConeBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedCone_Registration.PCON_HEADER;
+        public override RecordType RecordType => RecordTypes.PCON;
         public static void FillBinaryStructs(
             IPlacedConeInternal item,
             MutagenFrame frame)

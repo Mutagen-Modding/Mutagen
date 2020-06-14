@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return;
                 }
-                using (HeaderExport.Subrecord(writer, PlacedObject_Registration.XRMR_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.XRMR))
                 {
                     writer.Write((byte)item.LinkedRooms.Count);
                     byte flags = 0;
@@ -245,15 +245,15 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (lightingTemplate.FormKey != null)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKey.Value, PlacedObject_Registration.LNAM_HEADER);
+                    FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKey.Value, RecordTypes.LNAM);
                 }
                 if (imageSpace.FormKey != null)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKey.Value, PlacedObject_Registration.INAM_HEADER);
+                    FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKey.Value, RecordTypes.INAM);
                 }
                 foreach (var room in linkedRooms)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(writer, room.FormKey, PlacedObject_Registration.XLRM_HEADER);
+                    FormKeyBinaryTranslation.Instance.Write(writer, room.FormKey, RecordTypes.XLRM);
                 }
             }
         }

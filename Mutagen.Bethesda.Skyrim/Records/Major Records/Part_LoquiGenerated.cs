@@ -1064,8 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PartXmlWriteTranslation);
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1073,8 +1071,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        NAM0_HEADER,
-                        NAM1_HEADER
+                        RecordTypes.NAM0,
+                        RecordTypes.NAM1
                     })
             );
         });
@@ -1765,11 +1763,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.PartType,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(Part_Registration.NAM0_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
-                header: recordTypeConverter.ConvertToCustom(Part_Registration.NAM1_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1818,14 +1816,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1984,13 +1982,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
                     _PartTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
                     _FileNameLocation = (stream.Position - offset);

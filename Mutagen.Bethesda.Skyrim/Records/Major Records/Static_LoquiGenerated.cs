@@ -1328,12 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(StaticXmlWriteTranslation);
-        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType TriggeringRecordType = STAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.STAT;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2466,7 +2461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Static_Registration.DNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2491,7 +2486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Static_Registration.STAT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.STAT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2543,7 +2538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
 
-        public override RecordType RecordType => Static_Registration.STAT_HEADER;
+        public override RecordType RecordType => RecordTypes.STAT;
         public static void FillBinaryStructs(
             IStaticInternal item,
             MutagenFrame frame)
@@ -2563,19 +2558,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -2585,7 +2580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
@@ -2754,12 +2749,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2767,12 +2762,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _LodLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);

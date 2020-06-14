@@ -1668,16 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogTopicXmlWriteTranslation);
-        public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TIFC_HEADER = new RecordType("TIFC");
-        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
-        public static readonly RecordType TriggeringRecordType = DIAL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DIAL;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3112,22 +3103,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Priority,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.BNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.QNAM_HEADER));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER)))
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Write(
                     writer,
@@ -3145,7 +3136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SubtypeName,
-                header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             DialogTopicBinaryWriteTranslation.WriteBinaryResponseCount(
                 writer: writer,
                 item: item);
@@ -3158,7 +3149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DIAL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DIAL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3213,7 +3204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogTopicBinaryCreateTranslation Instance = new DialogTopicBinaryCreateTranslation();
 
-        public override RecordType RecordType => DialogTopic_Registration.DIAL_HEADER;
+        public override RecordType RecordType => RecordTypes.DIAL;
         public static void FillBinaryStructs(
             IDialogTopicInternal item,
             MutagenFrame frame)
@@ -3233,7 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3242,13 +3233,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Priority = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Branch = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3256,7 +3247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3264,7 +3255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3273,13 +3264,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SubtypeName = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
                 }
-                case 0x43464954: // TIFC
+                case RecordTypeInts.TIFC:
                 {
                     DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -3498,37 +3489,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PriorityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _BranchLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     _QuestLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _SubtypeNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
                 }
-                case 0x43464954: // TIFC
+                case RecordTypeInts.TIFC:
                 {
                     ResponseCountCustomParse(
                         stream,

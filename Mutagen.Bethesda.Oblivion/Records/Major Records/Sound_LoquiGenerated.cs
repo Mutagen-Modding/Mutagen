@@ -1085,11 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoundXmlWriteTranslation);
-        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
-        public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
-        public static readonly RecordType TriggeringRecordType = SOUN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SOUN;
         public static readonly Type BinaryWriteTranslation = typeof(SoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1976,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
-                header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -1994,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Sound_Registration.SOUN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SOUN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2046,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SoundBinaryCreateTranslation Instance = new SoundBinaryCreateTranslation();
 
-        public override RecordType RecordType => Sound_Registration.SOUN_HEADER;
+        public override RecordType RecordType => RecordTypes.SOUN;
         public static void FillBinaryStructs(
             ISoundInternal item,
             MutagenFrame frame)
@@ -2066,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2074,12 +2070,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 }
-                case 0x44444E53: // SNDD
+                case RecordTypeInts.SNDD:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SoundData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
-                case 0x58444E53: // SNDX
+                case RecordTypeInts.SNDX:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SoundDataExtended.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
@@ -2243,18 +2239,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 }
-                case 0x44444E53: // SNDD
+                case RecordTypeInts.SNDD:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _DataType = type;
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
-                case 0x58444E53: // SNDX
+                case RecordTypeInts.SNDX:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _DataType = type;

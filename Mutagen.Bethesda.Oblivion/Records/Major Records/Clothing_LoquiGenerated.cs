@@ -1070,9 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ClothingXmlWriteTranslation);
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = CLOT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CLOT;
         public static readonly Type BinaryWriteTranslation = typeof(ClothingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2154,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Clothing_Registration.CLOT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CLOT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2228,7 +2226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ClothingBinaryCreateTranslation Instance = new ClothingBinaryCreateTranslation();
 
-        public override RecordType RecordType => Clothing_Registration.CLOT_HEADER;
+        public override RecordType RecordType => RecordTypes.CLOT;
         public static void FillBinaryStructs(
             IClothingInternal item,
             MutagenFrame frame)
@@ -2248,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.ClothingData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Data);
@@ -2392,7 +2390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Data);

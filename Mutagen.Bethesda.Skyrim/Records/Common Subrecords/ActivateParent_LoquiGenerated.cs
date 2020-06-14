@@ -1073,8 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ActivateParentXmlWriteTranslation);
-        public static readonly RecordType XAPR_HEADER = new RecordType("XAPR");
-        public static readonly RecordType TriggeringRecordType = XAPR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XAPR;
         public static readonly Type BinaryWriteTranslation = typeof(ActivateParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ActivateParent_Registration.XAPR_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XAPR)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1763,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ActivateParent_Registration.XAPR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XAPR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

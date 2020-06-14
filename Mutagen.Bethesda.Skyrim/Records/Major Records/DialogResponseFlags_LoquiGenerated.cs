@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogResponseFlagsXmlWriteTranslation);
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType TriggeringRecordType = ENAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ENAM;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseFlagsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(DialogResponseFlags_Registration.ENAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.ENAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1756,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogResponseFlags_Registration.ENAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

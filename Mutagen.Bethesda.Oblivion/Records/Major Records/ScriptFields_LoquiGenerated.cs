@@ -1395,14 +1395,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptFieldsXmlWriteTranslation);
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
-        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1410,8 +1402,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        SCHD_HEADER,
-                        SCHR_HEADER
+                        RecordTypes.SCHD,
+                        RecordTypes.SCHR
                     })
             );
         });
@@ -2410,11 +2402,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript,
-                header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCDA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SourceCode,
-                header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCTX_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX),
                 binaryType: StringBinaryType.Plain);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
                 writer: writer,
@@ -2485,7 +2477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44484353: // SCHD
+                case RecordTypeInts.SCHD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
@@ -2493,7 +2485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     item.MetadataSummary.CopyInFromBinary(
@@ -2501,13 +2493,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
-                case 0x41444353: // SCDA
+                case RecordTypeInts.SCDA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2515,8 +2507,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.Plain);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
-                case 0x44534C53: // SLSD
-                case 0x52564353: // SCVR
+                case RecordTypeInts.SLSD:
+                case RecordTypeInts.SCVR:
                 {
                     item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
@@ -2532,8 +2524,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
                 }
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
+                case RecordTypeInts.SCRV:
+                case RecordTypeInts.SCRO:
                 {
                     item.References.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
@@ -2732,7 +2724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44484353: // SCHD
+                case RecordTypeInts.SCHD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     MetadataSummaryOldCustomParse(
@@ -2740,24 +2732,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
-                case 0x41444353: // SCDA
+                case RecordTypeInts.SCDA:
                 {
                     _CompiledScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     _SourceCodeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
-                case 0x44534C53: // SLSD
-                case 0x52564353: // SCVR
+                case RecordTypeInts.SLSD:
+                case RecordTypeInts.SCVR:
                 {
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
@@ -2766,8 +2758,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         factory:  LocalVariableBinaryOverlay.LocalVariableFactory);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
                 }
-                case 0x56524353: // SCRV
-                case 0x4F524353: // SCRO
+                case RecordTypeInts.SCRV:
+                case RecordTypeInts.SCRO:
                 {
                     this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
                         stream: stream,

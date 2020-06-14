@@ -1394,16 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FactionXmlWriteTranslation);
-        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType TriggeringRecordType = FACT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2505,7 +2496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
                 writer: writer,
@@ -2522,11 +2513,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CrimeGoldMultiplier,
-                header: recordTypeConverter.ConvertToCustom(Faction_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
                 writer: writer,
                 items: item.Ranks,
@@ -2547,7 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Faction_Registration.FACT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FACT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2599,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
 
-        public override RecordType RecordType => Faction_Registration.FACT_HEADER;
+        public override RecordType RecordType => RecordTypes.FACT;
         public static void FillBinaryStructs(
             IFactionInternal item,
             MutagenFrame frame)
@@ -2619,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2627,12 +2618,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Faction_Registration.XNAM_HEADER,
+                            triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2643,22 +2634,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 }
-                case 0x4D414E52: // RNAM
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.INAM:
                 {
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
@@ -2828,12 +2819,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     this.Relations = BinaryOverlayList<RelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -2848,20 +2839,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _CrimeGoldMultiplierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 }
-                case 0x4D414E52: // RNAM
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.INAM:
                 {
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,

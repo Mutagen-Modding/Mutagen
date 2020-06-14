@@ -1169,8 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherImageSpacesXmlWriteTranslation);
-        public static readonly RecordType IMSP_HEADER = new RecordType("IMSP");
-        public static readonly RecordType TriggeringRecordType = IMSP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IMSP;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherImageSpacesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WeatherImageSpaces_Registration.IMSP_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.IMSP)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1948,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WeatherImageSpaces_Registration.IMSP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IMSP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

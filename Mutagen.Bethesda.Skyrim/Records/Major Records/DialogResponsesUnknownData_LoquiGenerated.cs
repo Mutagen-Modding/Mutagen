@@ -1125,9 +1125,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogResponsesUnknownDataXmlWriteTranslation);
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType NEXT_HEADER = new RecordType("NEXT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1135,9 +1132,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        SCHR_HEADER,
-                        QNAM_HEADER,
-                        NEXT_HEADER
+                        RecordTypes.SCHR,
+                        RecordTypes.QNAM,
+                        RecordTypes.NEXT
                     })
             );
         });
@@ -1878,15 +1875,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.SCHR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.QNAM,
-                header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.QNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
             Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.NEXT,
-                header: recordTypeConverter.ConvertToCustom(DialogResponsesUnknownData_Registration.NEXT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NEXT));
         }
 
         public void Write(
@@ -1934,14 +1931,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1950,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
                 }
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.NEXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
                     item.NEXT = true;
@@ -2117,19 +2114,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     _SCHRLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     _QNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
                 }
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.NEXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
                     _NEXTLocation = (stream.Position - offset);

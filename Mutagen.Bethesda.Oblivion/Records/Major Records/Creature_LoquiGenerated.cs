@@ -2713,33 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CreatureXmlWriteTranslation);
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
-        public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
-        public static readonly RecordType NIFZ_HEADER = new RecordType("NIFZ");
-        public static readonly RecordType NIFT_HEADER = new RecordType("NIFT");
-        public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
-        public static readonly RecordType PKID_HEADER = new RecordType("PKID");
-        public static readonly RecordType KFFZ_HEADER = new RecordType("KFFZ");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
-        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
-        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
-        public static readonly RecordType TriggeringRecordType = CREA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CREA;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5299,7 +5273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -5327,17 +5301,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Creature_Registration.SPLO_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Models,
-                recordType: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFZ_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NIFZ),
                 transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NIFT,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NIFT));
             if (item.Configuration.TryGet(out var ConfigurationItem))
             {
                 ((CreatureConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
@@ -5359,11 +5333,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DeathItem,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             if (item.AIData.TryGet(out var AIDataItem))
             {
                 ((CreatureAIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
@@ -5379,12 +5353,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Creature_Registration.PKID_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PKID));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Animations,
-                recordType: recordTypeConverter.ConvertToCustom(Creature_Registration.KFFZ_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KFFZ),
                 transl: StringBinaryTranslation.Instance.Write);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -5396,37 +5370,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackReach,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.ZNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TurningSpeed,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BaseScale,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.BNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FootWeight,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BloodSpray,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.NAM0_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BloodDecal,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.NAM1_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InheritsSoundFrom,
-                header: recordTypeConverter.ConvertToCustom(Creature_Registration.CSCR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSCR));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ICreatureSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
@@ -5447,7 +5421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Creature_Registration.CREA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CREA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -5521,7 +5495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
 
-        public override RecordType RecordType => Creature_Registration.CREA_HEADER;
+        public override RecordType RecordType => RecordTypes.CREA;
         public static void FillBinaryStructs(
             ICreatureInternal item,
             MutagenFrame frame)
@@ -5541,7 +5515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5549,19 +5523,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
                 }
-                case 0x4F544E43: // CNTO
+                case RecordTypeInts.CNTO:
                 {
                     item.Items.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ItemEntry>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Creature_Registration.CNTO_HEADER,
+                            triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -5572,17 +5546,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Creature_Registration.SPLO_HEADER,
+                            triggeringRecord: RecordTypes.SPLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
-                case 0x5A46494E: // NIFZ
+                case RecordTypeInts.NIFZ:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Models = 
@@ -5598,23 +5572,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Models);
                 }
-                case 0x5446494E: // NIFT
+                case RecordTypeInts.NIFT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NIFT = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
                 }
-                case 0x53424341: // ACBS
+                case RecordTypeInts.ACBS:
                 {
                     item.Configuration = Mutagen.Bethesda.Oblivion.CreatureConfiguration.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Configuration);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Creature_Registration.SNAM_HEADER,
+                            triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -5625,7 +5599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5633,7 +5607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5641,22 +5615,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
                 }
-                case 0x54444941: // AIDT
+                case RecordTypeInts.AIDT:
                 {
                     item.AIData = Mutagen.Bethesda.Oblivion.CreatureAIData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIData);
                 }
-                case 0x44494B50: // PKID
+                case RecordTypeInts.PKID:
                 {
                     item.AIPackages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Creature_Registration.PKID_HEADER,
+                            triggeringRecord: RecordTypes.PKID,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
                 }
-                case 0x5A46464B: // KFFZ
+                case RecordTypeInts.KFFZ:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Animations = 
@@ -5672,18 +5646,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<String>();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Animations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.CreatureData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Data);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackReach = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5691,25 +5665,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TurningSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BaseScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FootWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BloodSpray = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5717,7 +5691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BloodDecal = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5725,7 +5699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InheritsSoundFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5733,9 +5707,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
                 }
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound>.Instance.Parse(
@@ -5966,12 +5940,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -5979,7 +5953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Model);
                 }
-                case 0x4F544E43: // CNTO
+                case RecordTypeInts.CNTO:
                 {
                     this.Items = BinaryOverlayList<ItemEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -5994,7 +5968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     this.Spells = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -6009,7 +5983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
-                case 0x5A46494E: // NIFZ
+                case RecordTypeInts.NIFZ:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -6020,17 +5994,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Models);
                 }
-                case 0x5446494E: // NIFT
+                case RecordTypeInts.NIFT:
                 {
                     _NIFTLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.NIFT);
                 }
-                case 0x53424341: // ACBS
+                case RecordTypeInts.ACBS:
                 {
                     _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Configuration);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -6045,22 +6019,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     _DeathItemLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
                 }
-                case 0x54444941: // AIDT
+                case RecordTypeInts.AIDT:
                 {
                     _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIData);
                 }
-                case 0x44494B50: // PKID
+                case RecordTypeInts.PKID:
                 {
                     this.AIPackages = BinaryOverlayList<IFormLink<IAIPackageGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -6075,7 +6049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
                 }
-                case 0x5A46464B: // KFFZ
+                case RecordTypeInts.KFFZ:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -6086,54 +6060,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Animations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Data);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _AttackReachLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     _CombatStyleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TurningSpeedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.TurningSpeed);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _BaseScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BaseScale);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     _FootWeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.FootWeight);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     _BloodSprayLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodSpray);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     _BloodDecalLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.BloodDecal);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     _InheritsSoundFromLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
                 }
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<CreatureSoundBinaryOverlay>(
                         stream: stream,

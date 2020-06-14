@@ -1747,12 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ClassXmlWriteTranslation);
-        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = CLAS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CLAS;
         public static readonly Type BinaryWriteTranslation = typeof(ClassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3073,20 +3068,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Unknown);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
@@ -3117,7 +3112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Class_Registration.CLAS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CLAS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3169,7 +3164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ClassBinaryCreateTranslation Instance = new ClassBinaryCreateTranslation();
 
-        public override RecordType RecordType => Class_Registration.CLAS_HEADER;
+        public override RecordType RecordType => RecordTypes.CLAS;
         public static void FillBinaryStructs(
             IClassInternal item,
             MutagenFrame frame)
@@ -3189,7 +3184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3198,7 +3193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3206,7 +3201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3214,7 +3209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3436,22 +3431,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Unknown2);

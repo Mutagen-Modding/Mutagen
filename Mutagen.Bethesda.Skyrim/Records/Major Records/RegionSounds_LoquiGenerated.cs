@@ -1129,10 +1129,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionSoundsXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType RDMO_HEADER = new RecordType("RDMO");
-        public static readonly RecordType RDSA_HEADER = new RecordType("RDSA");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1140,8 +1136,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RDAT_HEADER,
-                        ICON_HEADER
+                        RecordTypes.RDAT,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -1906,11 +1902,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Music,
-                header: recordTypeConverter.ConvertToCustom(RegionSounds_Registration.RDMO_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RDMO));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                recordType: recordTypeConverter.ConvertToCustom(RegionSounds_Registration.RDSA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDSA),
                 transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1977,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4F4D4452: // RDMO
+                case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -1985,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Music);
                 }
-                case 0x41534452: // RDSA
+                case RecordTypeInts.RDSA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sounds = 
@@ -2140,12 +2136,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4F4D4452: // RDMO
+                case RecordTypeInts.RDMO:
                 {
                     _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Music);
                 }
-                case 0x41534452: // RDSA
+                case RecordTypeInts.RDSA:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ImpactDataSetXmlWriteTranslation);
-        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
-        public static readonly RecordType TriggeringRecordType = IPDS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IPDS;
         public static readonly Type BinaryWriteTranslation = typeof(ImpactDataSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ImpactDataSet_Registration.IPDS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IPDS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
-        public override RecordType RecordType => ImpactDataSet_Registration.IPDS_HEADER;
+        public override RecordType RecordType => RecordTypes.IPDS;
         public static void FillBinaryStructs(
             IImpactDataSetInternal item,
             MutagenFrame frame)

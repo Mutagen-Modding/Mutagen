@@ -1387,8 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleFlightXmlWriteTranslation);
-        public static readonly RecordType CSFL_HEADER = new RecordType("CSFL");
-        public static readonly RecordType TriggeringRecordType = CSFL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSFL;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleFlightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1478,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CombatStyleFlight_Registration.CSFL_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CSFL)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2390,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyleFlight_Registration.CSFL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSFL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

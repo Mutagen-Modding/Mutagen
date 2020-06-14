@@ -1126,8 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RankPlacementXmlWriteTranslation);
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SNAM;
         public static readonly Type BinaryWriteTranslation = typeof(RankPlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1211,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RankPlacement_Registration.SNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1858,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RankPlacement_Registration.SNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

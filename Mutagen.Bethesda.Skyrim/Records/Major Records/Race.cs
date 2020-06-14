@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 for (int i = 0; i < NumBipedObjectNames; i++)
                 {
-                    var subHeader = frame.Reader.ReadSubrecordFrame(Race_Registration.NAME_HEADER);
+                    var subHeader = frame.Reader.ReadSubrecordFrame(RecordTypes.NAME);
                     BipedObject type = (BipedObject)i;
                     var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                     if (!string.IsNullOrEmpty(val))
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var loc = _bipedObjectNamesLoc.Value;
                     for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                     {
-                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc).Span, Race_Registration.NAME_HEADER);
+                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc).Span, RecordTypes.NAME);
                         BipedObject type = (BipedObject)i;
                         var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                         if (!string.IsNullOrEmpty(val))
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
             {
                 _bipedObjectNamesLoc = (ushort)(stream.Position - offset);
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.NAME_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
             }
 
             partial void FaceFxPhonemesListingParsingCustomParse(BinaryMemoryReadStream stream, int offset)
@@ -206,8 +206,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _faceFxPhonemesLoc = (ushort)(stream.Position - offset);
                 }
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.PHTN_HEADER);
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, Race_Registration.PHWT_HEADER);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHTN);
+                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHWT);
             }
 
             private FaceFxPhonemes GetFaceFx()
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                 {
                     var bipedObj = (BipedObject)i;
-                    using (HeaderExport.Subrecord(writer, Race_Registration.NAME_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.NAME))
                     {
                         if (bipedObjs.TryGetValue(bipedObj, out var val))
                         {

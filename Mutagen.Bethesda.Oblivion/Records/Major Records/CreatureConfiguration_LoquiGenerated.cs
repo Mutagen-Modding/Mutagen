@@ -1289,8 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CreatureConfigurationXmlWriteTranslation);
-        public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
-        public static readonly RecordType TriggeringRecordType = ACBS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ACBS;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1378,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CreatureConfiguration_Registration.ACBS_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.ACBS)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2182,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CreatureConfiguration_Registration.ACBS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ACBS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

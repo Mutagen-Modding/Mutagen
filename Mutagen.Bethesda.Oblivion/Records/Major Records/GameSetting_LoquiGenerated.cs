@@ -938,8 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GameSettingXmlWriteTranslation);
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType TriggeringRecordType = GMST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
         public static readonly Type BinaryWriteTranslation = typeof(GameSettingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1686,7 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GameSetting_Registration.GMST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GMST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(

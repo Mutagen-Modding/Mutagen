@@ -1026,9 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GlobalIntXmlWriteTranslation);
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
-        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalIntBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1965,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GlobalInt_Registration.GLOB_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GLOB),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2028,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalIntBinaryCreateTranslation Instance = new GlobalIntBinaryCreateTranslation();
 
-        public override RecordType RecordType => GlobalInt_Registration.GLOB_HEADER;
+        public override RecordType RecordType => RecordTypes.GLOB;
         public static void FillBinaryStructs(
             IGlobalIntInternal item,
             MutagenFrame frame)
@@ -2048,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     GlobalIntBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2200,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     DataCustomParse(
                         stream: stream,

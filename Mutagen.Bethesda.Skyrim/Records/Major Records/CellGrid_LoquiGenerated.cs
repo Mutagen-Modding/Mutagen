@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CellGridXmlWriteTranslation);
-        public static readonly RecordType XCLC_HEADER = new RecordType("XCLC");
-        public static readonly RecordType TriggeringRecordType = XCLC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XCLC;
         public static readonly Type BinaryWriteTranslation = typeof(CellGridBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CellGrid_Registration.XCLC_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XCLC)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1754,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CellGrid_Registration.XCLC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XCLC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

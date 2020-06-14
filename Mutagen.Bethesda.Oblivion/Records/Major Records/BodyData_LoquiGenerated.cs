@@ -1165,9 +1165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyDataXmlWriteTranslation);
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1175,9 +1172,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        MODL_HEADER,
-                        INDX_HEADER,
-                        ICON_HEADER
+                        RecordTypes.MODL,
+                        RecordTypes.INDX,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -2015,7 +2012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
@@ -2023,8 +2020,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 }
-                case 0x58444E49: // INDX
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     item.BodyParts.SetTo(
@@ -2185,7 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryOverlay.ModelFactory(
@@ -2194,8 +2191,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 }
-                case 0x58444E49: // INDX
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(

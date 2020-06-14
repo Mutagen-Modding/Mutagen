@@ -1108,9 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RoadXmlWriteTranslation);
-        public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
-        public static readonly RecordType PGRP_HEADER = new RecordType("PGRP");
-        public static readonly RecordType TriggeringRecordType = ROAD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ROAD;
         public static readonly Type BinaryWriteTranslation = typeof(RoadBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2006,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Road_Registration.ROAD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ROAD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2058,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RoadBinaryCreateTranslation Instance = new RoadBinaryCreateTranslation();
 
-        public override RecordType RecordType => Road_Registration.ROAD_HEADER;
+        public override RecordType RecordType => RecordTypes.ROAD;
         public static void FillBinaryStructs(
             IRoadInternal item,
             MutagenFrame frame)
@@ -2078,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x50524750: // PGRP
+                case RecordTypeInts.PGRP:
                 {
                     RoadBinaryCreateTranslation.FillBinaryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2231,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x50524750: // PGRP
+                case RecordTypeInts.PGRP:
                 {
                     PointsCustomParse(
                         stream: stream,

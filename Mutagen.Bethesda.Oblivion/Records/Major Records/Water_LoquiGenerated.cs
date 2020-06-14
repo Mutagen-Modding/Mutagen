@@ -1341,15 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WaterXmlWriteTranslation);
-        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType TriggeringRecordType = WATR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2523,26 +2515,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Texture,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Opacity,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaterialID,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             WaterBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
                 item: item);
@@ -2562,7 +2554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WATR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2614,7 +2606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
-        public override RecordType RecordType => Water_Registration.WATR_HEADER;
+        public override RecordType RecordType => RecordTypes.WATR;
         public static void FillBinaryStructs(
             IWaterInternal item,
             MutagenFrame frame)
@@ -2634,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Texture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2642,19 +2634,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Opacity = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaterialID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2662,7 +2654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2670,14 +2662,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     WaterBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
@@ -2859,32 +2851,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _OpacityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _MaterialIDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     DataCustomParse(
                         stream,
@@ -2892,7 +2884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     _RelatedWatersLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);

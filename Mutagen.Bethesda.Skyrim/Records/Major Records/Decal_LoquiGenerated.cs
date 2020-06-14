@@ -1470,8 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DecalXmlWriteTranslation);
-        public static readonly RecordType DODT_HEADER = new RecordType("DODT");
-        public static readonly RecordType TriggeringRecordType = DODT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DODT;
         public static readonly Type BinaryWriteTranslation = typeof(DecalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1563,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(Decal_Registration.DODT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.DODT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2543,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Decal_Registration.DODT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DODT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

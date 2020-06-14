@@ -1073,8 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ContainerItemXmlWriteTranslation);
-        public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
-        public static readonly RecordType TriggeringRecordType = CNTO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ContainerItem_Registration.CNTO_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CNTO)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1761,7 +1760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ContainerItem_Registration.CNTO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CNTO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

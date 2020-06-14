@@ -963,8 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ShoutXmlWriteTranslation);
-        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
-        public static readonly RecordType TriggeringRecordType = SHOU_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SHOU;
         public static readonly Type BinaryWriteTranslation = typeof(ShoutBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1828,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Shout_Registration.SHOU_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SHOU),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1891,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ShoutBinaryCreateTranslation Instance = new ShoutBinaryCreateTranslation();
 
-        public override RecordType RecordType => Shout_Registration.SHOU_HEADER;
+        public override RecordType RecordType => RecordTypes.SHOU;
         public static void FillBinaryStructs(
             IShoutInternal item,
             MutagenFrame frame)

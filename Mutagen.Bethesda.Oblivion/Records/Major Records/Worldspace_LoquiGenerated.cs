@@ -1862,23 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceXmlWriteTranslation);
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
-        public static readonly RecordType XXXX_HEADER = new RecordType("XXXX");
-        public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TriggeringRecordType = WRLD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3746,24 +3730,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Parent,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.MapData.TryGet(out var MapDataItem))
             {
@@ -3776,25 +3760,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectBoundsMin,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM0_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
             Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectBoundsMax,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM9_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM9));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.WriteNullable(
                 writer,
                 item.Music,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.OffsetData,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.OFST_HEADER),
-                overflowRecord: Worldspace_Registration.XXXX_HEADER);
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST),
+                overflowRecord: RecordTypes.XXXX);
         }
 
         public void Write(
@@ -3804,7 +3788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WRLD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WRLD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3870,7 +3854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => Worldspace_Registration.WRLD_HEADER;
+        public override RecordType RecordType => RecordTypes.WRLD;
         public static void FillBinaryStructs(
             IWorldspaceInternal item,
             MutagenFrame frame)
@@ -3890,7 +3874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3898,7 +3882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3906,7 +3890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Climate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3914,7 +3898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3922,7 +3906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3930,39 +3914,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectBoundsMin = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectBoundsMax = Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Music = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
-                case 0x5453464F: // OFST
-                case 0x58585858: // XXXX
+                case RecordTypeInts.OFST:
+                case RecordTypeInts.XXXX:
                 {
-                    if (nextRecordType == Worldspace_Registration.XXXX_HEADER)
+                    if (nextRecordType == RecordTypes.XXXX)
                     {
                         var overflowHeader = frame.ReadSubrecordFrame();
                         contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
@@ -4113,7 +4097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             _data,
             _package.MetaData.Constants,
             _OffsetDataLocation,
-            Worldspace_Registration.XXXX_HEADER);
+            RecordTypes.XXXX);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -4187,58 +4171,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     _ParentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _ClimateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     _ObjectBoundsMinLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     _ObjectBoundsMaxLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
-                case 0x5453464F: // OFST
-                case 0x58585858: // XXXX
+                case RecordTypeInts.OFST:
+                case RecordTypeInts.XXXX:
                 {
                     _OffsetDataLocation = UtilityTranslation.HandleOverlayRecordOverflow(
                         existingLoc: _OffsetDataLocation,

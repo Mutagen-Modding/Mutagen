@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Skyrim
                 IReadOnlyList<Target>? targets;
                 bool? lipMode = null;
 
-                if (meta.RecordType == Race_Registration.PHTN_HEADER)
+                if (meta.RecordType == RecordTypes.PHTN)
                 {
                     var targetAccumulation = new List<Target>();
                     targets = targetAccumulation;
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
 
                     var subFrame = frame.Reader.GetSubrecordFrame();
-                    while (subFrame.Header.RecordType == Race_Registration.PHTN_HEADER)
+                    while (subFrame.Header.RecordType == RecordTypes.PHTN)
                     {
                         var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content);
                         Add(targetAccumulation, FaceFxPhonemesMixIn.GetTarget(str, out var isLip));
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
                     }
                 }
-                else if (meta.RecordType == Race_Registration.PHWT_HEADER)
+                else if (meta.RecordType == RecordTypes.PHWT)
                 {
                     targets = Targets;
                 }
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ReadOnlyMemorySlice<byte>[] slots = new ReadOnlyMemorySlice<byte>[SlotSize];
                 for (int i = 0; i < SlotSize; i++)
                 {
-                    var subMetaFrame = frame.Reader.ReadSubrecordMemoryFrame(Race_Registration.PHWT_HEADER);
+                    var subMetaFrame = frame.Reader.ReadSubrecordMemoryFrame(RecordTypes.PHWT);
                     var content = subMetaFrame.Content;
                     if (content.Length != expectedSize)
                     {
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (phonemes[i] == null) continue;
                         var target = (Target)i;
-                        using (HeaderExport.Subrecord(writer, Race_Registration.PHTN_HEADER))
+                        using (HeaderExport.Subrecord(writer, RecordTypes.PHTN))
                         {
                             writer.Write(target.GetString(lipMode), StringBinaryType.NullTerminate);
                         }
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 foreach (var slot in FaceFxPhonemesBinaryCreateTranslation.Slots)
                 {
-                    using (HeaderExport.Subrecord(writer, Race_Registration.PHWT_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.PHWT))
                     {
                         foreach (var target in FaceFxPhonemesBinaryCreateTranslation.Targets)
                         {

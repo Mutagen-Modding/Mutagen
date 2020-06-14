@@ -1607,18 +1607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(HeadPartXmlWriteTranslation);
-        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType TriggeringRecordType = HDPT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.HDPT;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2944,7 +2933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -2958,12 +2947,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HeadPart.TypeEnum>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ExtraParts,
@@ -2972,7 +2961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.HNAM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPartGetter>.Instance.Write(
                 writer: writer,
@@ -2988,15 +2977,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ValidRaces,
-                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
         }
 
         public void Write(
@@ -3006,7 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(HeadPart_Registration.HDPT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.HDPT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3058,7 +3047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static HeadPartBinaryCreateTranslation Instance = new HeadPartBinaryCreateTranslation();
 
-        public override RecordType RecordType => HeadPart_Registration.HDPT_HEADER;
+        public override RecordType RecordType => RecordTypes.HDPT;
         public static void FillBinaryStructs(
             IHeadPartInternal item,
             MutagenFrame frame)
@@ -3078,7 +3067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3087,37 +3076,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<HeadPart.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<HeadPart.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     item.ExtraParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: HeadPart_Registration.HNAM_HEADER,
+                            triggeringRecord: RecordTypes.HNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }
-                case 0x304D414E: // NAM0
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM1:
                 {
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Part>.Instance.Parse(
@@ -3133,7 +3122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3141,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3149,7 +3138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ValidRaces = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3328,12 +3317,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3341,17 +3330,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     this.ExtraParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3366,8 +3355,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }
-                case 0x304D414E: // NAM0
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM1:
                 {
                     this.Parts = this.ParseRepeatedTypelessSubrecord<PartBinaryOverlay>(
                         stream: stream,
@@ -3376,17 +3365,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  PartBinaryOverlay.PartFactory);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _ValidRacesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);

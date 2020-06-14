@@ -1121,9 +1121,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TintPresetXmlWriteTranslation);
-        public static readonly RecordType TINC_HEADER = new RecordType("TINC");
-        public static readonly RecordType TINV_HEADER = new RecordType("TINV");
-        public static readonly RecordType TIRS_HEADER = new RecordType("TIRS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1131,9 +1128,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        TINC_HEADER,
-                        TINV_HEADER,
-                        TIRS_HEADER
+                        RecordTypes.TINC,
+                        RecordTypes.TINV,
+                        RecordTypes.TIRS
                     })
             );
         });
@@ -1873,15 +1870,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(TintPreset_Registration.TINC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINC));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultValue,
-                header: recordTypeConverter.ConvertToCustom(TintPreset_Registration.TINV_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINV));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(TintPreset_Registration.TIRS_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TIRS));
         }
 
         public void Write(
@@ -1929,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x434E4954: // TINC
+                case RecordTypeInts.TINC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1938,14 +1935,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
                 }
-                case 0x564E4954: // TINV
+                case RecordTypeInts.TINV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.DefaultValue) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.DefaultValue);
                 }
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2113,19 +2110,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x434E4954: // TINC
+                case RecordTypeInts.TINC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
                     _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
                 }
-                case 0x564E4954: // TINV
+                case RecordTypeInts.TINV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.DefaultValue) return TryGet<int?>.Failure;
                     _DefaultValueLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.DefaultValue);
                 }
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);

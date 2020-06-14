@@ -1188,12 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FurnitureXmlWriteTranslation);
-        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType TriggeringRecordType = FURN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FURN;
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2176,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -2188,11 +2183,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MarkerFlags,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.MNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
         }
 
         public void Write(
@@ -2202,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Furniture_Registration.FURN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FURN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2254,7 +2249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static FurnitureBinaryCreateTranslation Instance = new FurnitureBinaryCreateTranslation();
 
-        public override RecordType RecordType => Furniture_Registration.FURN_HEADER;
+        public override RecordType RecordType => RecordTypes.FURN;
         public static void FillBinaryStructs(
             IFurnitureInternal item,
             MutagenFrame frame)
@@ -2274,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2282,14 +2277,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2297,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Script);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MarkerFlags = frame.ReadInt32();
@@ -2457,12 +2452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2470,12 +2465,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Script);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _MarkerFlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.MarkerFlags);

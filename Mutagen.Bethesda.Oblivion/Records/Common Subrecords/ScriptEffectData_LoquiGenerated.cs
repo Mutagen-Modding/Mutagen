@@ -1216,8 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptEffectDataXmlWriteTranslation);
-        public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
-        public static readonly RecordType TriggeringRecordType = SCIT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCIT;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1303,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ScriptEffectData_Registration.SCIT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SCIT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2042,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ScriptEffectData_Registration.SCIT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SCIT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CollisionLayerXmlWriteTranslation);
-        public static readonly RecordType COLL_HEADER = new RecordType("COLL");
-        public static readonly RecordType TriggeringRecordType = COLL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.COLL;
         public static readonly Type BinaryWriteTranslation = typeof(CollisionLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CollisionLayer_Registration.COLL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.COLL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CollisionLayerBinaryCreateTranslation Instance = new CollisionLayerBinaryCreateTranslation();
 
-        public override RecordType RecordType => CollisionLayer_Registration.COLL_HEADER;
+        public override RecordType RecordType => RecordTypes.COLL;
         public static void FillBinaryStructs(
             ICollisionLayerInternal item,
             MutagenFrame frame)

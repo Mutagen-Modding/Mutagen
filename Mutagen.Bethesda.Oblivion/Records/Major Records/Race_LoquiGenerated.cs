@@ -2272,32 +2272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RaceXmlWriteTranslation);
-        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
-        public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType FGGS_HEADER = new RecordType("FGGS");
-        public static readonly RecordType FGGA_HEADER = new RecordType("FGGA");
-        public static readonly RecordType FGTS_HEADER = new RecordType("FGTS");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TriggeringRecordType = RACE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4308,12 +4283,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Write(
                 writer: writer,
@@ -4323,7 +4298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRaceRelationGetter>.Instance.Write(
                 writer: writer,
@@ -4346,7 +4321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Voices,
-                recordType: Race_Registration.VNAM_HEADER,
+                recordType: RecordTypes.VNAM,
                 transl: (MutagenWriter subWriter, IFormLink<IRaceGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -4356,7 +4331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.DefaultHair,
-                recordType: Race_Registration.DNAM_HEADER,
+                recordType: RecordTypes.DNAM,
                 transl: (MutagenWriter subWriter, IFormLink<IHairGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -4366,19 +4341,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultHairColor,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FaceGenMainClamp,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FaceGenFaceClamp,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM));
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.RaceStats,
-                recordType: Race_Registration.ATTR_HEADER,
+                recordType: RecordTypes.ATTR,
                 transl: (MutagenWriter subWriter, IRaceStatsGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -4387,7 +4362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            using (HeaderExport.Subrecord(writer, Race_Registration.NAM0_HEADER)) { }
+            using (HeaderExport.Subrecord(writer, RecordTypes.NAM0)) { }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceData,
@@ -4402,9 +4377,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.BodyData,
-                markerType: Race_Registration.NAM1_HEADER,
-                maleMarker: Race_Registration.MNAM_HEADER,
-                femaleMarker: Race_Registration.FNAM_HEADER,
+                markerType: RecordTypes.NAM1,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
                 transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, RecordTypeConverter? conv) =>
                 {
@@ -4419,7 +4394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHairGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Hairs,
-                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.HNAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                 transl: (MutagenWriter subWriter, IFormLink<IHairGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -4429,7 +4404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEyeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
-                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.ENAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM),
                 transl: (MutagenWriter subWriter, IFormLink<IEyeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -4446,7 +4421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SNAM,
-                header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
         }
 
         public void Write(
@@ -4456,7 +4431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Race_Registration.RACE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.RACE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -4508,7 +4483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => Race_Registration.RACE_HEADER;
+        public override RecordType RecordType => RecordTypes.RACE;
         public static void FillBinaryStructs(
             IRaceInternal item,
             MutagenFrame frame)
@@ -4528,7 +4503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4536,7 +4511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4544,22 +4519,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Race_Registration.SPLO_HEADER,
+                            triggeringRecord: RecordTypes.SPLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Race_Registration.XNAM_HEADER,
+                            triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RaceRelation listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -4570,12 +4545,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.RaceData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Race>>(
@@ -4583,7 +4558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Hair>>(
@@ -4591,25 +4566,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultHairColor = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenMainClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenFaceClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
                 }
-                case 0x52545441: // ATTR
+                case RecordTypeInts.ATTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RaceStats = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<RaceStats>(
@@ -4617,7 +4592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         transl: LoquiBinaryTranslation<RaceStats>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.FaceData.SetTo(
@@ -4634,17 +4609,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.BodyData = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<BodyData>(
                         frame: frame,
-                        maleMarker: Race_Registration.MNAM_HEADER,
-                        femaleMarker: Race_Registration.FNAM_HEADER,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
                         transl: LoquiBinaryTranslation<BodyData>.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
@@ -4655,7 +4630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
@@ -4666,16 +4641,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
-                case 0x53474746: // FGGS
-                case 0x41474746: // FGGA
-                case 0x53544746: // FGTS
+                case RecordTypeInts.FGGS:
+                case RecordTypeInts.FGGA:
+                case RecordTypeInts.FGTS:
                 {
                     item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SNAM = frame.ReadInt16();
@@ -4902,17 +4877,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     this.Spells = BinaryOverlayList<IFormLink<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -4927,7 +4902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     this.Relations = BinaryOverlayList<RaceRelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -4942,42 +4917,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     _VoicesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DefaultHairLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _DefaultHairColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _FaceGenMainClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     _FaceGenFaceClampLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
                 }
-                case 0x52545441: // ATTR
+                case RecordTypeInts.ATTR:
                 {
                     _RaceStatsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                     this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryOverlay>(
@@ -4987,19 +4962,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         factory:  FacePartBinaryOverlay.FacePartFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                     _BodyDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IBodyDataGetter>(
                         package: _package,
-                        male: Race_Registration.MNAM_HEADER,
-                        female: Race_Registration.FNAM_HEADER,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -5011,7 +4986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -5023,9 +4998,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
-                case 0x53474746: // FGGS
-                case 0x41474746: // FGGA
-                case 0x53544746: // FGTS
+                case RecordTypeInts.FGGS:
+                case RecordTypeInts.FGGA:
+                case RecordTypeInts.FGTS:
                 {
                     this.FaceGenData = FaceGenDataBinaryOverlay.FaceGenDataFactory(
                         stream: stream,
@@ -5033,7 +5008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _SNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.SNAM);

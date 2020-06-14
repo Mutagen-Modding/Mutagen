@@ -1354,13 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IdleAnimationXmlWriteTranslation);
-        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = IDLE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IDLE;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2474,11 +2468,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.AnimationGroupSection,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdleAnimations,
-                recordType: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DATA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
                 transl: (MutagenWriter subWriter, IFormLink<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -2494,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.IDLE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IDLE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2546,7 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
-        public override RecordType RecordType => IdleAnimation_Registration.IDLE_HEADER;
+        public override RecordType RecordType => RecordTypes.IDLE;
         public static void FillBinaryStructs(
             IIdleAnimationInternal item,
             MutagenFrame frame)
@@ -2566,15 +2560,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Model);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
@@ -2590,13 +2584,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AnimationGroupSection = EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdleAnimations = 
@@ -2754,7 +2748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2762,8 +2756,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Model);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -2778,12 +2772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _AnimationGroupSectionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

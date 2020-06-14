@@ -2302,22 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestXmlWriteTranslation);
-        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType QTGL_HEADER = new RecordType("QTGL");
-        public static readonly RecordType FLTR_HEADER = new RecordType("FLTR");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType NEXT_HEADER = new RecordType("NEXT");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType QOBJ_HEADER = new RecordType("QOBJ");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType ALST_HEADER = new RecordType("ALST");
-        public static readonly RecordType ALLS_HEADER = new RecordType("ALLS");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType TriggeringRecordType = QUST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.QUST;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4259,10 +4244,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Quest_Registration.DNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
                     writer,
@@ -4279,7 +4264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Event,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.ENAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Write(
                 writer: writer,
                 items: item.TextDisplayGlobals,
@@ -4288,12 +4273,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Quest_Registration.QTGL_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL));
                 });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectWindowFilter,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FLTR_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTR),
                 binaryType: StringBinaryType.NullTerminate);
             QuestBinaryWriteTranslation.WriteBinaryDialogConditions(
                 writer: writer,
@@ -4340,7 +4325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.NNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
         }
@@ -4352,7 +4337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Quest_Registration.QUST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.QUST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -4404,7 +4389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
-        public override RecordType RecordType => Quest_Registration.QUST_HEADER;
+        public override RecordType RecordType => RecordTypes.QUST;
         public static void FillBinaryStructs(
             IQuestInternal item,
             MutagenFrame frame)
@@ -4424,12 +4409,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.QuestAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4438,7 +4423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -4449,23 +4434,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Type = EnumBinaryTranslation<Quest.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Type);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Event = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Event);
                 }
-                case 0x4C475451: // QTGL
+                case RecordTypeInts.QTGL:
                 {
                     item.TextDisplayGlobals.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Global>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Quest_Registration.QTGL_HEADER,
+                            triggeringRecord: RecordTypes.QTGL,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.TextDisplayGlobals);
                 }
-                case 0x52544C46: // FLTR
+                case RecordTypeInts.FLTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectWindowFilter = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4473,26 +4458,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.ObjectWindowFilter);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.DialogConditions);
                 }
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.NEXT:
                 {
                     QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Quest_Registration.INDX_HEADER,
+                            triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out QuestStage listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -4503,12 +4488,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
-                case 0x4A424F51: // QOBJ
+                case RecordTypeInts.QOBJ:
                 {
                     item.Objectives.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestObjective>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Quest_Registration.QOBJ_HEADER,
+                            triggeringRecord: RecordTypes.QOBJ,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out QuestObjective listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -4519,15 +4504,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Objectives);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x54534C41: // ALST
-                case 0x534C4C41: // ALLS
+                case RecordTypeInts.ALST:
+                case RecordTypeInts.ALLS:
                 {
                     item.Aliases.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestAlias>.Instance.Parse(
@@ -4543,7 +4528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Aliases);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4774,27 +4759,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Type);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     _EventLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Event);
                 }
-                case 0x4C475451: // QTGL
+                case RecordTypeInts.QTGL:
                 {
                     this.TextDisplayGlobals = BinaryOverlayList<IFormLink<IGlobalGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -4809,12 +4794,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.TextDisplayGlobals);
                 }
-                case 0x52544C46: // FLTR
+                case RecordTypeInts.FLTR:
                 {
                     _ObjectWindowFilterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.ObjectWindowFilter);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     DialogConditionsCustomParse(
                         stream: stream,
@@ -4824,40 +4809,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.DialogConditions);
                 }
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.NEXT:
                 {
                     UnusedConditionsLogicCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: Quest_Registration.INDX_HEADER,
+                        trigger: RecordTypes.INDX,
                         factory:  QuestStageBinaryOverlay.QuestStageFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
-                case 0x4A424F51: // QOBJ
+                case RecordTypeInts.QOBJ:
                 {
                     this.Objectives = this.ParseRepeatedTypelessSubrecord<QuestObjectiveBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: Quest_Registration.QOBJ_HEADER,
+                        trigger: RecordTypes.QOBJ,
                         factory:  QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Objectives);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     NextAliasIDCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x54534C41: // ALST
-                case 0x534C4C41: // ALLS
+                case RecordTypeInts.ALST:
+                case RecordTypeInts.ALLS:
                 {
                     this.Aliases = this.ParseRepeatedTypelessSubrecord<QuestAliasBinaryOverlay>(
                         stream: stream,
@@ -4866,7 +4851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  QuestAliasBinaryOverlay.QuestAliasFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Aliases);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Description);

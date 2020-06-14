@@ -1023,9 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GlobalShortXmlWriteTranslation);
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
-        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalShortBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1958,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GlobalShort_Registration.GLOB_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GLOB),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2021,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
 
-        public override RecordType RecordType => GlobalShort_Registration.GLOB_HEADER;
+        public override RecordType RecordType => RecordTypes.GLOB;
         public static void FillBinaryStructs(
             IGlobalShortInternal item,
             MutagenFrame frame)
@@ -2041,7 +2039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     GlobalShortBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2193,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     DataCustomParse(
                         stream: stream,

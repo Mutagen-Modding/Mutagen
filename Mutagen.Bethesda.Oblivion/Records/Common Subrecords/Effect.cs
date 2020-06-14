@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 var magicEffName = frame.ReadMemory(4);
 
-                if (!frame.Reader.TryGetSubrecord(Effect_Registration.EFIT_HEADER, out var efitMeta))
+                if (!frame.Reader.TryGetSubrecord(RecordTypes.EFIT, out var efitMeta))
                 {
                     throw new ArgumentException("Expected EFIT header.");
                 }
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item)
             {
-                using (HeaderExport.Subrecord(writer, Effect_Registration.EFID_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.EFID))
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,

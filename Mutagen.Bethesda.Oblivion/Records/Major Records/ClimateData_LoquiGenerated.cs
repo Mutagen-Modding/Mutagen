@@ -1290,8 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ClimateDataXmlWriteTranslation);
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType TriggeringRecordType = TNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ClimateDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1379,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ClimateData_Registration.TNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.TNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2270,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ClimateData_Registration.TNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

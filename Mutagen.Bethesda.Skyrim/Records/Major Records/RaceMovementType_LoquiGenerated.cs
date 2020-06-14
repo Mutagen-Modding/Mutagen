@@ -1090,8 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RaceMovementTypeXmlWriteTranslation);
-        public static readonly RecordType MTYP_HEADER = new RecordType("MTYP");
-        public static readonly RecordType SPED_HEADER = new RecordType("SPED");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1099,8 +1097,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        MTYP_HEADER,
-                        SPED_HEADER
+                        RecordTypes.MTYP,
+                        RecordTypes.SPED
                     })
             );
         });
@@ -1827,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MovementType,
-                header: recordTypeConverter.ConvertToCustom(RaceMovementType_Registration.MTYP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MTYP));
             if (item.Overrides.TryGet(out var OverridesItem))
             {
                 ((SpeedOverridesBinaryWriteTranslation)((IBinaryItem)OverridesItem).BinaryWriteTranslator).Write(
@@ -1882,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x5059544D: // MTYP
+                case RecordTypeInts.MTYP:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1891,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
                 }
-                case 0x44455053: // SPED
+                case RecordTypeInts.SPED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
                     item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
@@ -2055,13 +2053,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x5059544D: // MTYP
+                case RecordTypeInts.MTYP:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return TryGet<int?>.Failure;
                     _MovementTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RaceMovementType_FieldIndex.MovementType);
                 }
-                case 0x44455053: // SPED
+                case RecordTypeInts.SPED:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.Overrides) return TryGet<int?>.Failure;
                     _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos);

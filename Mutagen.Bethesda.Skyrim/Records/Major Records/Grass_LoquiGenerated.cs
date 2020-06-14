@@ -1749,11 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GrassXmlWriteTranslation);
-        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = GRAS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GRAS;
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3243,7 +3239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Density);
                 writer.Write(item.MinSlope);
@@ -3284,7 +3280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Grass_Registration.GRAS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRAS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3336,7 +3332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
-        public override RecordType RecordType => Grass_Registration.GRAS_HEADER;
+        public override RecordType RecordType => RecordTypes.GRAS;
         public static void FillBinaryStructs(
             IGrassInternal item,
             MutagenFrame frame)
@@ -3356,19 +3352,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3600,12 +3596,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3613,7 +3609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);

@@ -4379,31 +4379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherXmlWriteTranslation);
-        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType JNAM_HEADER = new RecordType("JNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType IMSP_HEADER = new RecordType("IMSP");
-        public static readonly RecordType DALC_HEADER = new RecordType("DALC");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType TriggeringRecordType = WTHR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -8527,35 +8503,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DNAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CNAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ANAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BNAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.BNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LNAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.LNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Precipitation,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.MNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VisualEffect,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.NNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ONAM,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.ONAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
             WeatherBinaryWriteTranslation.WriteBinaryClouds(
                 writer: writer,
                 item: item);
@@ -8568,7 +8544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherBinaryWriteTranslation.WriteBinaryCloudAlphas(
                 writer: writer,
                 item: item);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.NAM0)))
             {
                 var SkyUpperColorItem = item.SkyUpperColor;
                 ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SkyUpperColorItem).BinaryWriteTranslator).Write(
@@ -8662,7 +8638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.FNAM)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -8689,7 +8665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.FogDistanceNightMax);
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 PercentBinaryTranslation.Write(
                     writer: writer,
@@ -8778,7 +8754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Weather_Registration.TNAM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
                 });
             if (item.ImageSpaces.TryGet(out var ImageSpacesItem))
             {
@@ -8793,11 +8769,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NAM2,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM2_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NAM3,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM3_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3));
             if (item.Aurora.TryGet(out var AuroraItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)AuroraItem).BinaryWriteTranslator).Write(
@@ -8814,7 +8790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Weather_Registration.WTHR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WTHR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -8866,7 +8842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
-        public override RecordType RecordType => Weather_Registration.WTHR_HEADER;
+        public override RecordType RecordType => RecordTypes.WTHR;
         public static void FillBinaryStructs(
             IWeatherInternal item,
             MutagenFrame frame)
@@ -8886,37 +8862,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ANAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Precipitation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8924,7 +8900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Precipitation);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VisualEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8932,41 +8908,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.VisualEffect);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E4A: // JNAM
+                case RecordTypeInts.JNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -8999,7 +8975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MoonGlareColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.MoonGlareColor);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -9013,7 +8989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FogDistanceNightMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -9064,19 +9040,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         multiplier: 0.7058823529411765);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Weather_Registration.SNAM_HEADER,
+                            triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WeatherSound listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -9087,41 +9063,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     item.SkyStatics.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Static>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Weather_Registration.TNAM_HEADER,
+                            triggeringRecord: RecordTypes.TNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
                 }
-                case 0x50534D49: // IMSP
+                case RecordTypeInts.IMSP:
                 {
                     item.ImageSpaces = Mutagen.Bethesda.Skyrim.WeatherImageSpaces.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ImageSpaces);
                 }
-                case 0x434C4144: // DALC
+                case RecordTypeInts.DALC:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Aurora = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
@@ -9615,47 +9591,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _ANAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _BNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     _LNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _PrecipitationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Precipitation);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _VisualEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.VisualEffect);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     _ONAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     CloudsCustomParse(
                         stream: stream,
@@ -9665,28 +9641,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     CloudXSpeedsCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     CloudColorsCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E4A: // JNAM
+                case RecordTypeInts.JNAM:
                 {
                     CloudAlphasCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     _NAM0Location = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
@@ -9700,24 +9676,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.MoonGlareColor);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     DisabledCloudLayersCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     this.Sounds = BinaryOverlayList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -9732,7 +9708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     this.SkyStatics = BinaryOverlayList<IFormLink<IStaticGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -9747,12 +9723,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
                 }
-                case 0x50534D49: // IMSP
+                case RecordTypeInts.IMSP:
                 {
                     _ImageSpacesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.ImageSpaces);
                 }
-                case 0x434C4144: // DALC
+                case RecordTypeInts.DALC:
                 {
                     DirectionalAmbientLightingColorsCustomParse(
                         stream,
@@ -9760,17 +9736,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _NAM2Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     _NAM3Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Aurora = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

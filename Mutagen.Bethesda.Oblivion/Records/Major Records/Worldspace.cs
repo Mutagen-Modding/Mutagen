@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (subCells?.Count == 0
                     && road != null
                     && topCell != null) return;
-                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
                             obj.SubCells.SetTo(
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                     frame: frame,
-                                    triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                                    triggeringRecord: RecordTypes.GRUP,
                                     transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                             break;
                         default:

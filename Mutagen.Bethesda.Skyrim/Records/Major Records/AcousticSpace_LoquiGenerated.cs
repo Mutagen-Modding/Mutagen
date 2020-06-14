@@ -1185,12 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AcousticSpaceXmlWriteTranslation);
-        public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
-        public static readonly RecordType TriggeringRecordType = ASPC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ASPC;
         public static readonly Type BinaryWriteTranslation = typeof(AcousticSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2170,15 +2165,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AmbientSound,
-                header: recordTypeConverter.ConvertToCustom(AcousticSpace_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseSoundFromRegion,
-                header: recordTypeConverter.ConvertToCustom(AcousticSpace_Registration.RDAT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RDAT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnvironmentType,
-                header: recordTypeConverter.ConvertToCustom(AcousticSpace_Registration.BNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
         }
 
         public void Write(
@@ -2188,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AcousticSpace_Registration.ASPC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ASPC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2240,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => AcousticSpace_Registration.ASPC_HEADER;
+        public override RecordType RecordType => RecordTypes.ASPC;
         public static void FillBinaryStructs(
             IAcousticSpaceInternal item,
             MutagenFrame frame)
@@ -2260,12 +2255,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AmbientSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2273,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.AmbientSound);
                 }
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UseSoundFromRegion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2281,7 +2276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.UseSoundFromRegion);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnvironmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2449,22 +2444,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _AmbientSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.AmbientSound);
                 }
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     _UseSoundFromRegionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.UseSoundFromRegion);
                 }
-                case 0x4D414E42: // BNAM
+                case RecordTypeInts.BNAM:
                 {
                     _EnvironmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.EnvironmentType);

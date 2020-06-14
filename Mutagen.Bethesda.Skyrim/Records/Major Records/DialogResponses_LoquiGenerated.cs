@@ -2079,25 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogResponsesXmlWriteTranslation);
-        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType TPIC_HEADER = new RecordType("TPIC");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TCLT_HEADER = new RecordType("TCLT");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType NEXT_HEADER = new RecordType("NEXT");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType TWAT_HEADER = new RecordType("TWAT");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType TriggeringRecordType = INFO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3896,7 +3878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DATA,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             if (item.Flags.TryGet(out var FlagsItem))
             {
                 ((DialogResponseFlagsBinaryWriteTranslation)((IBinaryItem)FlagsItem).BinaryWriteTranslator).Write(
@@ -3907,16 +3889,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.TPIC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TPIC));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousDialog,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<FavorLevel>.Instance.WriteNullable(
                 writer,
                 item.FavorLevel,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkTo,
@@ -3925,12 +3907,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.TCLT_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT));
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ResponseData,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.DNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
                 items: item.Responses,
@@ -3959,21 +3941,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Prompt,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.RNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Speaker,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WalkAwayTopic,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.TWAT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TWAT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AudioOutputOverride,
-                header: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.ONAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
         }
 
         public void Write(
@@ -3983,7 +3965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogResponses_Registration.INFO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.INFO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -4035,7 +4017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogResponsesBinaryCreateTranslation Instance = new DialogResponsesBinaryCreateTranslation();
 
-        public override RecordType RecordType => DialogResponses_Registration.INFO_HEADER;
+        public override RecordType RecordType => RecordTypes.INFO;
         public static void FillBinaryStructs(
             IDialogResponsesInternal item,
             MutagenFrame frame)
@@ -4055,23 +4037,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.FragmentsAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.DATA);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     item.Flags = Mutagen.Bethesda.Skyrim.DialogResponseFlags.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Flags);
                 }
-                case 0x43495054: // TPIC
+                case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Topic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4079,7 +4061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Topic);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PreviousDialog = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4087,23 +4069,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.PreviousDialog);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FavorLevel = EnumBinaryTranslation<FavorLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.FavorLevel);
                 }
-                case 0x544C4354: // TCLT
+                case RecordTypeInts.TCLT:
                 {
                     item.LinkTo.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialog>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogResponses_Registration.TCLT_HEADER,
+                            triggeringRecord: RecordTypes.TCLT,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.LinkTo);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ResponseData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4111,12 +4093,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.ResponseData);
                 }
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogResponses_Registration.TRDT_HEADER,
+                            triggeringRecord: RecordTypes.TRDT,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -4127,16 +4109,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Responses);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     DialogResponsesBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Conditions);
                 }
-                case 0x52484353: // SCHR
-                case 0x4D414E51: // QNAM
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.NEXT:
                 {
                     item.UnknownData.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponsesUnknownData>.Instance.Parse(
@@ -4152,7 +4134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.UnknownData);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Prompt = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4161,7 +4143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Prompt);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Speaker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4169,7 +4151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Speaker);
                 }
-                case 0x54415754: // TWAT
+                case RecordTypeInts.TWAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WalkAwayTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4177,7 +4159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.WalkAwayTopic);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AudioOutputOverride = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4393,37 +4375,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.DATA);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Flags);
                 }
-                case 0x43495054: // TPIC
+                case RecordTypeInts.TPIC:
                 {
                     _TopicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Topic);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PreviousDialogLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.PreviousDialog);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _FavorLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.FavorLevel);
                 }
-                case 0x544C4354: // TCLT
+                case RecordTypeInts.TCLT:
                 {
                     this.LinkTo = BinaryOverlayList<IFormLink<IDialogGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -4438,21 +4420,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.LinkTo);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _ResponseDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.ResponseData);
                 }
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: DialogResponses_Registration.TRDT_HEADER,
+                        trigger: RecordTypes.TRDT,
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Responses);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     ConditionsCustomParse(
                         stream: stream,
@@ -4462,9 +4444,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Conditions);
                 }
-                case 0x52484353: // SCHR
-                case 0x4D414E51: // QNAM
-                case 0x5458454E: // NEXT
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.QNAM:
+                case RecordTypeInts.NEXT:
                 {
                     this.UnknownData = this.ParseRepeatedTypelessSubrecord<DialogResponsesUnknownDataBinaryOverlay>(
                         stream: stream,
@@ -4473,22 +4455,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  DialogResponsesUnknownDataBinaryOverlay.DialogResponsesUnknownDataFactory);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.UnknownData);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _PromptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Prompt);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _SpeakerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Speaker);
                 }
-                case 0x54415754: // TWAT
+                case RecordTypeInts.TWAT:
                 {
                     _WalkAwayTopicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.WalkAwayTopic);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     _AudioOutputOverrideLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.AudioOutputOverride);

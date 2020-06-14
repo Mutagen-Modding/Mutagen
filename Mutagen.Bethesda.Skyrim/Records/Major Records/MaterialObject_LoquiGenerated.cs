@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MaterialObjectXmlWriteTranslation);
-        public static readonly RecordType MATO_HEADER = new RecordType("MATO");
-        public static readonly RecordType TriggeringRecordType = MATO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MATO;
         public static readonly Type BinaryWriteTranslation = typeof(MaterialObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(MaterialObject_Registration.MATO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.MATO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MaterialObjectBinaryCreateTranslation Instance = new MaterialObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => MaterialObject_Registration.MATO_HEADER;
+        public override RecordType RecordType => RecordTypes.MATO;
         public static void FillBinaryStructs(
             IMaterialObjectInternal item,
             MutagenFrame frame)

@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MovementTypeXmlWriteTranslation);
-        public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
-        public static readonly RecordType TriggeringRecordType = MOVT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MOVT;
         public static readonly Type BinaryWriteTranslation = typeof(MovementTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(MovementType_Registration.MOVT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.MOVT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MovementTypeBinaryCreateTranslation Instance = new MovementTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => MovementType_Registration.MOVT_HEADER;
+        public override RecordType RecordType => RecordTypes.MOVT;
         public static void FillBinaryStructs(
             IMovementTypeInternal item,
             MutagenFrame frame)

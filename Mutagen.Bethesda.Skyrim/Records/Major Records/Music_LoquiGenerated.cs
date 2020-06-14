@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MusicXmlWriteTranslation);
-        public static readonly RecordType MUSC_HEADER = new RecordType("MUSC");
-        public static readonly RecordType TriggeringRecordType = MUSC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MUSC;
         public static readonly Type BinaryWriteTranslation = typeof(MusicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Music_Registration.MUSC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.MUSC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MusicBinaryCreateTranslation Instance = new MusicBinaryCreateTranslation();
 
-        public override RecordType RecordType => Music_Registration.MUSC_HEADER;
+        public override RecordType RecordType => RecordTypes.MUSC;
         public static void FillBinaryStructs(
             IMusicInternal item,
             MutagenFrame frame)

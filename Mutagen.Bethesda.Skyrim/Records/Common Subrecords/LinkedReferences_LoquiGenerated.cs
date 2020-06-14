@@ -1125,8 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LinkedReferencesXmlWriteTranslation);
-        public static readonly RecordType XLKR_HEADER = new RecordType("XLKR");
-        public static readonly RecordType TriggeringRecordType = XLKR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XLKR;
         public static readonly Type BinaryWriteTranslation = typeof(LinkedReferencesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LinkedReferences_Registration.XLKR_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XLKR)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1860,7 +1859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LinkedReferences_Registration.XLKR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XLKR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

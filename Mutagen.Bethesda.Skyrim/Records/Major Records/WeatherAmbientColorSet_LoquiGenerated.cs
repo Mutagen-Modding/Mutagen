@@ -1195,8 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherAmbientColorSetXmlWriteTranslation);
-        public static readonly RecordType DALC_HEADER = new RecordType("DALC");
-        public static readonly RecordType TriggeringRecordType = DALC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DALC;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherAmbientColorSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1281,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WeatherAmbientColorSet_Registration.DALC_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.DALC)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2058,7 +2057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WeatherAmbientColorSet_Registration.DALC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DALC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

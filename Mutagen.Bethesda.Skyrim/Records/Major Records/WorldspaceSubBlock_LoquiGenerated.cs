@@ -1380,9 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceSubBlockXmlWriteTranslation);
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceSubBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2377,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WorldspaceSubBlock_Registration.GRUP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))
             {
                 WriteEmbedded(
@@ -2428,12 +2426,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C4543: // CELL
+                case RecordTypeInts.CELL:
                 {
                     item.Items.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: WorldspaceSubBlock_Registration.CELL_HEADER,
+                            triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Cell listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2616,7 +2614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C4543: // CELL
+                case RecordTypeInts.CELL:
                 {
                     ItemsCustomParse(
                         stream: stream,

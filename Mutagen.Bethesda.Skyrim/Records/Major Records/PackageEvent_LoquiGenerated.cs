@@ -1427,13 +1427,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PackageEventXmlWriteTranslation);
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1441,13 +1434,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        INAM_HEADER,
-                        SCHR_HEADER,
-                        SCDA_HEADER,
-                        SCTX_HEADER,
-                        QNAM_HEADER,
-                        TNAM_HEADER,
-                        PDTO_HEADER
+                        RecordTypes.INAM,
+                        RecordTypes.SCHR,
+                        RecordTypes.SCDA,
+                        RecordTypes.SCTX,
+                        RecordTypes.QNAM,
+                        RecordTypes.TNAM,
+                        RecordTypes.PDTO
                     })
             );
         });
@@ -2477,27 +2470,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Idle,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.SCHR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCDA,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.SCDA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCTX,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.SCTX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.QNAM,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.QNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TNAM,
-                header: recordTypeConverter.ConvertToCustom(PackageEvent_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             PackageEventBinaryWriteTranslation.WriteBinaryTopics(
                 writer: writer,
                 item: item);
@@ -2548,7 +2541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2557,42 +2550,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Idle);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCHR);
                 }
-                case 0x41444353: // SCDA
+                case RecordTypeInts.SCDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCDA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCDA);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCTX);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.QNAM);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.TNAM);
                 }
-                case 0x4F544450: // PDTO
+                case RecordTypeInts.PDTO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return TryGet<int?>.Failure;
                     PackageEventBinaryCreateTranslation.FillBinaryTopicsCustom(
@@ -2785,43 +2778,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return TryGet<int?>.Failure;
                     _IdleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Idle);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     _SCHRLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCHR);
                 }
-                case 0x41444353: // SCDA
+                case RecordTypeInts.SCDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return TryGet<int?>.Failure;
                     _SCDALocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCDA);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return TryGet<int?>.Failure;
                     _SCTXLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCTX);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     _QNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.QNAM);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return TryGet<int?>.Failure;
                     _TNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.TNAM);
                 }
-                case 0x4F544450: // PDTO
+                case RecordTypeInts.PDTO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return TryGet<int?>.Failure;
                     TopicsCustomParse(

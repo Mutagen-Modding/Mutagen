@@ -1335,8 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CellBlockXmlWriteTranslation);
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(CellBlockBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2287,7 +2286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CellBlock_Registration.GRUP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))
             {
                 WriteEmbedded(
@@ -2337,12 +2336,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x50555247: // GRUP
+                case RecordTypeInts.GRUP:
                 {
                     item.SubBlocks.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: CellBlock_Registration.GRUP_HEADER,
+                            triggeringRecord: RecordTypes.GRUP,
                             thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
@@ -2518,7 +2517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x50555247: // GRUP
+                case RecordTypeInts.GRUP:
                 {
                     this.SubBlocks = BinaryOverlayList<CellSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

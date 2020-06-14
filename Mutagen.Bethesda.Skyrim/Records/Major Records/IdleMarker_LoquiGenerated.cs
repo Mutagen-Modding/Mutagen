@@ -1344,14 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IdleMarkerXmlWriteTranslation);
-        public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType IDLF_HEADER = new RecordType("IDLF");
-        public static readonly RecordType IDLC_HEADER = new RecordType("IDLC");
-        public static readonly RecordType IDLT_HEADER = new RecordType("IDLT");
-        public static readonly RecordType IDLA_HEADER = new RecordType("IDLA");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType TriggeringRecordType = IDLM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IDLM;
         public static readonly Type BinaryWriteTranslation = typeof(IdleMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2495,14 +2488,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(IdleMarker_Registration.IDLF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimationCount(
                 writer: writer,
                 item: item);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleTimer,
-                header: recordTypeConverter.ConvertToCustom(IdleMarker_Registration.IDLT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLT));
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimations(
                 writer: writer,
                 item: item);
@@ -2522,7 +2515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(IdleMarker_Registration.IDLM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IDLM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2574,7 +2567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
-        public override RecordType RecordType => IdleMarker_Registration.IDLM_HEADER;
+        public override RecordType RecordType => RecordTypes.IDLM;
         public static void FillBinaryStructs(
             IIdleMarkerInternal item,
             MutagenFrame frame)
@@ -2594,38 +2587,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.ObjectBounds);
                 }
-                case 0x464C4449: // IDLF
+                case RecordTypeInts.IDLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<IdleMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Flags);
                 }
-                case 0x434C4449: // IDLC
+                case RecordTypeInts.IDLC:
                 {
                     IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x544C4449: // IDLT
+                case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTimer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.IdleTimer);
                 }
-                case 0x414C4449: // IDLA
+                case RecordTypeInts.IDLA:
                 {
                     IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Animations);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
@@ -2808,29 +2801,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.ObjectBounds);
                 }
-                case 0x464C4449: // IDLF
+                case RecordTypeInts.IDLF:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Flags);
                 }
-                case 0x434C4449: // IDLC
+                case RecordTypeInts.IDLC:
                 {
                     AnimationCountCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x544C4449: // IDLT
+                case RecordTypeInts.IDLT:
                 {
                     _IdleTimerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.IdleTimer);
                 }
-                case 0x414C4449: // IDLA
+                case RecordTypeInts.IDLA:
                 {
                     AnimationsCustomParse(
                         stream: stream,
@@ -2840,7 +2833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Animations);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

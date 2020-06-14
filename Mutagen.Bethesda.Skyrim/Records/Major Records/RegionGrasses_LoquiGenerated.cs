@@ -1080,9 +1080,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionGrassesXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType RDGS_HEADER = new RecordType("RDGS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1090,8 +1087,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RDAT_HEADER,
-                        ICON_HEADER
+                        RecordTypes.RDAT,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -1806,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionGrassGetter>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
-                recordType: recordTypeConverter.ConvertToCustom(RegionGrasses_Registration.RDGS_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDGS),
                 transl: (MutagenWriter subWriter, IRegionGrassGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1873,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x53474452: // RDGS
+                case RecordTypeInts.RDGS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
@@ -2023,7 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x53474452: // RDGS
+                case RecordTypeInts.RDGS:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

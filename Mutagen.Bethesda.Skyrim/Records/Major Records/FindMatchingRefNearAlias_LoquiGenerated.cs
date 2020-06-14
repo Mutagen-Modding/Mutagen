@@ -1064,8 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FindMatchingRefNearAliasXmlWriteTranslation);
-        public static readonly RecordType ALNA_HEADER = new RecordType("ALNA");
-        public static readonly RecordType ALNT_HEADER = new RecordType("ALNT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1073,8 +1071,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        ALNA_HEADER,
-                        ALNT_HEADER
+                        RecordTypes.ALNA,
+                        RecordTypes.ALNT
                     })
             );
         });
@@ -1781,7 +1779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Type,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(FindMatchingRefNearAlias_Registration.ALNT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALNT));
         }
 
         public void Write(
@@ -1829,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x414E4C41: // ALNA
+                case RecordTypeInts.ALNA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryAliasIndexCustom(
@@ -1837,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex);
                 }
-                case 0x544E4C41: // ALNT
+                case RecordTypeInts.ALNT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2001,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x414E4C41: // ALNA
+                case RecordTypeInts.ALNA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     AliasIndexCustomParse(
@@ -2010,7 +2008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex);
                 }
-                case 0x544E4C41: // ALNT
+                case RecordTypeInts.ALNT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return TryGet<int?>.Failure;
                     _TypeLocation = (stream.Position - offset);

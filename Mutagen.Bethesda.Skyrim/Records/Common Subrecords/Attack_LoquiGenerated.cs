@@ -1090,8 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AttackXmlWriteTranslation);
-        public static readonly RecordType ATKD_HEADER = new RecordType("ATKD");
-        public static readonly RecordType ATKE_HEADER = new RecordType("ATKE");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1099,8 +1097,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        ATKD_HEADER,
-                        ATKE_HEADER
+                        RecordTypes.ATKD,
+                        RecordTypes.ATKE
                     })
             );
         });
@@ -1837,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackEvent,
-                header: recordTypeConverter.ConvertToCustom(Attack_Registration.ATKE_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ATKE),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1886,13 +1884,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444B5441: // ATKD
+                case RecordTypeInts.ATKD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return TryGet<int?>.Failure;
                     item.AttackData = Mutagen.Bethesda.Skyrim.AttackData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackData);
                 }
-                case 0x454B5441: // ATKE
+                case RecordTypeInts.ATKE:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2058,13 +2056,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444B5441: // ATKD
+                case RecordTypeInts.ATKD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackData) return TryGet<int?>.Failure;
                     _AttackDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Attack_FieldIndex.AttackData);
                 }
-                case 0x454B5441: // ATKE
+                case RecordTypeInts.ATKE:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Attack_FieldIndex.AttackEvent) return TryGet<int?>.Failure;
                     _AttackEventLocation = (stream.Position - offset);

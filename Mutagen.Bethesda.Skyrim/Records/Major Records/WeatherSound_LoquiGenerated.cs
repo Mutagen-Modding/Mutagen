@@ -1073,8 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherSoundXmlWriteTranslation);
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TriggeringRecordType = SNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WeatherSound_Registration.SNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1764,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WeatherSound_Registration.SNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

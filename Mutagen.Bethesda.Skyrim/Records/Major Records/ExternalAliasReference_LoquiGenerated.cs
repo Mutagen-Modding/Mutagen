@@ -1074,8 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ExternalAliasReferenceXmlWriteTranslation);
-        public static readonly RecordType ALEQ_HEADER = new RecordType("ALEQ");
-        public static readonly RecordType ALEA_HEADER = new RecordType("ALEA");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1083,8 +1081,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        ALEQ_HEADER,
-                        ALEA_HEADER
+                        RecordTypes.ALEQ,
+                        RecordTypes.ALEA
                     })
             );
         });
@@ -1778,11 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(ExternalAliasReference_Registration.ALEQ_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALEQ));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AliasIndex,
-                header: recordTypeConverter.ConvertToCustom(ExternalAliasReference_Registration.ALEA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALEA));
         }
 
         public void Write(
@@ -1830,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x51454C41: // ALEQ
+                case RecordTypeInts.ALEQ:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1839,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.Quest);
                 }
-                case 0x41454C41: // ALEA
+                case RecordTypeInts.ALEA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2003,13 +2001,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x51454C41: // ALEQ
+                case RecordTypeInts.ALEQ:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return TryGet<int?>.Failure;
                     _QuestLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.Quest);
                 }
-                case 0x41454C41: // ALEA
+                case RecordTypeInts.ALEA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     _AliasIndexLocation = (stream.Position - offset);

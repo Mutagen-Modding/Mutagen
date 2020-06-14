@@ -1899,23 +1899,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(HeadDataXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType HEAD_HEADER = new RecordType("HEAD");
-        public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
-        public static readonly RecordType RPRM_HEADER = new RecordType("RPRM");
-        public static readonly RecordType AHCM_HEADER = new RecordType("AHCM");
-        public static readonly RecordType FTSM_HEADER = new RecordType("FTSM");
-        public static readonly RecordType DFTM_HEADER = new RecordType("DFTM");
-        public static readonly RecordType TINI_HEADER = new RecordType("TINI");
-        public static readonly RecordType TINT_HEADER = new RecordType("TINT");
-        public static readonly RecordType TINP_HEADER = new RecordType("TINP");
-        public static readonly RecordType TIND_HEADER = new RecordType("TIND");
-        public static readonly RecordType TINC_HEADER = new RecordType("TINC");
-        public static readonly RecordType TINV_HEADER = new RecordType("TINV");
-        public static readonly RecordType TIRS_HEADER = new RecordType("TIRS");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType NAM8_HEADER = new RecordType("NAM8");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1923,23 +1906,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        INDX_HEADER,
-                        HEAD_HEADER,
-                        MPAI_HEADER,
-                        RPRM_HEADER,
-                        AHCM_HEADER,
-                        FTSM_HEADER,
-                        DFTM_HEADER,
-                        TINI_HEADER,
-                        TINT_HEADER,
-                        TINP_HEADER,
-                        TIND_HEADER,
-                        TINC_HEADER,
-                        TINV_HEADER,
-                        TIRS_HEADER,
-                        MODL_HEADER,
-                        NAM8_HEADER,
-                        RNAM_HEADER
+                        RecordTypes.INDX,
+                        RecordTypes.HEAD,
+                        RecordTypes.MPAI,
+                        RecordTypes.RPRM,
+                        RecordTypes.AHCM,
+                        RecordTypes.FTSM,
+                        RecordTypes.DFTM,
+                        RecordTypes.TINI,
+                        RecordTypes.TINT,
+                        RecordTypes.TINP,
+                        RecordTypes.TIND,
+                        RecordTypes.TINC,
+                        RecordTypes.TINV,
+                        RecordTypes.TIRS,
+                        RecordTypes.MODL,
+                        RecordTypes.NAM8,
+                        RecordTypes.RNAM
                     })
             );
         });
@@ -3366,7 +3349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RPRM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
@@ -3376,7 +3359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.AHCM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
@@ -3386,12 +3369,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(HeadData_Registration.FTSM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM));
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultFaceTexture,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.DFTM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DFTM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintMasks,
@@ -3413,11 +3396,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MorphRace,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.NAM8_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ArmorRace,
-                header: recordTypeConverter.ConvertToCustom(HeadData_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
         }
 
         public void Write(
@@ -3465,8 +3448,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
-                case 0x44414548: // HEAD
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.HeadParts) return TryGet<int?>.Failure;
                     item.HeadParts.SetTo(
@@ -3483,46 +3466,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
                 }
-                case 0x4941504D: // MPAI
+                case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableMorphs) return TryGet<int?>.Failure;
                     item.AvailableMorphs = Mutagen.Bethesda.Skyrim.AvailableMorphs.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableMorphs);
                 }
-                case 0x4D525052: // RPRM
+                case RecordTypeInts.RPRM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return TryGet<int?>.Failure;
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: HeadData_Registration.RPRM_HEADER,
+                            triggeringRecord: RecordTypes.RPRM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
-                case 0x4D434841: // AHCM
+                case RecordTypeInts.AHCM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return TryGet<int?>.Failure;
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: HeadData_Registration.AHCM_HEADER,
+                            triggeringRecord: RecordTypes.AHCM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
                 }
-                case 0x4D535446: // FTSM
+                case RecordTypeInts.FTSM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return TryGet<int?>.Failure;
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: HeadData_Registration.FTSM_HEADER,
+                            triggeringRecord: RecordTypes.FTSM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
                 }
-                case 0x4D544644: // DFTM
+                case RecordTypeInts.DFTM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3531,13 +3514,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.DefaultFaceTexture);
                 }
-                case 0x494E4954: // TINI
-                case 0x544E4954: // TINT
-                case 0x504E4954: // TINP
-                case 0x444E4954: // TIND
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TINI:
+                case RecordTypeInts.TINT:
+                case RecordTypeInts.TINP:
+                case RecordTypeInts.TIND:
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.TintMasks) return TryGet<int?>.Failure;
                     item.TintMasks.SetTo(
@@ -3554,7 +3537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
@@ -3562,7 +3545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.Model);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3571,7 +3554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.MorphRace);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3750,8 +3733,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
-                case 0x44414548: // HEAD
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.HeadParts) return TryGet<int?>.Failure;
                     this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
@@ -3761,7 +3744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
                 }
-                case 0x4941504D: // MPAI
+                case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableMorphs) return TryGet<int?>.Failure;
                     this.AvailableMorphs = AvailableMorphsBinaryOverlay.AvailableMorphsFactory(
@@ -3770,7 +3753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableMorphs);
                 }
-                case 0x4D525052: // RPRM
+                case RecordTypeInts.RPRM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return TryGet<int?>.Failure;
                     this.RacePresets = BinaryOverlayList<IFormLink<INpcGetter>>.FactoryByArray(
@@ -3786,7 +3769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
-                case 0x4D434841: // AHCM
+                case RecordTypeInts.AHCM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return TryGet<int?>.Failure;
                     this.AvailableHairColors = BinaryOverlayList<IFormLink<IColorRecordGetter>>.FactoryByArray(
@@ -3802,7 +3785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
                 }
-                case 0x4D535446: // FTSM
+                case RecordTypeInts.FTSM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return TryGet<int?>.Failure;
                     this.FaceDetails = BinaryOverlayList<IFormLink<ITextureSetGetter>>.FactoryByArray(
@@ -3818,19 +3801,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
                 }
-                case 0x4D544644: // DFTM
+                case RecordTypeInts.DFTM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return TryGet<int?>.Failure;
                     _DefaultFaceTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.DefaultFaceTexture);
                 }
-                case 0x494E4954: // TINI
-                case 0x544E4954: // TINT
-                case 0x504E4954: // TINP
-                case 0x444E4954: // TIND
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TINI:
+                case RecordTypeInts.TINT:
+                case RecordTypeInts.TINP:
+                case RecordTypeInts.TIND:
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.TintMasks) return TryGet<int?>.Failure;
                     this.TintMasks = this.ParseRepeatedTypelessSubrecord<TintAssetsBinaryOverlay>(
@@ -3840,7 +3823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  TintAssetsBinaryOverlay.TintAssetsFactory);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryOverlay.ModelFactory(
@@ -3849,13 +3832,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.Model);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return TryGet<int?>.Failure;
                     _MorphRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.MorphRace);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return TryGet<int?>.Failure;
                     _ArmorRaceLocation = (stream.Position - offset);

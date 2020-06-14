@@ -1123,8 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WaterReflectionXmlWriteTranslation);
-        public static readonly RecordType XPWR_HEADER = new RecordType("XPWR");
-        public static readonly RecordType TriggeringRecordType = XPWR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XPWR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterReflectionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1208,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WaterReflection_Registration.XPWR_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XPWR)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1858,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WaterReflection_Registration.XPWR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XPWR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

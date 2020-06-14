@@ -1219,8 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AvailableMorphsXmlWriteTranslation);
-        public static readonly RecordType MPAI_HEADER = new RecordType("MPAI");
-        public static readonly RecordType TriggeringRecordType = MPAI_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MPAI;
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2200,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4941504D: // MPAI
+                case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
                     AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
@@ -2359,7 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4941504D: // MPAI
+                case RecordTypeInts.MPAI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
                     ParseCustomParse(

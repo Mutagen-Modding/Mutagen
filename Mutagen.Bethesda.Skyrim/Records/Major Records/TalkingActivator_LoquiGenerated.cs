@@ -1609,21 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TalkingActivatorXmlWriteTranslation);
-        public static readonly RecordType TACT_HEADER = new RecordType("TACT");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
-        public static readonly RecordType TriggeringRecordType = TACT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TACT;
         public static readonly Type BinaryWriteTranslation = typeof(TalkingActivatorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3065,7 +3051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -3085,9 +3071,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: TalkingActivator_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3097,19 +3083,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PNAM,
-                header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
-                header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.SNDR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNDR));
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
-                header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VoiceType,
-                header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.VNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
         }
 
         public void Write(
@@ -3119,7 +3105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.TACT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TACT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3171,7 +3157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static TalkingActivatorBinaryCreateTranslation Instance = new TalkingActivatorBinaryCreateTranslation();
 
-        public override RecordType RecordType => TalkingActivator_Registration.TACT_HEADER;
+        public override RecordType RecordType => RecordTypes.TACT;
         public static void FillBinaryStructs(
             ITalkingActivatorInternal item,
             MutagenFrame frame)
@@ -3191,17 +3177,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3210,43 +3196,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: TalkingActivator_Registration.KSIZ_HEADER,
-                            triggeringRecord: TalkingActivator_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PNAM = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.PNAM);
                 }
-                case 0x52444E53: // SNDR
+                case RecordTypeInts.SNDR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoopingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3254,13 +3240,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.LoopingSound);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = frame.ReadInt16();
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.FNAM);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VoiceType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3444,22 +3430,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3467,9 +3453,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -3477,35 +3463,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: TalkingActivator_Registration.KSIZ_HEADER,
-                        subrecordType: TalkingActivator_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.PNAM);
                 }
-                case 0x52444E53: // SNDR
+                case RecordTypeInts.SNDR:
                 {
                     _LoopingSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.LoopingSound);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.FNAM);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     _VoiceTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.VoiceType);

@@ -908,6 +908,8 @@
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Oblivion.cs" />
+    <Compile Include="Records\RecordTypeInts.cs" />
+    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Warmup.cs" />
   </ItemGroup>
   <ItemGroup>

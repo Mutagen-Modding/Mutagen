@@ -1585,16 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestXmlWriteTranslation);
-        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
-        public static readonly RecordType TriggeringRecordType = QUST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.QUST;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2883,16 +2874,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Quest_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -2943,7 +2934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Quest_Registration.QUST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.QUST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2995,7 +2986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
-        public override RecordType RecordType => Quest_Registration.QUST_HEADER;
+        public override RecordType RecordType => RecordTypes.QUST;
         public static void FillBinaryStructs(
             IQuestInternal item,
             MutagenFrame frame)
@@ -3015,7 +3006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3023,7 +3014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Script);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3031,7 +3022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3039,13 +3030,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Icon);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.QuestData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Data);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
@@ -3061,12 +3052,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
                 }
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestStage>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Quest_Registration.INDX_HEADER,
+                            triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out QuestStage listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -3077,12 +3068,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     item.Targets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestTarget>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Quest_Registration.QSTA_HEADER,
+                            triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out QuestTarget listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -3254,28 +3245,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Script);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Icon);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Data);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3290,21 +3281,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
                 }
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: Quest_Registration.INDX_HEADER,
+                        trigger: RecordTypes.INDX,
                         factory:  QuestStageBinaryOverlay.QuestStageFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: Quest_Registration.QSTA_HEADER,
+                        trigger: RecordTypes.QSTA,
                         factory:  QuestTargetBinaryOverlay.QuestTargetFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
                 }

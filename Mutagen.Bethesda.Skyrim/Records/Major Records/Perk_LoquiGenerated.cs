@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PerkXmlWriteTranslation);
-        public static readonly RecordType PERK_HEADER = new RecordType("PERK");
-        public static readonly RecordType TriggeringRecordType = PERK_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PERK;
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Perk_Registration.PERK_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PERK),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
 
-        public override RecordType RecordType => Perk_Registration.PERK_HEADER;
+        public override RecordType RecordType => RecordTypes.PERK;
         public static void FillBinaryStructs(
             IPerkInternal item,
             MutagenFrame frame)

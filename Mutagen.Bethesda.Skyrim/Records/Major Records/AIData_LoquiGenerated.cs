@@ -1469,8 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AIDataXmlWriteTranslation);
-        public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
-        public static readonly RecordType TriggeringRecordType = AIDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.AIDT;
         public static readonly Type BinaryWriteTranslation = typeof(AIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1562,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(AIData_Registration.AIDT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.AIDT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2538,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AIData_Registration.AIDT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.AIDT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

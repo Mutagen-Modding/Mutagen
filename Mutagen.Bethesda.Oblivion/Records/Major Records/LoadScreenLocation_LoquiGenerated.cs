@@ -1120,8 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LoadScreenLocationXmlWriteTranslation);
-        public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
-        public static readonly RecordType TriggeringRecordType = LNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LNAM;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenLocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1205,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LoadScreenLocation_Registration.LNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.LNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1854,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LoadScreenLocation_Registration.LNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

@@ -1564,14 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionXmlWriteTranslation);
-        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType RCLR_HEADER = new RecordType("RCLR");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType RPLI_HEADER = new RecordType("RPLI");
-        public static readonly RecordType RPLD_HEADER = new RecordType("RPLD");
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType TriggeringRecordType = REGN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3010,16 +3003,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapColor,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RCLR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Worldspace,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
                 writer: writer,
                 items: item.Areas,
@@ -3043,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Region_Registration.REGN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.REGN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3095,7 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
-        public override RecordType RecordType => Region_Registration.REGN_HEADER;
+        public override RecordType RecordType => RecordTypes.REGN;
         public static void FillBinaryStructs(
             IRegionInternal item,
             MutagenFrame frame)
@@ -3115,7 +3108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3123,13 +3116,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 }
-                case 0x524C4352: // RCLR
+                case RecordTypeInts.RCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3137,8 +3130,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
-                case 0x494C5052: // RPLI
-                case 0x444C5052: // RPLD
+                case RecordTypeInts.RPLI:
+                case RecordTypeInts.RPLD:
                 {
                     item.Areas.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
@@ -3154,7 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -3327,7 +3320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     IconCustomParse(
                         stream: stream,
@@ -3335,18 +3328,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 }
-                case 0x524C4352: // RCLR
+                case RecordTypeInts.RCLR:
                 {
                     _MapColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     _WorldspaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
-                case 0x494C5052: // RPLI
-                case 0x444C5052: // RPLD
+                case RecordTypeInts.RPLI:
+                case RecordTypeInts.RPLD:
                 {
                     this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
                         stream: stream,
@@ -3355,7 +3348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         factory:  RegionAreaBinaryOverlay.RegionAreaFactory);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     RegionAreaLogicCustomParse(
                         stream,

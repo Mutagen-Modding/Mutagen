@@ -1851,21 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogItemXmlWriteTranslation);
-        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType QSTI_HEADER = new RecordType("QSTI");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType NAME_HEADER = new RecordType("NAME");
-        public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType TCLT_HEADER = new RecordType("TCLT");
-        public static readonly RecordType TCLF_HEADER = new RecordType("TCLF");
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType TriggeringRecordType = INFO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3361,11 +3347,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.QSTI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousTopic,
-                header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Topics,
@@ -3374,7 +3360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.NAME_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.NAME));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
@@ -3406,7 +3392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLT_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
@@ -3416,7 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLF_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF));
                 });
             var ScriptItem = item.Script;
             ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)ScriptItem).BinaryWriteTranslator).Write(
@@ -3432,7 +3418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogItem_Registration.INFO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.INFO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3484,7 +3470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
 
-        public override RecordType RecordType => DialogItem_Registration.INFO_HEADER;
+        public override RecordType RecordType => RecordTypes.INFO;
         public static void FillBinaryStructs(
             IDialogItemInternal item,
             MutagenFrame frame)
@@ -3504,12 +3490,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
                 }
-                case 0x49545351: // QSTI
+                case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3517,7 +3503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3525,19 +3511,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
-                case 0x454D414E: // NAME
+                case RecordTypeInts.NAME:
                 {
                     item.Topics.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogItem_Registration.NAME_HEADER,
+                            triggeringRecord: RecordTypes.NAME,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
-                case 0x54445254: // TRDT
-                case 0x314D414E: // NAM1
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.TRDT:
+                case RecordTypeInts.NAM1:
+                case RecordTypeInts.NAM2:
                 {
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.Parse(
@@ -3553,8 +3539,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
@@ -3570,28 +3556,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 }
-                case 0x544C4354: // TCLT
+                case RecordTypeInts.TCLT:
                 {
                     item.Choices.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogItem_Registration.TCLT_HEADER,
+                            triggeringRecord: RecordTypes.TCLT,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
-                case 0x464C4354: // TCLF
+                case RecordTypeInts.TCLF:
                 {
                     item.LinkFrom.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: DialogItem_Registration.TCLF_HEADER,
+                            triggeringRecord: RecordTypes.TCLF,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     item.Script.CopyInFromBinary(
                         frame: frame,
@@ -3762,22 +3748,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
                 }
-                case 0x49545351: // QSTI
+                case RecordTypeInts.QSTI:
                 {
                     _QuestLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PreviousTopicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
-                case 0x454D414E: // NAME
+                case RecordTypeInts.NAME:
                 {
                     this.Topics = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3792,9 +3778,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
-                case 0x54445254: // TRDT
-                case 0x314D414E: // NAM1
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.TRDT:
+                case RecordTypeInts.NAM1:
+                case RecordTypeInts.NAM2:
                 {
                     this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
@@ -3803,8 +3789,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3819,7 +3805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
                 }
-                case 0x544C4354: // TCLT
+                case RecordTypeInts.TCLT:
                 {
                     this.Choices = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3834,7 +3820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
-                case 0x464C4354: // TCLF
+                case RecordTypeInts.TCLF:
                 {
                     this.LinkFrom = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -3849,8 +3835,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,

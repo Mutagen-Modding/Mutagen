@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(OutfitXmlWriteTranslation);
-        public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
-        public static readonly RecordType TriggeringRecordType = OTFT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.OTFT;
         public static readonly Type BinaryWriteTranslation = typeof(OutfitBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Outfit_Registration.OTFT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.OTFT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static OutfitBinaryCreateTranslation Instance = new OutfitBinaryCreateTranslation();
 
-        public override RecordType RecordType => Outfit_Registration.OTFT_HEADER;
+        public override RecordType RecordType => RecordTypes.OTFT;
         public static void FillBinaryStructs(
             IOutfitInternal item,
             MutagenFrame frame)

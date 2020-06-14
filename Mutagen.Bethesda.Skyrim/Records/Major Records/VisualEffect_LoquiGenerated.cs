@@ -1174,9 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(VisualEffectXmlWriteTranslation);
-        public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = RFCT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RFCT;
         public static readonly Type BinaryWriteTranslation = typeof(VisualEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2108,7 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(VisualEffect_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2130,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(VisualEffect_Registration.RFCT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.RFCT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2182,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static VisualEffectBinaryCreateTranslation Instance = new VisualEffectBinaryCreateTranslation();
 
-        public override RecordType RecordType => VisualEffect_Registration.RFCT_HEADER;
+        public override RecordType RecordType => RecordTypes.RFCT;
         public static void FillBinaryStructs(
             IVisualEffectInternal item,
             MutagenFrame frame)
@@ -2202,7 +2200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -2372,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)VisualEffect_FieldIndex.Flags);

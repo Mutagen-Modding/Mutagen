@@ -1434,12 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PathGridXmlWriteTranslation);
-        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType PGAG_HEADER = new RecordType("PGAG");
-        public static readonly RecordType PGRI_HEADER = new RecordType("PGRI");
-        public static readonly RecordType PGRL_HEADER = new RecordType("PGRL");
-        public static readonly RecordType TriggeringRecordType = PGRD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PGRD;
         public static readonly Type BinaryWriteTranslation = typeof(PathGridBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2597,7 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
                 writer: writer,
                 items: item.InterCellConnections,
-                recordType: recordTypeConverter.ConvertToCustom(PathGrid_Registration.PGRI_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PGRI),
                 transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -2626,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PathGrid_Registration.PGRD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PGRD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2678,7 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PathGridBinaryCreateTranslation Instance = new PathGridBinaryCreateTranslation();
 
-        public override RecordType RecordType => PathGrid_Registration.PGRD_HEADER;
+        public override RecordType RecordType => RecordTypes.PGRD;
         public static void FillBinaryStructs(
             IPathGridInternal item,
             MutagenFrame frame)
@@ -2698,14 +2693,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
                 }
-                case 0x49524750: // PGRI
+                case RecordTypeInts.PGRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterCellConnections = 
@@ -2720,12 +2715,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 }
-                case 0x4C524750: // PGRL
+                case RecordTypeInts.PGRL:
                 {
                     item.PointToReferenceMappings.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: PathGrid_Registration.PGRL_HEADER,
+                            triggeringRecord: RecordTypes.PGRL,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2890,7 +2885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     PointToPointConnectionsCustomParse(
                         stream: stream,
@@ -2900,7 +2895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
                 }
-                case 0x49524750: // PGRI
+                case RecordTypeInts.PGRI:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -2912,7 +2907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 }
-                case 0x4C524750: // PGRL
+                case RecordTypeInts.PGRL:
                 {
                     this.PointToReferenceMappings = BinaryOverlayList<PointToReferenceMappingBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

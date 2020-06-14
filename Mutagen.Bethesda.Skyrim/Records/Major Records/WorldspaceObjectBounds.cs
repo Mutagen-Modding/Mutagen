@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryMaxCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
             {
-                using (HeaderExport.Subrecord(writer, Worldspace_Registration.NAM9_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.NAM9))
                 {
                     var max = item.Max;
                     writer.Write(max.X * 4096f);
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryMinCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
             {
-                using (HeaderExport.Subrecord(writer, Worldspace_Registration.NAM0_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.NAM0))
                 {
                     var min = item.Min;
                     writer.Write(min.X * 4096f);

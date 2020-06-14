@@ -1687,14 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ObjectEffectXmlWriteTranslation);
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ENCH;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3093,10 +3086,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ENIT)))
             {
                 writer.Write(item.EnchantmentCost);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Write(
@@ -3149,7 +3142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENCH_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ENCH),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3201,7 +3194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ObjectEffectBinaryCreateTranslation Instance = new ObjectEffectBinaryCreateTranslation();
 
-        public override RecordType RecordType => ObjectEffect_Registration.ENCH_HEADER;
+        public override RecordType RecordType => RecordTypes.ENCH;
         public static void FillBinaryStructs(
             IObjectEffectInternal item,
             MutagenFrame frame)
@@ -3221,12 +3214,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3235,7 +3228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3259,9 +3252,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                case 0x41445443: // CTDA
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
+                case RecordTypeInts.CTDA:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -3474,17 +3467,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     _ENITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
@@ -3494,9 +3487,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                case 0x41445443: // CTDA
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
+                case RecordTypeInts.CTDA:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,

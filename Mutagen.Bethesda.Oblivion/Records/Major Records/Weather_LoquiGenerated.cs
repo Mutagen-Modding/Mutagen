@@ -1587,16 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeatherXmlWriteTranslation);
-        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType TriggeringRecordType = WTHR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2981,12 +2972,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureLowerLayer,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureUpperLayer,
-                header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -2998,7 +2989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherColorsGetter>.Instance.Write(
                 writer: writer,
                 items: item.Colors,
-                recordType: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
                 transl: (MutagenWriter subWriter, IWeatherColorsGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -3048,7 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Weather_Registration.WTHR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WTHR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3100,7 +3091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
-        public override RecordType RecordType => Weather_Registration.WTHR_HEADER;
+        public override RecordType RecordType => RecordTypes.WTHR;
         public static void FillBinaryStructs(
             IWeatherInternal item,
             MutagenFrame frame)
@@ -3120,7 +3111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureLowerLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3128,7 +3119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureUpperLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3136,14 +3127,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Colors = 
@@ -3158,27 +3149,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         .ToExtendedList<WeatherColors>();
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     item.FogDistance = Mutagen.Bethesda.Oblivion.FogDistance.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     item.HDRData = Mutagen.Bethesda.Oblivion.HDRData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.WeatherData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Weather_Registration.SNAM_HEADER,
+                            triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WeatherSound listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -3355,17 +3346,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _TextureLowerLayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _TextureUpperLayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3373,7 +3364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -3385,22 +3376,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FogDistanceLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     _HDRDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     this.Sounds = BinaryOverlayList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

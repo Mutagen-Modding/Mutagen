@@ -1056,8 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CellNavigationMeshXmlWriteTranslation);
-        public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
-        public static readonly RecordType TriggeringRecordType = NAVM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NAVM;
         public static readonly Type BinaryWriteTranslation = typeof(CellNavigationMeshBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2022,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CellNavigationMesh_Registration.NAVM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2085,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CellNavigationMeshBinaryCreateTranslation Instance = new CellNavigationMeshBinaryCreateTranslation();
 
-        public override RecordType RecordType => CellNavigationMesh_Registration.NAVM_HEADER;
+        public override RecordType RecordType => RecordTypes.NAVM;
         public static void FillBinaryStructs(
             ICellNavigationMeshInternal item,
             MutagenFrame frame)

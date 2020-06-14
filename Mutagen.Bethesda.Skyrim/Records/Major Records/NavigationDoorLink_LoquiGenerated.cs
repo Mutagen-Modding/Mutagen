@@ -1118,8 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NavigationDoorLinkXmlWriteTranslation);
-        public static readonly RecordType XNDP_HEADER = new RecordType("XNDP");
-        public static readonly RecordType TriggeringRecordType = XNDP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XNDP;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationDoorLinkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(NavigationDoorLink_Registration.XNDP_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XNDP)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1847,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NavigationDoorLink_Registration.XNDP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XNDP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

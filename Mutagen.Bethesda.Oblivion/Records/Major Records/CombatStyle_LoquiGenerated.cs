@@ -1098,10 +1098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleXmlWriteTranslation);
-        public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
-        public static readonly RecordType CSTD_HEADER = new RecordType("CSTD");
-        public static readonly RecordType CSAD_HEADER = new RecordType("CSAD");
-        public static readonly RecordType TriggeringRecordType = CSTY_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSTY;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2041,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTY_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSTY),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2093,7 +2090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
-        public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
+        public override RecordType RecordType => RecordTypes.CSTY;
         public static void FillBinaryStructs(
             ICombatStyleInternal item,
             MutagenFrame frame)
@@ -2113,12 +2110,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44545343: // CSTD
+                case RecordTypeInts.CSTD:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.CombatStyleData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
                 }
-                case 0x44415343: // CSAD
+                case RecordTypeInts.CSAD:
                 {
                     item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
@@ -2267,12 +2264,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44545343: // CSTD
+                case RecordTypeInts.CSTD:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
                 }
-                case 0x44415343: // CSAD
+                case RecordTypeInts.CSAD:
                 {
                     _AdvancedLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);

@@ -1120,10 +1120,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RankXmlWriteTranslation);
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1131,10 +1127,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RNAM_HEADER,
-                        MNAM_HEADER,
-                        FNAM_HEADER,
-                        INAM_HEADER
+                        RecordTypes.RNAM,
+                        RecordTypes.MNAM,
+                        RecordTypes.FNAM,
+                        RecordTypes.INAM
                     })
             );
         });
@@ -1892,17 +1888,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RankNumber,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Name,
-                maleMarker: Rank_Registration.MNAM_HEADER,
-                femaleMarker: Rank_Registration.FNAM_HEADER,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Insignia,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1951,26 +1947,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
                     item.Name = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
-                        maleMarker: Rank_Registration.MNAM_HEADER,
-                        femaleMarker: Rank_Registration.FNAM_HEADER,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
                         transl: StringBinaryTranslation.Instance.Parse,
                         skipMarker: false);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2133,25 +2129,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     _RankNumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
-                case 0x4D414E4D: // MNAM
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
                     _NameOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
-                        male: Rank_Registration.MNAM_HEADER,
-                        female: Rank_Registration.FNAM_HEADER,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     _InsigniaLocation = (stream.Position - offset);

@@ -1085,8 +1085,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionDataXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1094,8 +1092,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RDAT_HEADER,
-                        ICON_HEADER
+                        RecordTypes.RDAT,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -1897,13 +1895,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
                     item.Header = Mutagen.Bethesda.Skyrim.RegionDataHeader.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
@@ -2037,13 +2035,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
                     this.Icons = IconsBinaryOverlay.IconsFactory(

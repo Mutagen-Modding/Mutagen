@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IngredientDataXmlWriteTranslation);
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType TriggeringRecordType = ENIT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ENIT;
         public static readonly Type BinaryWriteTranslation = typeof(IngredientDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.ENIT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1752,7 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ENIT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

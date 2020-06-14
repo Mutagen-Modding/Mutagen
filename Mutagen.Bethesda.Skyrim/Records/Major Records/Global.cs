@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                     writer,
                     item.TypeChar,
-                    header: Global_Registration.FNAM_HEADER);
+                    header: RecordTypes.FNAM);
             }
         }
 

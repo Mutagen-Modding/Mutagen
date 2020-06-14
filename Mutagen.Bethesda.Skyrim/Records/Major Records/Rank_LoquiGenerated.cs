@@ -1158,10 +1158,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RankXmlWriteTranslation);
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1169,10 +1165,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RNAM_HEADER,
-                        MNAM_HEADER,
-                        FNAM_HEADER,
-                        INAM_HEADER
+                        RecordTypes.RNAM,
+                        RecordTypes.MNAM,
+                        RecordTypes.FNAM,
+                        RecordTypes.INAM
                     })
             );
         });
@@ -1954,21 +1950,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RankNumber,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaleRankTitle,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FemaleRankTitle,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Insignia,
-                header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -2017,14 +2013,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadUInt32();
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2033,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2042,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2209,25 +2205,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     _RankNumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
                     _MaleRankTitleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
                     _FemaleRankTitleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     _InsigniaLocation = (stream.Position - offset);

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 reader.Position = rec;
                 var t = HeaderTranslation.ReadNextRecordType(reader);
-                if (!t.Equals(Npc_Registration.NPC__HEADER))
+                if (!t.Equals(Oblivion.Internals.RecordTypes.NPC_))
                 {
                     throw new ArgumentException("Exported a non-NPC record.");
                 }
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 reader.Position = rec;
                 var t = HeaderTranslation.ReadNextRecordType(reader);
-                if (!t.Equals(Npc_Registration.NPC__HEADER))
+                if (!t.Equals(Oblivion.Internals.RecordTypes.NPC_))
                 {
                     throw new ArgumentException("Exported a non-NPC record.");
                 }

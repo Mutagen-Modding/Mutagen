@@ -1547,15 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ModHeaderXmlWriteTranslation);
-        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
-        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
-        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
-        public static readonly RecordType DELE_HEADER = new RecordType("DELE");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = TES4_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1646,7 +1638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
             UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
@@ -2694,20 +2686,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.OFST_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DELE_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                 writer: writer,
@@ -2723,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VestigialData,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -2733,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2782,24 +2774,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x52444548: // HEDR
+                case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Oblivion.ModStats.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
-                case 0x5453464F: // OFST
+                case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
-                case 0x454C4544: // DELE
+                case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2807,7 +2799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2815,12 +2807,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
-                case 0x5453414D: // MAST
+                case RecordTypeInts.MAST:
                 {
                     item.MasterReferences.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: ModHeader_Registration.MAST_HEADER,
+                            triggeringRecord: RecordTypes.MAST,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out MasterReference listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2831,7 +2823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VestigialData = frame.ReadUInt64();
@@ -3015,41 +3007,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x52444548: // HEDR
+                case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
-                case 0x5453464F: // OFST
+                case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
-                case 0x454C4544: // DELE
+                case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
-                case 0x5453414D: // MAST
+                case RecordTypeInts.MAST:
                 {
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: ModHeader_Registration.MAST_HEADER,
+                        trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _VestigialDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);

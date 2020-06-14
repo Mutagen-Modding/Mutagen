@@ -1227,12 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EnchantmentXmlWriteTranslation);
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ENCH;
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2222,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data.TryGet(out var DataItem))
             {
@@ -2251,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Enchantment_Registration.ENCH_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ENCH),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2303,7 +2298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static EnchantmentBinaryCreateTranslation Instance = new EnchantmentBinaryCreateTranslation();
 
-        public override RecordType RecordType => Enchantment_Registration.ENCH_HEADER;
+        public override RecordType RecordType => RecordTypes.ENCH;
         public static void FillBinaryStructs(
             IEnchantmentInternal item,
             MutagenFrame frame)
@@ -2323,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2331,13 +2326,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.EnchantmentData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -2503,18 +2498,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,

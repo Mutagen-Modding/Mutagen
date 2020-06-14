@@ -1523,19 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TextureSetXmlWriteTranslation);
-        public static readonly RecordType TXST_HEADER = new RecordType("TXST");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType TX00_HEADER = new RecordType("TX00");
-        public static readonly RecordType TX01_HEADER = new RecordType("TX01");
-        public static readonly RecordType TX02_HEADER = new RecordType("TX02");
-        public static readonly RecordType TX03_HEADER = new RecordType("TX03");
-        public static readonly RecordType TX04_HEADER = new RecordType("TX04");
-        public static readonly RecordType TX05_HEADER = new RecordType("TX05");
-        public static readonly RecordType TX06_HEADER = new RecordType("TX06");
-        public static readonly RecordType TX07_HEADER = new RecordType("TX07");
-        public static readonly RecordType DODT_HEADER = new RecordType("DODT");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TriggeringRecordType = TXST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TXST;
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2858,42 +2846,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Diffuse,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX00_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NormalOrGloss,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX01_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnvironmentMaskOrSubsurfaceTint,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX02_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GlowOrDetailMap,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX03_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Height,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX04_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Environment,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX05_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Multilayer,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX06_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BacklightMaskOrSpecular,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TX07_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Decal.TryGet(out var DecalItem))
             {
@@ -2906,7 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.DNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
         }
 
         public void Write(
@@ -2916,7 +2904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TXST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TXST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2968,7 +2956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
-        public override RecordType RecordType => TextureSet_Registration.TXST_HEADER;
+        public override RecordType RecordType => RecordTypes.TXST;
         public static void FillBinaryStructs(
             ITextureSetInternal item,
             MutagenFrame frame)
@@ -2988,12 +2976,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
                 }
-                case 0x30305854: // TX00
+                case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Diffuse = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3001,7 +2989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
                 }
-                case 0x31305854: // TX01
+                case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NormalOrGloss = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3009,7 +2997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
                 }
-                case 0x32305854: // TX02
+                case RecordTypeInts.TX02:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnvironmentMaskOrSubsurfaceTint = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3017,7 +3005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 }
-                case 0x33305854: // TX03
+                case RecordTypeInts.TX03:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GlowOrDetailMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3025,7 +3013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
                 }
-                case 0x34305854: // TX04
+                case RecordTypeInts.TX04:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Height = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3033,7 +3021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
                 }
-                case 0x35305854: // TX05
+                case RecordTypeInts.TX05:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Environment = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3041,7 +3029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
                 }
-                case 0x36305854: // TX06
+                case RecordTypeInts.TX06:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Multilayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3049,7 +3037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
                 }
-                case 0x37305854: // TX07
+                case RecordTypeInts.TX07:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BacklightMaskOrSpecular = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3057,12 +3045,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
                 }
-                case 0x54444F44: // DODT
+                case RecordTypeInts.DODT:
                 {
                     item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -3248,57 +3236,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
                 }
-                case 0x30305854: // TX00
+                case RecordTypeInts.TX00:
                 {
                     _DiffuseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
                 }
-                case 0x31305854: // TX01
+                case RecordTypeInts.TX01:
                 {
                     _NormalOrGlossLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
                 }
-                case 0x32305854: // TX02
+                case RecordTypeInts.TX02:
                 {
                     _EnvironmentMaskOrSubsurfaceTintLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 }
-                case 0x33305854: // TX03
+                case RecordTypeInts.TX03:
                 {
                     _GlowOrDetailMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
                 }
-                case 0x34305854: // TX04
+                case RecordTypeInts.TX04:
                 {
                     _HeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
                 }
-                case 0x35305854: // TX05
+                case RecordTypeInts.TX05:
                 {
                     _EnvironmentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
                 }
-                case 0x36305854: // TX06
+                case RecordTypeInts.TX06:
                 {
                     _MultilayerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
                 }
-                case 0x37305854: // TX07
+                case RecordTypeInts.TX07:
                 {
                     _BacklightMaskOrSpecularLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
                 }
-                case 0x54444F44: // DODT
+                case RecordTypeInts.DODT:
                 {
                     _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);

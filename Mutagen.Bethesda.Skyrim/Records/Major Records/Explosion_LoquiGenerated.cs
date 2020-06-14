@@ -1991,15 +1991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ExplosionXmlWriteTranslation);
-        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType EITM_HEADER = new RecordType("EITM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = EXPL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.EXPL;
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3748,7 +3740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Explosion_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -3761,12 +3753,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectEffect,
-                header: recordTypeConverter.ConvertToCustom(Explosion_Registration.EITM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.EITM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ImageSpaceModifier,
-                header: recordTypeConverter.ConvertToCustom(Explosion_Registration.MNAM_HEADER));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Explosion_Registration.DATA_HEADER)))
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3828,7 +3820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Explosion_Registration.EXPL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.EXPL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3880,7 +3872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
 
-        public override RecordType RecordType => Explosion_Registration.EXPL_HEADER;
+        public override RecordType RecordType => RecordTypes.EXPL;
         public static void FillBinaryStructs(
             IExplosionInternal item,
             MutagenFrame frame)
@@ -3900,17 +3892,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3919,14 +3911,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
                 }
-                case 0x4D544945: // EITM
+                case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3934,7 +3926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3942,7 +3934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -4220,22 +4212,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -4243,17 +4235,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
                 }
-                case 0x4D544945: // EITM
+                case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _ImageSpaceModifierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;

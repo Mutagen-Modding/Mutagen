@@ -1154,8 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SpellDataXmlWriteTranslation);
-        public static readonly RecordType SPIT_HEADER = new RecordType("SPIT");
-        public static readonly RecordType TriggeringRecordType = SPIT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SPIT;
         public static readonly Type BinaryWriteTranslation = typeof(SpellDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(SpellData_Registration.SPIT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SPIT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1930,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SpellData_Registration.SPIT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SPIT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

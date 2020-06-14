@@ -1196,9 +1196,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MapMarkerXmlWriteTranslation);
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1206,9 +1203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        FNAM_HEADER,
-                        FULL_HEADER,
-                        TNAM_HEADER
+                        RecordTypes.FNAM,
+                        RecordTypes.FULL,
+                        RecordTypes.TNAM
                     })
             );
         });
@@ -2000,16 +1997,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
                 writer: writer,
                 items: item.Types,
-                recordType: recordTypeConverter.ConvertToCustom(MapMarker_Registration.TNAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
@@ -2064,14 +2061,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2080,7 +2077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2247,19 +2244,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);

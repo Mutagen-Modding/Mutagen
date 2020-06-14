@@ -1107,8 +1107,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ArmorModelXmlWriteTranslation);
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1116,8 +1114,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        MODL_HEADER,
-                        ICON_HEADER
+                        RecordTypes.MODL,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -1938,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
@@ -1946,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
@@ -2104,7 +2102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryOverlay.ModelFactory(
@@ -2113,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
                     this.Icons = IconsBinaryOverlay.IconsFactory(

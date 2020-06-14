@@ -1077,9 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionWeatherXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType RDWT_HEADER = new RecordType("RDWT");
-        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionWeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1789,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.Weathers,
-                recordType: recordTypeConverter.ConvertToCustom(RegionWeather_Registration.RDWT_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDWT),
                 transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1856,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54574452: // RDWT
+                case RecordTypeInts.RDWT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weathers = 
@@ -2006,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54574452: // RDWT
+                case RecordTypeInts.RDWT:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

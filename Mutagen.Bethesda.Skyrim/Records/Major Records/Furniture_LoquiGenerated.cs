@@ -1857,26 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FurnitureXmlWriteTranslation);
-        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType KNAM_HEADER = new RecordType("KNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType WBDT_HEADER = new RecordType("WBDT");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType FNPR_HEADER = new RecordType("FNPR");
-        public static readonly RecordType XMRK_HEADER = new RecordType("XMRK");
-        public static readonly RecordType TriggeringRecordType = FURN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FURN;
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3621,7 +3602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -3641,9 +3622,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Furniture_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Furniture_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3653,14 +3634,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PNAM,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
             FurnitureBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
                 item: item);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InteractionKeyword,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.KNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
             FurnitureBinaryWriteTranslation.WriteBinaryFlags2(
                 writer: writer,
                 item: item);
@@ -3674,7 +3655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AssociatedSpell,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.NAM1_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
             FurnitureBinaryWriteTranslation.WriteBinaryDisabledMarkers(
                 writer: writer,
                 item: item);
@@ -3684,7 +3665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ModelFilename,
-                header: recordTypeConverter.ConvertToCustom(Furniture_Registration.XMRK_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -3695,7 +3676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Furniture_Registration.FURN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FURN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3747,7 +3728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FurnitureBinaryCreateTranslation Instance = new FurnitureBinaryCreateTranslation();
 
-        public override RecordType RecordType => Furniture_Registration.FURN_HEADER;
+        public override RecordType RecordType => RecordTypes.FURN;
         public static void FillBinaryStructs(
             IFurnitureInternal item,
             MutagenFrame frame)
@@ -3767,17 +3748,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3786,50 +3767,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Furniture_Registration.KSIZ_HEADER,
-                            triggeringRecord: Furniture_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.PNAM);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Flags);
                 }
-                case 0x4D414E4B: // KNAM
+                case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InteractionKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3837,19 +3818,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.InteractionKeyword);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x54444257: // WBDT
+                case RecordTypeInts.WBDT:
                 {
                     item.WorkbenchData = Mutagen.Bethesda.Skyrim.WorkbenchData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.WorkbenchData);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AssociatedSpell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3857,21 +3838,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.AssociatedSpell);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x52504E46: // FNPR
+                case RecordTypeInts.FNPR:
                 {
                     FurnitureBinaryCreateTranslation.FillBinaryMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Markers);
                 }
-                case 0x4B524D58: // XMRK
+                case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ModelFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4101,22 +4082,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -4124,9 +4105,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -4134,25 +4115,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Destructible);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Furniture_Registration.KSIZ_HEADER,
-                        subrecordType: Furniture_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Keywords);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _PNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.PNAM);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     FlagsCustomParse(
                         stream: stream,
@@ -4160,36 +4141,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Flags);
                 }
-                case 0x4D414E4B: // KNAM
+                case RecordTypeInts.KNAM:
                 {
                     _InteractionKeywordLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.InteractionKeyword);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     Flags2CustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x54444257: // WBDT
+                case RecordTypeInts.WBDT:
                 {
                     _WorkbenchDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.WorkbenchData);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     _AssociatedSpellLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.AssociatedSpell);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     DisabledMarkersCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x52504E46: // FNPR
+                case RecordTypeInts.FNPR:
                 {
                     MarkersCustomParse(
                         stream: stream,
@@ -4199,7 +4180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Markers);
                 }
-                case 0x4B524D58: // XMRK
+                case RecordTypeInts.XMRK:
                 {
                     _ModelFilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.ModelFilename);

@@ -1113,10 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MapMarkerXmlWriteTranslation);
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType TriggeringRecordType = FNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FNAM;
         public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1838,18 +1835,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.MarkerType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
         }
 
         public void Write(
@@ -1897,14 +1894,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1913,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<MapMarker.MarkerType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2073,18 +2070,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Type);

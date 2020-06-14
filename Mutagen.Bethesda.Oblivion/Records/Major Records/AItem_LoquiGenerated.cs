@@ -944,31 +944,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AItemXmlWriteTranslation);
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
-        public static readonly RecordType MOD4_HEADER = new RecordType("MOD4");
-        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
-        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
-        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
-        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
-        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -976,31 +951,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        FULL_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
-                        MODL_HEADER,
-                        MOD2_HEADER,
-                        ICON_HEADER,
-                        MOD3_HEADER,
-                        MOD4_HEADER,
-                        ICO2_HEADER,
-                        APPA_HEADER,
-                        AMMO_HEADER,
-                        BOOK_HEADER,
-                        INGR_HEADER,
-                        KEYM_HEADER,
-                        LVLI_HEADER,
-                        LIGH_HEADER,
-                        MISC_HEADER,
-                        ALCH_HEADER,
-                        SGST_HEADER,
-                        SLGM_HEADER,
-                        WEAP_HEADER,
-                        ARMO_HEADER,
-                        CLOT_HEADER
+                        RecordTypes.FULL,
+                        RecordTypes.SCRI,
+                        RecordTypes.ENAM,
+                        RecordTypes.ANAM,
+                        RecordTypes.BMDT,
+                        RecordTypes.MODL,
+                        RecordTypes.MOD2,
+                        RecordTypes.ICON,
+                        RecordTypes.MOD3,
+                        RecordTypes.MOD4,
+                        RecordTypes.ICO2,
+                        RecordTypes.APPA,
+                        RecordTypes.AMMO,
+                        RecordTypes.BOOK,
+                        RecordTypes.INGR,
+                        RecordTypes.KEYM,
+                        RecordTypes.LVLI,
+                        RecordTypes.LIGH,
+                        RecordTypes.MISC,
+                        RecordTypes.ALCH,
+                        RecordTypes.SGST,
+                        RecordTypes.SLGM,
+                        RecordTypes.WEAP,
+                        RecordTypes.ARMO,
+                        RecordTypes.CLOT
                     })
             );
         });

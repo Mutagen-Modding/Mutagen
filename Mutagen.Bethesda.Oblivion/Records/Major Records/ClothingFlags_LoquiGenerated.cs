@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ClothingFlagsXmlWriteTranslation);
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType TriggeringRecordType = BMDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.BMDT;
         public static readonly Type BinaryWriteTranslation = typeof(ClothingFlagsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ClothingFlags_Registration.BMDT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.BMDT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1755,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ClothingFlags_Registration.BMDT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.BMDT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

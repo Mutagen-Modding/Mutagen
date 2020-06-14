@@ -1050,8 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ConditionGlobalXmlWriteTranslation);
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = CTDA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CTDA;
         public static readonly Type BinaryWriteTranslation = typeof(ConditionGlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1153,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ConditionGlobal_Registration.CTDA_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CTDA)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1794,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ConditionGlobal_Registration.CTDA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CTDA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

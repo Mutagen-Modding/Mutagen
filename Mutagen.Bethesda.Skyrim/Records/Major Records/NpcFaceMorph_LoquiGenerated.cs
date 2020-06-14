@@ -1829,8 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcFaceMorphXmlWriteTranslation);
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType TriggeringRecordType = NAM9_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NAM9;
         public static readonly Type BinaryWriteTranslation = typeof(NpcFaceMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1930,7 +1929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(NpcFaceMorph_Registration.NAM9_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.NAM9)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -3249,7 +3248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NpcFaceMorph_Registration.NAM9_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NAM9),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

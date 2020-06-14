@@ -167,14 +167,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var majorMeta = frame.GetMajorRecord();
                 var nextHeader = majorMeta.RecordType;
-                if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
+                if (nextHeader.Equals(RecordTypes.PGRD))
                 {
                     obj.PathGrid = PathGrid.CreateFromBinary(
                         frame.SpawnWithLength(majorMeta.TotalLength),
                         recordTypeConverter: null);
                     return true;
                 }
-                else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
+                else if (nextHeader.Equals(RecordTypes.LAND))
                 {
                     obj.Landscape = Landscape.CreateFromBinary(
                         frame.SpawnWithLength(majorMeta.TotalLength),
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
                     && (obj.VisibleWhenDistant?.Count ?? 0) == 0
                     && pathGrid == null
                     && landscape == null) return;
-                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write(obj.Timestamp);
                     if (obj.Persistent?.Count > 0)
                     {
-                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
                         || pathGrid != null
                         || landscape != null)
                     {
-                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     if (obj.VisibleWhenDistant?.Count > 0)
                     {
-                        using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                         {
                             FormKeyBinaryTranslation.Instance.Write(
                                 writer,
@@ -314,9 +314,9 @@ namespace Mutagen.Bethesda.Oblivion
             static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
                 new HashSet<RecordType>()
                 {
-                    Cell_Registration.ACHR_HEADER,
-                    Cell_Registration.ACRE_HEADER,
-                    Cell_Registration.REFR_HEADER
+                    RecordTypes.ACHR,
+                    RecordTypes.ACRE,
+                    RecordTypes.REFR
                 });
 
             private ReadOnlyMemorySlice<byte>? _grupData;
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
                 while (!stream.Complete)
                 {
                     var cellMeta = package.MetaData.Constants.GetMajorRecord(stream);
-                    if (cellMeta.RecordType != Cell_Registration.CELL_HEADER) break;
+                    if (cellMeta.RecordType != RecordTypes.CELL) break;
                     ret.Add(stream.Position - startingPos);
                     stream.Position += (int)cellMeta.TotalLength;
                     if (stream.Complete) break;

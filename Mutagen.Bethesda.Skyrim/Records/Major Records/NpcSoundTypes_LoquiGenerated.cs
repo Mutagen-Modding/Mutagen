@@ -1067,9 +1067,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcSoundTypesXmlWriteTranslation);
-        public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
-        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
-        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1077,9 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        CSDT_HEADER,
-                        CSDI_HEADER,
-                        CSDC_HEADER
+                        RecordTypes.CSDT,
+                        RecordTypes.CSDI,
+                        RecordTypes.CSDC
                     })
             );
         });
@@ -1836,9 +1833,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return TryGet<int?>.Failure;
                     item.Types.SetTo(
@@ -1984,9 +1981,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return TryGet<int?>.Failure;
                     this.Types = this.ParseRepeatedTypelessSubrecord<NpcSoundTypeBinaryOverlay>(

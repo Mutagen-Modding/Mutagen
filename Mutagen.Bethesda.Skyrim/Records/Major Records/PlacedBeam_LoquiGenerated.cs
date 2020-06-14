@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedBeamXmlWriteTranslation);
-        public static readonly RecordType PBEA_HEADER = new RecordType("PBEA");
-        public static readonly RecordType TriggeringRecordType = PBEA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PBEA;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedBeamBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedBeam_Registration.PBEA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PBEA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedBeamBinaryCreateTranslation Instance = new PlacedBeamBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedBeam_Registration.PBEA_HEADER;
+        public override RecordType RecordType => RecordTypes.PBEA;
         public static void FillBinaryStructs(
             IPlacedBeamInternal item,
             MutagenFrame frame)

@@ -907,8 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
         public static readonly Type XmlWriteTranslation = typeof(ListGroupXmlWriteTranslation);
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TriggeringRecordType = GRUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1847,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ListGroup_Registration.GRUP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Group))
             {
                 WriteEmbedded(

@@ -1117,8 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceMaxHeightXmlWriteTranslation);
-        public static readonly RecordType MHDT_HEADER = new RecordType("MHDT");
-        public static readonly RecordType TriggeringRecordType = MHDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MHDT;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMaxHeightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1202,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WorldspaceMaxHeight_Registration.MHDT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.MHDT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1850,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WorldspaceMaxHeight_Registration.MHDT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.MHDT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

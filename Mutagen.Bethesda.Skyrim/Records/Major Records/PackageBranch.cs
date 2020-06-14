@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPackageBranch item)
             {
-                if (!frame.TryReadSubrecordFrame(Faction_Registration.CITC_HEADER, out var countMeta)
+                if (!frame.TryReadSubrecordFrame(RecordTypes.CITC, out var countMeta)
                     || countMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
             {
                 item.FlagsOverride = PackageFlagsOverride.CreateFromBinary(frame);
-                if (frame.Reader.TryGetSubrecord(PackageBranch_Registration.PFO2_HEADER, out var rec))
+                if (frame.Reader.TryGetSubrecord(RecordTypes.PFO2, out var rec))
                 {
                     item.FlagsOverrideUnused = PackageFlagsOverride.CreateFromBinary(frame);
                 }
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var conditions = item.Conditions;
                 if (conditions == null) return;
-                using (HeaderExport.Subrecord(writer, Faction_Registration.CITC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.CITC))
                 {
                     writer.Write(conditions.Count);
                 }
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 _flagsOverride = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
                     new MutagenInterfaceReadStream(stream, _package.MetaData)));
-                if (_package.MetaData.Constants.TryGetSubrecord(stream, PackageBranch_Registration.PFO2_HEADER, out var rec))
+                if (_package.MetaData.Constants.TryGetSubrecord(stream, RecordTypes.PFO2, out var rec))
                 {
                     FlagsOverrideUnused = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
                         new MutagenInterfaceReadStream(stream, _package.MetaData)));

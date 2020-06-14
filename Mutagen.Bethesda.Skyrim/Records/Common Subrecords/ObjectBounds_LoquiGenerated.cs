@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ObjectBoundsXmlWriteTranslation);
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType TriggeringRecordType = OBND_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.OBND;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectBoundsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ObjectBounds_Registration.OBND_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.OBND)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1753,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ObjectBounds_Registration.OBND_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.OBND),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

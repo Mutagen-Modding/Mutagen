@@ -1129,9 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FaceGenDataXmlWriteTranslation);
-        public static readonly RecordType FGGS_HEADER = new RecordType("FGGS");
-        public static readonly RecordType FGGA_HEADER = new RecordType("FGGA");
-        public static readonly RecordType FGTS_HEADER = new RecordType("FGTS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1139,9 +1136,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        FGGS_HEADER,
-                        FGGA_HEADER,
-                        FGTS_HEADER
+                        RecordTypes.FGGS,
+                        RecordTypes.FGGA,
+                        RecordTypes.FGTS
                     })
             );
         });
@@ -1898,15 +1895,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricGeometry,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FGGS));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AsymmetricGeometry,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FGGA));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricTexture,
-                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FGTS));
         }
 
         public void Write(
@@ -1954,21 +1951,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x53474746: // FGGS
+                case RecordTypeInts.FGGS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 }
-                case 0x41474746: // FGGA
+                case RecordTypeInts.FGGA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AsymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 }
-                case 0x53544746: // FGTS
+                case RecordTypeInts.FGTS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2129,19 +2126,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x53474746: // FGGS
+                case RecordTypeInts.FGGS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
                     _SymmetricGeometryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 }
-                case 0x41474746: // FGGA
+                case RecordTypeInts.FGGA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
                     _AsymmetricGeometryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 }
-                case 0x53544746: // FGTS
+                case RecordTypeInts.FGTS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
                     _SymmetricTextureLocation = (stream.Position - offset);

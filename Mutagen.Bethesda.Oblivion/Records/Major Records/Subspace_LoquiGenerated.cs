@@ -1023,9 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SubspaceXmlWriteTranslation);
-        public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TriggeringRecordType = SBSP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SBSP;
         public static readonly Type BinaryWriteTranslation = typeof(SubspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1833,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Point,
-                header: recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
         }
 
         public void Write(
@@ -1843,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Subspace_Registration.SBSP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SBSP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1895,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SubspaceBinaryCreateTranslation Instance = new SubspaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => Subspace_Registration.SBSP_HEADER;
+        public override RecordType RecordType => RecordTypes.SBSP;
         public static void FillBinaryStructs(
             ISubspaceInternal item,
             MutagenFrame frame)
@@ -1915,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2059,7 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _PointLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Point);

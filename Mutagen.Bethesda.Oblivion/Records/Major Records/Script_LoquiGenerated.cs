@@ -1041,10 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptXmlWriteTranslation);
-        public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType TriggeringRecordType = SCPT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCPT;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1882,7 +1879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Script_Registration.SCPT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SCPT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1934,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static ScriptBinaryCreateTranslation Instance = new ScriptBinaryCreateTranslation();
 
-        public override RecordType RecordType => Script_Registration.SCPT_HEADER;
+        public override RecordType RecordType => RecordTypes.SCPT;
         public static void FillBinaryStructs(
             IScriptInternal item,
             MutagenFrame frame)
@@ -1954,8 +1951,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     item.Fields.CopyInFromBinary(
                         frame: frame,
@@ -2106,8 +2103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     this._Fields = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,

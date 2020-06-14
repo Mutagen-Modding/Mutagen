@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(VoiceTypeXmlWriteTranslation);
-        public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
-        public static readonly RecordType TriggeringRecordType = VTYP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.VTYP;
         public static readonly Type BinaryWriteTranslation = typeof(VoiceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(VoiceType_Registration.VTYP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.VTYP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => VoiceType_Registration.VTYP_HEADER;
+        public override RecordType RecordType => RecordTypes.VTYP;
         public static void FillBinaryStructs(
             IVoiceTypeInternal item,
             MutagenFrame frame)

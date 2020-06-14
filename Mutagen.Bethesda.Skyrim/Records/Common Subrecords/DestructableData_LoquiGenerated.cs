@@ -1154,8 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DestructableDataXmlWriteTranslation);
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType TriggeringRecordType = DEST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DEST;
         public static readonly Type BinaryWriteTranslation = typeof(DestructableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(DestructableData_Registration.DEST_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.DEST)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1921,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DestructableData_Registration.DEST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DEST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

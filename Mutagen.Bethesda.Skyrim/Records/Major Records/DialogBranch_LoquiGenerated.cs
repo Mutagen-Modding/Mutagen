@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogBranchXmlWriteTranslation);
-        public static readonly RecordType DLBR_HEADER = new RecordType("DLBR");
-        public static readonly RecordType TriggeringRecordType = DLBR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DLBR;
         public static readonly Type BinaryWriteTranslation = typeof(DialogBranchBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogBranch_Registration.DLBR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DLBR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
 
-        public override RecordType RecordType => DialogBranch_Registration.DLBR_HEADER;
+        public override RecordType RecordType => RecordTypes.DLBR;
         public static void FillBinaryStructs(
             IDialogBranchInternal item,
             MutagenFrame frame)

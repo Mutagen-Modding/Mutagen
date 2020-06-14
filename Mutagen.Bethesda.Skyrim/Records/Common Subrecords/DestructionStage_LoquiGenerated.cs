@@ -1105,9 +1105,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DestructionStageXmlWriteTranslation);
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType DSTF_HEADER = new RecordType("DSTF");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1115,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        DSTD_HEADER,
-                        DMDL_HEADER
+                        RecordTypes.DSTD,
+                        RecordTypes.DMDL
                     })
             );
         });
@@ -1907,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: DestructionStage_Registration.ModelConverter);
             }
-            using (HeaderExport.Subrecord(writer, DestructionStage_Registration.DSTF_HEADER)) { } // End Marker
+            using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }
 
         public void Write(
@@ -1955,13 +1952,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44545344: // DSTD
+                case RecordTypeInts.DSTD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Data) return TryGet<int?>.Failure;
                     item.Data = Mutagen.Bethesda.Skyrim.DestructionStageData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Data);
                 }
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DMDL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
@@ -2128,13 +2125,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44545344: // DSTD
+                case RecordTypeInts.DSTD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Data) return TryGet<int?>.Failure;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Data);
                 }
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DMDL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DestructionStage_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryOverlay.ModelFactory(

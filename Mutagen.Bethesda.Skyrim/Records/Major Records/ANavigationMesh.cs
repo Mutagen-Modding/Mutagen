@@ -101,9 +101,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (var header = HeaderExport.Subrecord(
-                    writer, 
-                    ANavigationMesh_Registration.NVNM_HEADER,
-                    largeLengthRecord: ANavigationMesh_Registration.XXXX_HEADER))
+                    writer,
+                    RecordTypes.NVNM,
+                    largeLengthRecord: RecordTypes.XXXX))
                 {
                     data.WriteToBinary(header.PrepWriter);
                 }

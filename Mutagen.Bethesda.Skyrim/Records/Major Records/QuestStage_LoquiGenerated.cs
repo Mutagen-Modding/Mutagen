@@ -1300,15 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestStageXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType QSDT_HEADER = new RecordType("QSDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType TriggeringRecordType = INDX_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2169,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(QuestStage_Registration.INDX_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.INDX)))
             {
                 writer.Write(item.Index);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestStage.Flag>.Instance.Write(
@@ -2239,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2249,13 +2241,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Unknown);
                 }
-                case 0x54445351: // QSDT
-                case 0x41445443: // CTDA
-                case 0x4D414E43: // CNAM
-                case 0x304D414E: // NAM0
-                case 0x52484353: // SCHR
-                case 0x58544353: // SCTX
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QSDT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.SCTX:
+                case RecordTypeInts.QNAM:
                 {
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
@@ -2437,19 +2429,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return TryGet<int?>.Failure;
                     _INDXLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Unknown);
                 }
-                case 0x54445351: // QSDT
-                case 0x41445443: // CTDA
-                case 0x4D414E43: // CNAM
-                case 0x304D414E: // NAM0
-                case 0x52484353: // SCHR
-                case 0x58544353: // SCTX
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QSDT:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.SCHR:
+                case RecordTypeInts.SCTX:
+                case RecordTypeInts.QNAM:
                 {
                     this.LogEntries = this.ParseRepeatedTypelessSubrecord<QuestLogEntryBinaryOverlay>(
                         stream: stream,

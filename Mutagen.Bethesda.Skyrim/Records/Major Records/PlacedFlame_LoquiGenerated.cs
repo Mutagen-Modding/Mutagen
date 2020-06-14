@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedFlameXmlWriteTranslation);
-        public static readonly RecordType PFLA_HEADER = new RecordType("PFLA");
-        public static readonly RecordType TriggeringRecordType = PFLA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PFLA;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedFlameBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedFlame_Registration.PFLA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PFLA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedFlameBinaryCreateTranslation Instance = new PlacedFlameBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedFlame_Registration.PFLA_HEADER;
+        public override RecordType RecordType => RecordTypes.PFLA;
         public static void FillBinaryStructs(
             IPlacedFlameInternal item,
             MutagenFrame frame)

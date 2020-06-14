@@ -1343,15 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoulGemXmlWriteTranslation);
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType SOUL_HEADER = new RecordType("SOUL");
-        public static readonly RecordType SLCP_HEADER = new RecordType("SLCP");
-        public static readonly RecordType TriggeringRecordType = SLGM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SLGM;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2608,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -2620,12 +2612,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             if (item.Data.TryGet(out var DataItem))
             {
                 ((SoulGemDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
@@ -2637,12 +2629,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.ContainedSoul,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SOUL_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SOUL));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.WriteNullable(
                 writer,
                 item.MaximumCapacity,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLCP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SLCP));
         }
 
         public void Write(
@@ -2652,7 +2644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLGM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SLGM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2715,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
-        public override RecordType RecordType => SoulGem_Registration.SLGM_HEADER;
+        public override RecordType RecordType => RecordTypes.SLGM;
         public static void FillBinaryStructs(
             ISoulGemInternal item,
             MutagenFrame frame)
@@ -2735,7 +2727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2743,14 +2735,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2758,7 +2750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icon);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2766,18 +2758,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Script);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SoulGemData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Data);
                 }
-                case 0x4C554F53: // SOUL
+                case RecordTypeInts.SOUL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ContainedSoul = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
                 }
-                case 0x50434C53: // SLCP
+                case RecordTypeInts.SLCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaximumCapacity = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2950,12 +2942,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2963,27 +2955,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icon);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Script);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Data);
                 }
-                case 0x4C554F53: // SOUL
+                case RecordTypeInts.SOUL:
                 {
                     _ContainedSoulLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
                 }
-                case 0x50434C53: // SLCP
+                case RecordTypeInts.SLCP:
                 {
                     _MaximumCapacityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.MaximumCapacity);

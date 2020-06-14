@@ -1073,8 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EnableParentXmlWriteTranslation);
-        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
-        public static readonly RecordType TriggeringRecordType = XESP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XESP;
         public static readonly Type BinaryWriteTranslation = typeof(EnableParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1157,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(EnableParent_Registration.XESP_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XESP)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1764,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EnableParent_Registration.XESP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XESP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

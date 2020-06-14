@@ -2509,18 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ProjectileXmlWriteTranslation);
-        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
-        public static readonly RecordType TriggeringRecordType = PROJ_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PROJ;
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4733,7 +4722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Projectile_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -4750,7 +4739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Projectile_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Projectile.Flag>.Instance.Write(
                     writer,
@@ -4836,16 +4825,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MuzzleFlashModel,
-                header: recordTypeConverter.ConvertToCustom(Projectile_Registration.NAM1_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
-                header: recordTypeConverter.ConvertToCustom(Projectile_Registration.NAM2_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SoundLevel,
-                header: recordTypeConverter.ConvertToCustom(Projectile_Registration.VNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
         }
 
         public void Write(
@@ -4855,7 +4844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Projectile_Registration.PROJ_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PROJ),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -4907,7 +4896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
-        public override RecordType RecordType => Projectile_Registration.PROJ_HEADER;
+        public override RecordType RecordType => RecordTypes.PROJ;
         public static void FillBinaryStructs(
             IProjectileInternal item,
             MutagenFrame frame)
@@ -4927,12 +4916,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -4941,23 +4930,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -5015,7 +5004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MuzzleFlashModel = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5023,13 +5012,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFilesHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundLevel = frame.ReadUInt32();
@@ -5320,17 +5309,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -5338,9 +5327,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -5348,7 +5337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
@@ -5362,17 +5351,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     _MuzzleFlashModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _TextureFilesHashesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     _SoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);

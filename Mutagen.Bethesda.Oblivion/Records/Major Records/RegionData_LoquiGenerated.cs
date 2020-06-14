@@ -1017,8 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionDataXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1699,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.RDAT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteRecordTypes(
@@ -1737,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     item.Header = Mutagen.Bethesda.Oblivion.RegionDataHeader.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
@@ -1867,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54414452: // RDAT
+                case RecordTypeInts.RDAT:
                 {
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);

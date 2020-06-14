@@ -1109,8 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ImageSpaceCinematicXmlWriteTranslation);
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TriggeringRecordType = CNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceCinematicBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ImageSpaceCinematic_Registration.CNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1841,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ImageSpaceCinematic_Registration.CNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

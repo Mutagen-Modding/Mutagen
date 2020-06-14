@@ -1118,8 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AIPackageLocationXmlWriteTranslation);
-        public static readonly RecordType PLDT_HEADER = new RecordType("PLDT");
-        public static readonly RecordType TriggeringRecordType = PLDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PLDT;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageLocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1203,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(AIPackageLocation_Registration.PLDT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.PLDT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1852,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AIPackageLocation_Registration.PLDT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PLDT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

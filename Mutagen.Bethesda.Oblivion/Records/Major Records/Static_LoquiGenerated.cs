@@ -1037,9 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(StaticXmlWriteTranslation);
-        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType TriggeringRecordType = STAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.STAT;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1893,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Static_Registration.STAT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.STAT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1945,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
 
-        public override RecordType RecordType => Static_Registration.STAT_HEADER;
+        public override RecordType RecordType => RecordTypes.STAT;
         public static void FillBinaryStructs(
             IStaticInternal item,
             MutagenFrame frame)
@@ -1965,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
@@ -2107,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

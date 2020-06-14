@@ -1256,12 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BirthsignXmlWriteTranslation);
-        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
-        public static readonly RecordType TriggeringRecordType = BSGN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.BSGN;
         public static readonly Type BinaryWriteTranslation = typeof(BirthsignBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2256,17 +2251,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Write(
                 writer: writer,
@@ -2276,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.SPLO_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO));
                 });
         }
 
@@ -2287,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Birthsign_Registration.BSGN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.BSGN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2339,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static BirthsignBinaryCreateTranslation Instance = new BirthsignBinaryCreateTranslation();
 
-        public override RecordType RecordType => Birthsign_Registration.BSGN_HEADER;
+        public override RecordType RecordType => RecordTypes.BSGN;
         public static void FillBinaryStructs(
             IBirthsignInternal item,
             MutagenFrame frame)
@@ -2359,7 +2354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2367,7 +2362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Name);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2375,7 +2370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Icon);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2383,12 +2378,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Description);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Birthsign_Registration.SPLO_HEADER,
+                            triggeringRecord: RecordTypes.SPLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Spells);
@@ -2546,22 +2541,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Name);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Icon);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Birthsign_FieldIndex.Description);
                 }
-                case 0x4F4C5053: // SPLO
+                case RecordTypeInts.SPLO:
                 {
                     this.Spells = BinaryOverlayList<IFormLink<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,

@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var ret = new ModRecordAligner.AlignmentRules();
             ret.AddAlignments(
-                Cell_Registration.CELL_HEADER,
+                RecordTypes.CELL,
                 new RecordType("EDID"),
                 new RecordType("FULL"),
                 new RecordType("DATA"),
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XCIM")
             );
             ret.AddAlignments(
-                Cell_Registration.REFR_HEADER,
+                RecordTypes.REFR,
                 new RecordType("EDID"),
                 new RecordType("VMAD"),
                 new RecordType("NAME"),
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("DATA")
             );
             ret.AddAlignments(
-                PlacedNpc_Registration.ACHR_HEADER,
+                RecordTypes.ACHR,
                 new RecordType("EDID"),
                 new RecordType("VMAD"),
                 new RecordType("NAME"),

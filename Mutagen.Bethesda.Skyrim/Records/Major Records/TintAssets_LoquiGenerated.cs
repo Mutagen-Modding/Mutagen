@@ -1303,13 +1303,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TintAssetsXmlWriteTranslation);
-        public static readonly RecordType TINI_HEADER = new RecordType("TINI");
-        public static readonly RecordType TINT_HEADER = new RecordType("TINT");
-        public static readonly RecordType TINP_HEADER = new RecordType("TINP");
-        public static readonly RecordType TIND_HEADER = new RecordType("TIND");
-        public static readonly RecordType TINC_HEADER = new RecordType("TINC");
-        public static readonly RecordType TINV_HEADER = new RecordType("TINV");
-        public static readonly RecordType TIRS_HEADER = new RecordType("TIRS");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1317,13 +1310,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        TINI_HEADER,
-                        TINT_HEADER,
-                        TINP_HEADER,
-                        TIND_HEADER,
-                        TINC_HEADER,
-                        TINV_HEADER,
-                        TIRS_HEADER
+                        RecordTypes.TINI,
+                        RecordTypes.TINT,
+                        RecordTypes.TINP,
+                        RecordTypes.TIND,
+                        RecordTypes.TINC,
+                        RecordTypes.TINV,
+                        RecordTypes.TIRS
                     })
             );
         });
@@ -2212,21 +2205,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(TintAssets_Registration.TINI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
-                header: recordTypeConverter.ConvertToCustom(TintAssets_Registration.TINT_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.WriteNullable(
                 writer,
                 item.MaskType,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(TintAssets_Registration.TINP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TINP));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PresetDefault,
-                header: recordTypeConverter.ConvertToCustom(TintAssets_Registration.TIND_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TIND));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ITintPresetGetter>.Instance.Write(
                 writer: writer,
                 items: item.Presets,
@@ -2285,14 +2278,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x494E4954: // TINI
+                case RecordTypeInts.TINI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
                 }
-                case 0x544E4954: // TINT
+                case RecordTypeInts.TINT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2301,14 +2294,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
                 }
-                case 0x504E4954: // TINP
+                case RecordTypeInts.TINP:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
                 }
-                case 0x444E4954: // TIND
+                case RecordTypeInts.TIND:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2317,9 +2310,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
                 }
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
                     item.Presets.SetTo(
@@ -2502,33 +2495,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x494E4954: // TINI
+                case RecordTypeInts.TINI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
                 }
-                case 0x544E4954: // TINT
+                case RecordTypeInts.TINT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
                     _FileNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
                 }
-                case 0x504E4954: // TINP
+                case RecordTypeInts.TINP:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
                     _MaskTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
                 }
-                case 0x444E4954: // TIND
+                case RecordTypeInts.TIND:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
                     _PresetDefaultLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
                 }
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53524954: // TIRS
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(

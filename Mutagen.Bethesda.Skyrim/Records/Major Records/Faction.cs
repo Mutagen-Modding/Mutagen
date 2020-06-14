@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item)
             {
-                if (!frame.TryReadSubrecordFrame(Faction_Registration.CITC_HEADER, out var countMeta)
+                if (!frame.TryReadSubrecordFrame(RecordTypes.CITC, out var countMeta)
                     || countMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var conditions = item.Conditions;
                 if (conditions == null) return;
-                using (HeaderExport.Subrecord(writer, Faction_Registration.CITC_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.CITC))
                 {
                     writer.Write(conditions.Count);
                 }

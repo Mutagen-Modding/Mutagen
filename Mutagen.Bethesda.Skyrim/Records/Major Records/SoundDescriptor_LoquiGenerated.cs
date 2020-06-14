@@ -963,8 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoundDescriptorXmlWriteTranslation);
-        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
-        public static readonly RecordType TriggeringRecordType = SNDR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SNDR;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1723,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SoundDescriptor_Registration.SNDR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNDR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1775,7 +1774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
 
-        public override RecordType RecordType => SoundDescriptor_Registration.SNDR_HEADER;
+        public override RecordType RecordType => RecordTypes.SNDR;
         public static void FillBinaryStructs(
             ISoundDescriptorInternal item,
             MutagenFrame frame)

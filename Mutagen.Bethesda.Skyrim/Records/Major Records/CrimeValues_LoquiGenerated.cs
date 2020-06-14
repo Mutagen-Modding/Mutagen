@@ -1475,8 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CrimeValuesXmlWriteTranslation);
-        public static readonly RecordType CRVA_HEADER = new RecordType("CRVA");
-        public static readonly RecordType TriggeringRecordType = CRVA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CRVA;
         public static readonly Type BinaryWriteTranslation = typeof(CrimeValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1568,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CrimeValues_Registration.CRVA_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CRVA)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2538,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CrimeValues_Registration.CRVA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CRVA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

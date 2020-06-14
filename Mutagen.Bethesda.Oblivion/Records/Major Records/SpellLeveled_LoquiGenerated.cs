@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SpellLeveledXmlWriteTranslation);
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType TriggeringRecordType = LVSP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LVSP;
         public static readonly Type BinaryWriteTranslation = typeof(SpellLeveledBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1927,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SpellLeveled_Registration.LVSP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVSP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2001,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
 
-        public override RecordType RecordType => SpellLeveled_Registration.LVSP_HEADER;
+        public override RecordType RecordType => RecordTypes.LVSP;
         public static void FillBinaryStructs(
             ISpellLeveledInternal item,
             MutagenFrame frame)

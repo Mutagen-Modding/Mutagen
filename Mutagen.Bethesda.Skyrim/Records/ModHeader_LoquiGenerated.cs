@@ -1820,17 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ModHeaderXmlWriteTranslation);
-        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
-        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
-        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
-        public static readonly RecordType DELE_HEADER = new RecordType("DELE");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType INTV_HEADER = new RecordType("INTV");
-        public static readonly RecordType INCC_HEADER = new RecordType("INCC");
-        public static readonly RecordType TriggeringRecordType = TES4_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1925,7 +1915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
             UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
@@ -3206,20 +3196,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.OFST_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.DELE_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                 writer: writer,
@@ -3235,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
-                recordType: recordTypeConverter.ConvertToCustom(ModHeader_Registration.ONAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 transl: (MutagenWriter subWriter, IFormLink<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3245,11 +3235,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.INTV,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.INTV_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.INCC,
-                header: recordTypeConverter.ConvertToCustom(ModHeader_Registration.INCC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
         }
 
         public void Write(
@@ -3259,7 +3249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ModHeader_Registration.TES4_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3310,24 +3300,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x52444548: // HEDR
+                case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
-                case 0x5453464F: // OFST
+                case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
-                case 0x454C4544: // DELE
+                case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3335,7 +3325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3343,12 +3333,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
-                case 0x5453414D: // MAST
+                case RecordTypeInts.MAST:
                 {
                     item.MasterReferences.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: ModHeader_Registration.MAST_HEADER,
+                            triggeringRecord: RecordTypes.MAST,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out MasterReference listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -3359,7 +3349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
@@ -3370,13 +3360,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
                 }
-                case 0x56544E49: // INTV
+                case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
                 }
-                case 0x43434E49: // INCC
+                case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
@@ -3573,41 +3563,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x52444548: // HEDR
+                case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
-                case 0x5453464F: // OFST
+                case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
                 }
-                case 0x454C4544: // DELE
+                case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
                 }
-                case 0x5453414D: // MAST
+                case RecordTypeInts.MAST:
                 {
                     this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: ModHeader_Registration.MAST_HEADER,
+                        trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -3619,12 +3609,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
                 }
-                case 0x56544E49: // INTV
+                case RecordTypeInts.INTV:
                 {
                     _INTVLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
                 }
-                case 0x43434E49: // INCC
+                case RecordTypeInts.INCC:
                 {
                     _INCCLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);

@@ -1161,9 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ActivateParentsXmlWriteTranslation);
-        public static readonly RecordType XAPD_HEADER = new RecordType("XAPD");
-        public static readonly RecordType XAPR_HEADER = new RecordType("XAPR");
-        public static readonly RecordType TriggeringRecordType = XAPD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XAPD;
         public static readonly Type BinaryWriteTranslation = typeof(ActivateParentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1902,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(ActivateParents_Registration.XAPD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XAPD));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IActivateParentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parents,
@@ -1961,19 +1959,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44504158: // XAPD
+                case RecordTypeInts.XAPD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<ActivateParents.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
                 }
-                case 0x52504158: // XAPR
+                case RecordTypeInts.XAPR:
                 {
                     item.Parents.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ActivateParent>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: ActivateParents_Registration.XAPR_HEADER,
+                            triggeringRecord: RecordTypes.XAPR,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ActivateParent listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2137,13 +2135,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44504158: // XAPD
+                case RecordTypeInts.XAPD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
                 }
-                case 0x52504158: // XAPR
+                case RecordTypeInts.XAPR:
                 {
                     this.Parents = BinaryOverlayList<ActivateParentBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

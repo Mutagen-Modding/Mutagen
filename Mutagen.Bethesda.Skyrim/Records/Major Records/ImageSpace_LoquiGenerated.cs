@@ -1277,13 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ImageSpaceXmlWriteTranslation);
-        public static readonly RecordType IMGS_HEADER = new RecordType("IMGS");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TriggeringRecordType = IMGS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IMGS;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2416,7 +2410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ENAM,
-                header: recordTypeConverter.ConvertToCustom(ImageSpace_Registration.ENAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
             if (item.Hdr.TryGet(out var HdrItem))
             {
                 ((ImageSpaceHdrBinaryWriteTranslation)((IBinaryItem)HdrItem).BinaryWriteTranslator).Write(
@@ -2454,7 +2448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ImageSpace_Registration.IMGS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IMGS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2506,7 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => ImageSpace_Registration.IMGS_HEADER;
+        public override RecordType RecordType => RecordTypes.IMGS;
         public static void FillBinaryStructs(
             IImageSpaceInternal item,
             MutagenFrame frame)
@@ -2526,28 +2520,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ENAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.ENAM);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     item.Hdr = Mutagen.Bethesda.Skyrim.ImageSpaceHdr.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Hdr);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     item.Cinematic = Mutagen.Bethesda.Skyrim.ImageSpaceCinematic.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Cinematic);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     item.Tint = Mutagen.Bethesda.Skyrim.ImageSpaceTint.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Tint);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     item.DepthOfField = Mutagen.Bethesda.Skyrim.ImageSpaceDepthOfField.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.DepthOfField);
@@ -2710,27 +2704,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     _ENAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.ENAM);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     _HdrLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Hdr);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _CinematicLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Cinematic);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TintLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Tint);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DepthOfFieldLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.DepthOfField);

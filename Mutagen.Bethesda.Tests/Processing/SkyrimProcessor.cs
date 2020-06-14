@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Tests
             // Find and store marker data
             var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
             var indices = new List<int>();
-            var initialPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Furniture_Registration.ENAM_HEADER);
+            var initialPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.ENAM);
             if (initialPos == null) return;
             var pos = initialPos.Value;
             while (pos < majorFrame.Content.Length)
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Tests
                     stopOnAlreadyEncounteredRecord: true,
                     new RecordType[]
                     {
-                        Furniture_Registration.ENAM_HEADER,
+                        RecordTypes.ENAM,
                         new RecordType("NAM0"),
                         new RecordType("FNMK"),
                     });
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
 
-            var qnam = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Npc_Registration.QNAM_HEADER, navigateToContent: true);
+            var qnam = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.QNAM, navigateToContent: true);
             if (qnam != null)
             {
                 // Standardize float rounding errors
@@ -175,11 +175,11 @@ namespace Mutagen.Bethesda.Tests
                 writer.Write(b / 255f);
                 this._Instructions.SetSubstitution(loc.Min + qnam.Value + majorFrame.Header.HeaderLength, bytes);
             }
-            var nam9 = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Npc_Registration.NAM9_HEADER);
+            var nam9 = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.NAM9);
             if (nam9 != null)
             {
                 // Standardize floats
-                var subRecord = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(nam9.Value), Npc_Registration.NAM9_HEADER);
+                var subRecord = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(nam9.Value), RecordTypes.NAM9);
                 stream.Position = loc.Min + nam9.Value + majorFrame.Header.HeaderLength + subRecord.HeaderLength;
                 var final = stream.Position + subRecord.ContentLength;
                 while (stream.Position < final)
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
 
-            var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Region_Registration.RDAT_HEADER, navigateToContent: false);
+            var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.RDAT, navigateToContent: false);
             if (rdat == null) return;
 
             // Order RDATs by index
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Tests
                 var nextRdat = UtilityTranslation.FindFirstSubrecord(
                     majorFrame.Content,
                     stream.MetaData.Constants,
-                    Region_Registration.RDAT_HEADER,
+                    RecordTypes.RDAT,
                     navigateToContent: false,
                     offset: rdat.Value + rdatHeader.Header.TotalLength);
                 rdats[index] =
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
+            if (!RecordTypes.CELL.Equals(recType)) return;
             CleanEmptyCellGroups(
                 stream,
                 formID,
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Tests
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
             var sizeChange = 0;
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.DATA_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
             {
                 var subHeader = stream.MetaData.Constants.Subrecord(majorFrame.Content.Slice(pos.Value));
@@ -298,15 +298,15 @@ namespace Mutagen.Bethesda.Tests
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
             var content = majorFrame.Content;
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Quest_Registration.ANAM_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.ANAM);
             if (pos != null)
             {
                 var anamFrame = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(pos.Value));
                 var next = BinaryPrimitives.ReadUInt32LittleEndian(anamFrame.Content);
                 var targets = new RecordType[]
                 {
-                    Quest_Registration.ALST_HEADER,
-                    Quest_Registration.ALLS_HEADER
+                    RecordTypes.ALST,
+                    RecordTypes.ALLS
                 };
                 var locs = UtilityTranslation.FindAllOfSubrecords(
                     majorFrame.Content,
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Tests
             out ushort objectFormat,
             out int processed)
         {
-            vmadPos = UtilityTranslation.FindFirstSubrecord(frame.Content, Meta, Quest_Registration.VMAD_HEADER);
+            vmadPos = UtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
             if (vmadPos == null)
             {
                 processed = 0;
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Tests
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
             var sizeChange = 0;
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.DATA_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XTEL_HEADER);
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XTEL);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XPRM_HEADER);
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XPRM);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, PlacedObject_Registration.XRMR_HEADER);
+            pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XRMR);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -570,12 +570,12 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!ANavigationMesh_Registration.NAVM_HEADER.Equals(recType)) return;
+            if (!RecordTypes.NAVM.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, ANavigationMesh_Registration.NVNM_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.NVNM);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -602,13 +602,13 @@ namespace Mutagen.Bethesda.Tests
             // Reorder Idle subrecords
 
             // Reorder data values
-            var xnamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.XNAM_HEADER);
+            var xnamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XNAM);
             if (xnamPos == null)
             {
                 throw new ArgumentException();
             }
 
-            var pkcuPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.PKCU_HEADER, navigateToContent: true);
+            var pkcuPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.PKCU, navigateToContent: true);
             if (!pkcuPos.HasValue)
             {
                 throw new ArgumentException();
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Tests
 
             if (count == 0) return;
 
-            var anamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, Package_Registration.ANAM_HEADER);
+            var anamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.ANAM);
             RecordType pldt = new RecordType("PLDT");
             RecordType ptda = new RecordType("PTDA");
             RecordType pdto = new RecordType("PDTO");
@@ -638,8 +638,8 @@ namespace Mutagen.Bethesda.Tests
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
                         stream.MetaData.Constants,
                         out var _,
-                        Package_Registration.ANAM_HEADER,
-                        Package_Registration.CNAM_HEADER,
+                        RecordTypes.ANAM,
+                        RecordTypes.CNAM,
                         pldt,
                         ptda,
                         pdto,
@@ -789,7 +789,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, EffectShader_Registration.DATA_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
 
-            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, EffectShader_Registration.DATA_HEADER);
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
             {
                 stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;

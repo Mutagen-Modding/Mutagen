@@ -1079,9 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SimpleModelXmlWriteTranslation);
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
-        public static readonly RecordType TriggeringRecordType = MODL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1769,12 +1767,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File,
-                header: recordTypeConverter.ConvertToCustom(SimpleModel_Registration.MODL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data,
-                header: recordTypeConverter.ConvertToCustom(SimpleModel_Registration.MODT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
         }
 
         public virtual void Write(
@@ -1822,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SimpleModel_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1831,7 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)SimpleModel_FieldIndex.File);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -1993,13 +1991,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SimpleModel_FieldIndex.File) return TryGet<int?>.Failure;
                     _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SimpleModel_FieldIndex.File);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SimpleModel_FieldIndex.Data);

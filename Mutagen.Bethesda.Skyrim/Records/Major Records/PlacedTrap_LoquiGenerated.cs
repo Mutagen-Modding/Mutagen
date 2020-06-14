@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedTrapXmlWriteTranslation);
-        public static readonly RecordType PGRE_HEADER = new RecordType("PGRE");
-        public static readonly RecordType TriggeringRecordType = PGRE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PGRE;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedTrapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedTrap_Registration.PGRE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PGRE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedTrapBinaryCreateTranslation Instance = new PlacedTrapBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedTrap_Registration.PGRE_HEADER;
+        public override RecordType RecordType => RecordTypes.PGRE;
         public static void FillBinaryStructs(
             IPlacedTrapInternal item,
             MutagenFrame frame)

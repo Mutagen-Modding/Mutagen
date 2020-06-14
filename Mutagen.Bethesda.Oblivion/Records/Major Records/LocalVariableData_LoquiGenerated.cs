@@ -1162,8 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LocalVariableDataXmlWriteTranslation);
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType TriggeringRecordType = SLSD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SLSD;
         public static readonly Type BinaryWriteTranslation = typeof(LocalVariableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1248,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LocalVariableData_Registration.SLSD_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SLSD)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1935,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LocalVariableData_Registration.SLSD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SLSD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

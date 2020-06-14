@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var ret = new ModRecordAligner.AlignmentRules();
             ret.AddAlignments(
-                Cell_Registration.CELL_HEADER,
+                RecordTypes.CELL,
                 new RecordType("EDID"),
                 new RecordType("FULL"),
                 new RecordType("DATA"),
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XRNK"),
                 new RecordType("XGLB"));
             ret.AddAlignments(
-                Worldspace_Registration.WRLD_HEADER,
+                RecordTypes.WRLD,
                 new RecordType("EDID"),
                 new RecordType("FULL"),
                 new RecordType("WNAM"),
@@ -90,12 +90,12 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("NAM9"),
                 new RecordType("SNAM"),
                 new RecordType("XXXX"));
-            ret.StopMarkers[Worldspace_Registration.WRLD_HEADER] = new List<RecordType>()
+            ret.StopMarkers[RecordTypes.WRLD] = new List<RecordType>()
             {
                 new RecordType("OFST"),
             };
             ret.AddAlignments(
-                PlacedObject_Registration.REFR_HEADER,
+                RecordTypes.REFR,
                 new ModRecordAligner.AlignmentStraightRecord("EDID"),
                 new ModRecordAligner.AlignmentStraightRecord("NAME"),
                 new ModRecordAligner.AlignmentStraightRecord("XPCI"),
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Tests
                 new ModRecordAligner.AlignmentStraightRecord("XSOL"),
                 new ModRecordAligner.AlignmentStraightRecord("DATA"));
             ret.AddAlignments(
-                PlacedCreature_Registration.ACRE_HEADER,
+                RecordTypes.ACRE,
                 new RecordType("EDID"),
                 new RecordType("NAME"),
                 new RecordType("XOWN"),
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XSCL"),
                 new RecordType("DATA"));
             ret.AddAlignments(
-                PlacedNpc_Registration.ACHR_HEADER,
+                RecordTypes.ACHR,
                 new RecordType("EDID"),
                 new RecordType("NAME"),
                 new RecordType("XPCI"),

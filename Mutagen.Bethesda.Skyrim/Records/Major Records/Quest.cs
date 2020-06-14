@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
             {
                 var nextHeader = frame.ReadSubrecordFrame();
-                if (nextHeader.Header.RecordType != Quest_Registration.NEXT_HEADER
+                if (nextHeader.Header.RecordType != RecordTypes.NEXT
                     || nextHeader.Content.Length != 0)
                 {
                     throw new ArgumentException("Unexpected NEXT header");
@@ -106,14 +106,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
             {
-                using (HeaderExport.Subrecord(writer, Quest_Registration.NEXT_HEADER)) { }
+                using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
             }
 
             static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
             {
                 var aliases = item.Aliases;
-                using (HeaderExport.Subrecord(writer, Quest_Registration.ANAM_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))
                 {
                     if (aliases.Count == 0)
                     {
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void UnusedConditionsLogicCustomParse(BinaryMemoryReadStream stream, int offset)
             {
                 var nextHeader = _package.MetaData.Constants.ReadSubrecordFrame(stream);
-                if (nextHeader.Header.RecordType != Quest_Registration.NEXT_HEADER
+                if (nextHeader.Header.RecordType != RecordTypes.NEXT
                     || nextHeader.Content.Length != 0)
                 {
                     throw new ArgumentException("Unexpected NEXT header");

@@ -954,9 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GlobalXmlWriteTranslation);
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1732,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Global_Registration.GLOB_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GLOB),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1795,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -1911,7 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     TypeCharCustomParse(
                         stream,

@@ -1246,8 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PreferredPathingXmlWriteTranslation);
-        public static readonly RecordType NVPP_HEADER = new RecordType("NVPP");
-        public static readonly RecordType TriggeringRecordType = NVPP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NVPP;
         public static readonly Type BinaryWriteTranslation = typeof(PreferredPathingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1330,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(PreferredPathing_Registration.NVPP_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.NVPP)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2079,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PreferredPathing_Registration.NVPP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NVPP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

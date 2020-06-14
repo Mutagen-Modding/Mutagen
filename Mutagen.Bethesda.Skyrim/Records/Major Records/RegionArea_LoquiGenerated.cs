@@ -1147,8 +1147,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionAreaXmlWriteTranslation);
-        public static readonly RecordType RPLI_HEADER = new RecordType("RPLI");
-        public static readonly RecordType RPLD_HEADER = new RecordType("RPLD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1156,8 +1154,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        RPLI_HEADER,
-                        RPLD_HEADER
+                        RecordTypes.RPLI,
+                        RecordTypes.RPLD
                     })
             );
         });
@@ -1902,11 +1900,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EdgeFallOff,
-                header: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RPLI));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
                 writer: writer,
                 items: item.RegionPointListData,
-                recordType: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLD_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RPLD),
                 transl: P2FloatBinaryTranslation.Instance.Write);
         }
 
@@ -1955,14 +1953,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x494C5052: // RPLI
+                case RecordTypeInts.RPLI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
-                case 0x444C5052: // RPLD
+                case RecordTypeInts.RPLD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2120,13 +2118,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x494C5052: // RPLI
+                case RecordTypeInts.RPLI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
                     _EdgeFallOffLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
-                case 0x444C5052: // RPLD
+                case RecordTypeInts.RPLD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);

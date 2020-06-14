@@ -1224,8 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LockDataXmlWriteTranslation);
-        public static readonly RecordType XLOC_HEADER = new RecordType("XLOC");
-        public static readonly RecordType TriggeringRecordType = XLOC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XLOC;
         public static readonly Type BinaryWriteTranslation = typeof(LockDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1311,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LockData_Registration.XLOC_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XLOC)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2047,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LockData_Registration.XLOC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XLOC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

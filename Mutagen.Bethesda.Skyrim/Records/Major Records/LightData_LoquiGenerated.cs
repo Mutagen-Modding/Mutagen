@@ -1249,8 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LightDataXmlWriteTranslation);
-        public static readonly RecordType XLIG_HEADER = new RecordType("XLIG");
-        public static readonly RecordType TriggeringRecordType = XLIG_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XLIG;
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1337,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LightData_Registration.XLIG_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XLIG)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2109,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LightData_Registration.XLIG_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XLIG),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

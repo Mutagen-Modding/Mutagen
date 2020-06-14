@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (!frame.Reader.TryGetSubrecord(Condition_Registration.CTDA_HEADER, out var subRecMeta))
+            if (!frame.Reader.TryGetSubrecord(Mutagen.Bethesda.Skyrim.Internals.RecordTypes.CTDA, out var subRecMeta))
             {
                 throw new ArgumentException();
             }
@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class Condition_Registration
         {
-            public static readonly RecordType CIS1_HEADER = new RecordType("CIS1");
-            public static readonly RecordType CIS2_HEADER = new RecordType("CIS2");
+            public static readonly RecordType CIS1 = new RecordType("CIS1");
+            public static readonly RecordType CIS2 = new RecordType("CIS2");
         }
 
         public partial class ConditionBinaryCreateTranslation
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame)
             {
                 conditions.Clear();
-                while (frame.Reader.TryGetSubrecord(Condition_Registration.CTDA_HEADER, out var subMeta))
+                while (frame.Reader.TryGetSubrecord(RecordTypes.CTDA, out var subMeta))
                 {
                     conditions.Add(Condition.CreateFromBinary(frame, default(RecordTypeConverter)));
                 }
@@ -152,14 +152,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
                 if (funcData.ParameterOneString.TryGet(out var param1))
                 {
-                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1_HEADER))
+                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS1))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
                 if (funcData.ParameterTwoString.TryGet(out var param2))
                 {
-                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2_HEADER))
+                    using (HeaderExport.Subrecord(writer, Condition_Registration.CIS2))
                     {
                         StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
                     }
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static ConditionBinaryOverlay ConditionFactory(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 var subRecMeta = package.MetaData.Constants.GetSubrecordFrame(stream);
-                if (subRecMeta.Header.RecordType != Condition_Registration.CTDA_HEADER)
+                if (subRecMeta.Header.RecordType != RecordTypes.CTDA)
                 {
                     throw new ArgumentException();
                 }
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 var counterMeta = package.MetaData.Constants.ReadSubrecordFrame(stream);
-                if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
+                if (counterMeta.Header.RecordType != RecordTypes.CITC
                     || counterMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                     stream: stream,
                     finalPos: long.MaxValue,
                     constants: package.MetaData.Constants.SubConstants,
-                    trigger: Condition_Registration.CTDA_HEADER,
+                    trigger: RecordTypes.CTDA,
                     includeTriggers: IncludeTriggers,
                     skipHeader: false);
                 span = span.Slice(0, stream.Position - pos);

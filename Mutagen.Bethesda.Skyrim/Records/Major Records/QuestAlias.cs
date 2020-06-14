@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 RecordType type = item.Type switch
                 {
-                    QuestAlias.TypeEnum.Reference => QuestAlias_Registration.ALST_HEADER,
-                    QuestAlias.TypeEnum.Location => QuestAlias_Registration.ALLS_HEADER,
+                    QuestAlias.TypeEnum.Reference => RecordTypes.ALST,
+                    QuestAlias.TypeEnum.Location => RecordTypes.ALLS,
                     _ => throw new NotImplementedException(),
                 };
                 using (HeaderExport.Subrecord(writer, type))
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)
             {
-                using (HeaderExport.Subrecord(writer, QuestAlias_Registration.ALED_HEADER)) { }
+                using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { }
             }
         }
 

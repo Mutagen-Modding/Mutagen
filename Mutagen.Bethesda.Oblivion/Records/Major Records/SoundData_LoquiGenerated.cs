@@ -1155,8 +1155,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoundDataXmlWriteTranslation);
-        public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
-        public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1164,8 +1162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        SNDD_HEADER,
-                        SNDX_HEADER
+                        RecordTypes.SNDD,
+                        RecordTypes.SNDX
                     })
             );
         });
@@ -1253,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(SoundData_Registration.SNDD_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.SNDD)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1983,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SoundData_Registration.SNDD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNDD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

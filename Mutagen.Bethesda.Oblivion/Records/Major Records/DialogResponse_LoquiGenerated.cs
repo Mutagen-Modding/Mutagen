@@ -1127,9 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogResponseXmlWriteTranslation);
-        public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1137,9 +1134,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        TRDT_HEADER,
-                        NAM1_HEADER,
-                        NAM2_HEADER
+                        RecordTypes.TRDT,
+                        RecordTypes.NAM1,
+                        RecordTypes.NAM2
                     })
             );
         });
@@ -1915,12 +1912,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ResponseText,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActorNotes,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1969,13 +1966,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
                     item.Data = Mutagen.Bethesda.Oblivion.DialogResponseData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1984,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2148,19 +2145,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
                     _ResponseTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
                     _ActorNotesLocation = (stream.Position - offset);

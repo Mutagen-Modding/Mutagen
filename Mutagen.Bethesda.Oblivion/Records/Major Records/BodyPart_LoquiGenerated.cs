@@ -1064,8 +1064,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyPartXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1073,8 +1071,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        INDX_HEADER,
-                        ICON_HEADER
+                        RecordTypes.INDX,
+                        RecordTypes.ICON
                     })
             );
         });
@@ -1765,11 +1763,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Index,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.INDX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1818,14 +1816,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Index);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1984,13 +1982,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Index);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return TryGet<int?>.Failure;
                     _IconLocation = (stream.Position - offset);

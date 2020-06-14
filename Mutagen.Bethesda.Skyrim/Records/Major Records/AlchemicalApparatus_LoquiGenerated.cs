@@ -1672,21 +1672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AlchemicalApparatusXmlWriteTranslation);
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
-        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
-        public static readonly RecordType QUAL_HEADER = new RecordType("QUAL");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = APPA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.APPA;
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3227,7 +3213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -3254,23 +3240,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.YNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PutDownSound,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.ZNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.WriteNullable(
                 writer,
                 item.Quality,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.QUAL_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QUAL));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Value);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3286,7 +3272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.APPA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.APPA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3338,7 +3324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
 
-        public override RecordType RecordType => AlchemicalApparatus_Registration.APPA_HEADER;
+        public override RecordType RecordType => RecordTypes.APPA;
         public static void FillBinaryStructs(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame)
@@ -3358,17 +3344,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3377,30 +3363,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icons);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Destructible);
                 }
-                case 0x4D414E59: // YNAM
+                case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3408,7 +3394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.PickUpSound);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3416,13 +3402,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.PutDownSound);
                 }
-                case 0x4C415551: // QUAL
+                case RecordTypeInts.QUAL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quality = EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3431,7 +3417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Description);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3626,22 +3612,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3649,7 +3635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
@@ -3657,9 +3643,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Icons);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -3667,27 +3653,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Destructible);
                 }
-                case 0x4D414E59: // YNAM
+                case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.PickUpSound);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.PutDownSound);
                 }
-                case 0x4C415551: // QUAL
+                case RecordTypeInts.QUAL:
                 {
                     _QualityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Description);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Weight);

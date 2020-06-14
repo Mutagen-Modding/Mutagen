@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LightingTemplateXmlWriteTranslation);
-        public static readonly RecordType LGTM_HEADER = new RecordType("LGTM");
-        public static readonly RecordType TriggeringRecordType = LGTM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LGTM;
         public static readonly Type BinaryWriteTranslation = typeof(LightingTemplateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LightingTemplate_Registration.LGTM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LGTM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LightingTemplateBinaryCreateTranslation Instance = new LightingTemplateBinaryCreateTranslation();
 
-        public override RecordType RecordType => LightingTemplate_Registration.LGTM_HEADER;
+        public override RecordType RecordType => RecordTypes.LGTM;
         public static void FillBinaryStructs(
             ILightingTemplateInternal item,
             MutagenFrame frame)

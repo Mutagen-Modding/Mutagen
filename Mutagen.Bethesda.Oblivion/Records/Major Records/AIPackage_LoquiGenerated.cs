@@ -1360,14 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AIPackageXmlWriteTranslation);
-        public static readonly RecordType PACK_HEADER = new RecordType("PACK");
-        public static readonly RecordType PKDT_HEADER = new RecordType("PKDT");
-        public static readonly RecordType PLDT_HEADER = new RecordType("PLDT");
-        public static readonly RecordType PSDT_HEADER = new RecordType("PSDT");
-        public static readonly RecordType PTDT_HEADER = new RecordType("PTDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType TriggeringRecordType = PACK_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PACK;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2596,7 +2589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AIPackage_Registration.PACK_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PACK),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2648,7 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AIPackageBinaryCreateTranslation Instance = new AIPackageBinaryCreateTranslation();
 
-        public override RecordType RecordType => AIPackage_Registration.PACK_HEADER;
+        public override RecordType RecordType => RecordTypes.PACK;
         public static void FillBinaryStructs(
             IAIPackageInternal item,
             MutagenFrame frame)
@@ -2668,28 +2661,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54444B50: // PKDT
+                case RecordTypeInts.PKDT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.AIPackageData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
                 }
-                case 0x54444C50: // PLDT
+                case RecordTypeInts.PLDT:
                 {
                     item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
                 }
-                case 0x54445350: // PSDT
+                case RecordTypeInts.PSDT:
                 {
                     item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
                 }
-                case 0x54445450: // PTDT
+                case RecordTypeInts.PTDT:
                 {
                     item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
@@ -2866,28 +2859,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54444B50: // PKDT
+                case RecordTypeInts.PKDT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
                 }
-                case 0x54444C50: // PLDT
+                case RecordTypeInts.PLDT:
                 {
                     _LocationLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
                 }
-                case 0x54445350: // PSDT
+                case RecordTypeInts.PSDT:
                 {
                     _ScheduleLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
                 }
-                case 0x54445450: // PTDT
+                case RecordTypeInts.PTDT:
                 {
                     _TargetLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

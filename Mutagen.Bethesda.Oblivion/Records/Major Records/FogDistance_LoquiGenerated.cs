@@ -1154,8 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FogDistanceXmlWriteTranslation);
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType TriggeringRecordType = FNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FNAM;
         public static readonly Type BinaryWriteTranslation = typeof(FogDistanceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(FogDistance_Registration.FNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.FNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1929,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(FogDistance_Registration.FNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

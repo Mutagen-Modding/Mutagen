@@ -1201,12 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SoundMarkerXmlWriteTranslation);
-        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
-        public static readonly RecordType SDSC_HEADER = new RecordType("SDSC");
-        public static readonly RecordType TriggeringRecordType = SOUN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SOUN;
         public static readonly Type BinaryWriteTranslation = typeof(SoundMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2192,15 +2187,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
-                header: recordTypeConverter.ConvertToCustom(SoundMarker_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SNDD,
-                header: recordTypeConverter.ConvertToCustom(SoundMarker_Registration.SNDD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNDD));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SoundDescriptor,
-                header: recordTypeConverter.ConvertToCustom(SoundMarker_Registration.SDSC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SDSC));
         }
 
         public void Write(
@@ -2210,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SoundMarker_Registration.SOUN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SOUN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2262,7 +2257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SoundMarkerBinaryCreateTranslation Instance = new SoundMarkerBinaryCreateTranslation();
 
-        public override RecordType RecordType => SoundMarker_Registration.SOUN_HEADER;
+        public override RecordType RecordType => RecordTypes.SOUN;
         public static void FillBinaryStructs(
             ISoundMarkerInternal item,
             MutagenFrame frame)
@@ -2282,24 +2277,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.FNAM);
                 }
-                case 0x44444E53: // SNDD
+                case RecordTypeInts.SNDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SNDD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SNDD);
                 }
-                case 0x43534453: // SDSC
+                case RecordTypeInts.SDSC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundDescriptor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2465,22 +2460,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.FNAM);
                 }
-                case 0x44444E53: // SNDD
+                case RecordTypeInts.SNDD:
                 {
                     _SNDDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SNDD);
                 }
-                case 0x43534453: // SDSC
+                case RecordTypeInts.SDSC:
                 {
                     _SoundDescriptorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SoundDescriptor);

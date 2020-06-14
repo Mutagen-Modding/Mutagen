@@ -881,8 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
         public static readonly Type XmlWriteTranslation = typeof(LeveledEntryXmlWriteTranslation);
-        public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
-        public static readonly RecordType TriggeringRecordType = LVLO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LVLO;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -996,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(LeveledEntry_Registration.LVLO_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.LVLO)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1765,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LeveledEntry_Registration.LVLO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

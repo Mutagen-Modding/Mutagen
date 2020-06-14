@@ -1026,9 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GameSettingStringXmlWriteTranslation);
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = GMST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
         public static readonly Type BinaryWriteTranslation = typeof(GameSettingStringBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1943,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Data,
-                header: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1954,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.GMST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GMST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2017,7 +2015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
 
-        public override RecordType RecordType => GameSettingString_Registration.GMST_HEADER;
+        public override RecordType RecordType => RecordTypes.GMST;
         public static void FillBinaryStructs(
             IGameSettingStringInternal item,
             MutagenFrame frame)
@@ -2037,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2183,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);

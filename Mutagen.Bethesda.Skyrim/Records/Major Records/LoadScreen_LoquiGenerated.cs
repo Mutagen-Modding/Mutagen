@@ -1537,17 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LoadScreenXmlWriteTranslation);
-        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
-        public static readonly RecordType TriggeringRecordType = LSCR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LSCR;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2858,7 +2848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
             LoadScreenBinaryWriteTranslation.WriteBinaryConditions(
@@ -2867,18 +2857,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LoadingScreenNif,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.NNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialScale,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialRotation,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
             if (item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsItem))
             {
-                using (HeaderExport.Subrecord(writer, LoadScreen_Registration.ONAM_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.ONAM))
                 {
                     ((Int16MinMaxBinaryWriteTranslation)((IBinaryItem)RotationOffsetConstraintsItem).BinaryWriteTranslator).Write(
                         item: RotationOffsetConstraintsItem,
@@ -2889,11 +2879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialTranslationOffset,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.XNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CameraPath,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.MOD2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MOD2),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -2904,7 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.LSCR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LSCR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2956,7 +2946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
 
-        public override RecordType RecordType => LoadScreen_Registration.LSCR_HEADER;
+        public override RecordType RecordType => RecordTypes.LSCR;
         public static void FillBinaryStructs(
             ILoadScreenInternal item,
             MutagenFrame frame)
@@ -2976,14 +2966,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2992,14 +2982,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     LoadScreenBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoadingScreenNif = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3007,31 +2997,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialRotation = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.RotationOffsetConstraints = Mutagen.Bethesda.Skyrim.Int16MinMax.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialTranslationOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
                 }
-                case 0x32444F4D: // MOD2
+                case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CameraPath = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3219,7 +3209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
@@ -3227,12 +3217,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     ConditionsCustomParse(
                         stream: stream,
@@ -3242,22 +3232,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _LoadingScreenNifLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _InitialScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _InitialRotationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     this.RotationOffsetConstraints = Int16MinMaxBinaryOverlay.Int16MinMaxFactory(
@@ -3266,12 +3256,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     _InitialTranslationOffsetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
                 }
-                case 0x32444F4D: // MOD2
+                case RecordTypeInts.MOD2:
                 {
                     _CameraPathLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.CameraPath);

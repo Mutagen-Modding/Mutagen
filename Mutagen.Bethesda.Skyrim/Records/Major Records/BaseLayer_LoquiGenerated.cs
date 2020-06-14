@@ -1036,8 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BaseLayerXmlWriteTranslation);
-        public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
-        public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1045,8 +1043,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        BTXT_HEADER,
-                        ATXT_HEADER
+                        RecordTypes.BTXT,
+                        RecordTypes.ATXT
                     })
             );
         });
@@ -1781,7 +1779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54585442: // BTXT
+                case RecordTypeInts.BTXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
                     item.Header = Mutagen.Bethesda.Skyrim.LayerHeader.CreateFromBinary(
@@ -1942,7 +1940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54585442: // BTXT
+                case RecordTypeInts.BTXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);

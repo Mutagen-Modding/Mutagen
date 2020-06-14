@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyPartDataXmlWriteTranslation);
-        public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
-        public static readonly RecordType TriggeringRecordType = BPTD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.BPTD;
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(BodyPartData_Registration.BPTD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.BPTD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static BodyPartDataBinaryCreateTranslation Instance = new BodyPartDataBinaryCreateTranslation();
 
-        public override RecordType RecordType => BodyPartData_Registration.BPTD_HEADER;
+        public override RecordType RecordType => RecordTypes.BPTD;
         public static void FillBinaryStructs(
             IBodyPartDataInternal item,
             MutagenFrame frame)

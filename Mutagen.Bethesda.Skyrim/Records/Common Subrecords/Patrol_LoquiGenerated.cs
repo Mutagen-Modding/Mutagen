@@ -1314,13 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PatrolXmlWriteTranslation);
-        public static readonly RecordType XPRD_HEADER = new RecordType("XPRD");
-        public static readonly RecordType XPPA_HEADER = new RecordType("XPPA");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType PDTO_HEADER = new RecordType("PDTO");
-        public static readonly RecordType TriggeringRecordType = XPRD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XPRD;
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2232,22 +2226,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IdleTime,
-                header: recordTypeConverter.ConvertToCustom(Patrol_Registration.XPRD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XPRD));
             PatrolBinaryWriteTranslation.WriteBinaryPatrolScriptMarker(
                 writer: writer,
                 item: item);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Idle,
-                header: recordTypeConverter.ConvertToCustom(Patrol_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(Patrol_Registration.SCHR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCTX,
-                header: recordTypeConverter.ConvertToCustom(Patrol_Registration.SCTX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
             PatrolBinaryWriteTranslation.WriteBinaryTopics(
                 writer: writer,
                 item: item);
@@ -2298,21 +2292,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44525058: // XPRD
+                case RecordTypeInts.XPRD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
                 }
-                case 0x41505058: // XPPA
+                case RecordTypeInts.XPPA:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2320,19 +2314,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
                 }
-                case 0x4F544450: // PDTO
+                case RecordTypeInts.PDTO:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2525,35 +2519,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44525058: // XPRD
+                case RecordTypeInts.XPRD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
                     _IdleTimeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
                 }
-                case 0x41505058: // XPPA
+                case RecordTypeInts.XPPA:
                 {
                     PatrolScriptMarkerCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     _IdleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     _SCHRLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     _SCTXLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
                 }
-                case 0x4F544450: // PDTO
+                case RecordTypeInts.PDTO:
                 {
                     TopicsCustomParse(
                         stream: stream,

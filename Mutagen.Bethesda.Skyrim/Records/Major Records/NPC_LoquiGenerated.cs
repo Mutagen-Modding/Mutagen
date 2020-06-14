@@ -3983,67 +3983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcXmlWriteTranslation);
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType VTCK_HEADER = new RecordType("VTCK");
-        public static readonly RecordType TPLT_HEADER = new RecordType("TPLT");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
-        public static readonly RecordType SPCT_HEADER = new RecordType("SPCT");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType ATKR_HEADER = new RecordType("ATKR");
-        public static readonly RecordType ATKD_HEADER = new RecordType("ATKD");
-        public static readonly RecordType ATKE_HEADER = new RecordType("ATKE");
-        public static readonly RecordType SPOR_HEADER = new RecordType("SPOR");
-        public static readonly RecordType OCOR_HEADER = new RecordType("OCOR");
-        public static readonly RecordType GWOR_HEADER = new RecordType("GWOR");
-        public static readonly RecordType ECOR_HEADER = new RecordType("ECOR");
-        public static readonly RecordType PRKR_HEADER = new RecordType("PRKR");
-        public static readonly RecordType PRKZ_HEADER = new RecordType("PRKZ");
-        public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
-        public static readonly RecordType COCT_HEADER = new RecordType("COCT");
-        public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
-        public static readonly RecordType PKID_HEADER = new RecordType("PKID");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SHRT_HEADER = new RecordType("SHRT");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType HCLF_HEADER = new RecordType("HCLF");
-        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
-        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType NAM5_HEADER = new RecordType("NAM5");
-        public static readonly RecordType NAM6_HEADER = new RecordType("NAM6");
-        public static readonly RecordType NAM7_HEADER = new RecordType("NAM7");
-        public static readonly RecordType NAM8_HEADER = new RecordType("NAM8");
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
-        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
-        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
-        public static readonly RecordType DOFT_HEADER = new RecordType("DOFT");
-        public static readonly RecordType SOFT_HEADER = new RecordType("SOFT");
-        public static readonly RecordType DPLT_HEADER = new RecordType("DPLT");
-        public static readonly RecordType CRIF_HEADER = new RecordType("CRIF");
-        public static readonly RecordType FTST_HEADER = new RecordType("FTST");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType NAMA_HEADER = new RecordType("NAMA");
-        public static readonly RecordType TINI_HEADER = new RecordType("TINI");
-        public static readonly RecordType TINC_HEADER = new RecordType("TINC");
-        public static readonly RecordType TINV_HEADER = new RecordType("TINV");
-        public static readonly RecordType TIAS_HEADER = new RecordType("TIAS");
-        public static readonly RecordType TriggeringRecordType = NPC__HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -7758,25 +7698,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DeathItem,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Voice,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.VTCK_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VTCK));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.TPLT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TPLT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Race,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.RNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
-                counterType: Npc_Registration.SPCT_HEADER,
+                counterType: RecordTypes.SPCT,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.SPLO_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
                 transl: (MutagenWriter subWriter, IFormLink<IASpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
@@ -7794,15 +7734,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WornArmor,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FarAwayModel,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackRace,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.ATKR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ATKR));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
@@ -7817,23 +7757,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpectatorOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.SPOR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SPOR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObserveDeadBodyOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.OCOR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.OCOR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GuardWarnOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.GWOR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.GWOR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatOverridePackageList,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.ECOR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ECOR));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPerkPlacementGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Perks,
-                counterType: Npc_Registration.PRKZ_HEADER,
+                counterType: RecordTypes.PRKZ,
                 counterLength: 4,
                 transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, RecordTypeConverter? conv) =>
                 {
@@ -7846,7 +7786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Items,
-                counterType: Npc_Registration.COCT_HEADER,
+                counterType: RecordTypes.COCT,
                 counterLength: 4,
                 transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, RecordTypeConverter? conv) =>
                 {
@@ -7869,14 +7809,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Npc_Registration.PKID_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PKID));
                 });
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Npc_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -7886,17 +7826,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Class,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ShortName,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.SHRT_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SHRT),
                 binaryType: StringBinaryType.NullTerminate);
             NpcBinaryWriteTranslation.WriteBinaryDataMarker(
                 writer: writer,
@@ -7916,37 +7856,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(Npc_Registration.PNAM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColor,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.HCLF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.HCLF));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.ZNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GiftFilter,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.GNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NAM5,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM5_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Height,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM6_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM6));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weight,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM7_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM7));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundLevel>.Instance.Write(
                 writer,
                 item.SoundLevel,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM8_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
             if (item.Sound.TryGet(out var SoundItem))
             {
                 ((ANpcSoundDefinitionBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
@@ -7957,27 +7897,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultOutfit,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.DOFT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DOFT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SleepingOutfit,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.SOFT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SOFT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultPackageList,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.DPLT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DPLT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CrimeFaction,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.CRIF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CRIF));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadTexture,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.FTST_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FTST));
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureLighting,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.QNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                 binaryType: ColorBinaryType.NoAlphaFloat);
             if (item.FaceMorph.TryGet(out var FaceMorphItem))
             {
@@ -8013,7 +7953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Npc_Registration.NPC__HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NPC_),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -8065,7 +8005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
-        public override RecordType RecordType => Npc_Registration.NPC__HEADER;
+        public override RecordType RecordType => RecordTypes.NPC_;
         public static void FillBinaryStructs(
             INpcInternal item,
             MutagenFrame frame)
@@ -8085,27 +8025,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObjectBounds);
                 }
-                case 0x53424341: // ACBS
+                case RecordTypeInts.ACBS:
                 {
                     item.Configuration = Mutagen.Bethesda.Skyrim.NpcConfiguration.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Npc_Registration.SNAM_HEADER,
+                            triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -8116,7 +8056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8124,7 +8064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
                 }
-                case 0x4B435456: // VTCK
+                case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Voice = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8132,7 +8072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Voice);
                 }
-                case 0x544C5054: // TPLT
+                case RecordTypeInts.TPLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8140,7 +8080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Template);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8148,30 +8088,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
-                case 0x4F4C5053: // SPLO
-                case 0x54435053: // SPCT
+                case RecordTypeInts.SPLO:
+                case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Npc_Registration.SPCT_HEADER,
-                            triggeringRecord: Npc_Registration.SPLO_HEADER,
+                            countRecord: RecordTypes.SPCT,
+                            triggeringRecord: RecordTypes.SPLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ASpell>>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Destructible);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WornArmor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8179,7 +8119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.WornArmor);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FarAwayModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8187,7 +8127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FarAwayModel);
                 }
-                case 0x524B5441: // ATKR
+                case RecordTypeInts.ATKR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8195,8 +8135,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AttackRace);
                 }
-                case 0x444B5441: // ATKD
-                case 0x454B5441: // ATKE
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
                 {
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Attack>.Instance.Parse(
@@ -8212,7 +8152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Attacks);
                 }
-                case 0x524F5053: // SPOR
+                case RecordTypeInts.SPOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SpectatorOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8220,7 +8160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SpectatorOverridePackageList);
                 }
-                case 0x524F434F: // OCOR
+                case RecordTypeInts.OCOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObserveDeadBodyOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8228,7 +8168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
                 }
-                case 0x524F5747: // GWOR
+                case RecordTypeInts.GWOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GuardWarnOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8236,7 +8176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GuardWarnOverridePackageList);
                 }
-                case 0x524F4345: // ECOR
+                case RecordTypeInts.ECOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CombatOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8244,15 +8184,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
                 }
-                case 0x524B5250: // PRKR
-                case 0x5A4B5250: // PRKZ
+                case RecordTypeInts.PRKR:
+                case RecordTypeInts.PRKZ:
                 {
                     item.Perks = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkPlacement>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Npc_Registration.PRKZ_HEADER,
-                            triggeringRecord: Npc_Registration.PRKR_HEADER,
+                            countRecord: RecordTypes.PRKZ,
+                            triggeringRecord: RecordTypes.PRKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out PerkPlacement listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -8264,15 +8204,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         .ToExtendedList<PerkPlacement>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }
-                case 0x4F544E43: // CNTO
-                case 0x54434F43: // COCT
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
                 {
                     item.Items = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Npc_Registration.COCT_HEADER,
-                            triggeringRecord: Npc_Registration.CNTO_HEADER,
+                            countRecord: RecordTypes.COCT,
+                            triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out ContainerEntry listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -8284,36 +8224,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         .ToExtendedList<ContainerEntry>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
-                case 0x54444941: // AIDT
+                case RecordTypeInts.AIDT:
                 {
                     item.AIData = Mutagen.Bethesda.Skyrim.AIData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
                 }
-                case 0x44494B50: // PKID
+                case RecordTypeInts.PKID:
                 {
                     item.Packages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Package>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Npc_Registration.PKID_HEADER,
+                            triggeringRecord: RecordTypes.PKID,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Npc_Registration.KSIZ_HEADER,
-                            triggeringRecord: Npc_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Keywords);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Class = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8321,7 +8261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8330,7 +8270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
                 }
-                case 0x54524853: // SHRT
+                case RecordTypeInts.SHRT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8338,29 +8278,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ShortName);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     item.PlayerSkills = Mutagen.Bethesda.Skyrim.PlayerSkills.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Npc_Registration.PNAM_HEADER,
+                            triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadParts);
                 }
-                case 0x464C4348: // HCLF
+                case RecordTypeInts.HCLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HairColor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8368,7 +8308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8376,7 +8316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GiftFilter = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8384,47 +8324,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GiftFilter);
                 }
-                case 0x354D414E: // NAM5
+                case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM5 = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
                 }
-                case 0x364D414E: // NAM6
+                case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Height = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Height);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Weight);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SoundLevel);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcInheritSound.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
                 }
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcSoundTypes.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
                 }
-                case 0x54464F44: // DOFT
+                case RecordTypeInts.DOFT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8432,7 +8372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultOutfit);
                 }
-                case 0x54464F53: // SOFT
+                case RecordTypeInts.SOFT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SleepingOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8440,7 +8380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SleepingOutfit);
                 }
-                case 0x544C5044: // DPLT
+                case RecordTypeInts.DPLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultPackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8448,7 +8388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultPackageList);
                 }
-                case 0x46495243: // CRIF
+                case RecordTypeInts.CRIF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8456,7 +8396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CrimeFaction);
                 }
-                case 0x54535446: // FTST
+                case RecordTypeInts.FTST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HeadTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8464,26 +8404,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadTexture);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureLighting = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.TextureLighting);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     item.FaceMorph = Mutagen.Bethesda.Skyrim.NpcFaceMorph.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceMorph);
                 }
-                case 0x414D414E: // NAMA
+                case RecordTypeInts.NAMA:
                 {
                     item.FaceParts = Mutagen.Bethesda.Skyrim.NpcFaceParts.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceParts);
                 }
-                case 0x494E4954: // TINI
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53414954: // TIAS
+                case RecordTypeInts.TINI:
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIAS:
                 {
                     item.TintLayers.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintLayer>.Instance.Parse(
@@ -8823,22 +8763,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObjectBounds);
                 }
-                case 0x53424341: // ACBS
+                case RecordTypeInts.ACBS:
                 {
                     _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -8853,43 +8793,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     _DeathItemLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
                 }
-                case 0x4B435456: // VTCK
+                case RecordTypeInts.VTCK:
                 {
                     _VoiceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Voice);
                 }
-                case 0x544C5054: // TPLT
+                case RecordTypeInts.TPLT:
                 {
                     _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Template);
                 }
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     _RaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
                 }
-                case 0x4F4C5053: // SPLO
-                case 0x54435053: // SPCT
+                case RecordTypeInts.SPLO:
+                case RecordTypeInts.SPCT:
                 {
                     this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Npc_Registration.SPCT_HEADER,
+                        countType: RecordTypes.SPCT,
                         finalPos: finalPos,
-                        subrecordType: Npc_Registration.SPLO_HEADER,
+                        subrecordType: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -8897,23 +8837,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Destructible);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     _WornArmorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.WornArmor);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _FarAwayModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FarAwayModel);
                 }
-                case 0x524B5441: // ATKR
+                case RecordTypeInts.ATKR:
                 {
                     _AttackRaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AttackRace);
                 }
-                case 0x444B5441: // ATKD
-                case 0x454B5441: // ATKE
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
                 {
                     this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
                         stream: stream,
@@ -8922,62 +8862,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         factory:  AttackBinaryOverlay.AttackFactory);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Attacks);
                 }
-                case 0x524F5053: // SPOR
+                case RecordTypeInts.SPOR:
                 {
                     _SpectatorOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SpectatorOverridePackageList);
                 }
-                case 0x524F434F: // OCOR
+                case RecordTypeInts.OCOR:
                 {
                     _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
                 }
-                case 0x524F5747: // GWOR
+                case RecordTypeInts.GWOR:
                 {
                     _GuardWarnOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GuardWarnOverridePackageList);
                 }
-                case 0x524F4345: // ECOR
+                case RecordTypeInts.ECOR:
                 {
                     _CombatOverridePackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
                 }
-                case 0x524B5250: // PRKR
-                case 0x5A4B5250: // PRKZ
+                case RecordTypeInts.PRKR:
+                case RecordTypeInts.PRKZ:
                 {
                     this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCountPerItem(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
                         countLength: 4,
-                        countType: Npc_Registration.PRKZ_HEADER,
+                        countType: RecordTypes.PRKZ,
                         finalPos: finalPos,
-                        subrecordType: Npc_Registration.PRKR_HEADER,
+                        subrecordType: RecordTypes.PRKR,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }
-                case 0x4F544E43: // CNTO
-                case 0x54434F43: // COCT
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
                 {
                     this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: Npc_Registration.CNTO_HEADER,
-                        countType: Npc_Registration.COCT_HEADER,
+                        subrecordType: RecordTypes.CNTO,
+                        countType: RecordTypes.COCT,
                         finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         skipHeader: false);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
-                case 0x54444941: // AIDT
+                case RecordTypeInts.AIDT:
                 {
                     _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
                 }
-                case 0x44494B50: // PKID
+                case RecordTypeInts.PKID:
                 {
                     this.Packages = BinaryOverlayList<IFormLink<IPackageGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -8992,47 +8932,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Npc_Registration.KSIZ_HEADER,
-                        subrecordType: Npc_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Keywords);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _ClassLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
                 }
-                case 0x54524853: // SHRT
+                case RecordTypeInts.SHRT:
                 {
                     _ShortNameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ShortName);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     DataMarkerCustomParse(
                         stream,
                         offset);
                     return TryGet<int?>.Succeed(null);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _PlayerSkillsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     this.HeadParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -9047,42 +8987,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadParts);
                 }
-                case 0x464C4348: // HCLF
+                case RecordTypeInts.HCLF:
                 {
                     _HairColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     _CombatStyleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     _GiftFilterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.GiftFilter);
                 }
-                case 0x354D414E: // NAM5
+                case RecordTypeInts.NAM5:
                 {
                     _NAM5Location = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
                 }
-                case 0x364D414E: // NAM6
+                case RecordTypeInts.NAM6:
                 {
                     _HeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Height);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     _WeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Weight);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     _SoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SoundLevel);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     this.Sound = NpcInheritSoundBinaryOverlay.NpcInheritSoundFactory(
                         stream: stream,
@@ -9090,9 +9030,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
                 }
-                case 0x54445343: // CSDT
-                case 0x49445343: // CSDI
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDT:
+                case RecordTypeInts.CSDI:
+                case RecordTypeInts.CSDC:
                 {
                     this.Sound = NpcSoundTypesBinaryOverlay.NpcSoundTypesFactory(
                         stream: stream,
@@ -9100,50 +9040,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
                 }
-                case 0x54464F44: // DOFT
+                case RecordTypeInts.DOFT:
                 {
                     _DefaultOutfitLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultOutfit);
                 }
-                case 0x54464F53: // SOFT
+                case RecordTypeInts.SOFT:
                 {
                     _SleepingOutfitLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.SleepingOutfit);
                 }
-                case 0x544C5044: // DPLT
+                case RecordTypeInts.DPLT:
                 {
                     _DefaultPackageListLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultPackageList);
                 }
-                case 0x46495243: // CRIF
+                case RecordTypeInts.CRIF:
                 {
                     _CrimeFactionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CrimeFaction);
                 }
-                case 0x54535446: // FTST
+                case RecordTypeInts.FTST:
                 {
                     _HeadTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadTexture);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     _TextureLightingLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.TextureLighting);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     _FaceMorphLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceMorph);
                 }
-                case 0x414D414E: // NAMA
+                case RecordTypeInts.NAMA:
                 {
                     _FacePartsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceParts);
                 }
-                case 0x494E4954: // TINI
-                case 0x434E4954: // TINC
-                case 0x564E4954: // TINV
-                case 0x53414954: // TIAS
+                case RecordTypeInts.TINI:
+                case RecordTypeInts.TINC:
+                case RecordTypeInts.TINV:
+                case RecordTypeInts.TIAS:
                 {
                     this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintLayerBinaryOverlay>(
                         stream: stream,

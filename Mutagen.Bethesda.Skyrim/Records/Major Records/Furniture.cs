@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var locs = UtilityTranslation.FindRepeatingSubrecord(
                     stream.RemainingSpan,
                     stream.MetaData.Constants,
-                    Furniture_Registration.FNPR_HEADER,
+                    RecordTypes.FNPR,
                     out var parsed);
                 for (int i = 0; i < locs.Length; i++)
                 {
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = (uint)(item.Flags ?? 0);
                 // Trim out upper flags
                 var normalFlags = flags & ~FurnitureBinaryCreateTranslation.UpperFlagsMask;
-                using (HeaderExport.Subrecord(writer, Furniture_Registration.FNAM_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.FNAM))
                 {
                     writer.Write(checked((ushort)normalFlags));
                 }
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
 
                 // Write out mashup of upper flags and sit markers
-                using (HeaderExport.Subrecord(writer, Furniture_Registration.MNAM_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.MNAM))
                 {
                     writer.Write(exportFlags);
                 }
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (disabledPts == null && markerKeyword.FormKey == null) continue;
 
                     // Write out index
-                    using (HeaderExport.Subrecord(writer, Furniture_Registration.ENAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.ENAM))
                     {
                         writer.Write(i);
                     }
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                     if (entryPts == null)
                     {
-                        using (HeaderExport.Subrecord(writer, Furniture_Registration.FNPR_HEADER))
+                        using (HeaderExport.Subrecord(writer, RecordTypes.FNPR))
                         {
                             writer.Write(checked((uint)Furniture.AnimationType.Sit));
                             writer.WriteZeros(2);
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     else
                     {
-                        using (HeaderExport.Subrecord(writer, Furniture_Registration.FNPR_HEADER))
+                        using (HeaderExport.Subrecord(writer, RecordTypes.FNPR))
                         {
                             writer.Write(checked((ushort)entryPts.Type));
                             writer.Write(checked((ushort)entryPts.Points));

@@ -1073,9 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceParentXmlWriteTranslation);
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
-        public static readonly RecordType TriggeringRecordType = WNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1751,12 +1749,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Worldspace,
-                header: recordTypeConverter.ConvertToCustom(WorldspaceParent_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<WorldspaceParent.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2,
-                header: recordTypeConverter.ConvertToCustom(WorldspaceParent_Registration.PNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
         }
 
         public void Write(
@@ -1804,7 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1813,7 +1811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)WorldspaceParent_FieldIndex.Worldspace);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<WorldspaceParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -1976,13 +1974,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return TryGet<int?>.Failure;
                     _WorldspaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)WorldspaceParent_FieldIndex.Worldspace);
                 }
-                case 0x4D414E50: // PNAM
+                case RecordTypeInts.PNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)WorldspaceParent_FieldIndex.Flags);

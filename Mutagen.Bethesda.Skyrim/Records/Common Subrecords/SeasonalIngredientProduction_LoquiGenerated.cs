@@ -1154,8 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SeasonalIngredientProductionXmlWriteTranslation);
-        public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
-        public static readonly RecordType TriggeringRecordType = PFPC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PFPC;
         public static readonly Type BinaryWriteTranslation = typeof(SeasonalIngredientProductionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1240,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(SeasonalIngredientProduction_Registration.PFPC_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.PFPC)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1921,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(SeasonalIngredientProduction_Registration.PFPC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PFPC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

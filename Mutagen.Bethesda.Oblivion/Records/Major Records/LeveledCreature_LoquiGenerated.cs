@@ -1305,13 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LeveledCreatureXmlWriteTranslation);
-        public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
-        public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
-        public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
-        public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType TriggeringRecordType = LVLC_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LVLC;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledCreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2471,12 +2465,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
-                header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IANpcSpawnGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
@@ -2491,11 +2485,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
-                header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
         }
 
         public void Write(
@@ -2505,7 +2499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLC_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLC),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2568,7 +2562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
 
-        public override RecordType RecordType => LeveledCreature_Registration.LVLC_HEADER;
+        public override RecordType RecordType => RecordTypes.LVLC;
         public static void FillBinaryStructs(
             ILeveledCreatureInternal item,
             MutagenFrame frame)
@@ -2588,24 +2582,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444C564C: // LVLD
+                case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 }
-                case 0x464C564C: // LVLF
+                case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 }
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
+                            triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledEntry<ANpcSpawn> listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2616,7 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2624,7 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2791,17 +2785,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444C564C: // LVLD
+                case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 }
-                case 0x464C564C: // LVLF
+                case RecordTypeInts.LVLF:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 }
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     this.Entries = BinaryOverlayList<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -2816,12 +2810,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);

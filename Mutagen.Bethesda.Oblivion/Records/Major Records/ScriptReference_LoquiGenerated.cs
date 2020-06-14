@@ -949,8 +949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptReferenceXmlWriteTranslation);
-        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -958,8 +956,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        SCRV_HEADER,
-                        SCRO_HEADER
+                        RecordTypes.SCRV,
+                        RecordTypes.SCRO
                     })
             );
         });

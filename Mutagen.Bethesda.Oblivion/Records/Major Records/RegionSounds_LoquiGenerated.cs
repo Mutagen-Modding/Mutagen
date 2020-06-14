@@ -1126,10 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionSoundsXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType RDMD_HEADER = new RecordType("RDMD");
-        public static readonly RecordType RDSD_HEADER = new RecordType("RDSD");
-        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1886,11 +1883,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.MusicType,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(RegionSounds_Registration.RDMD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RDMD));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                recordType: recordTypeConverter.ConvertToCustom(RegionSounds_Registration.RDSD_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDSD),
                 transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1957,13 +1954,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444D4452: // RDMD
+                case RecordTypeInts.RDMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
                 }
-                case 0x44534452: // RDSD
+                case RecordTypeInts.RDSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sounds = 
@@ -2117,12 +2114,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444D4452: // RDMD
+                case RecordTypeInts.RDMD:
                 {
                     _MusicTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
                 }
-                case 0x44534452: // RDSD
+                case RecordTypeInts.RDSD:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;

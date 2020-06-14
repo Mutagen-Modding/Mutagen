@@ -1801,8 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NavigationMapInfoXmlWriteTranslation);
-        public static readonly RecordType NVMI_HEADER = new RecordType("NVMI");
-        public static readonly RecordType TriggeringRecordType = NVMI_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NVMI;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMapInfoBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1895,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(NavigationMapInfo_Registration.NVMI_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.NVMI)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -3175,7 +3174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NavigationMapInfo_Registration.NVMI_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NVMI),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

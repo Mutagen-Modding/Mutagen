@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LensFlareXmlWriteTranslation);
-        public static readonly RecordType LENS_HEADER = new RecordType("LENS");
-        public static readonly RecordType TriggeringRecordType = LENS_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LENS;
         public static readonly Type BinaryWriteTranslation = typeof(LensFlareBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LensFlare_Registration.LENS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LENS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LensFlareBinaryCreateTranslation Instance = new LensFlareBinaryCreateTranslation();
 
-        public override RecordType RecordType => LensFlare_Registration.LENS_HEADER;
+        public override RecordType RecordType => RecordTypes.LENS;
         public static void FillBinaryStructs(
             ILensFlareInternal item,
             MutagenFrame frame)

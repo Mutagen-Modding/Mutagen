@@ -1252,8 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PackageFlagsOverrideXmlWriteTranslation);
-        public static readonly RecordType PFO2_HEADER = new RecordType("PFO2");
-        public static readonly RecordType TriggeringRecordType = PFO2_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PFO2;
         public static readonly Type BinaryWriteTranslation = typeof(PackageFlagsOverrideBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1340,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(PackageFlagsOverride_Registration.PFO2_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.PFO2)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2119,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PackageFlagsOverride_Registration.PFO2_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PFO2),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

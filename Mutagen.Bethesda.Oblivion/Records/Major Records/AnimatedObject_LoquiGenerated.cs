@@ -1092,10 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AnimatedObjectXmlWriteTranslation);
-        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = ANIO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ANIO;
         public static readonly Type BinaryWriteTranslation = typeof(AnimatedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1993,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleAnimation,
-                header: recordTypeConverter.ConvertToCustom(AnimatedObject_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -2003,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(AnimatedObject_Registration.ANIO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ANIO),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2055,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AnimatedObjectBinaryCreateTranslation Instance = new AnimatedObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => AnimatedObject_Registration.ANIO_HEADER;
+        public override RecordType RecordType => RecordTypes.ANIO;
         public static void FillBinaryStructs(
             IAnimatedObjectInternal item,
             MutagenFrame frame)
@@ -2075,14 +2072,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2236,7 +2233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -2244,7 +2241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _IdleAnimationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);

@@ -1092,8 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyDataXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1101,8 +1099,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        INDX_HEADER,
-                        MODL_HEADER
+                        RecordTypes.INDX,
+                        RecordTypes.MODL
                     })
             );
         });
@@ -1833,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Index,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(BodyData_Registration.INDX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
             if (item.Model.TryGet(out var ModelItem))
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -1888,14 +1886,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
@@ -2056,13 +2054,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Index);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
                     this.Model = ModelBinaryOverlay.ModelFactory(

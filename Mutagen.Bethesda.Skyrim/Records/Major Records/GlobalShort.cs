@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
-                using (HeaderExport.Subrecord(writer, GlobalShort_Registration.FLTV_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
                 {
                     writer.Write((float)data);
                 }

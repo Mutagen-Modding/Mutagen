@@ -1429,16 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IngredientXmlWriteTranslation);
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType TriggeringRecordType = INGR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.INGR;
         public static readonly Type BinaryWriteTranslation = typeof(IngredientBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2752,7 +2743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -2764,16 +2755,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Weight,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             if (item.Data.TryGet(out var DataItem))
             {
                 ((IngredientDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
@@ -2801,7 +2792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Ingredient_Registration.INGR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.INGR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2864,7 +2855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
-        public override RecordType RecordType => Ingredient_Registration.INGR_HEADER;
+        public override RecordType RecordType => RecordTypes.INGR;
         public static void FillBinaryStructs(
             IIngredientInternal item,
             MutagenFrame frame)
@@ -2884,7 +2875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2892,14 +2883,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2907,7 +2898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Icon);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2915,19 +2906,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Script);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Weight);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.IngredientData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -3107,12 +3098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3120,28 +3111,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Icon);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Script);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _WeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Weight);
                 }
-                case 0x54494E45: // ENIT
+                case RecordTypeInts.ENIT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,

@@ -963,8 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LocationXmlWriteTranslation);
-        public static readonly RecordType LCTN_HEADER = new RecordType("LCTN");
-        public static readonly RecordType TriggeringRecordType = LCTN_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LCTN;
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1723,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Location_Registration.LCTN_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LCTN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1775,7 +1774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
-        public override RecordType RecordType => Location_Registration.LCTN_HEADER;
+        public override RecordType RecordType => RecordTypes.LCTN;
         public static void FillBinaryStructs(
             ILocationInternal item,
             MutagenFrame frame)

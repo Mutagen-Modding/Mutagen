@@ -974,8 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptVariableReferenceXmlWriteTranslation);
-        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
-        public static readonly RecordType TriggeringRecordType = SCRV_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCRV;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptVariableReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1600,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VariableIndex,
-                header: recordTypeConverter.ConvertToCustom(ScriptVariableReference_Registration.SCRV_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRV));
         }
 
         public void Write(
@@ -1659,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x56524353: // SCRV
+                case RecordTypeInts.SCRV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1792,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x56524353: // SCRV
+                case RecordTypeInts.SCRV:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
                     _VariableIndexLocation = (stream.Position - offset);

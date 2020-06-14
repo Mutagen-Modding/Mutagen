@@ -1098,9 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ContainerEntryXmlWriteTranslation);
-        public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
-        public static readonly RecordType COED_HEADER = new RecordType("COED");
-        public static readonly RecordType TriggeringRecordType = CNTO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1902,13 +1900,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4F544E43: // CNTO
+                case RecordTypeInts.CNTO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
                     item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
                 }
-                case 0x44454F43: // COED
+                case RecordTypeInts.COED:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
@@ -2071,13 +2069,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4F544E43: // CNTO
+                case RecordTypeInts.CNTO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
                     _ItemLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
                 }
-                case 0x44454F43: // COED
+                case RecordTypeInts.COED:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);

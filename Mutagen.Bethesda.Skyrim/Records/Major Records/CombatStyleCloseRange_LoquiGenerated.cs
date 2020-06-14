@@ -1204,8 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleCloseRangeXmlWriteTranslation);
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType TriggeringRecordType = CSCR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleCloseRangeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1291,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CombatStyleCloseRange_Registration.CSCR_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CSCR)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2023,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyleCloseRange_Registration.CSCR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSCR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

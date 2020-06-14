@@ -1165,8 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TeleportDestinationXmlWriteTranslation);
-        public static readonly RecordType XTEL_HEADER = new RecordType("XTEL");
-        public static readonly RecordType TriggeringRecordType = XTEL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XTEL;
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1251,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(TeleportDestination_Registration.XTEL_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.XTEL)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1942,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(TeleportDestination_Registration.XTEL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.XTEL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

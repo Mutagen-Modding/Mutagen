@@ -1222,9 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DebrisModelXmlWriteTranslation);
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
-        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(DebrisModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2044,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(DebrisModel_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Percentage);
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -2062,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureFileHashes,
-                header: recordTypeConverter.ConvertToCustom(DebrisModel_Registration.MODT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
         }
 
         public void Write(
@@ -2113,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2131,7 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFileHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2301,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
@@ -2312,7 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     _TextureFileHashesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.TextureFileHashes);

@@ -983,8 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcInheritSoundXmlWriteTranslation);
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType TriggeringRecordType = CSCR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
         public static readonly Type BinaryWriteTranslation = typeof(NpcInheritSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1619,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InheritsSoundsFrom,
-                header: recordTypeConverter.ConvertToCustom(NpcInheritSound_Registration.CSCR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSCR));
         }
 
         public void Write(
@@ -1678,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1820,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
                     _InheritsSoundsFromLocation = (stream.Position - offset);

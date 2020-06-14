@@ -1170,10 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestTargetXmlWriteTranslation);
-        public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType TriggeringRecordType = QSTA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1992,14 +1989,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Data) return TryGet<int?>.Failure;
                     item.Data = Mutagen.Bethesda.Oblivion.QuestTargetData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Data);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
@@ -2169,14 +2166,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Data) return TryGet<int?>.Failure;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Data);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

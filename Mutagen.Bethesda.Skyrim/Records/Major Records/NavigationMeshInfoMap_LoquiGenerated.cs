@@ -1281,12 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NavigationMeshInfoMapXmlWriteTranslation);
-        public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
-        public static readonly RecordType NVER_HEADER = new RecordType("NVER");
-        public static readonly RecordType NVMI_HEADER = new RecordType("NVMI");
-        public static readonly RecordType NVPP_HEADER = new RecordType("NVPP");
-        public static readonly RecordType NVSI_HEADER = new RecordType("NVSI");
-        public static readonly RecordType TriggeringRecordType = NAVI_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NAVI;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshInfoMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2338,7 +2333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NavMeshVersion,
-                header: recordTypeConverter.ConvertToCustom(NavigationMeshInfoMap_Registration.NVER_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NVER));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
                 writer: writer,
                 items: item.MapInfos,
@@ -2360,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NVSI,
-                header: recordTypeConverter.ConvertToCustom(NavigationMeshInfoMap_Registration.NVSI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NVSI));
         }
 
         public void Write(
@@ -2370,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(NavigationMeshInfoMap_Registration.NAVI_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVI),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2422,7 +2417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NavigationMeshInfoMapBinaryCreateTranslation Instance = new NavigationMeshInfoMapBinaryCreateTranslation();
 
-        public override RecordType RecordType => NavigationMeshInfoMap_Registration.NAVI_HEADER;
+        public override RecordType RecordType => RecordTypes.NAVI;
         public static void FillBinaryStructs(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame)
@@ -2442,18 +2437,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x5245564E: // NVER
+                case RecordTypeInts.NVER:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NavMeshVersion = frame.ReadUInt32();
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
                 }
-                case 0x494D564E: // NVMI
+                case RecordTypeInts.NVMI:
                 {
                     item.MapInfos.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: NavigationMeshInfoMap_Registration.NVMI_HEADER,
+                            triggeringRecord: RecordTypes.NVMI,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out NavigationMapInfo listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2464,12 +2459,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
                 }
-                case 0x5050564E: // NVPP
+                case RecordTypeInts.NVPP:
                 {
                     item.PreferredPathing = Mutagen.Bethesda.Skyrim.PreferredPathing.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
                 }
-                case 0x4953564E: // NVSI
+                case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NVSI = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2629,12 +2624,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x5245564E: // NVER
+                case RecordTypeInts.NVER:
                 {
                     _NavMeshVersionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
                 }
-                case 0x494D564E: // NVMI
+                case RecordTypeInts.NVMI:
                 {
                     this.MapInfos = BinaryOverlayList<NavigationMapInfoBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -2649,12 +2644,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
                 }
-                case 0x5050564E: // NVPP
+                case RecordTypeInts.NVPP:
                 {
                     _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
                 }
-                case 0x4953564E: // NVSI
+                case RecordTypeInts.NVSI:
                 {
                     _NVSILocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);

@@ -1211,12 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LeveledItemXmlWriteTranslation);
-        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
-        public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
-        public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
-        public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = LVLI_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LVLI;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2289,12 +2284,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
-                header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLF_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IAItemGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
@@ -2318,7 +2313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LeveledItem_Registration.LVLI_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLI),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2381,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
-        public override RecordType RecordType => LeveledItem_Registration.LVLI_HEADER;
+        public override RecordType RecordType => RecordTypes.LVLI;
         public static void FillBinaryStructs(
             ILeveledItemInternal item,
             MutagenFrame frame)
@@ -2401,24 +2396,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444C564C: // LVLD
+                case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
-                case 0x464C564C: // LVLF
+                case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
                 }
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<AItem>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: LeveledItem_Registration.LVLO_HEADER,
+                            triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LeveledEntry<AItem> listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2429,7 +2424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2597,12 +2592,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444C564C: // LVLD
+                case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
-                case 0x464C564C: // LVLF
+                case RecordTypeInts.LVLF:
                 {
                     FlagsCustomParse(
                         stream: stream,
@@ -2610,7 +2605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset);
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
                 }
-                case 0x4F4C564C: // LVLO
+                case RecordTypeInts.LVLO:
                 {
                     this.Entries = BinaryOverlayList<LeveledEntryBinaryOverlay<IAItemGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -2625,7 +2620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     VestigialCustomParse(
                         stream,

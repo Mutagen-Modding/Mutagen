@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void FillBinaryPointToPointConnections(MutagenFrame frame, IPathGridInternal item)
         {
-            if (!frame.TryReadSubrecord(PathGrid_Registration.DATA_HEADER, out var subMeta)) return;
+            if (!frame.TryReadSubrecord(RecordTypes.DATA, out var subMeta)) return;
 
             uint ptCount = frame.Reader.ReadUInt16();
 
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
 
-            using (HeaderExport.Subrecord(writer, PathGrid_Registration.DATA_HEADER))
+            using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
             {
                 writer.Write((ushort)ptToPt.Count);
             }
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (item.PGAG.TryGet(out var pgag))
             {
-                using (HeaderExport.Subrecord(writer, PathGrid_Registration.PGAG_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.PGAG))
                 {
                     writer.Write(pgag);
                 }

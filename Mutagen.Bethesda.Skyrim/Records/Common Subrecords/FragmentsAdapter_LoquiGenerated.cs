@@ -1006,8 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FragmentsAdapterXmlWriteTranslation);
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType TriggeringRecordType = VMAD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
         public static readonly Type BinaryWriteTranslation = typeof(FragmentsAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1108,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(FragmentsAdapter_Registration.VMAD_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.VMAD)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1703,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(FragmentsAdapter_Registration.VMAD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.VMAD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

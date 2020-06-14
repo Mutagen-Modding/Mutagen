@@ -2678,42 +2678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WeaponXmlWriteTranslation);
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType EITM_HEADER = new RecordType("EITM");
-        public static readonly RecordType EAMT_HEADER = new RecordType("EAMT");
-        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
-        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
-        public static readonly RecordType ETYP_HEADER = new RecordType("ETYP");
-        public static readonly RecordType BIDS_HEADER = new RecordType("BIDS");
-        public static readonly RecordType BAMT_HEADER = new RecordType("BAMT");
-        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
-        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType NAM7_HEADER = new RecordType("NAM7");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType NAM8_HEADER = new RecordType("NAM8");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType CRDT_HEADER = new RecordType("CRDT");
-        public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TriggeringRecordType = WEAP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODL"),
@@ -5373,7 +5338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             if (item.Model.TryGet(out var ModelItem))
@@ -5393,11 +5358,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectEffect,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.EITM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.EITM));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentAmount,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.EAMT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.EAMT));
             if (item.Destructible.TryGet(out var DestructibleItem))
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -5408,29 +5373,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EquipmentType,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.ETYP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ETYP));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BlockBashImpact,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.BIDS_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BIDS));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AlternateBlockMaterial,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.BAMT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BAMT));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.YNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PutDownSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.ZNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Weapon_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Weapon_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -5440,7 +5405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
             if (item.ScopeModel.TryGet(out var ScopeModelItem))
@@ -5453,43 +5418,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.NNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ImpactDataSet,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FirstPersonModel,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.WNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackSound2D,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.XNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackLoopSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.NAM7_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM7));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackFailSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.UNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EquipSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.NAM9_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM9));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UnequipSound,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.NAM8_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
             if (item.BasicStats.TryGet(out var BasicStatsItem))
             {
                 ((WeaponBasicStatsBinaryWriteTranslation)((IBinaryItem)BasicStatsItem).BinaryWriteTranslator).Write(
@@ -5515,11 +5480,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.DetectionSoundLevel,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.VNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
         }
 
         public void Write(
@@ -5529,7 +5494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Weapon_Registration.WEAP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WEAP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -5581,7 +5546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WeaponBinaryCreateTranslation Instance = new WeaponBinaryCreateTranslation();
 
-        public override RecordType RecordType => Weapon_Registration.WEAP_HEADER;
+        public override RecordType RecordType => RecordTypes.WEAP;
         public static void FillBinaryStructs(
             IWeaponInternal item,
             MutagenFrame frame)
@@ -5601,17 +5566,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5620,21 +5585,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
                 }
-                case 0x4D544945: // EITM
+                case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5642,22 +5607,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
                 }
-                case 0x544D4145: // EAMT
+                case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentAmount = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
                 }
-                case 0x50595445: // ETYP
+                case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5665,7 +5630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
                 }
-                case 0x53444942: // BIDS
+                case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BlockBashImpact = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5673,7 +5638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
                 }
-                case 0x544D4142: // BAMT
+                case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlternateBlockMaterial = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5681,7 +5646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
                 }
-                case 0x4D414E59: // YNAM
+                case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5689,7 +5654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5697,21 +5662,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Weapon_Registration.KSIZ_HEADER,
-                            triggeringRecord: Weapon_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5720,20 +5685,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
                 }
-                case 0x33444F4D: // MOD3
+                case RecordTypeInts.MOD3:
                 {
                     item.ScopeModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5741,7 +5706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FirstPersonModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5749,7 +5714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5757,7 +5722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackSound2D = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5765,7 +5730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackLoopSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5773,7 +5738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackFailSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5781,7 +5746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5789,7 +5754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EquipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5797,7 +5762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.UnequipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5805,28 +5770,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.BasicStats = Mutagen.Bethesda.Skyrim.WeaponBasicStats.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.WeaponData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
                 }
-                case 0x54445243: // CRDT
+                case RecordTypeInts.CRDT:
                 {
                     item.Critical = Mutagen.Bethesda.Skyrim.CriticalData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DetectionSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -6105,22 +6070,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -6128,7 +6093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
@@ -6136,19 +6101,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
                 }
-                case 0x4D544945: // EITM
+                case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
                 }
-                case 0x544D4145: // EAMT
+                case RecordTypeInts.EAMT:
                 {
                     _EnchantmentAmountLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
                 }
-                case 0x54534544: // DEST
-                case 0x44545344: // DSTD
-                case 0x4C444D44: // DMDL
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                case RecordTypeInts.DMDL:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
@@ -6156,50 +6121,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
                 }
-                case 0x50595445: // ETYP
+                case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
                 }
-                case 0x53444942: // BIDS
+                case RecordTypeInts.BIDS:
                 {
                     _BlockBashImpactLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
                 }
-                case 0x544D4142: // BAMT
+                case RecordTypeInts.BAMT:
                 {
                     _AlternateBlockMaterialLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
                 }
-                case 0x4D414E59: // YNAM
+                case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Weapon_Registration.KSIZ_HEADER,
-                        subrecordType: Weapon_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
                 }
-                case 0x33444F4D: // MOD3
+                case RecordTypeInts.MOD3:
                 {
                     this.ScopeModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -6207,77 +6172,77 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _UnusedLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     _ImpactDataSetLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     _FirstPersonModelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _AttackSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     _AttackSound2DLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
                 }
-                case 0x374D414E: // NAM7
+                case RecordTypeInts.NAM7:
                 {
                     _AttackLoopSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _AttackFailSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     _IdleSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
                 }
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM9:
                 {
                     _EquipSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
                 }
-                case 0x384D414E: // NAM8
+                case RecordTypeInts.NAM8:
                 {
                     _UnequipSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _BasicStatsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
                 }
-                case 0x54445243: // CRDT
+                case RecordTypeInts.CRDT:
                 {
                     _CriticalLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
                 }
-                case 0x4D414E56: // VNAM
+                case RecordTypeInts.VNAM:
                 {
                     _DetectionSoundLevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _TemplateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);

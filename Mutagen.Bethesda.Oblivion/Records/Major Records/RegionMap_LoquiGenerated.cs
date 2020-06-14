@@ -985,9 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(RegionMapXmlWriteTranslation);
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType RDMP_HEADER = new RecordType("RDMP");
-        public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1624,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Map,
-                header: recordTypeConverter.ConvertToCustom(RegionMap_Registration.RDMP_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RDMP),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1684,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x504D4452: // RDMP
+                case RecordTypeInts.RDMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Map = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1824,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x504D4452: // RDMP
+                case RecordTypeInts.RDMP:
                 {
                     _MapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Map);

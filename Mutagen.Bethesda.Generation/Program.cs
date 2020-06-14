@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "Int8(int.MinValue, 7);";
+            string testString = "se RecordTypes.CNAMInt";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

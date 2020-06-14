@@ -1906,15 +1906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleXmlWriteTranslation);
-        public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
-        public static readonly RecordType CSGD_HEADER = new RecordType("CSGD");
-        public static readonly RecordType CSMD_HEADER = new RecordType("CSMD");
-        public static readonly RecordType CSME_HEADER = new RecordType("CSME");
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType CSLR_HEADER = new RecordType("CSLR");
-        public static readonly RecordType CSFL_HEADER = new RecordType("CSFL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = CSTY_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSTY;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3520,7 +3512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSGD_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.CSGD)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3562,7 +3554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CSMD,
-                header: recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSMD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSMD));
             if (item.Melee.TryGet(out var MeleeItem))
             {
                 ((CombatStyleMeleeBinaryWriteTranslation)((IBinaryItem)MeleeItem).BinaryWriteTranslator).Write(
@@ -3580,7 +3572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LongRangeStrafeMult,
-                header: recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSLR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSLR));
             if (item.Flight.TryGet(out var FlightItem))
             {
                 ((CombatStyleFlightBinaryWriteTranslation)((IBinaryItem)FlightItem).BinaryWriteTranslator).Write(
@@ -3592,7 +3584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(CombatStyle_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -3602,7 +3594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTY_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSTY),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3654,7 +3646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
-        public override RecordType RecordType => CombatStyle_Registration.CSTY_HEADER;
+        public override RecordType RecordType => RecordTypes.CSTY;
         public static void FillBinaryStructs(
             ICombatStyleInternal item,
             MutagenFrame frame)
@@ -3674,7 +3666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44475343: // CSGD
+                case RecordTypeInts.CSGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3700,34 +3692,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AvoidThreatChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
                 }
-                case 0x444D5343: // CSMD
+                case RecordTypeInts.CSMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CSMD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
                 }
-                case 0x454D5343: // CSME
+                case RecordTypeInts.CSME:
                 {
                     item.Melee = Mutagen.Bethesda.Skyrim.CombatStyleMelee.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     item.CloseRange = Mutagen.Bethesda.Skyrim.CombatStyleCloseRange.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
                 }
-                case 0x524C5343: // CSLR
+                case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LongRangeStrafeMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
                 }
-                case 0x4C465343: // CSFL
+                case RecordTypeInts.CSFL:
                 {
                     item.Flight = Mutagen.Bethesda.Skyrim.CombatStyleFlight.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -3947,7 +3939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44475343: // CSGD
+                case RecordTypeInts.CSGD:
                 {
                     _CSGDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
@@ -3961,32 +3953,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
                 }
-                case 0x444D5343: // CSMD
+                case RecordTypeInts.CSMD:
                 {
                     _CSMDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
                 }
-                case 0x454D5343: // CSME
+                case RecordTypeInts.CSME:
                 {
                     _MeleeLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
                 }
-                case 0x52435343: // CSCR
+                case RecordTypeInts.CSCR:
                 {
                     _CloseRangeLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
                 }
-                case 0x524C5343: // CSLR
+                case RecordTypeInts.CSLR:
                 {
                     _LongRangeStrafeMultLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
                 }
-                case 0x4C465343: // CSFL
+                case RecordTypeInts.CSFL:
                 {
                     _FlightLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flags);

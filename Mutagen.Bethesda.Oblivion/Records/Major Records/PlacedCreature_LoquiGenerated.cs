@@ -1396,16 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedCreatureXmlWriteTranslation);
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
-        public static readonly RecordType NAME_HEADER = new RecordType("NAME");
-        public static readonly RecordType XOWN_HEADER = new RecordType("XOWN");
-        public static readonly RecordType XRNK_HEADER = new RecordType("XRNK");
-        public static readonly RecordType XGLB_HEADER = new RecordType("XGLB");
-        public static readonly RecordType XESP_HEADER = new RecordType("XESP");
-        public static readonly RecordType XRGD_HEADER = new RecordType("XRGD");
-        public static readonly RecordType XSCL_HEADER = new RecordType("XSCL");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = ACRE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ACRE;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedCreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2627,19 +2618,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Base,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.NAME_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAME));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Owner,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XOWN_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XOWN));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FactionRank,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XRNK_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XRNK));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GlobalVariable,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XGLB_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XGLB));
             if (item.EnableParent.TryGet(out var EnableParentItem))
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
@@ -2650,14 +2641,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RagdollData,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XRGD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XRGD));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Scale,
-                header: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.XSCL_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XSCL));
             if (item.Location.TryGet(out var LocationItem))
             {
-                using (HeaderExport.Subrecord(writer, PlacedCreature_Registration.DATA_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
                 {
                     ((LocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                         item: LocationItem,
@@ -2674,7 +2665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedCreature_Registration.ACRE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ACRE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2726,7 +2717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PlacedCreatureBinaryCreateTranslation Instance = new PlacedCreatureBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedCreature_Registration.ACRE_HEADER;
+        public override RecordType RecordType => RecordTypes.ACRE;
         public static void FillBinaryStructs(
             IPlacedCreatureInternal item,
             MutagenFrame frame)
@@ -2746,7 +2737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x454D414E: // NAME
+                case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2754,7 +2745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 }
-                case 0x4E574F58: // XOWN
+                case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Owner = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2762,13 +2753,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 }
-                case 0x4B4E5258: // XRNK
+                case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FactionRank = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 }
-                case 0x424C4758: // XGLB
+                case RecordTypeInts.XGLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GlobalVariable = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2776,24 +2767,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
                 }
-                case 0x50534558: // XESP
+                case RecordTypeInts.XESP:
                 {
                     item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
                 }
-                case 0x44475258: // XRGD
+                case RecordTypeInts.XRGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
                 }
-                case 0x4C435358: // XSCL
+                case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame);
@@ -2972,42 +2963,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x454D414E: // NAME
+                case RecordTypeInts.NAME:
                 {
                     _BaseLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 }
-                case 0x4E574F58: // XOWN
+                case RecordTypeInts.XOWN:
                 {
                     _OwnerLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 }
-                case 0x4B4E5258: // XRNK
+                case RecordTypeInts.XRNK:
                 {
                     _FactionRankLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 }
-                case 0x424C4758: // XGLB
+                case RecordTypeInts.XGLB:
                 {
                     _GlobalVariableLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
                 }
-                case 0x50534558: // XESP
+                case RecordTypeInts.XESP:
                 {
                     _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
                 }
-                case 0x44475258: // XRGD
+                case RecordTypeInts.XRGD:
                 {
                     _RagdollDataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.RagdollData);
                 }
-                case 0x4C435358: // XSCL
+                case RecordTypeInts.XSCL:
                 {
                     _ScaleLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Scale);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     this.Location = LocationBinaryOverlay.LocationFactory(

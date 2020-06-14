@@ -403,10 +403,13 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
         }
 
-        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
-            return (await base.RequiredUsingStatements(obj))
-                .And("Mutagen.Bethesda.Xml");
+            await foreach (var item in base.RequiredUsingStatements(obj))
+            {
+                yield return item;
+            }
+            yield return "Mutagen.Bethesda.Xml";
         }
     }
 }

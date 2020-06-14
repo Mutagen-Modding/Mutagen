@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EquipTypeXmlWriteTranslation);
-        public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
-        public static readonly RecordType TriggeringRecordType = EQUP_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.EQUP;
         public static readonly Type BinaryWriteTranslation = typeof(EquipTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(EquipType_Registration.EQUP_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.EQUP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => EquipType_Registration.EQUP_HEADER;
+        public override RecordType RecordType => RecordTypes.EQUP;
         public static void FillBinaryStructs(
             IEquipTypeInternal item,
             MutagenFrame frame)

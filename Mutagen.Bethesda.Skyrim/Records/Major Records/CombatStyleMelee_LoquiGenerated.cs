@@ -1384,8 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleMeleeXmlWriteTranslation);
-        public static readonly RecordType CSME_HEADER = new RecordType("CSME");
-        public static readonly RecordType TriggeringRecordType = CSME_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSME;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleMeleeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1475,7 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CombatStyleMelee_Registration.CSME_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CSME)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2375,7 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyleMelee_Registration.CSME_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSME),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

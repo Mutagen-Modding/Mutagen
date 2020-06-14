@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ArmorAddonXmlWriteTranslation);
-        public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
-        public static readonly RecordType TriggeringRecordType = ARMA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ArmorAddon_Registration.ARMA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ARMA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
-        public override RecordType RecordType => ArmorAddon_Registration.ARMA_HEADER;
+        public override RecordType RecordType => RecordTypes.ARMA;
         public static void FillBinaryStructs(
             IArmorAddonInternal item,
             MutagenFrame frame)

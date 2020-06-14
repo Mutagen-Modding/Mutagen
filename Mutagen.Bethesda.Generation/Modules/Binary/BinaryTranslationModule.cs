@@ -252,11 +252,14 @@ namespace Mutagen.Bethesda.Generation
             obj.RequiredNamespaces.Add("System.Reactive.Linq");
         }
 
-        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
-            return (await base.RequiredUsingStatements(obj))
-                .And("Mutagen.Bethesda.Binary")
-                .And("System.Buffers.Binary");
+            await foreach (var item in base.RequiredUsingStatements(obj))
+            {
+                yield return item;
+            }
+            yield return "Mutagen.Bethesda.Binary";
+            yield return "System.Buffers.Binary";
         }
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
@@ -549,7 +552,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
-                                    fg.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
+                                    fg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
@@ -2575,7 +2578,7 @@ namespace Mutagen.Bethesda.Generation
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                     foreach (var trigger in gen.Key)
                                     {
-                                        fg.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
+                                        fg.AppendLine($"case RecordTypeInts.{trigger.Type}:");
                                     }
                                     using (new BraceWrapper(fg))
                                     {

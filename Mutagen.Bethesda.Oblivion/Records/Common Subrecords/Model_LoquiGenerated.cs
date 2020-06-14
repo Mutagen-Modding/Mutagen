@@ -1117,10 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ModelXmlWriteTranslation);
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
-        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
-        public static readonly RecordType TriggeringRecordType = MODL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1848,16 +1845,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File,
-                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius,
-                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODB_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODB));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Hashes,
-                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
         }
 
         public void Write(
@@ -1905,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1914,13 +1911,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 }
-                case 0x42444F4D: // MODB
+                case RecordTypeInts.MODB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BoundRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2080,18 +2077,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     _FileLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 }
-                case 0x42444F4D: // MODB
+                case RecordTypeInts.MODB:
                 {
                     _BoundRadiusLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 }
-                case 0x54444F4D: // MODT
+                case RecordTypeInts.MODT:
                 {
                     _HashesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);

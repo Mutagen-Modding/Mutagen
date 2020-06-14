@@ -949,10 +949,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ANpcSoundDefinitionXmlWriteTranslation);
-        public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
-        public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
-        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
-        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -960,10 +956,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        CSCR_HEADER,
-                        CSDT_HEADER,
-                        CSDI_HEADER,
-                        CSDC_HEADER
+                        RecordTypes.CSCR,
+                        RecordTypes.CSDT,
+                        RecordTypes.CSDI,
+                        RecordTypes.CSDC
                     })
             );
         });

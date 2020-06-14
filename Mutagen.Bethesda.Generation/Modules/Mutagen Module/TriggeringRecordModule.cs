@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,18 +110,21 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
-            HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
+            yield return $"{obj.ProtoGen.DefaultNamespace}.Internals";
+        }
+
+        public async IAsyncEnumerable<RecordType> GetAllRecordTypes(ObjectGeneration obj)
+        {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             if (obj.TryGetRecordType(out var recType))
             {
                 recordTypes.Add(recType);
             }
             var data = obj.GetObjectData();
-            var trigRecTypes = await obj.GetObjectData().GenerationTypes;
-            trigRecordTypes.Add(trigRecTypes.SelectMany((kv) => kv.Key));
-            recordTypes.Add(trigRecordTypes);
+            var trigRecTypes = await data.GenerationTypes;
+            recordTypes.Add(trigRecTypes.SelectMany((kv) => kv.Key));
             if (data.EndMarkerType.HasValue)
             {
                 recordTypes.Add(data.EndMarkerType.Value);
@@ -197,14 +201,22 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            foreach (var type in recordTypes)
+            foreach (var item in recordTypes)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type}_HEADER = new {nameof(RecordType)}(\"{type.Type}\");");
+                yield return item;
             }
+        }
+
+        public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+        {
+            HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
+            var data = obj.GetObjectData();
+            trigRecordTypes.Add((await data.GenerationTypes).SelectMany((kv) => kv.Key));
             var count = trigRecordTypes.Count();
+            if (obj.Name.EndsWith("MajorRecord")) return;
             if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember} = {trigRecordTypes.First().Type}_HEADER;");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
             }
             else if (count > 1)
             {
@@ -225,7 +237,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     foreach (var trigger in trigRecordTypes)
                                     {
-                                        comma.Add($"{trigger.Type}_HEADER");
+                                        comma.Add($"{obj.RecordTypeHeaderName(trigger)}");
                                     }
                                 }
                             }
@@ -653,6 +665,47 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
             }
             await base.GenerateInClass(obj, fg);
+        }
+
+        public override async Task FinalizeGeneration(ProtocolGeneration proto)
+        {
+            await base.FinalizeGeneration(proto);
+            if (proto.DefaultNamespace.Equals("Mutagen.Bethesda")) return;
+            HashSet<RecordType> recordTypes = new HashSet<RecordType>();
+            foreach (var obj in proto.ObjectGenerationsByID.Values)
+            {
+                recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
+            }
+            FileGeneration fg = new FileGeneration();
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+            {
+                using (var c = new ClassWrapper(fg, "RecordTypes"))
+                {
+                }
+                using (new BraceWrapper(fg))
+                {
+                    foreach (var type in recordTypes.OrderBy(r => r.Type))
+                    {
+                        fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type} = new {nameof(RecordType)}(0x{type.TypeInt:X});");
+                    }
+                }
+            }
+            fg.Generate(Path.Combine(proto.DefFileLocation.FullName, "RecordTypes.cs"));
+            fg = new FileGeneration();
+            using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
+            {
+                using (var c = new ClassWrapper(fg, "RecordTypeInts"))
+                {
+                }
+                using (new BraceWrapper(fg))
+                {
+                    foreach (var type in recordTypes.OrderBy(r => r.Type))
+                    {
+                        fg.AppendLine($"public const int {type.Type} = 0x{type.TypeInt:X};");
+                    }
+                }
+            }
+            fg.Generate(Path.Combine(proto.DefFileLocation.FullName, "RecordTypeInts.cs"));
         }
     }
 }

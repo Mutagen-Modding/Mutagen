@@ -1029,9 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LocationReferenceTypeXmlWriteTranslation);
-        public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TriggeringRecordType = LCRT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LCRT;
         public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1841,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(LocationReferenceType_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
         }
 
         public void Write(
@@ -1851,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LocationReferenceType_Registration.LCRT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LCRT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1903,7 +1901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => LocationReferenceType_Registration.LCRT_HEADER;
+        public override RecordType RecordType => RecordTypes.LCRT;
         public static void FillBinaryStructs(
             ILocationReferenceTypeInternal item,
             MutagenFrame frame)
@@ -1923,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
@@ -2067,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LocationReferenceType_FieldIndex.Color);

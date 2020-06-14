@@ -1415,13 +1415,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestLogEntryXmlWriteTranslation);
-        public static readonly RecordType QSDT_HEADER = new RecordType("QSDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
-        public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
-        public static readonly RecordType QNAM_HEADER = new RecordType("QNAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1429,13 +1422,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        QSDT_HEADER,
-                        CTDA_HEADER,
-                        CNAM_HEADER,
-                        NAM0_HEADER,
-                        SCHR_HEADER,
-                        SCTX_HEADER,
-                        QNAM_HEADER
+                        RecordTypes.QSDT,
+                        RecordTypes.CTDA,
+                        RecordTypes.CNAM,
+                        RecordTypes.NAM0,
+                        RecordTypes.SCHR,
+                        RecordTypes.SCTX,
+                        RecordTypes.QNAM
                     })
             );
         });
@@ -2452,32 +2445,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.QSDT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QSDT));
             QuestLogEntryBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Entry,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NextQuest,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.NAM0_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.SCHR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCTX,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.SCTX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.QNAM,
-                header: recordTypeConverter.ConvertToCustom(QuestLogEntry_Registration.QNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
         }
 
         public void Write(
@@ -2525,14 +2518,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54445351: // QSDT
+                case RecordTypeInts.QSDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestLogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
                     QuestLogEntryBinaryCreateTranslation.FillBinaryConditionsCustom(
@@ -2540,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Conditions);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2550,7 +2543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Entry);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2559,21 +2552,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.NextQuest);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCHR);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCTX);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2765,13 +2758,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54445351: // QSDT
+                case RecordTypeInts.QSDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
                     ConditionsCustomParse(
@@ -2782,31 +2775,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Conditions);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     _EntryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.Entry);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return TryGet<int?>.Failure;
                     _NextQuestLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.NextQuest);
                 }
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCHR) return TryGet<int?>.Failure;
                     _SCHRLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCHR);
                 }
-                case 0x58544353: // SCTX
+                case RecordTypeInts.SCTX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.SCTX) return TryGet<int?>.Failure;
                     _SCTXLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestLogEntry_FieldIndex.SCTX);
                 }
-                case 0x4D414E51: // QNAM
+                case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.QNAM) return TryGet<int?>.Failure;
                     _QNAMLocation = (stream.Position - offset);

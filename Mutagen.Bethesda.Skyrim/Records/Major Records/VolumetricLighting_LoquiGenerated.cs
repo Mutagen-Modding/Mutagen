@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(VolumetricLightingXmlWriteTranslation);
-        public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
-        public static readonly RecordType TriggeringRecordType = VOLI_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.VOLI;
         public static readonly Type BinaryWriteTranslation = typeof(VolumetricLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(VolumetricLighting_Registration.VOLI_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.VOLI),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static VolumetricLightingBinaryCreateTranslation Instance = new VolumetricLightingBinaryCreateTranslation();
 
-        public override RecordType RecordType => VolumetricLighting_Registration.VOLI_HEADER;
+        public override RecordType RecordType => RecordTypes.VOLI;
         public static void FillBinaryStructs(
             IVolumetricLightingInternal item,
             MutagenFrame frame)

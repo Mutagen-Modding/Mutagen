@@ -1070,8 +1070,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FindMatchingRefFromEventXmlWriteTranslation);
-        public static readonly RecordType ALFE_HEADER = new RecordType("ALFE");
-        public static readonly RecordType ALFD_HEADER = new RecordType("ALFD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1079,8 +1077,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        ALFE_HEADER,
-                        ALFD_HEADER
+                        RecordTypes.ALFE,
+                        RecordTypes.ALFD
                     })
             );
         });
@@ -1777,11 +1775,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FromEvent,
-                header: recordTypeConverter.ConvertToCustom(FindMatchingRefFromEvent_Registration.ALFE_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFE));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EventData,
-                header: recordTypeConverter.ConvertToCustom(FindMatchingRefFromEvent_Registration.ALFD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFD));
         }
 
         public void Write(
@@ -1829,14 +1827,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x45464C41: // ALFE
+                case RecordTypeInts.ALFE:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FromEvent = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.FromEvent);
                 }
-                case 0x44464C41: // ALFD
+                case RecordTypeInts.ALFD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1993,13 +1991,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x45464C41: // ALFE
+                case RecordTypeInts.ALFE:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return TryGet<int?>.Failure;
                     _FromEventLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.FromEvent);
                 }
-                case 0x44464C41: // ALFD
+                case RecordTypeInts.ALFD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return TryGet<int?>.Failure;
                     _EventDataLocation = (stream.Position - offset);

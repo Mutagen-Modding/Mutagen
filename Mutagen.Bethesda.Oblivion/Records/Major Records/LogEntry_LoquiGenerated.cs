@@ -1270,12 +1270,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LogEntryXmlWriteTranslation);
-        public static readonly RecordType QSDT_HEADER = new RecordType("QSDT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType CTDT_HEADER = new RecordType("CTDT");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1283,12 +1277,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        QSDT_HEADER,
-                        CTDA_HEADER,
-                        CTDT_HEADER,
-                        CNAM_HEADER,
-                        SCHD_HEADER,
-                        SCHR_HEADER
+                        RecordTypes.QSDT,
+                        RecordTypes.CTDA,
+                        RecordTypes.CTDT,
+                        RecordTypes.CNAM,
+                        RecordTypes.SCHD,
+                        RecordTypes.SCHR
                     })
             );
         });
@@ -2164,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QSDT));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -2179,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Entry,
-                header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.ResultScript.TryGet(out var ResultScriptItem))
             {
@@ -2235,15 +2229,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54445351: // QSDT
+                case RecordTypeInts.QSDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
                     item.Conditions.SetTo(
@@ -2260,7 +2254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }));
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2269,8 +2263,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
                 }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
                     item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
@@ -2436,14 +2430,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54445351: // QSDT
+                case RecordTypeInts.QSDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
-                case 0x54445443: // CTDT
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CTDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
                     this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
@@ -2459,14 +2453,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     _EntryLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
                 }
-                case 0x44484353: // SCHD
-                case 0x52484353: // SCHR
+                case RecordTypeInts.SCHD:
+                case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(

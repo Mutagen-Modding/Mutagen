@@ -1064,8 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceMapOffsetXmlWriteTranslation);
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType TriggeringRecordType = ONAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ONAM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMapOffsetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1148,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(WorldspaceMapOffset_Registration.ONAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.ONAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1753,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WorldspaceMapOffset_Registration.ONAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

@@ -1026,9 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GameSettingBoolXmlWriteTranslation);
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = GMST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
         public static readonly Type BinaryWriteTranslation = typeof(GameSettingBoolBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1965,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GameSettingBool_Registration.GMST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GMST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2028,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GameSettingBoolBinaryCreateTranslation Instance = new GameSettingBoolBinaryCreateTranslation();
 
-        public override RecordType RecordType => GameSettingBool_Registration.GMST_HEADER;
+        public override RecordType RecordType => RecordTypes.GMST;
         public static void FillBinaryStructs(
             IGameSettingBoolInternal item,
             MutagenFrame frame)
@@ -2048,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2200,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     DataCustomParse(
                         stream: stream,

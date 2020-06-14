@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ColorRecordXmlWriteTranslation);
-        public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
-        public static readonly RecordType TriggeringRecordType = CLFM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CLFM;
         public static readonly Type BinaryWriteTranslation = typeof(ColorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ColorRecord_Registration.CLFM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CLFM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
-        public override RecordType RecordType => ColorRecord_Registration.CLFM_HEADER;
+        public override RecordType RecordType => RecordTypes.CLFM;
         public static void FillBinaryStructs(
             IColorRecordInternal item,
             MutagenFrame frame)

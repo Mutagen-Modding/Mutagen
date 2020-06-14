@@ -1090,8 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacedHazardXmlWriteTranslation);
-        public static readonly RecordType PHZD_HEADER = new RecordType("PHZD");
-        public static readonly RecordType TriggeringRecordType = PHZD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PHZD;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedHazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(PlacedHazard_Registration.PHZD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.PHZD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2106,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedHazardBinaryCreateTranslation Instance = new PlacedHazardBinaryCreateTranslation();
 
-        public override RecordType RecordType => PlacedHazard_Registration.PHZD_HEADER;
+        public override RecordType RecordType => RecordTypes.PHZD;
         public static void FillBinaryStructs(
             IPlacedHazardInternal item,
             MutagenFrame frame)

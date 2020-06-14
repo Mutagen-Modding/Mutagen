@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DualCastDataXmlWriteTranslation);
-        public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
-        public static readonly RecordType TriggeringRecordType = DUAL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DUAL;
         public static readonly Type BinaryWriteTranslation = typeof(DualCastDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1721,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DualCastData_Registration.DUAL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DUAL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1773,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DualCastDataBinaryCreateTranslation Instance = new DualCastDataBinaryCreateTranslation();
 
-        public override RecordType RecordType => DualCastData_Registration.DUAL_HEADER;
+        public override RecordType RecordType => RecordTypes.DUAL;
         public static void FillBinaryStructs(
             IDualCastDataInternal item,
             MutagenFrame frame)

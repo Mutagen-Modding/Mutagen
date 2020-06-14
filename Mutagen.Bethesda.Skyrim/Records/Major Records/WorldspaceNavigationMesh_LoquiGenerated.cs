@@ -1056,8 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceNavigationMeshXmlWriteTranslation);
-        public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
-        public static readonly RecordType TriggeringRecordType = NAVM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NAVM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceNavigationMeshBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2022,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(WorldspaceNavigationMesh_Registration.NAVM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -2085,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WorldspaceNavigationMeshBinaryCreateTranslation Instance = new WorldspaceNavigationMeshBinaryCreateTranslation();
 
-        public override RecordType RecordType => WorldspaceNavigationMesh_Registration.NAVM_HEADER;
+        public override RecordType RecordType => RecordTypes.NAVM;
         public static void FillBinaryStructs(
             IWorldspaceNavigationMeshInternal item,
             MutagenFrame frame)

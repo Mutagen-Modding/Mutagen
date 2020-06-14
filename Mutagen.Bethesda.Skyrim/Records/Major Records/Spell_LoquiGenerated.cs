@@ -1954,19 +1954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(SpellXmlWriteTranslation);
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
-        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
-        public static readonly RecordType MDOB_HEADER = new RecordType("MDOB");
-        public static readonly RecordType ETYP_HEADER = new RecordType("ETYP");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType SPIT_HEADER = new RecordType("SPIT");
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = SPEL_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SPEL;
         public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3709,15 +3697,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Spell_Registration.KSIZ_HEADER,
+                counterType: RecordTypes.KSIZ,
                 counterLength: 4,
-                recordType: recordTypeConverter.ConvertToCustom(Spell_Registration.KWDA_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3727,17 +3715,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MenuDisplayObject,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.MDOB_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MDOB));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EquipmentType,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.ETYP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ETYP));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Spell_Registration.SPIT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.SPIT)))
             {
                 writer.Write(item.BaseCost);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<SpellDataFlag>.Instance.Write(
@@ -3789,7 +3777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Spell_Registration.SPEL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SPEL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3852,7 +3840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
-        public override RecordType RecordType => Spell_Registration.SPEL_HEADER;
+        public override RecordType RecordType => RecordTypes.SPEL;
         public static void FillBinaryStructs(
             ISpellInternal item,
             MutagenFrame frame)
@@ -3872,12 +3860,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3886,21 +3874,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: Spell_Registration.KSIZ_HEADER,
-                            triggeringRecord: Spell_Registration.KWDA_HEADER,
+                            countRecord: RecordTypes.KSIZ,
+                            triggeringRecord: RecordTypes.KWDA,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
                 }
-                case 0x424F444D: // MDOB
+                case RecordTypeInts.MDOB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3908,7 +3896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
                 }
-                case 0x50595445: // ETYP
+                case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3916,7 +3904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3924,7 +3912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
                 }
-                case 0x54495053: // SPIT
+                case RecordTypeInts.SPIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3941,9 +3929,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.HalfCostPerk);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                case 0x41445443: // CTDA
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
+                case RecordTypeInts.CTDA:
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
@@ -4171,52 +4159,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
                 }
-                case 0x4144574B: // KWDA
-                case 0x5A49534B: // KSIZ
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
                 {
                     this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
-                        countType: Spell_Registration.KSIZ_HEADER,
-                        subrecordType: Spell_Registration.KWDA_HEADER,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
                 }
-                case 0x424F444D: // MDOB
+                case RecordTypeInts.MDOB:
                 {
                     _MenuDisplayObjectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
                 }
-                case 0x50595445: // ETYP
+                case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
                 }
-                case 0x54495053: // SPIT
+                case RecordTypeInts.SPIT:
                 {
                     _SPITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.HalfCostPerk);
                 }
-                case 0x44494645: // EFID
-                case 0x54494645: // EFIT
-                case 0x41445443: // CTDA
+                case RecordTypeInts.EFID:
+                case RecordTypeInts.EFIT:
+                case RecordTypeInts.CTDA:
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,

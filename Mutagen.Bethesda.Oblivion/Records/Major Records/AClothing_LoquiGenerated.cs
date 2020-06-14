@@ -1552,19 +1552,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(AClothingXmlWriteTranslation);
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
-        public static readonly RecordType MOD4_HEADER = new RecordType("MOD4");
-        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1572,19 +1559,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        FULL_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
-                        MODL_HEADER,
-                        MOD2_HEADER,
-                        ICON_HEADER,
-                        MOD3_HEADER,
-                        MOD4_HEADER,
-                        ICO2_HEADER,
-                        ARMO_HEADER,
-                        CLOT_HEADER
+                        RecordTypes.FULL,
+                        RecordTypes.SCRI,
+                        RecordTypes.ENAM,
+                        RecordTypes.ANAM,
+                        RecordTypes.BMDT,
+                        RecordTypes.MODL,
+                        RecordTypes.MOD2,
+                        RecordTypes.ICON,
+                        RecordTypes.MOD3,
+                        RecordTypes.MOD4,
+                        RecordTypes.ICO2,
+                        RecordTypes.ARMO,
+                        RecordTypes.CLOT
                     })
             );
         });
@@ -3151,20 +3138,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.SCRI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Enchantment,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ENAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentPoints,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             if (item.ClothingFlags.TryGet(out var ClothingFlagsItem))
             {
                 ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
@@ -3189,7 +3176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaleIcon,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
             {
@@ -3208,7 +3195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FemaleIcon,
-                header: recordTypeConverter.ConvertToCustom(AClothing_Registration.ICO2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -3287,7 +3274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3295,7 +3282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3303,7 +3290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Enchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3311,32 +3298,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentPoints = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.EnchantmentPoints);
                 }
-                case 0x54444D42: // BMDT
+                case RecordTypeInts.BMDT:
                 {
                     item.ClothingFlags = Mutagen.Bethesda.Oblivion.ClothingFlags.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
                 }
-                case 0x32444F4D: // MOD2
+                case RecordTypeInts.MOD2:
                 {
                     item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleWorldModel);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3344,21 +3331,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
                 }
-                case 0x33444F4D: // MOD3
+                case RecordTypeInts.MOD3:
                 {
                     item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleBipedModel);
                 }
-                case 0x34444F4D: // MOD4
+                case RecordTypeInts.MOD4:
                 {
                     item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleWorldModel);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FemaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3506,32 +3493,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
                 }
-                case 0x49524353: // SCRI
+                case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     _EnchantmentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _EnchantmentPointsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.EnchantmentPoints);
                 }
-                case 0x54444D42: // BMDT
+                case RecordTypeInts.BMDT:
                 {
                     _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3539,7 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
                 }
-                case 0x32444F4D: // MOD2
+                case RecordTypeInts.MOD2:
                 {
                     this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3547,12 +3534,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleWorldModel);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _MaleIconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
                 }
-                case 0x33444F4D: // MOD3
+                case RecordTypeInts.MOD3:
                 {
                     this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3560,7 +3547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleBipedModel);
                 }
-                case 0x34444F4D: // MOD4
+                case RecordTypeInts.MOD4:
                 {
                     this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3568,7 +3555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleWorldModel);
                 }
-                case 0x324F4349: // ICO2
+                case RecordTypeInts.ICO2:
                 {
                     _FemaleIconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleIcon);

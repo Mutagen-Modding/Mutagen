@@ -1109,8 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(HavokDataXmlWriteTranslation);
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType TriggeringRecordType = HNAM_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
         public static readonly Type BinaryWriteTranslation = typeof(HavokDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1194,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.HNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1838,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

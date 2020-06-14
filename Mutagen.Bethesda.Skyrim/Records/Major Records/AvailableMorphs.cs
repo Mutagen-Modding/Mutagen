@@ -10,13 +10,10 @@ namespace Mutagen.Bethesda.Skyrim
 {
     namespace Internals
     {
-        public partial class AvailableMorphs_Registration
-        {
-            public static readonly RecordType MPAV_HEADER = new RecordType("MPAV");
-        }
-
         public partial class AvailableMorphsBinaryCreateTranslation
         {
+            public static readonly RecordType MPAV = new RecordType("MPAV");
+
             public enum MorphEnum
             {
                 Nose = 0,
@@ -29,12 +26,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if (!frame.Reader.TryReadSubrecordFrame(AvailableMorphs_Registration.MPAI_HEADER, out var indexFrame)) break;
+                    if (!frame.Reader.TryReadSubrecordFrame(RecordTypes.MPAI, out var indexFrame)) break;
                     if (indexFrame.Content.Length != 4)
                     {
                         throw new ArgumentException($"Unexpected Morphs index length: {indexFrame.Content.Length} != 4");
                     }
-                    if (!frame.Reader.TryReadSubrecordFrame(AvailableMorphs_Registration.MPAV_HEADER, out var dataFrame))
+                    if (!frame.Reader.TryReadSubrecordFrame(MPAV, out var dataFrame))
                     {
                         throw new ArgumentException($"Did not read in expected morph data record MPAI");
                     }
@@ -78,11 +75,11 @@ namespace Mutagen.Bethesda.Skyrim
             static void WriteMorph(MutagenWriter writer, MorphEnum e, IMorphGetter? morph)
             {
                 if (morph == null) return;
-                using (HeaderExport.Subrecord(writer, AvailableMorphs_Registration.MPAI_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.MPAI))
                 {
                     writer.Write((int)e);
                 }
-                using (HeaderExport.Subrecord(writer, AvailableMorphs_Registration.MPAV_HEADER))
+                using (HeaderExport.Subrecord(writer, AvailableMorphsBinaryCreateTranslation.MPAV))
                 {
                     writer.Write(morph.Data);
                 }

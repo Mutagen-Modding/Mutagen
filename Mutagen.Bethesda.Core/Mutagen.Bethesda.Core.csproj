@@ -48,6 +48,8 @@
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Records\RecordTypeInts.cs" />
+    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
     <Compile Include="Streams\ParsingBundle.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />

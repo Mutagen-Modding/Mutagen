@@ -1023,9 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GameSettingFloatXmlWriteTranslation);
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = GMST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
         public static readonly Type BinaryWriteTranslation = typeof(GameSettingFloatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1936,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Data,
-                header: recordTypeConverter.ConvertToCustom(GameSettingFloat_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -1946,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GameSettingFloat_Registration.GMST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GMST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2009,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GameSettingFloatBinaryCreateTranslation Instance = new GameSettingFloatBinaryCreateTranslation();
 
-        public override RecordType RecordType => GameSettingFloat_Registration.GMST_HEADER;
+        public override RecordType RecordType => RecordTypes.GMST;
         public static void FillBinaryStructs(
             IGameSettingFloatInternal item,
             MutagenFrame frame)
@@ -2029,7 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2173,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)GameSettingFloat_FieldIndex.Data);

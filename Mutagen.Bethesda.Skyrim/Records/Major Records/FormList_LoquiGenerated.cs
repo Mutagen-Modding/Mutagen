@@ -967,8 +967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(FormListXmlWriteTranslation);
-        public static readonly RecordType FLST_HEADER = new RecordType("FLST");
-        public static readonly RecordType TriggeringRecordType = FLST_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FLST;
         public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1727,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(FormList_Registration.FLST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.FLST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1779,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
-        public override RecordType RecordType => FormList_Registration.FLST_HEADER;
+        public override RecordType RecordType => RecordTypes.FLST;
         public static void FillBinaryStructs(
             IFormListInternal item,
             MutagenFrame frame)

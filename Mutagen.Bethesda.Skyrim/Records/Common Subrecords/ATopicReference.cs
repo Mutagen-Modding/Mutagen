@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static IEnumerable<ATopicReference> Factory(MutagenFrame frame)
             {
-                while (frame.TryReadSubrecord(ATopicReference_Registration.PDTO_HEADER, out var _))
+                while (frame.TryReadSubrecord(RecordTypes.PDTO, out var _))
                 {
                     var type = (ATopicReference.TopicType)frame.ReadInt32();
                     switch (type)
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 foreach (var item in topics)
                 {
-                    using var header = HeaderExport.Subrecord(writer, ATopicReference_Registration.PDTO_HEADER);
+                    using var header = HeaderExport.Subrecord(writer, RecordTypes.PDTO);
                     switch (item)
                     {
                         case ITopicReferenceGetter refGetter:

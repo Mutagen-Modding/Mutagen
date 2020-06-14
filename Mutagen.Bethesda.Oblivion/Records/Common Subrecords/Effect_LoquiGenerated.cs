@@ -1097,10 +1097,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(EffectXmlWriteTranslation);
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
-        public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1108,8 +1104,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        EFID_HEADER,
-                        EFIT_HEADER
+                        RecordTypes.EFID,
+                        RecordTypes.EFIT
                     })
             );
         });
@@ -1930,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44494645: // EFID
+                case RecordTypeInts.EFID:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
                     EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
@@ -1938,14 +1934,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFIT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
                     item.Data = Mutagen.Bethesda.Oblivion.EffectData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
                 }
-                case 0x54494353: // SCIT
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.SCIT:
+                case RecordTypeInts.FULL:
                 {
                     item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
                         frame: frame,
@@ -2115,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44494645: // EFID
+                case RecordTypeInts.EFID:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
                     EffectInitialCustomParse(
@@ -2123,14 +2119,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
-                case 0x54494645: // EFIT
+                case RecordTypeInts.EFIT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
                 }
-                case 0x54494353: // SCIT
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.SCIT:
+                case RecordTypeInts.FULL:
                 {
                     this.ScriptEffect = ScriptEffectBinaryOverlay.ScriptEffectFactory(
                         stream: stream,

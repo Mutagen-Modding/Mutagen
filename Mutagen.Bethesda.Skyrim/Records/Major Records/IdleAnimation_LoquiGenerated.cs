@@ -1619,13 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IdleAnimationXmlWriteTranslation);
-        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = IDLE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IDLE;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2945,24 +2939,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Filename,
-                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AnimationEvent,
-                header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ENAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdles,
-                recordType: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                 transl: (MutagenWriter subWriter, IFormLink<IIdleRelationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DATA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.LoopingSecondsMin);
                 writer.Write(item.LoopingSecondsMax);
@@ -2982,7 +2976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.IDLE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.IDLE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3034,7 +3028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
-        public override RecordType RecordType => IdleAnimation_Registration.IDLE_HEADER;
+        public override RecordType RecordType => RecordTypes.IDLE;
         public static void FillBinaryStructs(
             IIdleAnimationInternal item,
             MutagenFrame frame)
@@ -3054,14 +3048,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Filename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3069,7 +3063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AnimationEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3077,7 +3071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdles.SetTo(
@@ -3087,7 +3081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3286,7 +3280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     ConditionsCustomParse(
                         stream: stream,
@@ -3296,17 +3290,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _FilenameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
                 }
-                case 0x4D414E45: // ENAM
+                case RecordTypeInts.ENAM:
                 {
                     _AnimationEventLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
@@ -3318,7 +3312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);

@@ -1257,9 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestTargetXmlWriteTranslation);
-        public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
-        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = QSTA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2095,7 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.QSTA)))
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2158,7 +2156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2169,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     QuestTargetBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -2348,13 +2346,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
                     _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
                 }
-                case 0x41445443: // CTDA
+                case RecordTypeInts.CTDA:
                 {
                     ConditionsCustomParse(
                         stream: stream,

@@ -1121,9 +1121,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LocationAliasReferenceXmlWriteTranslation);
-        public static readonly RecordType ALFA_HEADER = new RecordType("ALFA");
-        public static readonly RecordType KNAM_HEADER = new RecordType("KNAM");
-        public static readonly RecordType ALRT_HEADER = new RecordType("ALRT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1131,9 +1128,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        ALFA_HEADER,
-                        KNAM_HEADER,
-                        ALRT_HEADER
+                        RecordTypes.ALFA,
+                        RecordTypes.KNAM,
+                        RecordTypes.ALRT
                     })
             );
         });
@@ -1877,15 +1874,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AliasIndex,
-                header: recordTypeConverter.ConvertToCustom(LocationAliasReference_Registration.ALFA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFA));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Keyword,
-                header: recordTypeConverter.ConvertToCustom(LocationAliasReference_Registration.KNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RefType,
-                header: recordTypeConverter.ConvertToCustom(LocationAliasReference_Registration.ALRT_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALRT));
         }
 
         public void Write(
@@ -1933,14 +1930,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41464C41: // ALFA
+                case RecordTypeInts.ALFA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasIndex = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.AliasIndex);
                 }
-                case 0x4D414E4B: // KNAM
+                case RecordTypeInts.KNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1949,7 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.Keyword);
                 }
-                case 0x54524C41: // ALRT
+                case RecordTypeInts.ALRT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2120,19 +2117,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41464C41: // ALFA
+                case RecordTypeInts.ALFA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
                     _AliasIndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.AliasIndex);
                 }
-                case 0x4D414E4B: // KNAM
+                case RecordTypeInts.KNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return TryGet<int?>.Failure;
                     _KeywordLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.Keyword);
                 }
-                case 0x54524C41: // ALRT
+                case RecordTypeInts.ALRT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return TryGet<int?>.Failure;
                     _RefTypeLocation = (stream.Position - offset);

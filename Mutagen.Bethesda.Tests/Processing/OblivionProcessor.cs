@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Npc_Registration.NPC__HEADER.Equals(recType)) return;
+            if (!RecordTypes.NPC_.Equals(recType)) return;
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordMemoryFrame();
             this.DynamicMove(
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Creature_Registration.CREA_HEADER.Equals(recType)) return;
+            if (!RecordTypes.CREA.Equals(recType)) return;
             this.AlignRecords(
                 stream,
                 loc,
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
+            if (!RecordTypes.LVLI.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("DATA");
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
+            if (!RecordTypes.REGN.Equals(recType)) return;
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Meta.MajorConstants.HeaderLength;
             var str = stream.ReadZString(lenToRead);
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
+            if (!RecordTypes.REFR.Equals(recType)) return;
 
             int amount = 0;
             stream.Position = loc.Min;
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
+            if (!RecordTypes.CELL.Equals(recType)) return;
             CleanEmptyCellGroups(
                 stream, 
                 formID, 
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
+            if (!RecordTypes.DIAL.Equals(recType)) return;
             CleanEmptyDialogGroups(
                 stream,
                 formID,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
+            if (!RecordTypes.INFO.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
+            if (!RecordTypes.IDLE.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
+            if (!RecordTypes.PACK.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+            if (!RecordTypes.MGEF.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+            if (!RecordTypes.MGEF.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Enchantment_Registration.ENCH_HEADER.Equals(recType)) return;
+            if (!RecordTypes.ENCH.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Ingredient_Registration.INGR_HEADER.Equals(recType)) return;
+            if (!RecordTypes.INGR.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Potion_Registration.ALCH_HEADER.Equals(recType)) return;
+            if (!RecordTypes.ALCH.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!SigilStone_Registration.SGST_HEADER.Equals(recType)) return;
+            if (!RecordTypes.SGST.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
         #endregion

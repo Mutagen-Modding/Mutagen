@@ -1074,8 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(HeadPartReferenceXmlWriteTranslation);
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType HEAD_HEADER = new RecordType("HEAD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1083,8 +1081,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        INDX_HEADER,
-                        HEAD_HEADER
+                        RecordTypes.INDX,
+                        RecordTypes.HEAD
                     })
             );
         });
@@ -1778,11 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Number,
-                header: recordTypeConverter.ConvertToCustom(HeadPartReference_Registration.INDX_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Head,
-                header: recordTypeConverter.ConvertToCustom(HeadPartReference_Registration.HEAD_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.HEAD));
         }
 
         public void Write(
@@ -1830,14 +1828,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Number) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Number = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Number);
                 }
-                case 0x44414548: // HEAD
+                case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2003,13 +2001,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x58444E49: // INDX
+                case RecordTypeInts.INDX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Number) return TryGet<int?>.Failure;
                     _NumberLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Number);
                 }
-                case 0x44414548: // HEAD
+                case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
                     _HeadLocation = (stream.Position - offset);

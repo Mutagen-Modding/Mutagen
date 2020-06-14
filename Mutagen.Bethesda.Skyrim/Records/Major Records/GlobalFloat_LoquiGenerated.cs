@@ -1026,9 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(GlobalFloatXmlWriteTranslation);
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
-        public static readonly RecordType TriggeringRecordType = GLOB_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
         public static readonly Type BinaryWriteTranslation = typeof(GlobalFloatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1943,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Data,
-                header: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.FLTV_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTV));
         }
 
         public void Write(
@@ -1953,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.GLOB_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.GLOB),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2016,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalFloatBinaryCreateTranslation Instance = new GlobalFloatBinaryCreateTranslation();
 
-        public override RecordType RecordType => GlobalFloat_Registration.GLOB_HEADER;
+        public override RecordType RecordType => RecordTypes.GLOB;
         public static void FillBinaryStructs(
             IGlobalFloatInternal item,
             MutagenFrame frame)
@@ -2036,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2180,7 +2178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x56544C46: // FLTV
+                case RecordTypeInts.FLTV:
                 {
                     _DataLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);

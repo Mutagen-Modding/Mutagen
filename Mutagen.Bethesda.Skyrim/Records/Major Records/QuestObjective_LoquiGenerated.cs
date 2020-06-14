@@ -1255,11 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(QuestObjectiveXmlWriteTranslation);
-        public static readonly RecordType QOBJ_HEADER = new RecordType("QOBJ");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType QSTA_HEADER = new RecordType("QSTA");
-        public static readonly RecordType TriggeringRecordType = QOBJ_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.QOBJ;
         public static readonly Type BinaryWriteTranslation = typeof(QuestObjectiveBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2090,16 +2086,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Index,
-                header: recordTypeConverter.ConvertToCustom(QuestObjective_Registration.QOBJ_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QOBJ));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestObjective.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(QuestObjective_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DisplayText,
-                header: recordTypeConverter.ConvertToCustom(QuestObjective_Registration.NNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestObjectiveTargetGetter>.Instance.Write(
@@ -2160,20 +2156,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4A424F51: // QOBJ
+                case RecordTypeInts.QOBJ:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Index);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestObjective.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Flags);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DisplayText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2182,12 +2178,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.DisplayText);
                 }
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     item.Targets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestObjectiveTarget>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: QuestObjective_Registration.QSTA_HEADER,
+                            triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out QuestObjectiveTarget listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2359,28 +2355,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4A424F51: // QOBJ
+                case RecordTypeInts.QOBJ:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return TryGet<int?>.Failure;
                     _IndexLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Index);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Flags);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _DisplayTextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.DisplayText);
                 }
-                case 0x41545351: // QSTA
+                case RecordTypeInts.QSTA:
                 {
                     this.Targets = this.ParseRepeatedTypelessSubrecord<QuestObjectiveTargetBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: QuestObjective_Registration.QSTA_HEADER,
+                        trigger: RecordTypes.QSTA,
                         factory:  QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Targets);
                 }

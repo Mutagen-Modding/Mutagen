@@ -1211,11 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LoadScreenXmlWriteTranslation);
-        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
-        public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
-        public static readonly RecordType TriggeringRecordType = LSCR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LSCR;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2172,12 +2168,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<ILoadScreenLocationGetter>.Instance.Write(
                 writer: writer,
@@ -2199,7 +2195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LoadScreen_Registration.LSCR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LSCR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2251,7 +2247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
 
-        public override RecordType RecordType => LoadScreen_Registration.LSCR_HEADER;
+        public override RecordType RecordType => RecordTypes.LSCR;
         public static void FillBinaryStructs(
             ILoadScreenInternal item,
             MutagenFrame frame)
@@ -2271,7 +2267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2279,7 +2275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2287,12 +2283,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     item.Locations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
+                            triggeringRecord: RecordTypes.LNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out LoadScreenLocation listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2452,17 +2448,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
                 }
-                case 0x43534544: // DESC
+                case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     this.Locations = BinaryOverlayList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,

@@ -1212,10 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CreateReferenceToObjectXmlWriteTranslation);
-        public static readonly RecordType ALCO_HEADER = new RecordType("ALCO");
-        public static readonly RecordType ALCA_HEADER = new RecordType("ALCA");
-        public static readonly RecordType ALCL_HEADER = new RecordType("ALCL");
-        public static readonly RecordType TriggeringRecordType = ALCO_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ALCO;
         public static readonly Type BinaryWriteTranslation = typeof(CreateReferenceToObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2017,8 +2014,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object,
-                header: recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCO_HEADER));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCA_HEADER)))
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCO));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ALCA)))
             {
                 writer.Write(item.AliasIndex);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Write(
@@ -2030,7 +2027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Level,
                 length: 4,
-                header: recordTypeConverter.ConvertToCustom(CreateReferenceToObject_Registration.ALCL_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCL));
         }
 
         public void Write(
@@ -2081,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4F434C41: // ALCO
+                case RecordTypeInts.ALCO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2090,7 +2087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)CreateReferenceToObject_FieldIndex.Object);
                 }
-                case 0x41434C41: // ALCA
+                case RecordTypeInts.ALCA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -2098,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     return TryGet<int?>.Succeed((int)CreateReferenceToObject_FieldIndex.Create);
                 }
-                case 0x4C434C41: // ALCL
+                case RecordTypeInts.ALCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Level = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
@@ -2273,18 +2270,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4F434C41: // ALCO
+                case RecordTypeInts.ALCO:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return TryGet<int?>.Failure;
                     _ObjectLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CreateReferenceToObject_FieldIndex.Object);
                 }
-                case 0x41434C41: // ALCA
+                case RecordTypeInts.ALCA:
                 {
                     _ALCALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)CreateReferenceToObject_FieldIndex.Create);
                 }
-                case 0x4C434C41: // ALCL
+                case RecordTypeInts.ALCL:
                 {
                     _LevelLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)CreateReferenceToObject_FieldIndex.Level);

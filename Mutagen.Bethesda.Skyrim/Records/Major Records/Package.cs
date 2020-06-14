@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.ProcedureTree.SetTo(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         frame: frame.SpawnAll(),
-                        triggeringRecord: Package_Registration.ANAM_HEADER,
+                        triggeringRecord: RecordTypes.ANAM,
                         transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
                         {
                             listSubItem = PackageBranch.CreateFromBinary(r);
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var data = item.Data;
                 long jumpbackPos;
-                using (HeaderExport.Subrecord(writer, Package_Registration.PKCU_HEADER))
+                using (HeaderExport.Subrecord(writer, RecordTypes.PKCU))
                 {
                     jumpbackPos = writer.Position;
                     writer.Write(data.Count);
@@ -401,26 +401,26 @@ namespace Mutagen.Bethesda.Skyrim
                     };
                     if (typeStr == null) continue;
                     addedKeys.Add(kv.Key);
-                    using (HeaderExport.Subrecord(writer, Package_Registration.ANAM_HEADER))
+                    using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))
                     {
                         writer.Write(typeStr, StringBinaryType.NullTerminate);
                     }
                     switch (val)
                     {
                         case PackageDataBool b:
-                            using (HeaderExport.Subrecord(writer, Package_Registration.CNAM_HEADER))
+                            using (HeaderExport.Subrecord(writer, RecordTypes.CNAM))
                             {
                                 writer.Write((byte)(b.Data ? 1 : 0));
                             }
                             break;
                         case PackageDataInt i:
-                            using (HeaderExport.Subrecord(writer, Package_Registration.CNAM_HEADER))
+                            using (HeaderExport.Subrecord(writer, RecordTypes.CNAM))
                             {
                                 writer.Write(i.Data);
                             }
                             break;
                         case PackageDataFloat f:
-                            using (HeaderExport.Subrecord(writer, Package_Registration.CNAM_HEADER))
+                            using (HeaderExport.Subrecord(writer, RecordTypes.CNAM))
                             {
                                 writer.Write(f.Data);
                             }
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                         case PackageDataObjectList list:
                             if (list.Data != null)
                             {
-                                using (HeaderExport.Subrecord(writer, Package_Registration.CNAM_HEADER))
+                                using (HeaderExport.Subrecord(writer, RecordTypes.CNAM))
                                 {
                                     writer.Write(list.Data);
                                 }
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             break;
                         case PackageDataTarget target:
-                            using (HeaderExport.Subrecord(writer, PackageDataTarget_Registration.PTDA_HEADER))
+                            using (HeaderExport.Subrecord(writer, RecordTypes.PTDA))
                             {
                                 APackageTargetBinaryWriteTranslation.WriteCustom(writer, target.Target);
                             }
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void WriteBinaryXnamMarkerCustom(MutagenWriter writer, IPackageGetter item)
             {
-                using (HeaderExport.Subrecord(writer, Package_Registration.XNAM_HEADER)) 
+                using (HeaderExport.Subrecord(writer, RecordTypes.XNAM)) 
                 {
                     writer.Write(item.XnamMarker);
                 }
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
                     stream: stream,
                     recordTypeConverter: null,
-                    trigger: Package_Registration.ANAM_HEADER,
+                    trigger: RecordTypes.ANAM,
                     factory: PackageBranchBinaryOverlay.PackageBranchFactory);
                 PackageBinaryCreateTranslation.AbsorbPackageData(
                     new MutagenInterfaceReadStream(stream, _package.MetaData), _packageData);

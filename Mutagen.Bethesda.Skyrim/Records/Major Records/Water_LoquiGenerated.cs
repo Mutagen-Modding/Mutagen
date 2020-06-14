@@ -4112,25 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WaterXmlWriteTranslation);
-        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
-        public static readonly RecordType NAM4_HEADER = new RecordType("NAM4");
-        public static readonly RecordType TriggeringRecordType = WATR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -7711,48 +7693,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.WritePerItem(
                 writer: writer,
                 items: item.UnusedNoisemaps,
-                recordType: recordTypeConverter.ConvertToCustom(Water_Registration.NNAM_HEADER),
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Opacity,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MNAM,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Material,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OpenSound,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Spell,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.XNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ImageSpace,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.INAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DamagePerSecond,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DNAM_HEADER)))
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -7897,29 +7879,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GNAM,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.GNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LinearVelocity,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM0_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AngularVelocity,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM1_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerOneTexture,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerTwoTexture,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM3_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NoiseLayerThreeTexture,
-                header: recordTypeConverter.ConvertToCustom(Water_Registration.NAM4_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -7930,7 +7912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WATR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -7982,7 +7964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
-        public override RecordType RecordType => Water_Registration.WATR_HEADER;
+        public override RecordType RecordType => RecordTypes.WATR;
         public static void FillBinaryStructs(
             IWaterInternal item,
             MutagenFrame frame)
@@ -8002,7 +7984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8011,34 +7993,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     item.UnusedNoisemaps.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Water_Registration.NNAM_HEADER,
+                            triggeringRecord: RecordTypes.NNAM,
                             transl: StringBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Opacity = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8046,7 +8028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8054,7 +8036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8062,7 +8044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -8070,13 +8052,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamagePerSecond = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -8131,25 +8113,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpecularSunSparklePower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LinearVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AngularVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NoiseLayerOneTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8157,7 +8139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NoiseLayerTwoTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8165,7 +8147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
                 }
-                case 0x344D414E: // NAM4
+                case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NoiseLayerThreeTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -8625,12 +8607,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     this.UnusedNoisemaps = BinaryOverlayList<String>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -8645,77 +8627,77 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
                 }
-                case 0x4D414E41: // ANAM
+                case RecordTypeInts.ANAM:
                 {
                     _OpacityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
-                case 0x4D414E46: // FNAM
+                case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _MNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _MaterialLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _OpenSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     _SpellLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
                 }
-                case 0x4D414E49: // INAM
+                case RecordTypeInts.INAM:
                 {
                     _ImageSpaceLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _DamagePerSecondLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     _GNAMLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
                 }
-                case 0x304D414E: // NAM0
+                case RecordTypeInts.NAM0:
                 {
                     _LinearVelocityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     _AngularVelocityLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _NoiseLayerOneTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     _NoiseLayerTwoTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
                 }
-                case 0x344D414E: // NAM4
+                case RecordTypeInts.NAM4:
                 {
                     _NoiseLayerThreeTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);

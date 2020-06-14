@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!obj.Items.TryGet(out var items)
                     || items.Count == 0) return;
-                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,

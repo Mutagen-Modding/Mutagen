@@ -2660,8 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CombatStyleDataXmlWriteTranslation);
-        public static readonly RecordType CSTD_HEADER = new RecordType("CSTD");
-        public static readonly RecordType TriggeringRecordType = CSTD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CSTD;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2779,7 +2778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CombatStyleData_Registration.CSTD_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.CSTD)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -4870,7 +4869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CombatStyleData_Registration.CSTD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CSTD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

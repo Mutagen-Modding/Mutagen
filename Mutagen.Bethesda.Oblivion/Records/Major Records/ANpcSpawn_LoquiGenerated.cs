@@ -944,9 +944,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ANpcSpawnXmlWriteTranslation);
-        public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -954,9 +951,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        LVLC_HEADER,
-                        CREA_HEADER,
-                        NPC__HEADER
+                        RecordTypes.LVLC,
+                        RecordTypes.CREA,
+                        RecordTypes.NPC_
                     })
             );
         });

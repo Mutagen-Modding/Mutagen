@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 obj.SubCells.SetTo(
                                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                         frame: frame,
-                                        triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                                        triggeringRecord: RecordTypes.GRUP,
                                         transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                                 break;
                             default:
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var subCells = obj.SubCells;
                 if (subCells?.Count == 0
                     && topCell != null) return;
-                using (HeaderExport.Header(writer, Group_Registration.GRUP_HEADER, Mutagen.Bethesda.Binary.ObjectType.Group))
+                using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
                         writer,

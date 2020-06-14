@@ -1637,13 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogResponseXmlWriteTranslation);
-        public static readonly RecordType TRDT_HEADER = new RecordType("TRDT");
-        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType LNAM_HEADER = new RecordType("LNAM");
-        public static readonly RecordType TriggeringRecordType = TRDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TRDT;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2824,7 +2818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.TRDT)))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
                     writer,
@@ -2850,27 +2844,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Text,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.IL);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ScriptNotes,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Edits,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM3_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpeakerIdleAnimation,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ListenerIdleAnimation,
-                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.LNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
         }
 
         public void Write(
@@ -2921,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2938,7 +2932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Unknown3);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2947,7 +2941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Text);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ScriptNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2955,7 +2949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ScriptNotes);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Edits = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2963,7 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Edits);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SpeakerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -2971,7 +2965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.SpeakerIdleAnimation);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ListenerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3191,33 +3185,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x54445254: // TRDT
+                case RecordTypeInts.TRDT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return TryGet<int?>.Failure;
                     _TRDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Unknown3);
                 }
-                case 0x314D414E: // NAM1
+                case RecordTypeInts.NAM1:
                 {
                     _TextLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Text);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _ScriptNotesLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ScriptNotes);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     _EditsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Edits);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _SpeakerIdleAnimationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.SpeakerIdleAnimation);
                 }
-                case 0x4D414E4C: // LNAM
+                case RecordTypeInts.LNAM:
                 {
                     _ListenerIdleAnimationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ListenerIdleAnimation);

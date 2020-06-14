@@ -1269,12 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LandTextureXmlWriteTranslation);
-        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
-        public static readonly RecordType TriggeringRecordType = LTEX_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LTEX;
         public static readonly Type BinaryWriteTranslation = typeof(LandTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2302,7 +2297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Havok.TryGet(out var HavokItem))
             {
@@ -2314,7 +2309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSpecularExponent,
-                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PotentialGrass,
@@ -2323,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
-                        header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER));
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
                 });
         }
 
@@ -2334,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(LandTexture_Registration.LTEX_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.LTEX),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2386,7 +2381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LandTextureBinaryCreateTranslation Instance = new LandTextureBinaryCreateTranslation();
 
-        public override RecordType RecordType => LandTexture_Registration.LTEX_HEADER;
+        public override RecordType RecordType => RecordTypes.LTEX;
         public static void FillBinaryStructs(
             ILandTextureInternal item,
             MutagenFrame frame)
@@ -2406,7 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -2414,23 +2409,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     item.Havok = Mutagen.Bethesda.Oblivion.HavokData.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSpecularExponent = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     item.PotentialGrass.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: LandTexture_Registration.GNAM_HEADER,
+                            triggeringRecord: RecordTypes.GNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
@@ -2589,22 +2584,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 }
-                case 0x4D414E48: // HNAM
+                case RecordTypeInts.HNAM:
                 {
                     _HavokLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _TextureSpecularExponentLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
-                case 0x4D414E47: // GNAM
+                case RecordTypeInts.GNAM:
                 {
                     this.PotentialGrass = BinaryOverlayList<IFormLink<IGrassGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,

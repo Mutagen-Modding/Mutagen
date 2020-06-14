@@ -2775,39 +2775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(WorldspaceXmlWriteTranslation);
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
-        public static readonly RecordType MHDT_HEADER = new RecordType("MHDT");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType WCTR_HEADER = new RecordType("WCTR");
-        public static readonly RecordType LTMP_HEADER = new RecordType("LTMP");
-        public static readonly RecordType XEZN_HEADER = new RecordType("XEZN");
-        public static readonly RecordType XLCN_HEADER = new RecordType("XLCN");
-        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType NAM2_HEADER = new RecordType("NAM2");
-        public static readonly RecordType NAM3_HEADER = new RecordType("NAM3");
-        public static readonly RecordType NAM4_HEADER = new RecordType("NAM4");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
-        public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
-        public static readonly RecordType NAMA_HEADER = new RecordType("NAMA");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType NAM9_HEADER = new RecordType("NAM9");
-        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
-        public static readonly RecordType NNAM_HEADER = new RecordType("NNAM");
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
-        public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
-        public static readonly RecordType XWEM_HEADER = new RecordType("XWEM");
-        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
-        public static readonly RecordType XXXX_HEADER = new RecordType("XXXX");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TriggeringRecordType = WRLD_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5545,25 +5513,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FixedDimensionsCenterCell,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WCTR_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.WCTR));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InteriorLighting,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.LTMP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LTMP));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EncounterZone,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.XEZN_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XEZN));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Location,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.XLCN_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XLCN));
             if (item.Parent.TryGet(out var ParentItem))
             {
                 ((WorldspaceParentBinaryWriteTranslation)((IBinaryItem)ParentItem).BinaryWriteTranslator).Write(
@@ -5574,19 +5542,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWater,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM3_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3));
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWaterHeight,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM4_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4));
             if (item.LandDefaults.TryGet(out var LandDefaultsItem))
             {
                 ((WorldspaceLandDefaultsBinaryWriteTranslation)((IBinaryItem)LandDefaultsItem).BinaryWriteTranslator).Write(
@@ -5597,7 +5565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapImage,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.CloudModel.TryGet(out var CloudModelItem))
             {
@@ -5621,12 +5589,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DistantLodMultiplier,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAMA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAMA));
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
             if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
             {
                 ((WorldspaceObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
@@ -5637,37 +5605,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Music,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ZNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CanopyShadow,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterNoiseTexture,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.XNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodDiffuseTexture,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.TNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodNormalTexture,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.UNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterEnvironmentMap,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.XWEM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.OffsetData,
-                header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.OFST_HEADER),
-                overflowRecord: Worldspace_Registration.XXXX_HEADER);
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST),
+                overflowRecord: RecordTypes.XXXX);
         }
 
         public void Write(
@@ -5677,7 +5645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WRLD_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WRLD),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -5732,7 +5700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => Worldspace_Registration.WRLD_HEADER;
+        public override RecordType RecordType => RecordTypes.WRLD;
         public static void FillBinaryStructs(
             IWorldspaceInternal item,
             MutagenFrame frame)
@@ -5752,12 +5720,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     item.LargeReferences.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Worldspace_Registration.RNAM_HEADER,
+                            triggeringRecord: RecordTypes.RNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out WorldspaceGridReference listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -5768,12 +5736,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             }));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LargeReferences);
                 }
-                case 0x5444484D: // MHDT
+                case RecordTypeInts.MHDT:
                 {
                     item.MaxHeight = Mutagen.Bethesda.Skyrim.WorldspaceMaxHeight.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MaxHeight);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5782,13 +5750,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
-                case 0x52544357: // WCTR
+                case RecordTypeInts.WCTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FixedDimensionsCenterCell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.FixedDimensionsCenterCell);
                 }
-                case 0x504D544C: // LTMP
+                case RecordTypeInts.LTMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InteriorLighting = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5796,7 +5764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.InteriorLighting);
                 }
-                case 0x4E5A4558: // XEZN
+                case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5804,7 +5772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.EncounterZone);
                 }
-                case 0x4E434C58: // XLCN
+                case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5812,14 +5780,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Location);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     item.Parent = Mutagen.Bethesda.Skyrim.WorldspaceParent.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Climate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5827,7 +5795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5835,7 +5803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LodWater = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5843,18 +5811,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWater);
                 }
-                case 0x344D414E: // NAM4
+                case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LodWaterHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWaterHeight);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     item.LandDefaults = Mutagen.Bethesda.Skyrim.WorldspaceLandDefaults.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LandDefaults);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MapImage = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5862,44 +5830,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapImage);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.CloudModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CloudModel);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     item.MapData = Mutagen.Bethesda.Skyrim.WorldspaceMap.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     item.MapOffset = Mutagen.Bethesda.Skyrim.WorldspaceMapOffset.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapOffset);
                 }
-                case 0x414D414E: // NAMA
+                case RecordTypeInts.NAMA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DistantLodMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.DistantLodMultiplier);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
-                case 0x304D414E: // NAM0
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM9:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.WorldspaceObjectBounds.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -5907,7 +5875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CanopyShadow = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5915,7 +5883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CanopyShadow);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WaterNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5923,7 +5891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterNoiseTexture);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdLodDiffuseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5931,7 +5899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodDiffuseTexture);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdLodNormalTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5939,7 +5907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodNormalTexture);
                 }
-                case 0x4D455758: // XWEM
+                case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WaterEnvironmentMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -5947,10 +5915,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterEnvironmentMap);
                 }
-                case 0x5453464F: // OFST
-                case 0x58585858: // XXXX
+                case RecordTypeInts.OFST:
+                case RecordTypeInts.XXXX:
                 {
-                    if (nextRecordType == Worldspace_Registration.XXXX_HEADER)
+                    if (nextRecordType == RecordTypes.XXXX)
                     {
                         var overflowHeader = frame.ReadSubrecordFrame();
                         contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
@@ -6161,7 +6129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             _data,
             _package.MetaData.Constants,
             _OffsetDataLocation,
-            Worldspace_Registration.XXXX_HEADER);
+            RecordTypes.XXXX);
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -6235,7 +6203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x4D414E52: // RNAM
+                case RecordTypeInts.RNAM:
                 {
                     this.LargeReferences = BinaryOverlayList<WorldspaceGridReferenceBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
@@ -6250,37 +6218,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: false));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LargeReferences);
                 }
-                case 0x5444484D: // MHDT
+                case RecordTypeInts.MHDT:
                 {
                     _MaxHeightLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MaxHeight);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
-                case 0x52544357: // WCTR
+                case RecordTypeInts.WCTR:
                 {
                     _FixedDimensionsCenterCellLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.FixedDimensionsCenterCell);
                 }
-                case 0x504D544C: // LTMP
+                case RecordTypeInts.LTMP:
                 {
                     _InteriorLightingLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.InteriorLighting);
                 }
-                case 0x4E5A4558: // XEZN
+                case RecordTypeInts.XEZN:
                 {
                     _EncounterZoneLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.EncounterZone);
                 }
-                case 0x4E434C58: // XLCN
+                case RecordTypeInts.XLCN:
                 {
                     _LocationLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Location);
                 }
-                case 0x4D414E57: // WNAM
+                case RecordTypeInts.WNAM:
                 {
                     this.Parent = WorldspaceParentBinaryOverlay.WorldspaceParentFactory(
                         stream: stream,
@@ -6288,37 +6256,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _ClimateLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
-                case 0x324D414E: // NAM2
+                case RecordTypeInts.NAM2:
                 {
                     _WaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
-                case 0x334D414E: // NAM3
+                case RecordTypeInts.NAM3:
                 {
                     _LodWaterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWater);
                 }
-                case 0x344D414E: // NAM4
+                case RecordTypeInts.NAM4:
                 {
                     _LodWaterHeightLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LodWaterHeight);
                 }
-                case 0x4D414E44: // DNAM
+                case RecordTypeInts.DNAM:
                 {
                     _LandDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LandDefaults);
                 }
-                case 0x4E4F4349: // ICON
+                case RecordTypeInts.ICON:
                 {
                     _MapImageLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapImage);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.CloudModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -6326,28 +6294,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CloudModel);
                 }
-                case 0x4D414E4D: // MNAM
+                case RecordTypeInts.MNAM:
                 {
                     _MapDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
-                case 0x4D414E4F: // ONAM
+                case RecordTypeInts.ONAM:
                 {
                     _MapOffsetLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapOffset);
                 }
-                case 0x414D414E: // NAMA
+                case RecordTypeInts.NAMA:
                 {
                     _DistantLodMultiplierLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.DistantLodMultiplier);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
-                case 0x304D414E: // NAM0
-                case 0x394D414E: // NAM9
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM9:
                 {
                     this.ObjectBounds = WorldspaceObjectBoundsBinaryOverlay.WorldspaceObjectBoundsFactory(
                         stream: stream,
@@ -6355,38 +6323,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBounds);
                 }
-                case 0x4D414E5A: // ZNAM
+                case RecordTypeInts.ZNAM:
                 {
                     _MusicLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
-                case 0x4D414E4E: // NNAM
+                case RecordTypeInts.NNAM:
                 {
                     _CanopyShadowLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.CanopyShadow);
                 }
-                case 0x4D414E58: // XNAM
+                case RecordTypeInts.XNAM:
                 {
                     _WaterNoiseTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterNoiseTexture);
                 }
-                case 0x4D414E54: // TNAM
+                case RecordTypeInts.TNAM:
                 {
                     _HdLodDiffuseTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodDiffuseTexture);
                 }
-                case 0x4D414E55: // UNAM
+                case RecordTypeInts.UNAM:
                 {
                     _HdLodNormalTextureLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.HdLodNormalTexture);
                 }
-                case 0x4D455758: // XWEM
+                case RecordTypeInts.XWEM:
                 {
                     _WaterEnvironmentMapLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.WaterEnvironmentMap);
                 }
-                case 0x5453464F: // OFST
-                case 0x58585858: // XXXX
+                case RecordTypeInts.OFST:
+                case RecordTypeInts.XXXX:
                 {
                     _OffsetDataLocation = UtilityTranslation.HandleOverlayRecordOverflow(
                         existingLoc: _OffsetDataLocation,

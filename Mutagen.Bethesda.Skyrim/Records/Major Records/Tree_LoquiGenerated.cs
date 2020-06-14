@@ -1671,16 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(TreeXmlWriteTranslation);
-        public static readonly RecordType TREE_HEADER = new RecordType("TREE");
-        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType PFIG_HEADER = new RecordType("PFIG");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType PFPC_HEADER = new RecordType("PFPC");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType TriggeringRecordType = TREE_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3171,11 +3162,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Ingredient,
-                header: recordTypeConverter.ConvertToCustom(Tree_Registration.PFIG_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PFIG));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HarvestSound,
-                header: recordTypeConverter.ConvertToCustom(Tree_Registration.SNAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
             if (item.Production.TryGet(out var ProductionItem))
             {
                 ((SeasonalIngredientProductionBinaryWriteTranslation)((IBinaryItem)ProductionItem).BinaryWriteTranslator).Write(
@@ -3186,10 +3177,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Tree_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.CNAM)))
             {
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3216,7 +3207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Tree_Registration.TREE_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.TREE),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
@@ -3268,7 +3259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
-        public override RecordType RecordType => Tree_Registration.TREE_HEADER;
+        public override RecordType RecordType => RecordTypes.TREE;
         public static void FillBinaryStructs(
             ITreeInternal item,
             MutagenFrame frame)
@@ -3288,24 +3279,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 }
-                case 0x47494650: // PFIG
+                case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3313,7 +3304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HarvestSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -3321,12 +3312,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
                 }
-                case 0x43504650: // PFPC
+                case RecordTypeInts.PFPC:
                 {
                     item.Production = Mutagen.Bethesda.Skyrim.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -3335,7 +3326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
@@ -3544,17 +3535,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44414D56: // VMAD
+                case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
                 }
-                case 0x444E424F: // OBND
+                case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
                 }
-                case 0x4C444F4D: // MODL
+                case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
@@ -3562,27 +3553,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
                 }
-                case 0x47494650: // PFIG
+                case RecordTypeInts.PFIG:
                 {
                     _IngredientLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
                 }
-                case 0x4D414E53: // SNAM
+                case RecordTypeInts.SNAM:
                 {
                     _HarvestSoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
                 }
-                case 0x43504650: // PFPC
+                case RecordTypeInts.PFPC:
                 {
                     _ProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
                 }
-                case 0x4C4C5546: // FULL
+                case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
                 }
-                case 0x4D414E43: // CNAM
+                case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);

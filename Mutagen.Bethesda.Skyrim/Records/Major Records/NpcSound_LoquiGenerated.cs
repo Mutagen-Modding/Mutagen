@@ -1074,8 +1074,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(NpcSoundXmlWriteTranslation);
-        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
-        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1083,8 +1081,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        CSDI_HEADER,
-                        CSDC_HEADER
+                        RecordTypes.CSDI,
+                        RecordTypes.CSDC
                     })
             );
         });
@@ -1778,11 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound,
-                header: recordTypeConverter.ConvertToCustom(NpcSound_Registration.CSDI_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDI));
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SoundChance,
-                header: recordTypeConverter.ConvertToCustom(NpcSound_Registration.CSDC_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDC));
         }
 
         public void Write(
@@ -1830,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x49445343: // CSDI
+                case RecordTypeInts.CSDI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1839,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
                 }
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2003,13 +2001,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x49445343: // CSDI
+                case RecordTypeInts.CSDI:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
                     _SoundLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
                 }
-                case 0x43445343: // CSDC
+                case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
                     _SoundChanceLocation = (stream.Position - offset);

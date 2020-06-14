@@ -1111,9 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DebrisXmlWriteTranslation);
-        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = DEBR_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DEBR;
         public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1993,7 +1991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Debris_Registration.DEBR_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DEBR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2045,7 +2043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
-        public override RecordType RecordType => Debris_Registration.DEBR_HEADER;
+        public override RecordType RecordType => RecordTypes.DEBR;
         public static void FillBinaryStructs(
             IDebrisInternal item,
             MutagenFrame frame)
@@ -2065,12 +2063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     item.Models.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DebrisModel>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: Debris_Registration.DATA_HEADER,
+                            triggeringRecord: RecordTypes.DATA,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out DebrisModel listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -2216,12 +2214,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
                     this.Models = this.ParseRepeatedTypelessSubrecord<DebrisModelBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: Debris_Registration.DATA_HEADER,
+                        trigger: RecordTypes.DATA,
                         factory:  DebrisModelBinaryOverlay.DebrisModelFactory);
                     return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
                 }

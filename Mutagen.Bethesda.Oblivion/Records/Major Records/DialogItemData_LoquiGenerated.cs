@@ -1114,8 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(DialogItemDataXmlWriteTranslation);
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1199,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(DialogItemData_Registration.DATA_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.DATA)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1849,7 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(DialogItemData_Registration.DATA_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

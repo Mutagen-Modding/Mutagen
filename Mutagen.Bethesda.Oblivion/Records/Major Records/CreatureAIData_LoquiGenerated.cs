@@ -1289,8 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(CreatureAIDataXmlWriteTranslation);
-        public static readonly RecordType AIDT_HEADER = new RecordType("AIDT");
-        public static readonly RecordType TriggeringRecordType = AIDT_HEADER;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.AIDT;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureAIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1378,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(CreatureAIData_Registration.AIDT_HEADER)));
+                recordTypeConverter.ConvertToCustom(RecordTypes.AIDT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2186,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(CreatureAIData_Registration.AIDT_HEADER),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.AIDT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

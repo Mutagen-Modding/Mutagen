@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
         {
             var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
-            while (rdat.Equals(Region_Registration.RDAT_HEADER))
+            while (rdat.Equals(RecordTypes.RDAT))
             {
                 ParseRegionData(frame, item);
                 if (frame.Complete) break;
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset)
         {
             var rdat = this._package.MetaData.Constants.GetSubrecord(stream);
-            while (rdat.RecordType.Equals(Region_Registration.RDAT_HEADER))
+            while (rdat.RecordType.Equals(RecordTypes.RDAT))
             {
                 ParseRegionData(stream, offset);
                 if (stream.Complete) break;
