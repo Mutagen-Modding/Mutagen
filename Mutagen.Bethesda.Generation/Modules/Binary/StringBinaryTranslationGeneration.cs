@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case StringBinaryType.NullTerminate:
                     fg.AppendLine($"ret.{typeGen.Name} = {nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}(ret._data.Slice({passedLengthAccessor}));");
-                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}ret.{typeGen.Name}.Length + 1;");
+                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{(str.Translated == null ? $"ret.{typeGen.Name}.Length + 1" : "5")};");
                     break;
                 default:
                     if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return;

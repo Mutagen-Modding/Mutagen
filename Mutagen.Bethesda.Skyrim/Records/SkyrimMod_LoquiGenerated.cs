@@ -113,6 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ImageSpaces_Object = new Group<ImageSpace>(this);
             _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
             _FormLists_Object = new Group<FormList>(this);
+            _Perks_Object = new Group<Perk>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -615,6 +616,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IFormListGetter> ISkyrimModGetter.FormLists => _FormLists_Object;
         #endregion
+        #region Perks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Perk> _Perks_Object;
+        public Group<Perk> Perks => _Perks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IPerkGetter> ISkyrimModGetter.Perks => _Perks_Object;
+        #endregion
 
         #region To String
 
@@ -856,6 +864,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -929,7 +938,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Debris,
                 TItem ImageSpaces,
                 TItem ImageSpaceAdapters,
-                TItem FormLists)
+                TItem FormLists,
+                TItem Perks)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1002,6 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(ImageSpaces, new Group.Mask<TItem>(ImageSpaces));
                 this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(ImageSpaceAdapters, new Group.Mask<TItem>(ImageSpaceAdapters));
                 this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(FormLists, new Group.Mask<TItem>(FormLists));
+                this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(Perks, new Group.Mask<TItem>(Perks));
             }
 
             #pragma warning disable CS8618
@@ -1084,6 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? ImageSpaces { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? FormLists { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Perks { get; set; }
             #endregion
 
             #region Equals
@@ -1167,6 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
                 if (!object.Equals(this.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
+                if (!object.Equals(this.Perks, rhs.Perks)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1243,6 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ImageSpaces);
                 hash.Add(this.ImageSpaceAdapters);
                 hash.Add(this.FormLists);
+                hash.Add(this.Perks);
                 return hash.ToHashCode();
             }
 
@@ -1606,6 +1620,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.FormLists.Overall)) return false;
                     if (this.FormLists.Specific != null && !this.FormLists.Specific.All(eval)) return false;
                 }
+                if (Perks != null)
+                {
+                    if (!eval(this.Perks.Overall)) return false;
+                    if (this.Perks.Specific != null && !this.Perks.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1968,6 +1987,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.FormLists.Overall)) return true;
                     if (this.FormLists.Specific != null && this.FormLists.Specific.Any(eval)) return true;
                 }
+                if (Perks != null)
+                {
+                    if (eval(this.Perks.Overall)) return true;
+                    if (this.Perks.Specific != null && this.Perks.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2053,6 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
                 obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
+                obj.Perks = this.Perks == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2359,6 +2384,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         FormLists?.ToString(fg);
                     }
+                    if (printMask?.Perks?.Overall ?? true)
+                    {
+                        Perks?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2455,6 +2484,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
             public MaskItem<Exception?, Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
             public MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
+            public MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>? Perks;
             #endregion
 
             #region IErrorMask
@@ -2605,6 +2635,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ImageSpaceAdapters;
                     case SkyrimMod_FieldIndex.FormLists:
                         return FormLists;
+                    case SkyrimMod_FieldIndex.Perks:
+                        return Perks;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2827,6 +2859,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.FormLists:
                         this.FormLists = new MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Perks:
+                        this.Perks = new MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3051,6 +3086,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.FormLists:
                         this.FormLists = (MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Perks:
+                        this.Perks = (MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3130,6 +3168,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ImageSpaces != null) return true;
                 if (ImageSpaceAdapters != null) return true;
                 if (FormLists != null) return true;
+                if (Perks != null) return true;
                 return false;
             }
             #endregion
@@ -3235,6 +3274,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaces?.ToString(fg);
                 ImageSpaceAdapters?.ToString(fg);
                 FormLists?.ToString(fg);
+                Perks?.ToString(fg);
             }
             #endregion
 
@@ -3314,6 +3354,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
                 ret.ImageSpaceAdapters = this.ImageSpaceAdapters.Combine(rhs.ImageSpaceAdapters, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
+                ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3406,6 +3447,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<ImageSpace.TranslationMask>?> ImageSpaces;
             public MaskItem<bool, Group.TranslationMask<ImageSpaceAdapter.TranslationMask>?> ImageSpaceAdapters;
             public MaskItem<bool, Group.TranslationMask<FormList.TranslationMask>?> FormLists;
+            public MaskItem<bool, Group.TranslationMask<Perk.TranslationMask>?> Perks;
             #endregion
 
             #region Ctors
@@ -3482,6 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaces = new MaskItem<bool, Group.TranslationMask<ImageSpace.TranslationMask>?>(defaultOn, null);
                 this.ImageSpaceAdapters = new MaskItem<bool, Group.TranslationMask<ImageSpaceAdapter.TranslationMask>?>(defaultOn, null);
                 this.FormLists = new MaskItem<bool, Group.TranslationMask<FormList.TranslationMask>?>(defaultOn, null);
+                this.Perks = new MaskItem<bool, Group.TranslationMask<Perk.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -3568,6 +3611,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ImageSpaces?.Overall ?? true, ImageSpaces?.Specific?.GetCrystal()));
                 ret.Add((ImageSpaceAdapters?.Overall ?? true, ImageSpaceAdapters?.Specific?.GetCrystal()));
                 ret.Add((FormLists?.Overall ?? true, FormLists?.Specific?.GetCrystal()));
+                ret.Add((Perks?.Overall ?? true, Perks?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3652,6 +3696,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ImageSpaces_Object = new Group<ImageSpace>(this);
             _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
             _FormLists_Object = new Group<FormList>(this);
+            _Perks_Object = new Group<Perk>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3939,6 +3984,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.FormLists ?? true)
             {
                 this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
+            }
+            if (mask?.Perks ?? true)
+            {
+                this.Perks.RecordCache.Set(rhsMod.Perks.RecordCache.Items);
             }
         }
 
@@ -4437,6 +4486,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<FormList>());
             }
+            if (mask?.Perks ?? true)
+            {
+                this.Perks.RecordCache.Set(
+                    rhs.Perks.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Perk>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -4526,6 +4582,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += ImageSpaces.RecordCache.Count > 0 ? 1 : 0;
             count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : 0;
             count += FormLists.RecordCache.Count > 0 ? 1 : 0;
+            count += Perks.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4815,6 +4872,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<ImageSpace> ImageSpaces { get; }
         new Group<ImageSpaceAdapter> ImageSpaceAdapters { get; }
         new Group<FormList> FormLists { get; }
+        new Group<Perk> Perks { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4903,6 +4961,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IImageSpaceGetter> ImageSpaces { get; }
         IGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
         IGroupGetter<IFormListGetter> FormLists { get; }
+        IGroupGetter<IPerkGetter> Perks { get; }
 
     }
 
@@ -5429,6 +5488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ImageSpaces = 68,
         ImageSpaceAdapters = 69,
         FormLists = 70,
+        Perks = 71,
     }
     #endregion
 
@@ -5446,9 +5506,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 71;
+        public const ushort AdditionalFieldCount = 72;
 
-        public const ushort FieldCount = 71;
+        public const ushort FieldCount = 72;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -5620,6 +5680,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 case "FORMLISTS":
                     return (ushort)SkyrimMod_FieldIndex.FormLists;
+                case "PERKS":
+                    return (ushort)SkyrimMod_FieldIndex.Perks;
                 default:
                     return null;
             }
@@ -5701,6 +5763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaces:
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
+                case SkyrimMod_FieldIndex.Perks:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5783,6 +5846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaces:
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
+                case SkyrimMod_FieldIndex.Perks:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5865,6 +5929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaces:
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
+                case SkyrimMod_FieldIndex.Perks:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6018,6 +6083,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ImageSpaceAdapters";
                 case SkyrimMod_FieldIndex.FormLists:
                     return "FormLists";
+                case SkyrimMod_FieldIndex.Perks:
+                    return "Perks";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6099,6 +6166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaces:
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
+                case SkyrimMod_FieldIndex.Perks:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6182,6 +6250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaces:
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
+                case SkyrimMod_FieldIndex.Perks:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6335,6 +6404,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<ImageSpaceAdapter>);
                 case SkyrimMod_FieldIndex.FormLists:
                     return typeof(Group<FormList>);
+                case SkyrimMod_FieldIndex.Perks:
+                    return typeof(Group<Perk>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6453,6 +6524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ImageSpaces.Clear();
             item.ImageSpaceAdapters.Clear();
             item.FormLists.Clear();
+            item.Perks.Clear();
         }
         
         #region Xml Translation
@@ -6678,6 +6750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ImageSpaces = MaskItemExt.Factory(item.ImageSpaces.GetEqualsMask(rhs.ImageSpaces, include), include);
             ret.ImageSpaceAdapters = MaskItemExt.Factory(item.ImageSpaceAdapters.GetEqualsMask(rhs.ImageSpaceAdapters, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
+            ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
         }
         
         public string ToString(
@@ -7008,6 +7081,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.FormLists?.ToString(fg, "FormLists");
             }
+            if (printMask?.Perks?.Overall ?? true)
+            {
+                item.Perks?.ToString(fg, "Perks");
+            }
         }
         
         public bool HasBeenSet(
@@ -7092,6 +7169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ImageSpaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImageSpaces?.GetHasBeenSetMask());
             mask.ImageSpaceAdapters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImageSpaceAdapters?.GetHasBeenSetMask());
             mask.FormLists = new MaskItem<bool, Group.Mask<bool>?>(true, item.FormLists?.GetHasBeenSetMask());
+            mask.Perks = new MaskItem<bool, Group.Mask<bool>?>(true, item.Perks?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -7172,6 +7250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
             if (!object.Equals(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
             if (!object.Equals(lhs.FormLists, rhs.FormLists)) return false;
+            if (!object.Equals(lhs.Perks, rhs.Perks)) return false;
             return true;
         }
         
@@ -7249,6 +7328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ImageSpaces);
             hash.Add(item.ImageSpaceAdapters);
             hash.Add(item.FormLists);
+            hash.Add(item.Perks);
             return hash.ToHashCode();
         }
         
@@ -7615,6 +7695,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormList":
                 case "IFormListInternal":
                     return obj.FormLists.RecordCache;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    return obj.Perks.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -7634,7 +7719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[70];
+            Stream[] outputStreams = new Stream[71];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -7706,6 +7791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8246,6 +8332,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Perks is ILinkedFormKeyContainer PerkslinkCont)
+            {
+                foreach (var item in PerkslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -8529,6 +8622,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.FormLists.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9175,6 +9272,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormList":
                 case "IFormListInternal":
                     foreach (var item in obj.FormLists.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in obj.Perks.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -10618,6 +10724,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Perks) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Perks);
+                try
+                {
+                    item.Perks.DeepCopyIn(
+                        rhs: rhs.Perks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Perks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11487,6 +11613,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.FormLists,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FormLists));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Perks) ?? true))
+            {
+                var PerksItem = item.Perks;
+                ((GroupXmlWriteTranslation)((IXmlItem)PerksItem).XmlWriteTranslator).Write<IPerkGetter>(
+                    item: PerksItem,
+                    node: node,
+                    name: nameof(item.Perks),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Perks,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Perks));
             }
         }
 
@@ -12905,6 +13042,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Perks":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Perks);
+                    try
+                    {
+                        item.Perks.CopyInFromXml<Perk>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -13144,6 +13300,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ImageSpaces;
         public bool ImageSpaceAdapters;
         public bool FormLists;
+        public bool Perks;
         public GroupMask()
         {
         }
@@ -13219,6 +13376,7 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaces = defaultValue;
             ImageSpaceAdapters = defaultValue;
             FormLists = defaultValue;
+            Perks = defaultValue;
         }
     }
 
@@ -14013,6 +14171,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
                         item: FormListsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Perks ?? true)
+            {
+                var PerksItem = item.Perks;
+                if (PerksItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
+                        item: PerksItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -15066,6 +15235,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
                 }
+                case RecordTypeInts.PERK:
+                {
+                    if (importMask?.Perks ?? true)
+                    {
+                        item.Perks.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -15587,6 +15770,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IFormListGetter>? _FormLists => _FormListsLocation.HasValue ? GroupBinaryOverlay<IFormListGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FormListsLocation!.Value.Min, _FormListsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IFormListGetter> FormLists => _FormLists ?? new Group<FormList>(this);
         #endregion
+        #region Perks
+        private RangeInt64? _PerksLocation;
+        private IGroupGetter<IPerkGetter>? _Perks => _PerksLocation.HasValue ? GroupBinaryOverlay<IPerkGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _PerksLocation!.Value.Min, _PerksLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IPerkGetter> Perks => _Perks ?? new Group<Perk>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -16031,6 +16219,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
+                }
+                case RecordTypeInts.PERK:
+                {
+                    _PerksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

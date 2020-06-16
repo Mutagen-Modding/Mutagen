@@ -49,6 +49,87 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PerkAdapter? _VirtualMachineAdapter;
+        public PerkAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IPerkGetter.Name => this.Name;
+        #endregion
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        #endregion
+        #region Icons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Icons? _Icons;
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IPerkGetter.Icons => this.Icons;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            protected set => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IPerkGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Trait
+        public Boolean Trait { get; set; } = default;
+        #endregion
+        #region Level
+        public Byte Level { get; set; } = default;
+        #endregion
+        #region NumRanks
+        public Byte NumRanks { get; set; } = default;
+        #endregion
+        #region Playable
+        public Boolean Playable { get; set; } = default;
+        #endregion
+        #region Hidden
+        public Boolean Hidden { get; set; } = default;
+        #endregion
+        #region NextPerk
+        public FormLinkNullable<Perk> NextPerk { get; set; } = new FormLinkNullable<Perk>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;
+        #endregion
+        #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
+        public ExtendedList<APerkEffect> Effects
+        {
+            get => this._Effects;
+            protected set => this._Effects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAPerkEffectGetter> IPerkGetter.Effects => _Effects;
+        #endregion
+
+        #endregion
+        #region DATADataTypeState
+        public Perk.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +300,19 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(initialValue, new PerkAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Trait = initialValue;
+                this.Level = initialValue;
+                this.NumRanks = initialValue;
+                this.Playable = initialValue;
+                this.Hidden = initialValue;
+                this.NextPerk = initialValue;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +321,20 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem Description,
+                TItem Icons,
+                TItem Conditions,
+                TItem Trait,
+                TItem Level,
+                TItem NumRanks,
+                TItem Playable,
+                TItem Hidden,
+                TItem NextPerk,
+                TItem Effects,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +343,19 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.Description = Description;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Trait = Trait;
+                this.Level = Level;
+                this.NumRanks = NumRanks;
+                this.Playable = Playable;
+                this.Hidden = Hidden;
+                this.NextPerk = NextPerk;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +364,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, PerkAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public TItem Description;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem Trait;
+            public TItem Level;
+            public TItem NumRanks;
+            public TItem Playable;
+            public TItem Hidden;
+            public TItem NextPerk;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>? Effects;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +393,37 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Trait, rhs.Trait)) return false;
+                if (!object.Equals(this.Level, rhs.Level)) return false;
+                if (!object.Equals(this.NumRanks, rhs.NumRanks)) return false;
+                if (!object.Equals(this.Playable, rhs.Playable)) return false;
+                if (!object.Equals(this.Hidden, rhs.Hidden)) return false;
+                if (!object.Equals(this.NextPerk, rhs.NextPerk)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Icons);
+                hash.Add(this.Conditions);
+                hash.Add(this.Trait);
+                hash.Add(this.Level);
+                hash.Add(this.NumRanks);
+                hash.Add(this.Playable);
+                hash.Add(this.Hidden);
+                hash.Add(this.NextPerk);
+                hash.Add(this.Effects);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +434,49 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Trait)) return false;
+                if (!eval(this.Level)) return false;
+                if (!eval(this.NumRanks)) return false;
+                if (!eval(this.Playable)) return false;
+                if (!eval(this.Hidden)) return false;
+                if (!eval(this.NextPerk)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +485,49 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Trait)) return true;
+                if (eval(this.Level)) return true;
+                if (eval(this.NumRanks)) return true;
+                if (eval(this.Playable)) return true;
+                if (eval(this.Hidden)) return true;
+                if (eval(this.NextPerk)) return true;
+                if (this.Effects != null)
+                {
+                    if (eval(this.Effects.Overall)) return true;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +543,47 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, PerkAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Trait = eval(this.Trait);
+                obj.Level = eval(this.Level);
+                obj.NumRanks = eval(this.NumRanks);
+                obj.Playable = eval(this.Playable);
+                obj.Hidden = eval(this.Hidden);
+                obj.NextPerk = eval(this.NextPerk);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, APerkEffect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, APerkEffect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, APerkEffect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, APerkEffect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, APerkEffect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -317,6 +606,96 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Icons?.Overall ?? true)
+                    {
+                        Icons?.ToString(fg);
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Trait ?? true)
+                    {
+                        fg.AppendItem(Trait, "Trait");
+                    }
+                    if (printMask?.Level ?? true)
+                    {
+                        fg.AppendItem(Level, "Level");
+                    }
+                    if (printMask?.NumRanks ?? true)
+                    {
+                        fg.AppendItem(NumRanks, "NumRanks");
+                    }
+                    if (printMask?.Playable ?? true)
+                    {
+                        fg.AppendItem(Playable, "Playable");
+                    }
+                    if (printMask?.Hidden ?? true)
+                    {
+                        fg.AppendItem(Hidden, "Hidden");
+                    }
+                    if (printMask?.NextPerk ?? true)
+                    {
+                        fg.AppendItem(NextPerk, "NextPerk");
+                    }
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects.TryGet(out var EffectsItem))
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in EffectsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +707,54 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, PerkAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public Exception? Description;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Trait;
+            public Exception? Level;
+            public Exception? NumRanks;
+            public Exception? Playable;
+            public Exception? Hidden;
+            public Exception? NextPerk;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>? Effects;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Perk_FieldIndex.Name:
+                        return Name;
+                    case Perk_FieldIndex.Description:
+                        return Description;
+                    case Perk_FieldIndex.Icons:
+                        return Icons;
+                    case Perk_FieldIndex.Conditions:
+                        return Conditions;
+                    case Perk_FieldIndex.Trait:
+                        return Trait;
+                    case Perk_FieldIndex.Level:
+                        return Level;
+                    case Perk_FieldIndex.NumRanks:
+                        return NumRanks;
+                    case Perk_FieldIndex.Playable:
+                        return Playable;
+                    case Perk_FieldIndex.Hidden:
+                        return Hidden;
+                    case Perk_FieldIndex.NextPerk:
+                        return NextPerk;
+                    case Perk_FieldIndex.Effects:
+                        return Effects;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +765,45 @@ namespace Mutagen.Bethesda.Skyrim
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, PerkAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Perk_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Trait:
+                        this.Trait = ex;
+                        break;
+                    case Perk_FieldIndex.Level:
+                        this.Level = ex;
+                        break;
+                    case Perk_FieldIndex.NumRanks:
+                        this.NumRanks = ex;
+                        break;
+                    case Perk_FieldIndex.Playable:
+                        this.Playable = ex;
+                        break;
+                    case Perk_FieldIndex.Hidden:
+                        this.Hidden = ex;
+                        break;
+                    case Perk_FieldIndex.NextPerk:
+                        this.NextPerk = ex;
+                        break;
+                    case Perk_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +815,45 @@ namespace Mutagen.Bethesda.Skyrim
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, PerkAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
+                        break;
+                    case Perk_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Perk_FieldIndex.Trait:
+                        this.Trait = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Level:
+                        this.Level = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.NumRanks:
+                        this.NumRanks = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Playable:
+                        this.Playable = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Hidden:
+                        this.Hidden = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.NextPerk:
+                        this.NextPerk = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>)obj;
+                        break;
+                    case Perk_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +863,19 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Icons != null) return true;
+                if (Conditions != null) return true;
+                if (Trait != null) return true;
+                if (Level != null) return true;
+                if (NumRanks != null) return true;
+                if (Playable != null) return true;
+                if (Hidden != null) return true;
+                if (NextPerk != null) return true;
+                if (Effects != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +911,61 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Description, "Description");
+                Icons?.ToString(fg);
+                if (Conditions.TryGet(out var ConditionsItem))
+                {
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Trait, "Trait");
+                fg.AppendItem(Level, "Level");
+                fg.AppendItem(NumRanks, "NumRanks");
+                fg.AppendItem(Playable, "Playable");
+                fg.AppendItem(Hidden, "Hidden");
+                fg.AppendItem(NextPerk, "NextPerk");
+                if (Effects.TryGet(out var EffectsItem))
+                {
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in EffectsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -407,6 +974,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Trait = this.Trait.Combine(rhs.Trait);
+                ret.Level = this.Level.Combine(rhs.Level);
+                ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
+                ret.Playable = this.Playable.Combine(rhs.Playable);
+                ret.Hidden = this.Hidden.Combine(rhs.Hidden);
+                ret.NextPerk = this.NextPerk.Combine(rhs.NextPerk);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +1008,71 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, PerkAdapter.TranslationMask?> VirtualMachineAdapter;
+            public bool Name;
+            public bool Description;
+            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool Trait;
+            public bool Level;
+            public bool NumRanks;
+            public bool Playable;
+            public bool Hidden;
+            public bool NextPerk;
+            public MaskItem<bool, APerkEffect.TranslationMask?> Effects;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, PerkAdapter.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.Trait = defaultOn;
+                this.Level = defaultOn;
+                this.NumRanks = defaultOn;
+                this.Playable = defaultOn;
+                this.Hidden = defaultOn;
+                this.NextPerk = defaultOn;
+                this.Effects = new MaskItem<bool, APerkEffect.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Trait, null));
+                ret.Add((Level, null));
+                ret.Add((NumRanks, null));
+                ret.Add((Playable, null));
+                ret.Add((Hidden, null));
+                ret.Add((NextPerk, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PerkCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
         public Perk(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +1090,15 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +1159,27 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerk :
         IPerkGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamed,
+        IHasIcons,
         ILoquiObjectSetter<IPerkInternal>
     {
+        new PerkAdapter? VirtualMachineAdapter { get; set; }
+        new TranslatedString? Name { get; set; }
+        new TranslatedString Description { get; set; }
+        new Icons? Icons { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new Boolean Trait { get; set; }
+        new Byte Level { get; set; }
+        new Byte NumRanks { get; set; }
+        new Boolean Playable { get; set; }
+        new Boolean Hidden { get; set; }
+        new FormLinkNullable<Perk> NextPerk { get; set; }
+        new ExtendedList<APerkEffect> Effects { get; }
+        new Perk.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new Perk.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IPerkInternal :
@@ -531,11 +1191,31 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
+        IHasIconsGetter,
         ILoquiObject<IPerkGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Perk_Registration.Instance;
+        IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        TranslatedString? Name { get; }
+        TranslatedString Description { get; }
+        IIconsGetter? Icons { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        Boolean Trait { get; }
+        Byte Level { get; }
+        Byte NumRanks { get; }
+        Boolean Playable { get; }
+        Boolean Hidden { get; }
+        IFormLinkNullable<IPerkGetter> NextPerk { get; }
+        IReadOnlyList<IAPerkEffectGetter> Effects { get; }
+        Perk.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        Perk.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -836,6 +1516,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Name = 7,
+        Description = 8,
+        Icons = 9,
+        Conditions = 10,
+        Trait = 11,
+        Level = 12,
+        NumRanks = 13,
+        Playable = 14,
+        Hidden = 15,
+        NextPerk = 16,
+        Effects = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -853,9 +1546,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -885,6 +1578,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)Perk_FieldIndex.VirtualMachineAdapter;
+                case "NAME":
+                    return (ushort)Perk_FieldIndex.Name;
+                case "DESCRIPTION":
+                    return (ushort)Perk_FieldIndex.Description;
+                case "ICONS":
+                    return (ushort)Perk_FieldIndex.Icons;
+                case "CONDITIONS":
+                    return (ushort)Perk_FieldIndex.Conditions;
+                case "TRAIT":
+                    return (ushort)Perk_FieldIndex.Trait;
+                case "LEVEL":
+                    return (ushort)Perk_FieldIndex.Level;
+                case "NUMRANKS":
+                    return (ushort)Perk_FieldIndex.NumRanks;
+                case "PLAYABLE":
+                    return (ushort)Perk_FieldIndex.Playable;
+                case "HIDDEN":
+                    return (ushort)Perk_FieldIndex.Hidden;
+                case "NEXTPERK":
+                    return (ushort)Perk_FieldIndex.NextPerk;
+                case "EFFECTS":
+                    return (ushort)Perk_FieldIndex.Effects;
+                case "DATADATATYPESTATE":
+                    return (ushort)Perk_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +1614,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.Conditions:
+                case Perk_FieldIndex.Effects:
+                    return true;
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                case Perk_FieldIndex.Name:
+                case Perk_FieldIndex.Description:
+                case Perk_FieldIndex.Icons:
+                case Perk_FieldIndex.Trait:
+                case Perk_FieldIndex.Level:
+                case Perk_FieldIndex.NumRanks:
+                case Perk_FieldIndex.Playable:
+                case Perk_FieldIndex.Hidden:
+                case Perk_FieldIndex.NextPerk:
+                case Perk_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1639,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                case Perk_FieldIndex.Icons:
+                case Perk_FieldIndex.Conditions:
+                case Perk_FieldIndex.Effects:
+                    return true;
+                case Perk_FieldIndex.Name:
+                case Perk_FieldIndex.Description:
+                case Perk_FieldIndex.Trait:
+                case Perk_FieldIndex.Level:
+                case Perk_FieldIndex.NumRanks:
+                case Perk_FieldIndex.Playable:
+                case Perk_FieldIndex.Hidden:
+                case Perk_FieldIndex.NextPerk:
+                case Perk_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1664,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                case Perk_FieldIndex.Name:
+                case Perk_FieldIndex.Description:
+                case Perk_FieldIndex.Icons:
+                case Perk_FieldIndex.Conditions:
+                case Perk_FieldIndex.Trait:
+                case Perk_FieldIndex.Level:
+                case Perk_FieldIndex.NumRanks:
+                case Perk_FieldIndex.Playable:
+                case Perk_FieldIndex.Hidden:
+                case Perk_FieldIndex.NextPerk:
+                case Perk_FieldIndex.Effects:
+                case Perk_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1688,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case Perk_FieldIndex.Name:
+                    return "Name";
+                case Perk_FieldIndex.Description:
+                    return "Description";
+                case Perk_FieldIndex.Icons:
+                    return "Icons";
+                case Perk_FieldIndex.Conditions:
+                    return "Conditions";
+                case Perk_FieldIndex.Trait:
+                    return "Trait";
+                case Perk_FieldIndex.Level:
+                    return "Level";
+                case Perk_FieldIndex.NumRanks:
+                    return "NumRanks";
+                case Perk_FieldIndex.Playable:
+                    return "Playable";
+                case Perk_FieldIndex.Hidden:
+                    return "Hidden";
+                case Perk_FieldIndex.NextPerk:
+                    return "NextPerk";
+                case Perk_FieldIndex.Effects:
+                    return "Effects";
+                case Perk_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1724,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                case Perk_FieldIndex.Name:
+                case Perk_FieldIndex.Description:
+                case Perk_FieldIndex.Icons:
+                case Perk_FieldIndex.Conditions:
+                case Perk_FieldIndex.Trait:
+                case Perk_FieldIndex.Level:
+                case Perk_FieldIndex.NumRanks:
+                case Perk_FieldIndex.Playable:
+                case Perk_FieldIndex.Hidden:
+                case Perk_FieldIndex.NextPerk:
+                case Perk_FieldIndex.Effects:
+                case Perk_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1748,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                case Perk_FieldIndex.Name:
+                case Perk_FieldIndex.Description:
+                case Perk_FieldIndex.Icons:
+                case Perk_FieldIndex.Conditions:
+                case Perk_FieldIndex.Trait:
+                case Perk_FieldIndex.Level:
+                case Perk_FieldIndex.NumRanks:
+                case Perk_FieldIndex.Playable:
+                case Perk_FieldIndex.Hidden:
+                case Perk_FieldIndex.NextPerk:
+                case Perk_FieldIndex.Effects:
+                case Perk_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1772,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk_FieldIndex enu = (Perk_FieldIndex)index;
             switch (enu)
             {
+                case Perk_FieldIndex.VirtualMachineAdapter:
+                    return typeof(PerkAdapter);
+                case Perk_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Perk_FieldIndex.Description:
+                    return typeof(TranslatedString);
+                case Perk_FieldIndex.Icons:
+                    return typeof(Icons);
+                case Perk_FieldIndex.Conditions:
+                    return typeof(ExtendedList<Condition>);
+                case Perk_FieldIndex.Trait:
+                    return typeof(Boolean);
+                case Perk_FieldIndex.Level:
+                    return typeof(Byte);
+                case Perk_FieldIndex.NumRanks:
+                    return typeof(Byte);
+                case Perk_FieldIndex.Playable:
+                    return typeof(Boolean);
+                case Perk_FieldIndex.Hidden:
+                    return typeof(Boolean);
+                case Perk_FieldIndex.NextPerk:
+                    return typeof(FormLinkNullable<Perk>);
+                case Perk_FieldIndex.Effects:
+                    return typeof(ExtendedList<APerkEffect>);
+                case Perk_FieldIndex.DATADataTypeState:
+                    return typeof(Perk.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1004,6 +1847,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.Description.Clear();
+            item.Icons = null;
+            item.Conditions.Clear();
+            item.Trait = default;
+            item.Level = default;
+            item.NumRanks = default;
+            item.Playable = default;
+            item.Hidden = default;
+            item.NextPerk = FormLinkNullable<Perk>.Null;
+            item.Effects.Clear();
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1161,6 +2017,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Trait = item.Trait == rhs.Trait;
+            ret.Level = item.Level == rhs.Level;
+            ret.NumRanks = item.NumRanks == rhs.NumRanks;
+            ret.Playable = item.Playable == rhs.Playable;
+            ret.Hidden = item.Hidden == rhs.Hidden;
+            ret.NextPerk = object.Equals(item.NextPerk, rhs.NextPerk);
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,12 +2095,102 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendItem(item.Description, "Description");
+            }
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons.TryGet(out var IconsItem))
+            {
+                IconsItem?.ToString(fg, "Icons");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Trait ?? true)
+            {
+                fg.AppendItem(item.Trait, "Trait");
+            }
+            if (printMask?.Level ?? true)
+            {
+                fg.AppendItem(item.Level, "Level");
+            }
+            if (printMask?.NumRanks ?? true)
+            {
+                fg.AppendItem(item.NumRanks, "NumRanks");
+            }
+            if (printMask?.Playable ?? true)
+            {
+                fg.AppendItem(item.Playable, "Playable");
+            }
+            if (printMask?.Hidden ?? true)
+            {
+                fg.AppendItem(item.Hidden, "Hidden");
+            }
+            if ((printMask?.NextPerk ?? true)
+                && item.NextPerk.TryGet(out var NextPerkItem))
+            {
+                fg.AppendItem(NextPerkItem, "NextPerk");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IPerkGetter item,
             Perk.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
+            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
+            if (checkMask.NextPerk.HasValue && checkMask.NextPerk.Value != (item.NextPerk.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1227,6 +2200,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkGetter item,
             Perk.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, PerkAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            mask.Description = true;
+            var itemIcons = item.Icons;
+            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Trait = true;
+            mask.Level = true;
+            mask.NumRanks = true;
+            mask.Playable = true;
+            mask.Hidden = true;
+            mask.NextPerk = (item.NextPerk.FormKey != null);
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, APerkEffect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, APerkEffect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +2268,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (lhs.Trait != rhs.Trait) return false;
+            if (lhs.Level != rhs.Level) return false;
+            if (lhs.NumRanks != rhs.NumRanks) return false;
+            if (lhs.Playable != rhs.Playable) return false;
+            if (lhs.Hidden != rhs.Hidden) return false;
+            if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
+            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1302,6 +2305,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPerkGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Description);
+            if (item.Icons.TryGet(out var Iconsitem))
+            {
+                hash.Add(Iconsitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.Trait);
+            hash.Add(item.Level);
+            hash.Add(item.NumRanks);
+            hash.Add(item.Playable);
+            hash.Add(item.Hidden);
+            if (item.NextPerk.TryGet(out var NextPerkitem))
+            {
+                hash.Add(NextPerkitem);
+            }
+            hash.Add(item.Effects);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1328,6 +2356,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IPerkGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            if (obj.NextPerk.FormKey.TryGet(out var NextPerkKey))
+            {
+                yield return NextPerkKey;
+            }
+            foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1378,6 +2427,142 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Icons) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Perk_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            {
+                item.Trait = rhs.Trait;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            {
+                item.Level = rhs.Level;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            {
+                item.NumRanks = rhs.NumRanks;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            {
+                item.Playable = rhs.Playable;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            {
+                item.Hidden = rhs.Hidden;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            {
+                item.NextPerk = rhs.NextPerk.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Effects);
+                try
+                {
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +2705,157 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((PerkAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)Perk_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Perk_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)Perk_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((item.Icons != null)
+                && (translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Icons) ?? true))
+            {
+                if (item.Icons.TryGet(out var IconsItem))
+                {
+                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
+                        item: IconsItem,
+                        node: node,
+                        name: nameof(item.Icons),
+                        fieldIndex: (int)Perk_FieldIndex.Icons,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.Icons));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            {
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
+                    fieldIndex: (int)Perk_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.Conditions),
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Trait),
+                    item: item.Trait,
+                    fieldIndex: (int)Perk_FieldIndex.Trait,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Level),
+                    item: item.Level,
+                    fieldIndex: (int)Perk_FieldIndex.Level,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumRanks),
+                    item: item.NumRanks,
+                    fieldIndex: (int)Perk_FieldIndex.NumRanks,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Playable),
+                    item: item.Playable,
+                    fieldIndex: (int)Perk_FieldIndex.Playable,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Hidden),
+                    item: item.Hidden,
+                    fieldIndex: (int)Perk_FieldIndex.Hidden,
+                    errorMask: errorMask);
+            }
+            if ((item.NextPerk.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NextPerk),
+                    item: item.NextPerk.FormKey.Value,
+                    fieldIndex: (int)Perk_FieldIndex.NextPerk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            {
+                ListXmlTranslation<IAPerkEffectGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)Perk_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.Effects),
+                    transl: (XElement subNode, IAPerkEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((APerkEffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Perk.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Perk_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1627,6 +2963,262 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<PerkAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icons":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Icons);
+                    try
+                    {
+                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Perk_FieldIndex.Icons));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Conditions);
+                    try
+                    {
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Trait":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Trait);
+                    try
+                    {
+                        item.Trait = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Level":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Level);
+                    try
+                    {
+                        item.Level = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumRanks":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.NumRanks);
+                    try
+                    {
+                        item.NumRanks = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Playable":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Playable);
+                    try
+                    {
+                        item.Playable = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Hidden":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Hidden);
+                    try
+                    {
+                        item.Hidden = BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NextPerk":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.NextPerk);
+                    try
+                    {
+                        item.NextPerk = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Effects":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.Effects);
+                    try
+                    {
+                        if (ListXmlTranslation<APerkEffect>.Instance.Parse(
+                            node: node,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<APerkEffect>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Perk_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Perk.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +3305,96 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
 
+        static partial void WriteBinaryConditionsCustom(
+            MutagenWriter writer,
+            IPerkGetter item);
+
+        public static void WriteBinaryConditions(
+            MutagenWriter writer,
+            IPerkGetter item)
+        {
+            WriteBinaryConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryEffectsCustom(
+            MutagenWriter writer,
+            IPerkGetter item);
+
+        public static void WriteBinaryEffects(
+            MutagenWriter writer,
+            IPerkGetter item)
+        {
+            WriteBinaryEffectsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IPerkGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IPerkGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((PerkAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            if (item.Icons.TryGet(out var IconsItem))
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            PerkBinaryWriteTranslation.WriteBinaryConditions(
+                writer: writer,
+                item: item);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.Trait);
+                writer.Write(item.Level);
+                writer.Write(item.NumRanks);
+                writer.Write(item.Playable);
+                writer.Write(item.Hidden);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NextPerk,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+            PerkBinaryWriteTranslation.WriteBinaryEffects(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPerkGetter item,
@@ -1723,10 +3405,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PERK),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1782,6 +3464,97 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IPerkInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.PerkAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.VirtualMachineAdapter);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Name);
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Description);
+                }
+                case RecordTypeInts.ICON:
+                {
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Icons);
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    PerkBinaryCreateTranslation.FillBinaryConditionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Conditions);
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Trait = dataFrame.ReadBoolean();
+                    item.Level = dataFrame.ReadUInt8();
+                    item.NumRanks = dataFrame.ReadUInt8();
+                    item.Playable = dataFrame.ReadBoolean();
+                    item.Hidden = dataFrame.ReadBoolean();
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Hidden);
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NextPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.NextPerk);
+                }
+                case RecordTypeInts.PRKE:
+                {
+                    PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Effects);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
+        static partial void FillBinaryConditionsCustom(
+            MutagenFrame frame,
+            IPerkInternal item);
+
+        static partial void FillBinaryEffectsCustom(
+            MutagenFrame frame,
+            IPerkInternal item);
+
     }
 
 }
@@ -1817,6 +3590,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PerkCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PerkXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1842,7 +3621,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        #endregion
+        public IIconsGetter? Icons { get; private set; }
+        #region Conditions
+        partial void ConditionsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        private int? _DATALocation;
+        public Perk.DATADataType DATADataTypeState { get; private set; }
+        #region Trait
+        private int _TraitLocation => _DATALocation!.Value;
+        private bool _Trait_IsSet => _DATALocation.HasValue;
+        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] == 1 : default;
+        #endregion
+        #region Level
+        private int _LevelLocation => _DATALocation!.Value + 0x1;
+        private bool _Level_IsSet => _DATALocation.HasValue;
+        public Byte Level => _Level_IsSet ? _data.Span[_LevelLocation] : default;
+        #endregion
+        #region NumRanks
+        private int _NumRanksLocation => _DATALocation!.Value + 0x2;
+        private bool _NumRanks_IsSet => _DATALocation.HasValue;
+        public Byte NumRanks => _NumRanks_IsSet ? _data.Span[_NumRanksLocation] : default;
+        #endregion
+        #region Playable
+        private int _PlayableLocation => _DATALocation!.Value + 0x3;
+        private bool _Playable_IsSet => _DATALocation.HasValue;
+        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] == 1 : default;
+        #endregion
+        #region Hidden
+        private int _HiddenLocation => _DATALocation!.Value + 0x4;
+        private bool _Hidden_IsSet => _DATALocation.HasValue;
+        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] == 1 : default;
+        #endregion
+        #region NextPerk
+        private int? _NextPerkLocation;
+        public bool NextPerk_IsSet => _NextPerkLocation.HasValue;
+        public IFormLinkNullable<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        #endregion
+        #region Effects
+        partial void EffectsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +3737,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.VirtualMachineAdapter);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Name);
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Description);
+                }
+                case RecordTypeInts.ICON:
+                {
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Icons);
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    ConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Conditions);
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Hidden);
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NextPerkLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.NextPerk);
+                }
+                case RecordTypeInts.PRKE:
+                {
+                    EffectsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Effects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

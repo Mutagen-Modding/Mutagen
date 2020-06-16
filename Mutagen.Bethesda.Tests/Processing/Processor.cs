@@ -1,4 +1,5 @@
 using Microsoft.VisualBasic;
+using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using Noggog.Utility;
@@ -321,25 +322,109 @@ namespace Mutagen.Bethesda.Tests
             return sizeChange;
         }
 
+        public abstract class AStringsAlignment
+        {
+            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.Config instr, List<KeyValuePair<uint, uint>> processedStrings, StringsLookupOverlay overlay, ref uint newIndex);
+
+            public RecordType MajorType;
+
+            public abstract Handle Handler { get; }
+
+            public static implicit operator AStringsAlignment(RecordType[] types)
+            {
+                return new StringsAlignmentTypical(types.Skip(1).ToArray())
+                {
+                    MajorType = types[0],
+                };
+            }
+
+            public static void ProcessStringLink(
+                IMutagenReadStream stream,
+                BinaryFileProcessor.Config instr,
+                List<KeyValuePair<uint, uint>> processedStrings,
+                StringsLookupOverlay overlay,
+                ref uint newIndex)
+            {
+                var sub = stream.ReadSubrecord();
+                if (sub.ContentLength != 4)
+                {
+                    throw new ArgumentException();
+                }
+                var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+                if (!overlay.TryLookup(curIndex, out var str)
+                    || string.IsNullOrEmpty(str))
+                {
+                    instr.SetSubstitution(stream.Position, new byte[4]);
+                }
+                else if (curIndex != 0)
+                {
+                    var assignedIndex = newIndex++;
+                    processedStrings.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
+                    byte[] b = new byte[4];
+                    BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
+                    instr.SetSubstitution(stream.Position, b);
+                }
+                stream.Position -= sub.HeaderLength;
+            }
+        }
+
+        public class StringsAlignmentCustom : AStringsAlignment
+        {
+            public override Handle Handler { get; }
+
+            public StringsAlignmentCustom(RecordType majorType, Handle handler)
+            {
+                MajorType = majorType;
+                Handler = handler;
+            }
+        }
+
+        public class StringsAlignmentTypical : AStringsAlignment
+        {
+            public HashSet<RecordType> StringTypes = new HashSet<RecordType>();
+
+            public StringsAlignmentTypical(RecordType[] types)
+            {
+                StringTypes.Add(types);
+            }
+
+            public override AStringsAlignment.Handle Handler => Handle;
+
+            private void Handle(
+                IMutagenReadStream stream, 
+                MajorRecordHeader major,
+                BinaryFileProcessor.Config instr,
+                List<KeyValuePair<uint, uint>> processedStrings,
+                StringsLookupOverlay overlay,
+                ref uint newIndex)
+            {
+                var majorCompletePos = stream.Position + major.ContentLength;
+                while (stream.Position < majorCompletePos)
+                {
+                    var sub = stream.GetSubrecord();
+                    if (StringTypes.Contains(sub.RecordType))
+                    {
+                        ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    }
+                    stream.Position += sub.TotalLength;
+                }
+            }
+        }
+
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
             IMutagenReadStream stream,
             Language language,
             StringsSource source,
-            params RecordType[][] recordTypes)
+            params AStringsAlignment[] recordTypes)
         {
             var overlay = new StringsLookupOverlay(
                 Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings", StringsUtility.GetFileName(ModKey, language, source)),
                 StringsUtility.GetFormat(source));
             var ret = new List<KeyValuePair<uint, uint>>();
-            var dict = new Dictionary<RecordType, HashSet<RecordType>>();
+            var dict = new Dictionary<RecordType, AStringsAlignment>();
             foreach (var item in recordTypes)
             {
-                var set = new HashSet<RecordType>();
-                dict[item[0]] = set;
-                for (int i = 1; i < item.Length; i++)
-                {
-                    set.Add(item[i]);
-                }
+                dict[item.MajorType] = item;
             }
 
             stream.Position = 0;
@@ -349,45 +434,18 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = 0;
             var locs = RecordLocator.GetFileLocations(
                 stream,
-                interest: new Mutagen.Bethesda.RecordInterest(
-                    recordTypes.Select(i => i[0])));
+                interest: new Mutagen.Bethesda.RecordInterest(dict.Keys));
 
             uint newIndex = 1;
             foreach (var rec in locs.ListedRecords)
             {
                 stream.Position = rec.Key;
                 var major = stream.ReadMajorRecord();
-                var majorCompletePos = stream.Position + major.ContentLength;
                 if (!dict.TryGetValue(major.RecordType, out var instructions))
                 {
                     continue;
                 }
-                while (stream.Position < majorCompletePos)
-                {
-                    var sub = stream.ReadSubrecord();
-                    if (instructions.Contains(sub.RecordType))
-                    {
-                        if (sub.ContentLength != 4)
-                        {
-                            throw new ArgumentException();
-                        }
-                        var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
-                        if (!overlay.TryLookup(curIndex, out var str)
-                            || string.IsNullOrEmpty(str))
-                        {
-                            _Instructions.SetSubstitution(stream.Position, new byte[4]);
-                        }
-                        else if (curIndex != 0)
-                        {
-                            var assignedIndex = newIndex++;
-                            ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
-                            byte[] b = new byte[4];
-                            BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
-                            _Instructions.SetSubstitution(stream.Position, b);
-                        }
-                    }
-                    stream.Position += sub.ContentLength;
-                }
+                instructions.Handler(stream, major, _Instructions, ret, overlay, ref newIndex);
             }
 
             return ret;

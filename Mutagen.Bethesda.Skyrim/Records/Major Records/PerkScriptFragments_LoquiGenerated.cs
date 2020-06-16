@@ -33,14 +33,14 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ScriptFragments :
-        IScriptFragments,
-        ILoquiObjectSetter<ScriptFragments>,
-        IEquatable<ScriptFragments>,
+    public partial class PerkScriptFragments :
+        IPerkScriptFragments,
+        ILoquiObjectSetter<PerkScriptFragments>,
+        IEquatable<PerkScriptFragments>,
         IEqualsMask
     {
         #region Ctor
-        public ScriptFragments()
+        public PerkScriptFragments()
         {
             CustomCtor();
         }
@@ -50,23 +50,20 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         public SByte Unknown { get; set; } = default;
         #endregion
-        #region Flags
-        public ScriptFragments.Flag Flags { get; set; } = default;
-        #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptFragment> _Fragments = new ExtendedList<ScriptFragment>();
-        public ExtendedList<ScriptFragment> Fragments
+        private ExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
+        public ExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptFragmentGetter> IScriptFragmentsGetter.Fragments => _Fragments;
+        IReadOnlyList<IIndexedScriptFragmentGetter> IPerkScriptFragmentsGetter.Fragments => _Fragments;
         #endregion
 
         #endregion
@@ -77,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ScriptFragmentsMixIn.ToString(
+            PerkScriptFragmentsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -87,22 +84,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFragmentsGetter rhs)) return false;
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IPerkScriptFragmentsGetter rhs)) return false;
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptFragments obj)
+        public bool Equals(PerkScriptFragments obj)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ScriptFragmentsXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => PerkScriptFragmentsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -111,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -120,9 +117,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             XElement node,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -131,27 +128,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             XElement node,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new ScriptFragments();
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new PerkScriptFragments();
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -159,9 +156,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             string path,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,10 +166,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             string path,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,10 +178,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -193,9 +190,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             Stream stream,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -203,10 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             Stream stream,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,10 +212,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptFragments CreateFromXml(
+        public static PerkScriptFragments CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -241,21 +238,18 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Unknown = initialValue;
-                this.Flags = initialValue;
                 this.FileName = initialValue;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>());
             }
 
             public Mask(
                 TItem Unknown,
-                TItem Flags,
                 TItem FileName,
                 TItem Fragments)
             {
                 this.Unknown = Unknown;
-                this.Flags = Flags;
                 this.FileName = FileName;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -268,9 +262,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Unknown;
-            public TItem Flags;
             public TItem FileName;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>? Fragments;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>? Fragments;
             #endregion
 
             #region Equals
@@ -284,7 +277,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.FileName, rhs.FileName)) return false;
                 if (!object.Equals(this.Fragments, rhs.Fragments)) return false;
                 return true;
@@ -293,7 +285,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Unknown);
-                hash.Add(this.Flags);
                 hash.Add(this.FileName);
                 hash.Add(this.Fragments);
                 return hash.ToHashCode();
@@ -305,7 +296,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.Flags)) return false;
                 if (!eval(this.FileName)) return false;
                 if (this.Fragments != null)
                 {
@@ -327,7 +317,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Unknown)) return true;
-                if (eval(this.Flags)) return true;
                 if (eval(this.FileName)) return true;
                 if (this.Fragments != null)
                 {
@@ -348,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ScriptFragments.Mask<R>();
+                var ret = new PerkScriptFragments.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -356,18 +345,17 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Unknown = eval(this.Unknown);
-                obj.Flags = eval(this.Flags);
                 obj.FileName = eval(this.FileName);
                 if (Fragments != null)
                 {
-                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>());
+                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>());
                     if (Fragments.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>();
                         obj.Fragments.Specific = l;
                         foreach (var item in Fragments.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, ScriptFragment.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptFragment.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -382,26 +370,22 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ScriptFragments.Mask<bool>? printMask = null)
+            public string ToString(PerkScriptFragments.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScriptFragments.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, PerkScriptFragments.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptFragments.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(PerkScriptFragments.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
                     if (printMask?.Unknown ?? true)
                     {
                         fg.AppendItem(Unknown, "Unknown");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FileName ?? true)
                     {
@@ -456,24 +440,21 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Unknown;
-            public Exception? Flags;
             public Exception? FileName;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>? Fragments;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>? Fragments;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+                PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
+                    case PerkScriptFragments_FieldIndex.Unknown:
                         return Unknown;
-                    case ScriptFragments_FieldIndex.Flags:
-                        return Flags;
-                    case ScriptFragments_FieldIndex.FileName:
+                    case PerkScriptFragments_FieldIndex.FileName:
                         return FileName;
-                    case ScriptFragments_FieldIndex.Fragments:
+                    case PerkScriptFragments_FieldIndex.Fragments:
                         return Fragments;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -482,20 +463,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+                PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
+                    case PerkScriptFragments_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case ScriptFragments_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case ScriptFragments_FieldIndex.FileName:
+                    case PerkScriptFragments_FieldIndex.FileName:
                         this.FileName = ex;
                         break;
-                    case ScriptFragments_FieldIndex.Fragments:
-                        this.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>(ex, null);
+                    case PerkScriptFragments_FieldIndex.Fragments:
+                        this.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -504,20 +482,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+                PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptFragments_FieldIndex.Unknown:
+                    case PerkScriptFragments_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case ScriptFragments_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case ScriptFragments_FieldIndex.FileName:
+                    case PerkScriptFragments_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
                         break;
-                    case ScriptFragments_FieldIndex.Fragments:
-                        this.Fragments = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>)obj;
+                    case PerkScriptFragments_FieldIndex.Fragments:
+                        this.Fragments = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -528,7 +503,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Unknown != null) return true;
-                if (Flags != null) return true;
                 if (FileName != null) return true;
                 if (Fragments != null) return true;
                 return false;
@@ -566,7 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(FileName, "FileName");
                 if (Fragments.TryGet(out var FragmentsItem))
                 {
@@ -599,9 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IndexedScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -624,18 +596,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public bool Unknown;
-            public bool Flags;
             public bool FileName;
-            public MaskItem<bool, ScriptFragment.TranslationMask?> Fragments;
+            public MaskItem<bool, IndexedScriptFragment.TranslationMask?> Fragments;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Unknown = defaultOn;
-                this.Flags = defaultOn;
                 this.FileName = defaultOn;
-                this.Fragments = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
+                this.Fragments = new MaskItem<bool, IndexedScriptFragment.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -652,7 +622,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Unknown, null));
-                ret.Add((Flags, null));
                 ret.Add((FileName, null));
                 ret.Add((Fragments?.Overall ?? true, Fragments?.Specific?.GetCrystal()));
             }
@@ -661,33 +630,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static ScriptFragments CreateFromBinary(MutagenFrame frame)
+        public static PerkScriptFragments CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static ScriptFragments CreateFromBinary(
+        public static PerkScriptFragments CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ScriptFragments();
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PerkScriptFragments();
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -700,35 +669,34 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFragmentsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkScriptFragmentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ScriptFragments GetNew()
+        internal static PerkScriptFragments GetNew()
         {
-            return new ScriptFragments();
+            return new PerkScriptFragments();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IScriptFragments :
-        IScriptFragmentsGetter,
-        ILoquiObjectSetter<IScriptFragments>
+    public partial interface IPerkScriptFragments :
+        IPerkScriptFragmentsGetter,
+        ILoquiObjectSetter<IPerkScriptFragments>
     {
         new SByte Unknown { get; set; }
-        new ScriptFragments.Flag Flags { get; set; }
         new String FileName { get; set; }
-        new ExtendedList<ScriptFragment> Fragments { get; }
+        new ExtendedList<IndexedScriptFragment> Fragments { get; }
     }
 
-    public partial interface IScriptFragmentsGetter :
+    public partial interface IPerkScriptFragmentsGetter :
         ILoquiObject,
-        ILoquiObject<IScriptFragmentsGetter>,
+        ILoquiObject<IPerkScriptFragmentsGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -738,53 +706,52 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ScriptFragments_Registration.Instance;
+        static ILoquiRegistration Registration => PerkScriptFragments_Registration.Instance;
         SByte Unknown { get; }
-        ScriptFragments.Flag Flags { get; }
         String FileName { get; }
-        IReadOnlyList<IScriptFragmentGetter> Fragments { get; }
+        IReadOnlyList<IIndexedScriptFragmentGetter> Fragments { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ScriptFragmentsMixIn
+    public static partial class PerkScriptFragmentsMixIn
     {
-        public static void Clear(this IScriptFragments item)
+        public static void Clear(this IPerkScriptFragments item)
         {
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptFragments.Mask<bool> GetEqualsMask(
-            this IScriptFragmentsGetter item,
-            IScriptFragmentsGetter rhs,
+        public static PerkScriptFragments.Mask<bool> GetEqualsMask(
+            this IPerkScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             string? name = null,
-            ScriptFragments.Mask<bool>? printMask = null)
+            PerkScriptFragments.Mask<bool>? printMask = null)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptFragments.Mask<bool>? printMask = null)
+            PerkScriptFragments.Mask<bool>? printMask = null)
         {
-            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -792,37 +759,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IScriptFragmentsGetter item,
-            ScriptFragments.Mask<bool?> checkMask)
+            this IPerkScriptFragmentsGetter item,
+            PerkScriptFragments.Mask<bool?> checkMask)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptFragments.Mask<bool> GetHasBeenSetMask(this IScriptFragmentsGetter item)
+        public static PerkScriptFragments.Mask<bool> GetHasBeenSetMask(this IPerkScriptFragmentsGetter item)
         {
-            var ret = new ScriptFragments.Mask<bool>(false);
-            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new PerkScriptFragments.Mask<bool>(false);
+            ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IScriptFragmentsGetter item,
-            IScriptFragmentsGetter rhs)
+            this IPerkScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter rhs)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).Equals(
+            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IScriptFragments lhs,
-            IScriptFragmentsGetter rhs)
+            this IPerkScriptFragments lhs,
+            IPerkScriptFragmentsGetter rhs)
         {
-            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -830,11 +797,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IScriptFragments lhs,
-            IScriptFragmentsGetter rhs,
-            ScriptFragments.TranslationMask? copyMask = null)
+            this IPerkScriptFragments lhs,
+            IPerkScriptFragmentsGetter rhs,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
-            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -842,59 +809,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IScriptFragments lhs,
-            IScriptFragmentsGetter rhs,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? copyMask = null)
+            this IPerkScriptFragments lhs,
+            IPerkScriptFragmentsGetter rhs,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IScriptFragments lhs,
-            IScriptFragmentsGetter rhs,
+            this IPerkScriptFragments lhs,
+            IPerkScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ScriptFragments DeepCopy(
-            this IScriptFragmentsGetter item,
-            ScriptFragments.TranslationMask? copyMask = null)
+        public static PerkScriptFragments DeepCopy(
+            this IPerkScriptFragmentsGetter item,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
-            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ScriptFragments DeepCopy(
-            this IScriptFragmentsGetter item,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? copyMask = null)
+        public static PerkScriptFragments DeepCopy(
+            this IPerkScriptFragmentsGetter item,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
-            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ScriptFragments DeepCopy(
-            this IScriptFragmentsGetter item,
+        public static PerkScriptFragments DeepCopy(
+            this IPerkScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkScriptFragmentsSetterTranslationCommon)((IPerkScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -903,9 +870,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             XElement node,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -916,10 +883,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             XElement node,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -927,16 +894,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -944,9 +911,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             string path,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -956,10 +923,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             string path,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -970,10 +937,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -984,9 +951,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             Stream stream,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -996,10 +963,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             Stream stream,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1010,10 +977,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1028,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1038,11 +1005,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IScriptFragments item,
+            this IPerkScriptFragments item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1058,50 +1025,49 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ScriptFragments_FieldIndex
+    public enum PerkScriptFragments_FieldIndex
     {
         Unknown = 0,
-        Flags = 1,
-        FileName = 2,
-        Fragments = 3,
+        FileName = 1,
+        Fragments = 2,
     }
     #endregion
 
     #region Registration
-    public partial class ScriptFragments_Registration : ILoquiRegistration
+    public partial class PerkScriptFragments_Registration : ILoquiRegistration
     {
-        public static readonly ScriptFragments_Registration Instance = new ScriptFragments_Registration();
+        public static readonly PerkScriptFragments_Registration Instance = new PerkScriptFragments_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 353,
+            msgID: 430,
             version: 0);
 
-        public const string GUID = "2ec19b11-bd07-4dcc-beb4-826dfc1de531";
+        public const string GUID = "111c1431-8ddc-44ab-83e1-8acac57ea4f2";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ScriptFragments.Mask<>);
+        public static readonly Type MaskType = typeof(PerkScriptFragments.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptFragments.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PerkScriptFragments.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ScriptFragments);
+        public static readonly Type ClassType = typeof(PerkScriptFragments);
 
-        public static readonly Type GetterType = typeof(IScriptFragmentsGetter);
+        public static readonly Type GetterType = typeof(IPerkScriptFragmentsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IScriptFragments);
+        public static readonly Type SetterType = typeof(IPerkScriptFragments);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ScriptFragments";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.PerkScriptFragments";
 
-        public const string Name = "ScriptFragments";
+        public const string Name = "PerkScriptFragments";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1114,13 +1080,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "UNKNOWN":
-                    return (ushort)ScriptFragments_FieldIndex.Unknown;
-                case "FLAGS":
-                    return (ushort)ScriptFragments_FieldIndex.Flags;
+                    return (ushort)PerkScriptFragments_FieldIndex.Unknown;
                 case "FILENAME":
-                    return (ushort)ScriptFragments_FieldIndex.FileName;
+                    return (ushort)PerkScriptFragments_FieldIndex.FileName;
                 case "FRAGMENTS":
-                    return (ushort)ScriptFragments_FieldIndex.Fragments;
+                    return (ushort)PerkScriptFragments_FieldIndex.Fragments;
                 default:
                     return null;
             }
@@ -1128,14 +1092,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return true;
-                case ScriptFragments_FieldIndex.Unknown:
-                case ScriptFragments_FieldIndex.Flags:
-                case ScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.FileName:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1144,14 +1107,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return true;
-                case ScriptFragments_FieldIndex.Unknown:
-                case ScriptFragments_FieldIndex.Flags:
-                case ScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.FileName:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1160,13 +1122,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Unknown:
-                case ScriptFragments_FieldIndex.Flags:
-                case ScriptFragments_FieldIndex.FileName:
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1175,16 +1136,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.Unknown:
                     return "Unknown";
-                case ScriptFragments_FieldIndex.Flags:
-                    return "Flags";
-                case ScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.FileName:
                     return "FileName";
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return "Fragments";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1193,13 +1152,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Unknown:
-                case ScriptFragments_FieldIndex.Flags:
-                case ScriptFragments_FieldIndex.FileName:
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1208,13 +1166,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Unknown:
-                case ScriptFragments_FieldIndex.Flags:
-                case ScriptFragments_FieldIndex.FileName:
-                case ScriptFragments_FieldIndex.Fragments:
+                case PerkScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.Fragments:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1223,24 +1180,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
+            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case ScriptFragments_FieldIndex.Unknown:
+                case PerkScriptFragments_FieldIndex.Unknown:
                     return typeof(SByte);
-                case ScriptFragments_FieldIndex.Flags:
-                    return typeof(ScriptFragments.Flag);
-                case ScriptFragments_FieldIndex.FileName:
+                case PerkScriptFragments_FieldIndex.FileName:
                     return typeof(String);
-                case ScriptFragments_FieldIndex.Fragments:
-                    return typeof(ExtendedList<ScriptFragment>);
+                case PerkScriptFragments_FieldIndex.Fragments:
+                    return typeof(ExtendedList<IndexedScriptFragment>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptFragmentsXmlWriteTranslation);
-        public static readonly Type BinaryWriteTranslation = typeof(ScriptFragmentsBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(PerkScriptFragmentsXmlWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PerkScriptFragmentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1273,24 +1228,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptFragmentsSetterCommon
+    public partial class PerkScriptFragmentsSetterCommon
     {
-        public static readonly ScriptFragmentsSetterCommon Instance = new ScriptFragmentsSetterCommon();
+        public static readonly PerkScriptFragmentsSetterCommon Instance = new PerkScriptFragmentsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IScriptFragments item)
+        public void Clear(IPerkScriptFragments item)
         {
             ClearPartial();
             item.Unknown = default;
-            item.Flags = default;
             item.FileName = string.Empty;
             item.Fragments.Clear();
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IScriptFragments item,
+            IPerkScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1299,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
+                    PerkScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1318,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IScriptFragments item,
+            IPerkScriptFragments item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1326,23 +1280,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: ScriptFragmentsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PerkScriptFragmentsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class ScriptFragmentsCommon
+    public partial class PerkScriptFragmentsCommon
     {
-        public static readonly ScriptFragmentsCommon Instance = new ScriptFragmentsCommon();
+        public static readonly PerkScriptFragmentsCommon Instance = new PerkScriptFragmentsCommon();
 
-        public ScriptFragments.Mask<bool> GetEqualsMask(
-            IScriptFragmentsGetter item,
-            IScriptFragmentsGetter rhs,
+        public PerkScriptFragments.Mask<bool> GetEqualsMask(
+            IPerkScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptFragments.Mask<bool>(false);
-            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PerkScriptFragments.Mask<bool>(false);
+            ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1351,14 +1305,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IScriptFragmentsGetter item,
-            IScriptFragmentsGetter rhs,
-            ScriptFragments.Mask<bool> ret,
+            IPerkScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter rhs,
+            PerkScriptFragments.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Flags = item.Flags == rhs.Flags;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.Fragments = item.Fragments.CollectionEqualsHelper(
                 rhs.Fragments,
@@ -1367,9 +1320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             string? name = null,
-            ScriptFragments.Mask<bool>? printMask = null)
+            PerkScriptFragments.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1381,18 +1334,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptFragments.Mask<bool>? printMask = null)
+            PerkScriptFragments.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptFragments =>");
+                fg.AppendLine($"PerkScriptFragments =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptFragments) =>");
+                fg.AppendLine($"{name} (PerkScriptFragments) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1406,17 +1359,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             FileGeneration fg,
-            ScriptFragments.Mask<bool>? printMask = null)
+            PerkScriptFragments.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
                 fg.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FileName ?? true)
             {
@@ -1443,42 +1392,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IScriptFragmentsGetter item,
-            ScriptFragments.Mask<bool?> checkMask)
+            IPerkScriptFragmentsGetter item,
+            PerkScriptFragments.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IScriptFragmentsGetter item,
-            ScriptFragments.Mask<bool> mask)
+            IPerkScriptFragmentsGetter item,
+            PerkScriptFragments.Mask<bool> mask)
         {
             mask.Unknown = true;
-            mask.Flags = true;
             mask.FileName = true;
             var FragmentsItem = item.Fragments;
-            mask.Fragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptFragment.Mask<bool>?>>?>(true, FragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Fragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IndexedScriptFragment.Mask<bool>?>>?>(true, FragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IndexedScriptFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptFragmentsGetter? lhs,
-            IScriptFragmentsGetter? rhs)
+            IPerkScriptFragmentsGetter? lhs,
+            IPerkScriptFragmentsGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.Flags != rhs.Flags) return false;
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
             if (!lhs.Fragments.SequenceEqual(rhs.Fragments)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IScriptFragmentsGetter item)
+        public virtual int GetHashCode(IPerkScriptFragmentsGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Unknown);
-            hash.Add(item.Flags);
             hash.Add(item.FileName);
             hash.Add(item.Fragments);
             return hash.ToHashCode();
@@ -1489,45 +1435,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return ScriptFragments.GetNew();
+            return PerkScriptFragments.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScriptFragmentsGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IPerkScriptFragmentsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IScriptFragmentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IPerkScriptFragmentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class ScriptFragmentsSetterTranslationCommon
+    public partial class PerkScriptFragmentsSetterTranslationCommon
     {
-        public static readonly ScriptFragmentsSetterTranslationCommon Instance = new ScriptFragmentsSetterTranslationCommon();
+        public static readonly PerkScriptFragmentsSetterTranslationCommon Instance = new PerkScriptFragmentsSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IScriptFragments item,
-            IScriptFragmentsGetter rhs,
+            IPerkScriptFragments item,
+            IPerkScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.FileName) ?? true))
             {
                 item.FileName = rhs.FileName;
             }
-            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Fragments) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Fragments) ?? true))
             {
-                errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Fragments);
+                errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.Fragments);
                 try
                 {
                     item.Fragments.SetTo(
@@ -1553,23 +1495,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public ScriptFragments DeepCopy(
-            IScriptFragmentsGetter item,
-            ScriptFragments.TranslationMask? copyMask = null)
+        public PerkScriptFragments DeepCopy(
+            IPerkScriptFragmentsGetter item,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
-            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            PerkScriptFragments ret = (PerkScriptFragments)((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ScriptFragments DeepCopy(
-            IScriptFragmentsGetter item,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? copyMask = null)
+        public PerkScriptFragments DeepCopy(
+            IPerkScriptFragmentsGetter item,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? copyMask = null)
         {
-            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            PerkScriptFragments ret = (PerkScriptFragments)((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1577,12 +1519,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ScriptFragments DeepCopy(
-            IScriptFragmentsGetter item,
+        public PerkScriptFragments DeepCopy(
+            IPerkScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            PerkScriptFragments ret = (PerkScriptFragments)((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1597,27 +1539,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptFragments
+    public partial class PerkScriptFragments
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
-        public static ScriptFragments_Registration Registration => ScriptFragments_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
+        public static PerkScriptFragments_Registration Registration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ScriptFragmentsSetterCommon.Instance;
+            return PerkScriptFragmentsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
+        object IPerkScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IScriptFragmentsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPerkScriptFragmentsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1628,56 +1570,47 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptFragmentsXmlWriteTranslation : IXmlWriteTranslator
+    public partial class PerkScriptFragmentsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ScriptFragmentsXmlWriteTranslation Instance = new ScriptFragmentsXmlWriteTranslation();
+        public readonly static PerkScriptFragmentsXmlWriteTranslation Instance = new PerkScriptFragmentsXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Unknown) ?? true))
             {
                 Int8XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
-                    fieldIndex: (int)ScriptFragments_FieldIndex.Unknown,
+                    fieldIndex: (int)PerkScriptFragments_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ScriptFragments.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)ScriptFragments_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.FileName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FileName),
                     item: item.FileName,
-                    fieldIndex: (int)ScriptFragments_FieldIndex.FileName,
+                    fieldIndex: (int)PerkScriptFragments_FieldIndex.FileName,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Fragments) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Fragments) ?? true))
             {
-                ListXmlTranslation<IScriptFragmentGetter>.Instance.Write(
+                ListXmlTranslation<IIndexedScriptFragmentGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Fragments),
                     item: item.Fragments,
-                    fieldIndex: (int)ScriptFragments_FieldIndex.Fragments,
+                    fieldIndex: (int)PerkScriptFragments_FieldIndex.Fragments,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.Fragments),
-                    transl: (XElement subNode, IScriptFragmentGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)PerkScriptFragments_FieldIndex.Fragments),
+                    transl: (XElement subNode, IIndexedScriptFragmentGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
-                        ((ScriptFragmentXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        ((IndexedScriptFragmentXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
                             item: Item,
                             node: subNode,
                             name: null,
@@ -1689,16 +1622,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptFragments");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PerkScriptFragments");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptFragments");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PerkScriptFragments");
             }
             WriteToNodeXml(
                 item: item,
@@ -1715,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IScriptFragmentsGetter)item,
+                item: (IPerkScriptFragmentsGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1724,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1734,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IScriptFragmentsGetter)item,
+                    item: (IPerkScriptFragmentsGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1753,12 +1686,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptFragmentsXmlCreateTranslation
+    public partial class PerkScriptFragmentsXmlCreateTranslation
     {
-        public readonly static ScriptFragmentsXmlCreateTranslation Instance = new ScriptFragmentsXmlCreateTranslation();
+        public readonly static PerkScriptFragmentsXmlCreateTranslation Instance = new PerkScriptFragmentsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IScriptFragments item,
+            IPerkScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1767,7 +1700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
+                    PerkScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1783,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IScriptFragments item,
+            IPerkScriptFragments item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1792,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Unknown":
-                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Unknown);
+                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.Unknown);
                     try
                     {
                         item.Unknown = Int8XmlTranslation.Instance.Parse(
@@ -1809,26 +1742,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<ScriptFragments.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FileName":
-                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.FileName);
+                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.FileName);
                     try
                     {
                         item.FileName = StringXmlTranslation.Instance.Parse(
@@ -1846,13 +1761,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Fragments":
-                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Fragments);
+                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.Fragments);
                     try
                     {
-                        if (ListXmlTranslation<ScriptFragment>.Instance.Parse(
+                        if (ListXmlTranslation<IndexedScriptFragment>.Instance.Parse(
                             node: node,
                             enumer: out var FragmentsItem,
-                            transl: LoquiXmlTranslation<ScriptFragment>.Instance.Parse,
+                            transl: LoquiXmlTranslation<IndexedScriptFragment>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -1884,30 +1799,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ScriptFragmentsXmlTranslationMixIn
+    public static class PerkScriptFragmentsXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             XElement node,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             string path,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1921,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1938,10 +1853,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             Stream stream,
-            out ScriptFragments.ErrorMask errorMask,
-            ScriptFragments.TranslationMask? translationMask = null,
+            out PerkScriptFragments.ErrorMask errorMask,
+            PerkScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1955,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1972,13 +1887,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1987,12 +1902,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             XElement node,
             string? name = null,
-            ScriptFragments.TranslationMask? translationMask = null)
+            PerkScriptFragments.TranslationMask? translationMask = null)
         {
-            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2001,12 +1916,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2016,12 +1931,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2040,30 +1955,27 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class PerkScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptFragmentsBinaryWriteTranslation Instance = new ScriptFragmentsBinaryWriteTranslation();
+        public readonly static PerkScriptFragmentsBinaryWriteTranslation Instance = new PerkScriptFragmentsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFragments.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 1);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileName,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptFragmentGetter>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IIndexedScriptFragmentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Fragments,
-                transl: (MutagenWriter subWriter, IScriptFragmentGetter subItem, RecordTypeConverter? conv) =>
+                countLengthLength: 2,
+                transl: (MutagenWriter subWriter, IIndexedScriptFragmentGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
-                    ((ScriptFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((IndexedScriptFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         recordTypeConverter: conv);
@@ -2072,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IScriptFragmentsGetter item,
+            IPerkScriptFragmentsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -2086,32 +1998,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IScriptFragmentsGetter)item,
+                item: (IPerkScriptFragmentsGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ScriptFragmentsBinaryCreateTranslation
+    public partial class PerkScriptFragmentsBinaryCreateTranslation
     {
-        public readonly static ScriptFragmentsBinaryCreateTranslation Instance = new ScriptFragmentsBinaryCreateTranslation();
+        public readonly static PerkScriptFragmentsBinaryCreateTranslation Instance = new PerkScriptFragmentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IScriptFragments item,
+            IPerkScriptFragments item,
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt8();
-            item.Flags = EnumBinaryTranslation<ScriptFragments.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
             item.Fragments.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptFragment>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
+                    amount: frame.ReadUInt16(),
                     frame: frame,
-                    transl: (MutagenFrame r, out ScriptFragment listSubItem) =>
+                    transl: (MutagenFrame r, out IndexedScriptFragment listSubItem) =>
                     {
-                        return LoquiBinaryTranslation<ScriptFragment>.Instance.Parse(
+                        return LoquiBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
                             frame: r,
                             item: out listSubItem!);
                     }));
@@ -2123,13 +2035,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ScriptFragmentsBinaryTranslationMixIn
+    public static class PerkScriptFragmentsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IScriptFragmentsGetter item,
+            this IPerkScriptFragmentsGetter item,
             MutagenWriter writer)
         {
-            ((ScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((PerkScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2142,33 +2054,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptFragmentsBinaryOverlay :
+    public partial class PerkScriptFragmentsBinaryOverlay :
         BinaryOverlay,
-        IScriptFragmentsGetter
+        IPerkScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
-        public static ScriptFragments_Registration Registration => ScriptFragments_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkScriptFragments_Registration.Instance;
+        public static PerkScriptFragments_Registration Registration => PerkScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ScriptFragmentsCommon.Instance;
+        protected object CommonInstance() => PerkScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
+        object IPerkScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IScriptFragmentsGetter.CommonSetterInstance() => null;
+        object? IPerkScriptFragmentsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFragmentsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkScriptFragmentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ScriptFragmentsXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => PerkScriptFragmentsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2177,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((PerkScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2185,28 +2097,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
-        public ScriptFragments.Flag Flags => (ScriptFragments.Flag)_data.Span.Slice(0x1, 0x1)[0];
         #region FileName
-        public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2);
+        public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x1), lengthLength: 2);
         protected int FileNameEndingPos;
         #endregion
         #region Fragments
-        public IReadOnlyList<IScriptFragmentGetter> Fragments => BinaryOverlayList<ScriptFragmentBinaryOverlay>.FactoryByLazyParse(_data.Slice(FileNameEndingPos), _package, (s, p) => ScriptFragmentBinaryOverlay.ScriptFragmentFactory(s, p));
         protected int FragmentsEndingPos;
+        partial void CustomFragmentsEndPos();
         #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
@@ -2214,7 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected ScriptFragmentsBinaryOverlay(
+        protected PerkScriptFragmentsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2224,16 +2135,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static ScriptFragmentsBinaryOverlay ScriptFragmentsFactory(
+        public static PerkScriptFragmentsBinaryOverlay PerkScriptFragmentsFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ScriptFragmentsBinaryOverlay(
+            var ret = new PerkScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.FileNameEndingPos = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x2)) + 2;
+            ret.FileNameEndingPos = 0x1 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x1)) + 2;
+            ret.CustomFragmentsEndPos();
             stream.Position += ret.FragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2242,12 +2154,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ScriptFragmentsBinaryOverlay ScriptFragmentsFactory(
+        public static PerkScriptFragmentsBinaryOverlay PerkScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ScriptFragmentsFactory(
+            return PerkScriptFragmentsFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2259,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ScriptFragmentsMixIn.ToString(
+            PerkScriptFragmentsMixIn.ToString(
                 item: this,
                 name: name);
         }

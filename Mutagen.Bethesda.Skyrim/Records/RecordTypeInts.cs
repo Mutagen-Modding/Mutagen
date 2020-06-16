@@ -118,6 +118,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int ENAM = 0x4D414E45;
         public const int ENCH = 0x48434E45;
         public const int ENIT = 0x54494E45;
+        public const int EPF2 = 0x32465045;
+        public const int EPF3 = 0x33465045;
+        public const int EPFD = 0x44465045;
+        public const int EPFT = 0x54465045;
         public const int EQUP = 0x50555145;
         public const int ESCE = 0x45435345;
         public const int ETYP = 0x50595445;
@@ -297,6 +301,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int POCA = 0x41434F50;
         public const int POEA = 0x41454F50;
         public const int PRCB = 0x42435250;
+        public const int PRKC = 0x434B5250;
+        public const int PRKE = 0x454B5250;
+        public const int PRKF = 0x464B5250;
         public const int PRKR = 0x524B5250;
         public const int PRKZ = 0x5A4B5250;
         public const int PROJ = 0x4A4F5250;

@@ -167,16 +167,29 @@ namespace Mutagen.Bethesda.Binary
         {
             using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                if (writer.MetaData.StringsWriter == null)
-                {
-                    writer.Write(
-                        item.String,
-                        binaryType: binaryType);
-                }
-                else
-                {
-                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
-                }
+                Write(
+                    writer,
+                    item,
+                    binaryType,
+                    source);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            ITranslatedStringGetter item,
+            StringBinaryType binaryType,
+            StringsSource source)
+        {
+            if (writer.MetaData.StringsWriter == null)
+            {
+                writer.Write(
+                    item.String,
+                    binaryType: binaryType);
+            }
+            else
+            {
+                writer.Write(writer.MetaData.StringsWriter.Register(item, source));
             }
         }
 

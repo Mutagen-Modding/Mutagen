@@ -924,6 +924,46 @@ namespace Mutagen.Bethesda.Tests
             ProcessStringsFilesIndices(stream, Language.English);
         }
 
+        public void PerkStringHandler(
+            IMutagenReadStream stream,
+            MajorRecordHeader major, 
+            BinaryFileProcessor.Config instr, 
+            List<KeyValuePair<uint, uint>> processedStrings,
+            StringsLookupOverlay overlay, 
+            ref uint newIndex)
+        {
+            var majorCompletePos = stream.Position + major.ContentLength;
+            long? lastepft = null;
+            while (stream.Position < majorCompletePos)
+            {
+                var sub = stream.GetSubrecord();
+                switch (sub.RecordTypeInt)
+                {
+                    case RecordTypeInts.FULL:
+                    case RecordTypeInts.EPF2:
+                        AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                        break;
+                    case RecordTypeInts.EPFT:
+                        lastepft = stream.Position;
+                        break;
+                    case RecordTypeInts.EPFD:
+                        var pos = stream.Position;
+                        stream.Position = lastepft.Value;
+                        var epftFrame = stream.ReadSubrecordFrame();
+                        if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                        {
+                            stream.Position = pos;
+                            AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                        }
+                        stream.Position = pos;
+                        break;
+                    default:
+                        break;
+                }
+                stream.Position += sub.TotalLength;
+            }
+        }
+
         private void ProcessStringsFilesIndices(IMutagenReadStream stream, Language language)
         {
             var stringsFolder = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings"));
@@ -973,7 +1013,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "INFO", "RNAM" },
                     new RecordType[] { "QUST", "FULL", "NNAM" },
                     new RecordType[] { "WATR", "FULL" },
-                    new RecordType[] { "EXPL", "FULL" }
+                    new RecordType[] { "EXPL", "FULL" },
+                    new StringsAlignmentCustom("PERK", PerkStringHandler)
                 ));
             ProcessStringsFiles(
                 stringsFolder,
@@ -991,7 +1032,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "WEAP", "DESC" },
                     new RecordType[] { "BOOK", "DESC" },
                     new RecordType[] { "QUST", "CNAM" },
-                    new RecordType[] { "LSCR", "DESC" }
+                    new RecordType[] { "LSCR", "DESC" },
+                    new RecordType[] { "PERK", "DESC" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

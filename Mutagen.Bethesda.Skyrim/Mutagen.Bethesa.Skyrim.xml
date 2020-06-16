@@ -335,6 +335,13 @@
             'Markers' list and the 'Marker Entry Points' list from the binary data into one list of objects to be exposed
             </summary>
         </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.APerkEntryPointEffect">
+            <summary>
+            An abstract class representing a Perk entry point effect.
+            Implemented by: [PerkModifyValue, PerkAddRangeToValue, PerkModifyActorValue, PerkAbsoluteValue
+            PerkAddLeveledItem, PerkAddActivateChoice, PerkSelectSpell, PerkSelectText, PerkSetText]
+            </summary>
+        </member>
         <member name="T:Mutagen.Bethesda.Skyrim.NpcConfiguration.Flag">
             <summary>
             Flags for NpcConfiguration

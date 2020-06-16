@@ -51,14 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private FragmentsAdapter? _VirtualMachineAdapter;
-        public FragmentsAdapter? VirtualMachineAdapter
+        private PackageAdapter? _VirtualMachineAdapter;
+        public PackageAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
             set => _VirtualMachineAdapter = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFragmentsAdapterGetter? IPackageGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IPackageAdapterGetter? IPackageGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Flags
         public Package.Flag Flags { get; set; } = default;
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.VirtualMachineAdapter = new MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>(initialValue, new FragmentsAdapter.Mask<TItem>(initialValue));
+                this.VirtualMachineAdapter = new MaskItem<TItem, PackageAdapter.Mask<TItem>?>(initialValue, new PackageAdapter.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.Type = initialValue;
                 this.InterruptOverride = initialValue;
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.VirtualMachineAdapter = new MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>(VirtualMachineAdapter, new FragmentsAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.VirtualMachineAdapter = new MaskItem<TItem, PackageAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PackageAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
                 this.Type = Type;
                 this.InterruptOverride = InterruptOverride;
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, FragmentsAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, PackageAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Flags;
             public TItem Type;
             public TItem InterruptOverride;
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, FragmentsAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, PackageAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Flags = eval(this.Flags);
                 obj.Type = eval(this.Type);
                 obj.InterruptOverride = eval(this.InterruptOverride);
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, FragmentsAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, PackageAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Flags;
             public Exception? Type;
             public Exception? InterruptOverride;
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Package_FieldIndex.VirtualMachineAdapter:
-                        this.VirtualMachineAdapter = new MaskItem<Exception?, FragmentsAdapter.ErrorMask?>(ex, null);
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, PackageAdapter.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case Package_FieldIndex.VirtualMachineAdapter:
-                        this.VirtualMachineAdapter = (MaskItem<Exception?, FragmentsAdapter.ErrorMask?>?)obj;
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, PackageAdapter.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, FragmentsAdapter.TranslationMask?> VirtualMachineAdapter;
+            public MaskItem<bool, PackageAdapter.TranslationMask?> VirtualMachineAdapter;
             public bool Flags;
             public bool Type;
             public bool InterruptOverride;
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, FragmentsAdapter.TranslationMask?>(defaultOn, null);
+                this.VirtualMachineAdapter = new MaskItem<bool, PackageAdapter.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.InterruptOverride = defaultOn;
@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IPackageInternal>
     {
-        new FragmentsAdapter? VirtualMachineAdapter { get; set; }
+        new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
         new Package.Types Type { get; set; }
         new Package.Interrupt InterruptOverride { get; set; }
@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => Package_Registration.Instance;
-        IFragmentsAdapterGetter? VirtualMachineAdapter { get; }
+        IPackageAdapterGetter? VirtualMachineAdapter { get; }
         Package.Flag Flags { get; }
         Package.Types Type { get; }
         Package.Interrupt InterruptOverride { get; }
@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Package_FieldIndex.VirtualMachineAdapter:
-                    return typeof(FragmentsAdapter);
+                    return typeof(PackageAdapter);
                 case Package_FieldIndex.Flags:
                     return typeof(Package.Flag);
                 case Package_FieldIndex.Type:
@@ -3283,7 +3283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Package.Mask<bool> mask)
         {
             var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, FragmentsAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.VirtualMachineAdapter = new MaskItem<bool, PackageAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
             mask.Flags = true;
             mask.Type = true;
             mask.InterruptOverride = true;
@@ -4037,7 +4037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
                 {
-                    ((FragmentsAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                    ((PackageAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
                         item: VirtualMachineAdapterItem,
                         node: node,
                         name: nameof(item.VirtualMachineAdapter),
@@ -4482,7 +4482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Package_FieldIndex.VirtualMachineAdapter);
                     try
                     {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<FragmentsAdapter>.Instance.Parse(
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<PackageAdapter>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter));
@@ -5182,7 +5182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
             {
-                ((FragmentsAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                ((PackageAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
                     item: VirtualMachineAdapterItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -5362,7 +5362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.VMAD:
                 {
-                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.FragmentsAdapter.CreateFromBinary(frame: frame);
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.PackageAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Package_FieldIndex.VirtualMachineAdapter);
                 }
                 case RecordTypeInts.PKDT:
@@ -5556,7 +5556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IFragmentsAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? FragmentsAdapterBinaryOverlay.FragmentsAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         private int? _PKDTLocation;

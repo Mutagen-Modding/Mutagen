@@ -187,12 +187,6 @@
     <Compile Include="Records\Common Subrecords\FactionOwner_LoquiGenerated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\FragmentsAdapter.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\FragmentsAdapter_LoquiGenerated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\FunctionConditionData_LoquiGenerated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -272,12 +266,6 @@
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFloatProperty_LoquiGenerated.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptFragments.cs">
-      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptFragments_LoquiGenerated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptFragment_LoquiGenerated.cs">
@@ -414,6 +402,12 @@
     </Compile>
     <Compile Include="Records\Major Records\APackageTarget_LoquiGenerated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEffect.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\APlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
@@ -614,6 +608,12 @@
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogResponses.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponsesAdapter.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponsesScriptFragments.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogResponsesUnknownData_LoquiGenerated.cs">
@@ -1129,7 +1129,9 @@
     <Compile Include="Records\Major Records\NpcSound_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\NPC_LoquiGenerated.cs" />
+    <Compile Include="Records\Major Records\Npc_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1140,6 +1142,9 @@
       <DependentUpon>Outfit.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Package.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAdapter.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PackageBranch.cs">
@@ -1211,6 +1216,9 @@
     <Compile Include="Records\Major Records\PackageRoot_LoquiGenerated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PackageScriptFragments.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PackageTargetAlias_LoquiGenerated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -1250,10 +1258,28 @@
     <Compile Include="Records\Major Records\PcLevelMult_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Perk.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAdapter.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkCondition.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkModifyActorValue.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkModifyValue.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PerkPlacement_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Perk_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\PerkScriptFlag.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Phoneme.cs">
@@ -1730,6 +1756,75 @@
     </Compile>
     <Compile Include="Records\Major Records\ColorFrame_LoquiGenerated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Perk_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEffect_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkQuestEffect_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAbilityEffect_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEntryPointEffect_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkModifyValue_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAddRangeToValue_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkModifyActorValue_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAbsoluteValue_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAddLeveledItem_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAddActivateChoice_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkSelectSpell_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkSelectText_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkSetText_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkCondition_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFlag_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponsesAdapter_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponsesScriptFragments_LoquiGenerated.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAdapter_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageScriptFragments_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAdapter_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragments_LoquiGenerated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IndexedScriptFragment_LoquiGenerated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

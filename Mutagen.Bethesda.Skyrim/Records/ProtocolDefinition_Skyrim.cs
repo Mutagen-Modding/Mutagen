@@ -314,8 +314,8 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DialogBranch_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DialogResponses_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Quest_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.FragmentsAdapter_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ScriptFragments_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PackageAdapter_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PackageScriptFragments_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ScriptFragment_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.VirtualMachineAdapter_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DialogResponse_Registration.Instance);
@@ -373,6 +373,26 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ImageSpaceDepthOfField_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.KeyFrame_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.ColorFrame_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.APerkEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkQuestEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAbilityEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.APerkEntryPointEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkCondition_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkModifyValue_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAddRangeToValue_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkModifyActorValue_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAbsoluteValue_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAddLeveledItem_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAddActivateChoice_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkSelectSpell_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkSelectText_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkSetText_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkScriptFlag_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DialogResponsesAdapter_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DialogResponsesScriptFragments_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkAdapter_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.PerkScriptFragments_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.IndexedScriptFragment_Registration.Instance);
         }
     }
 }

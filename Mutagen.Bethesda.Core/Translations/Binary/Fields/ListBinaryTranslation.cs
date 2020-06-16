@@ -278,6 +278,10 @@ namespace Mutagen.Bethesda.Binary
                 {
                     ret.Add(subItem);
                 }
+                else
+                {
+                    break;
+                }
             }
             return ret;
         }
@@ -293,6 +297,10 @@ namespace Mutagen.Bethesda.Binary
                 if (transl(frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
+                }
+                else
+                {
+                    break;
                 }
             }
             return ret;

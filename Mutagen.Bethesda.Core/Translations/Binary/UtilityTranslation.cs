@@ -199,11 +199,6 @@ namespace Mutagen.Bethesda
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
-            if (frame.Position == 0x1cd39d)
-            {
-                int wer = 23;
-                wer++;
-            }
             var groupMeta = frame.GetGroup();
             if (!groupMeta.IsGroup)
             {
