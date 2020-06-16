@@ -76,6 +76,7 @@
       <Group name="Debris" refName="Debris" />
       <Group name="ImageSpaces" refName="ImageSpace" />
       <Group name="ImageSpaceAdapters" refName="ImageSpaceAdapter" />
+      <Group name="FormLists" refName="FormList" />
     </Fields>
   </Object>
 </Loqui>
