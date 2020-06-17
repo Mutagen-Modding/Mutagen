@@ -49,6 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public VoiceType.Flag Flags { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -227,7 +231,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +250,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -257,11 +267,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +284,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -317,6 +332,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +347,18 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +383,9 @@ namespace Mutagen.Bethesda.Skyrim
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -407,6 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,14 +462,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Flags = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+            }
         }
         #endregion
 
@@ -520,6 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IVoiceTypeInternal>
     {
+        new VoiceType.Flag Flags { get; set; }
     }
 
     public partial interface IVoiceTypeInternal :
@@ -536,6 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => VoiceType_Registration.Instance;
+        VoiceType.Flag Flags { get; }
 
     }
 
@@ -836,6 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Flags = 6,
     }
     #endregion
 
@@ -853,9 +900,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "bc39d919-43d0-4349-99f1-1f9b0e7a5cec";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(VoiceType.Mask<>);
 
@@ -885,6 +932,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "FLAGS":
+                    return (ushort)VoiceType_FieldIndex.Flags;
                 default:
                     return null;
             }
@@ -895,6 +944,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +956,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +968,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return "Flags";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +992,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1004,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1016,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
             switch (enu)
             {
+                case VoiceType_FieldIndex.Flags:
+                    return typeof(VoiceType.Flag);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1004,6 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1161,6 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,6 +1277,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
         }
         
         public bool HasBeenSet(
@@ -1227,6 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVoiceTypeGetter item,
             VoiceType.Mask<bool> mask)
         {
+            mask.Flags = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
         
@@ -1302,6 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IVoiceTypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1378,6 +1450,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +1596,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<VoiceType.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)VoiceType_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1627,6 +1712,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Flags":
+                    errorMask?.PushIndex((int)VoiceType_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<VoiceType.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +1816,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static VoiceTypeBinaryWriteTranslation Instance = new VoiceTypeBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IVoiceTypeGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<VoiceType.Flag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IVoiceTypeGetter item,
@@ -1726,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1780,6 +1899,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IVoiceTypeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<VoiceType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)VoiceType_FieldIndex.Flags);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
 
     }
@@ -1843,6 +1988,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Flags
+        private int? _FlagsLocation;
+        public VoiceType.Flag Flags => _FlagsLocation.HasValue ? (VoiceType.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(VoiceType.Flag);
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +2044,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)VoiceType_FieldIndex.Flags);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

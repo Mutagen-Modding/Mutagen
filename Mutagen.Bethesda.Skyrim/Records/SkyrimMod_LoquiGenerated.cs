@@ -114,6 +114,15 @@ namespace Mutagen.Bethesda.Skyrim
             _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
             _FormLists_Object = new Group<FormList>(this);
             _Perks_Object = new Group<Perk>(this);
+            _BodyParts_Object = new Group<BodyPartData>(this);
+            _AddonNodes_Object = new Group<AddonNode>(this);
+            _ActorValueInformation_Object = new Group<ActorValueInformation>(this);
+            _CameraShots_Object = new Group<CameraShot>(this);
+            _CameraPaths_Object = new Group<CameraPath>(this);
+            _VoiceTypes_Object = new Group<VoiceType>(this);
+            _MaterialTypes_Object = new Group<MaterialType>(this);
+            _Impacts_Object = new Group<Impact>(this);
+            _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -623,6 +632,69 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IPerkGetter> ISkyrimModGetter.Perks => _Perks_Object;
         #endregion
+        #region BodyParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<BodyPartData> _BodyParts_Object;
+        public Group<BodyPartData> BodyParts => _BodyParts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IBodyPartDataGetter> ISkyrimModGetter.BodyParts => _BodyParts_Object;
+        #endregion
+        #region AddonNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AddonNode> _AddonNodes_Object;
+        public Group<AddonNode> AddonNodes => _AddonNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAddonNodeGetter> ISkyrimModGetter.AddonNodes => _AddonNodes_Object;
+        #endregion
+        #region ActorValueInformation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ActorValueInformation> _ActorValueInformation_Object;
+        public Group<ActorValueInformation> ActorValueInformation => _ActorValueInformation_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IActorValueInformationGetter> ISkyrimModGetter.ActorValueInformation => _ActorValueInformation_Object;
+        #endregion
+        #region CameraShots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<CameraShot> _CameraShots_Object;
+        public Group<CameraShot> CameraShots => _CameraShots_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ICameraShotGetter> ISkyrimModGetter.CameraShots => _CameraShots_Object;
+        #endregion
+        #region CameraPaths
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<CameraPath> _CameraPaths_Object;
+        public Group<CameraPath> CameraPaths => _CameraPaths_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ICameraPathGetter> ISkyrimModGetter.CameraPaths => _CameraPaths_Object;
+        #endregion
+        #region VoiceTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<VoiceType> _VoiceTypes_Object;
+        public Group<VoiceType> VoiceTypes => _VoiceTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IVoiceTypeGetter> ISkyrimModGetter.VoiceTypes => _VoiceTypes_Object;
+        #endregion
+        #region MaterialTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MaterialType> _MaterialTypes_Object;
+        public Group<MaterialType> MaterialTypes => _MaterialTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMaterialTypeGetter> ISkyrimModGetter.MaterialTypes => _MaterialTypes_Object;
+        #endregion
+        #region Impacts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Impact> _Impacts_Object;
+        public Group<Impact> Impacts => _Impacts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IImpactGetter> ISkyrimModGetter.Impacts => _Impacts_Object;
+        #endregion
+        #region ImpactDataSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ImpactDataSet> _ImpactDataSets_Object;
+        public Group<ImpactDataSet> ImpactDataSets => _ImpactDataSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IImpactDataSetGetter> ISkyrimModGetter.ImpactDataSets => _ImpactDataSets_Object;
+        #endregion
 
         #region To String
 
@@ -865,6 +937,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.BodyParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AddonNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ActorValueInformation = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CameraShots = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CameraPaths = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.VoiceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -939,7 +1020,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ImageSpaces,
                 TItem ImageSpaceAdapters,
                 TItem FormLists,
-                TItem Perks)
+                TItem Perks,
+                TItem BodyParts,
+                TItem AddonNodes,
+                TItem ActorValueInformation,
+                TItem CameraShots,
+                TItem CameraPaths,
+                TItem VoiceTypes,
+                TItem MaterialTypes,
+                TItem Impacts,
+                TItem ImpactDataSets)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1013,6 +1103,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaceAdapters = new MaskItem<TItem, Group.Mask<TItem>?>(ImageSpaceAdapters, new Group.Mask<TItem>(ImageSpaceAdapters));
                 this.FormLists = new MaskItem<TItem, Group.Mask<TItem>?>(FormLists, new Group.Mask<TItem>(FormLists));
                 this.Perks = new MaskItem<TItem, Group.Mask<TItem>?>(Perks, new Group.Mask<TItem>(Perks));
+                this.BodyParts = new MaskItem<TItem, Group.Mask<TItem>?>(BodyParts, new Group.Mask<TItem>(BodyParts));
+                this.AddonNodes = new MaskItem<TItem, Group.Mask<TItem>?>(AddonNodes, new Group.Mask<TItem>(AddonNodes));
+                this.ActorValueInformation = new MaskItem<TItem, Group.Mask<TItem>?>(ActorValueInformation, new Group.Mask<TItem>(ActorValueInformation));
+                this.CameraShots = new MaskItem<TItem, Group.Mask<TItem>?>(CameraShots, new Group.Mask<TItem>(CameraShots));
+                this.CameraPaths = new MaskItem<TItem, Group.Mask<TItem>?>(CameraPaths, new Group.Mask<TItem>(CameraPaths));
+                this.VoiceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(VoiceTypes, new Group.Mask<TItem>(VoiceTypes));
+                this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MaterialTypes, new Group.Mask<TItem>(MaterialTypes));
+                this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(Impacts, new Group.Mask<TItem>(Impacts));
+                this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(ImpactDataSets, new Group.Mask<TItem>(ImpactDataSets));
             }
 
             #pragma warning disable CS8618
@@ -1096,6 +1195,15 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Perks { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? BodyParts { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AddonNodes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ActorValueInformation { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CameraShots { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CameraPaths { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? VoiceTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MaterialTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Impacts { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ImpactDataSets { get; set; }
             #endregion
 
             #region Equals
@@ -1180,6 +1288,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
+                if (!object.Equals(this.BodyParts, rhs.BodyParts)) return false;
+                if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
+                if (!object.Equals(this.ActorValueInformation, rhs.ActorValueInformation)) return false;
+                if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
+                if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
+                if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
+                if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
+                if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
+                if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1257,6 +1374,15 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ImageSpaceAdapters);
                 hash.Add(this.FormLists);
                 hash.Add(this.Perks);
+                hash.Add(this.BodyParts);
+                hash.Add(this.AddonNodes);
+                hash.Add(this.ActorValueInformation);
+                hash.Add(this.CameraShots);
+                hash.Add(this.CameraPaths);
+                hash.Add(this.VoiceTypes);
+                hash.Add(this.MaterialTypes);
+                hash.Add(this.Impacts);
+                hash.Add(this.ImpactDataSets);
                 return hash.ToHashCode();
             }
 
@@ -1625,6 +1751,51 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Perks.Overall)) return false;
                     if (this.Perks.Specific != null && !this.Perks.Specific.All(eval)) return false;
                 }
+                if (BodyParts != null)
+                {
+                    if (!eval(this.BodyParts.Overall)) return false;
+                    if (this.BodyParts.Specific != null && !this.BodyParts.Specific.All(eval)) return false;
+                }
+                if (AddonNodes != null)
+                {
+                    if (!eval(this.AddonNodes.Overall)) return false;
+                    if (this.AddonNodes.Specific != null && !this.AddonNodes.Specific.All(eval)) return false;
+                }
+                if (ActorValueInformation != null)
+                {
+                    if (!eval(this.ActorValueInformation.Overall)) return false;
+                    if (this.ActorValueInformation.Specific != null && !this.ActorValueInformation.Specific.All(eval)) return false;
+                }
+                if (CameraShots != null)
+                {
+                    if (!eval(this.CameraShots.Overall)) return false;
+                    if (this.CameraShots.Specific != null && !this.CameraShots.Specific.All(eval)) return false;
+                }
+                if (CameraPaths != null)
+                {
+                    if (!eval(this.CameraPaths.Overall)) return false;
+                    if (this.CameraPaths.Specific != null && !this.CameraPaths.Specific.All(eval)) return false;
+                }
+                if (VoiceTypes != null)
+                {
+                    if (!eval(this.VoiceTypes.Overall)) return false;
+                    if (this.VoiceTypes.Specific != null && !this.VoiceTypes.Specific.All(eval)) return false;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (!eval(this.MaterialTypes.Overall)) return false;
+                    if (this.MaterialTypes.Specific != null && !this.MaterialTypes.Specific.All(eval)) return false;
+                }
+                if (Impacts != null)
+                {
+                    if (!eval(this.Impacts.Overall)) return false;
+                    if (this.Impacts.Specific != null && !this.Impacts.Specific.All(eval)) return false;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (!eval(this.ImpactDataSets.Overall)) return false;
+                    if (this.ImpactDataSets.Specific != null && !this.ImpactDataSets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1992,6 +2163,51 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Perks.Overall)) return true;
                     if (this.Perks.Specific != null && this.Perks.Specific.Any(eval)) return true;
                 }
+                if (BodyParts != null)
+                {
+                    if (eval(this.BodyParts.Overall)) return true;
+                    if (this.BodyParts.Specific != null && this.BodyParts.Specific.Any(eval)) return true;
+                }
+                if (AddonNodes != null)
+                {
+                    if (eval(this.AddonNodes.Overall)) return true;
+                    if (this.AddonNodes.Specific != null && this.AddonNodes.Specific.Any(eval)) return true;
+                }
+                if (ActorValueInformation != null)
+                {
+                    if (eval(this.ActorValueInformation.Overall)) return true;
+                    if (this.ActorValueInformation.Specific != null && this.ActorValueInformation.Specific.Any(eval)) return true;
+                }
+                if (CameraShots != null)
+                {
+                    if (eval(this.CameraShots.Overall)) return true;
+                    if (this.CameraShots.Specific != null && this.CameraShots.Specific.Any(eval)) return true;
+                }
+                if (CameraPaths != null)
+                {
+                    if (eval(this.CameraPaths.Overall)) return true;
+                    if (this.CameraPaths.Specific != null && this.CameraPaths.Specific.Any(eval)) return true;
+                }
+                if (VoiceTypes != null)
+                {
+                    if (eval(this.VoiceTypes.Overall)) return true;
+                    if (this.VoiceTypes.Specific != null && this.VoiceTypes.Specific.Any(eval)) return true;
+                }
+                if (MaterialTypes != null)
+                {
+                    if (eval(this.MaterialTypes.Overall)) return true;
+                    if (this.MaterialTypes.Specific != null && this.MaterialTypes.Specific.Any(eval)) return true;
+                }
+                if (Impacts != null)
+                {
+                    if (eval(this.Impacts.Overall)) return true;
+                    if (this.Impacts.Specific != null && this.Impacts.Specific.Any(eval)) return true;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (eval(this.ImpactDataSets.Overall)) return true;
+                    if (this.ImpactDataSets.Specific != null && this.ImpactDataSets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2078,6 +2294,15 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
+                obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
+                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
+                obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
+                obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
+                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
+                obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
+                obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
+                obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
+                obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2388,6 +2613,42 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Perks?.ToString(fg);
                     }
+                    if (printMask?.BodyParts?.Overall ?? true)
+                    {
+                        BodyParts?.ToString(fg);
+                    }
+                    if (printMask?.AddonNodes?.Overall ?? true)
+                    {
+                        AddonNodes?.ToString(fg);
+                    }
+                    if (printMask?.ActorValueInformation?.Overall ?? true)
+                    {
+                        ActorValueInformation?.ToString(fg);
+                    }
+                    if (printMask?.CameraShots?.Overall ?? true)
+                    {
+                        CameraShots?.ToString(fg);
+                    }
+                    if (printMask?.CameraPaths?.Overall ?? true)
+                    {
+                        CameraPaths?.ToString(fg);
+                    }
+                    if (printMask?.VoiceTypes?.Overall ?? true)
+                    {
+                        VoiceTypes?.ToString(fg);
+                    }
+                    if (printMask?.MaterialTypes?.Overall ?? true)
+                    {
+                        MaterialTypes?.ToString(fg);
+                    }
+                    if (printMask?.Impacts?.Overall ?? true)
+                    {
+                        Impacts?.ToString(fg);
+                    }
+                    if (printMask?.ImpactDataSets?.Overall ?? true)
+                    {
+                        ImpactDataSets?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2485,6 +2746,15 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
             public MaskItem<Exception?, Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>? Perks;
+            public MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
+            public MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
+            public MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
+            public MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
+            public MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
+            public MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
+            public MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
+            public MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
+            public MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
             #endregion
 
             #region IErrorMask
@@ -2637,6 +2907,24 @@ namespace Mutagen.Bethesda.Skyrim
                         return FormLists;
                     case SkyrimMod_FieldIndex.Perks:
                         return Perks;
+                    case SkyrimMod_FieldIndex.BodyParts:
+                        return BodyParts;
+                    case SkyrimMod_FieldIndex.AddonNodes:
+                        return AddonNodes;
+                    case SkyrimMod_FieldIndex.ActorValueInformation:
+                        return ActorValueInformation;
+                    case SkyrimMod_FieldIndex.CameraShots:
+                        return CameraShots;
+                    case SkyrimMod_FieldIndex.CameraPaths:
+                        return CameraPaths;
+                    case SkyrimMod_FieldIndex.VoiceTypes:
+                        return VoiceTypes;
+                    case SkyrimMod_FieldIndex.MaterialTypes:
+                        return MaterialTypes;
+                    case SkyrimMod_FieldIndex.Impacts:
+                        return Impacts;
+                    case SkyrimMod_FieldIndex.ImpactDataSets:
+                        return ImpactDataSets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2862,6 +3150,33 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Perks:
                         this.Perks = new MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.BodyParts:
+                        this.BodyParts = new MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.AddonNodes:
+                        this.AddonNodes = new MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ActorValueInformation:
+                        this.ActorValueInformation = new MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.CameraShots:
+                        this.CameraShots = new MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.CameraPaths:
+                        this.CameraPaths = new MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = new MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = new MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Impacts:
+                        this.Impacts = new MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = new MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3089,6 +3404,33 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Perks:
                         this.Perks = (MaskItem<Exception?, Group.ErrorMask<Perk.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.BodyParts:
+                        this.BodyParts = (MaskItem<Exception?, Group.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.AddonNodes:
+                        this.AddonNodes = (MaskItem<Exception?, Group.ErrorMask<AddonNode.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ActorValueInformation:
+                        this.ActorValueInformation = (MaskItem<Exception?, Group.ErrorMask<ActorValueInformation.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.CameraShots:
+                        this.CameraShots = (MaskItem<Exception?, Group.ErrorMask<CameraShot.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.CameraPaths:
+                        this.CameraPaths = (MaskItem<Exception?, Group.ErrorMask<CameraPath.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = (MaskItem<Exception?, Group.ErrorMask<VoiceType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MaterialTypes:
+                        this.MaterialTypes = (MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Impacts:
+                        this.Impacts = (MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = (MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3169,6 +3511,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ImageSpaceAdapters != null) return true;
                 if (FormLists != null) return true;
                 if (Perks != null) return true;
+                if (BodyParts != null) return true;
+                if (AddonNodes != null) return true;
+                if (ActorValueInformation != null) return true;
+                if (CameraShots != null) return true;
+                if (CameraPaths != null) return true;
+                if (VoiceTypes != null) return true;
+                if (MaterialTypes != null) return true;
+                if (Impacts != null) return true;
+                if (ImpactDataSets != null) return true;
                 return false;
             }
             #endregion
@@ -3275,6 +3626,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapters?.ToString(fg);
                 FormLists?.ToString(fg);
                 Perks?.ToString(fg);
+                BodyParts?.ToString(fg);
+                AddonNodes?.ToString(fg);
+                ActorValueInformation?.ToString(fg);
+                CameraShots?.ToString(fg);
+                CameraPaths?.ToString(fg);
+                VoiceTypes?.ToString(fg);
+                MaterialTypes?.ToString(fg);
+                Impacts?.ToString(fg);
+                ImpactDataSets?.ToString(fg);
             }
             #endregion
 
@@ -3355,6 +3715,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ImageSpaceAdapters = this.ImageSpaceAdapters.Combine(rhs.ImageSpaceAdapters, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
+                ret.BodyParts = this.BodyParts.Combine(rhs.BodyParts, (l, r) => l.Combine(r));
+                ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
+                ret.ActorValueInformation = this.ActorValueInformation.Combine(rhs.ActorValueInformation, (l, r) => l.Combine(r));
+                ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
+                ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
+                ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes, (l, r) => l.Combine(r));
+                ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
+                ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
+                ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3448,6 +3817,15 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<ImageSpaceAdapter.TranslationMask>?> ImageSpaceAdapters;
             public MaskItem<bool, Group.TranslationMask<FormList.TranslationMask>?> FormLists;
             public MaskItem<bool, Group.TranslationMask<Perk.TranslationMask>?> Perks;
+            public MaskItem<bool, Group.TranslationMask<BodyPartData.TranslationMask>?> BodyParts;
+            public MaskItem<bool, Group.TranslationMask<AddonNode.TranslationMask>?> AddonNodes;
+            public MaskItem<bool, Group.TranslationMask<ActorValueInformation.TranslationMask>?> ActorValueInformation;
+            public MaskItem<bool, Group.TranslationMask<CameraShot.TranslationMask>?> CameraShots;
+            public MaskItem<bool, Group.TranslationMask<CameraPath.TranslationMask>?> CameraPaths;
+            public MaskItem<bool, Group.TranslationMask<VoiceType.TranslationMask>?> VoiceTypes;
+            public MaskItem<bool, Group.TranslationMask<MaterialType.TranslationMask>?> MaterialTypes;
+            public MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?> Impacts;
+            public MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?> ImpactDataSets;
             #endregion
 
             #region Ctors
@@ -3525,6 +3903,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ImageSpaceAdapters = new MaskItem<bool, Group.TranslationMask<ImageSpaceAdapter.TranslationMask>?>(defaultOn, null);
                 this.FormLists = new MaskItem<bool, Group.TranslationMask<FormList.TranslationMask>?>(defaultOn, null);
                 this.Perks = new MaskItem<bool, Group.TranslationMask<Perk.TranslationMask>?>(defaultOn, null);
+                this.BodyParts = new MaskItem<bool, Group.TranslationMask<BodyPartData.TranslationMask>?>(defaultOn, null);
+                this.AddonNodes = new MaskItem<bool, Group.TranslationMask<AddonNode.TranslationMask>?>(defaultOn, null);
+                this.ActorValueInformation = new MaskItem<bool, Group.TranslationMask<ActorValueInformation.TranslationMask>?>(defaultOn, null);
+                this.CameraShots = new MaskItem<bool, Group.TranslationMask<CameraShot.TranslationMask>?>(defaultOn, null);
+                this.CameraPaths = new MaskItem<bool, Group.TranslationMask<CameraPath.TranslationMask>?>(defaultOn, null);
+                this.VoiceTypes = new MaskItem<bool, Group.TranslationMask<VoiceType.TranslationMask>?>(defaultOn, null);
+                this.MaterialTypes = new MaskItem<bool, Group.TranslationMask<MaterialType.TranslationMask>?>(defaultOn, null);
+                this.Impacts = new MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?>(defaultOn, null);
+                this.ImpactDataSets = new MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -3612,6 +3999,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ImageSpaceAdapters?.Overall ?? true, ImageSpaceAdapters?.Specific?.GetCrystal()));
                 ret.Add((FormLists?.Overall ?? true, FormLists?.Specific?.GetCrystal()));
                 ret.Add((Perks?.Overall ?? true, Perks?.Specific?.GetCrystal()));
+                ret.Add((BodyParts?.Overall ?? true, BodyParts?.Specific?.GetCrystal()));
+                ret.Add((AddonNodes?.Overall ?? true, AddonNodes?.Specific?.GetCrystal()));
+                ret.Add((ActorValueInformation?.Overall ?? true, ActorValueInformation?.Specific?.GetCrystal()));
+                ret.Add((CameraShots?.Overall ?? true, CameraShots?.Specific?.GetCrystal()));
+                ret.Add((CameraPaths?.Overall ?? true, CameraPaths?.Specific?.GetCrystal()));
+                ret.Add((VoiceTypes?.Overall ?? true, VoiceTypes?.Specific?.GetCrystal()));
+                ret.Add((MaterialTypes?.Overall ?? true, MaterialTypes?.Specific?.GetCrystal()));
+                ret.Add((Impacts?.Overall ?? true, Impacts?.Specific?.GetCrystal()));
+                ret.Add((ImpactDataSets?.Overall ?? true, ImpactDataSets?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3697,6 +4093,15 @@ namespace Mutagen.Bethesda.Skyrim
             _ImageSpaceAdapters_Object = new Group<ImageSpaceAdapter>(this);
             _FormLists_Object = new Group<FormList>(this);
             _Perks_Object = new Group<Perk>(this);
+            _BodyParts_Object = new Group<BodyPartData>(this);
+            _AddonNodes_Object = new Group<AddonNode>(this);
+            _ActorValueInformation_Object = new Group<ActorValueInformation>(this);
+            _CameraShots_Object = new Group<CameraShot>(this);
+            _CameraPaths_Object = new Group<CameraPath>(this);
+            _VoiceTypes_Object = new Group<VoiceType>(this);
+            _MaterialTypes_Object = new Group<MaterialType>(this);
+            _Impacts_Object = new Group<Impact>(this);
+            _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -3988,6 +4393,42 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Perks ?? true)
             {
                 this.Perks.RecordCache.Set(rhsMod.Perks.RecordCache.Items);
+            }
+            if (mask?.BodyParts ?? true)
+            {
+                this.BodyParts.RecordCache.Set(rhsMod.BodyParts.RecordCache.Items);
+            }
+            if (mask?.AddonNodes ?? true)
+            {
+                this.AddonNodes.RecordCache.Set(rhsMod.AddonNodes.RecordCache.Items);
+            }
+            if (mask?.ActorValueInformation ?? true)
+            {
+                this.ActorValueInformation.RecordCache.Set(rhsMod.ActorValueInformation.RecordCache.Items);
+            }
+            if (mask?.CameraShots ?? true)
+            {
+                this.CameraShots.RecordCache.Set(rhsMod.CameraShots.RecordCache.Items);
+            }
+            if (mask?.CameraPaths ?? true)
+            {
+                this.CameraPaths.RecordCache.Set(rhsMod.CameraPaths.RecordCache.Items);
+            }
+            if (mask?.VoiceTypes ?? true)
+            {
+                this.VoiceTypes.RecordCache.Set(rhsMod.VoiceTypes.RecordCache.Items);
+            }
+            if (mask?.MaterialTypes ?? true)
+            {
+                this.MaterialTypes.RecordCache.Set(rhsMod.MaterialTypes.RecordCache.Items);
+            }
+            if (mask?.Impacts ?? true)
+            {
+                this.Impacts.RecordCache.Set(rhsMod.Impacts.RecordCache.Items);
+            }
+            if (mask?.ImpactDataSets ?? true)
+            {
+                this.ImpactDataSets.RecordCache.Set(rhsMod.ImpactDataSets.RecordCache.Items);
             }
         }
 
@@ -4493,6 +4934,69 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Perk>());
             }
+            if (mask?.BodyParts ?? true)
+            {
+                this.BodyParts.RecordCache.Set(
+                    rhs.BodyParts.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<BodyPartData>());
+            }
+            if (mask?.AddonNodes ?? true)
+            {
+                this.AddonNodes.RecordCache.Set(
+                    rhs.AddonNodes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<AddonNode>());
+            }
+            if (mask?.ActorValueInformation ?? true)
+            {
+                this.ActorValueInformation.RecordCache.Set(
+                    rhs.ActorValueInformation.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ActorValueInformation>());
+            }
+            if (mask?.CameraShots ?? true)
+            {
+                this.CameraShots.RecordCache.Set(
+                    rhs.CameraShots.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<CameraShot>());
+            }
+            if (mask?.CameraPaths ?? true)
+            {
+                this.CameraPaths.RecordCache.Set(
+                    rhs.CameraPaths.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<CameraPath>());
+            }
+            if (mask?.VoiceTypes ?? true)
+            {
+                this.VoiceTypes.RecordCache.Set(
+                    rhs.VoiceTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<VoiceType>());
+            }
+            if (mask?.MaterialTypes ?? true)
+            {
+                this.MaterialTypes.RecordCache.Set(
+                    rhs.MaterialTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MaterialType>());
+            }
+            if (mask?.Impacts ?? true)
+            {
+                this.Impacts.RecordCache.Set(
+                    rhs.Impacts.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Impact>());
+            }
+            if (mask?.ImpactDataSets ?? true)
+            {
+                this.ImpactDataSets.RecordCache.Set(
+                    rhs.ImpactDataSets.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ImpactDataSet>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -4583,6 +5087,15 @@ namespace Mutagen.Bethesda.Skyrim
             count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : 0;
             count += FormLists.RecordCache.Count > 0 ? 1 : 0;
             count += Perks.RecordCache.Count > 0 ? 1 : 0;
+            count += BodyParts.RecordCache.Count > 0 ? 1 : 0;
+            count += AddonNodes.RecordCache.Count > 0 ? 1 : 0;
+            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : 0;
+            count += CameraShots.RecordCache.Count > 0 ? 1 : 0;
+            count += CameraPaths.RecordCache.Count > 0 ? 1 : 0;
+            count += VoiceTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += MaterialTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += Impacts.RecordCache.Count > 0 ? 1 : 0;
+            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -4873,6 +5386,15 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<ImageSpaceAdapter> ImageSpaceAdapters { get; }
         new Group<FormList> FormLists { get; }
         new Group<Perk> Perks { get; }
+        new Group<BodyPartData> BodyParts { get; }
+        new Group<AddonNode> AddonNodes { get; }
+        new Group<ActorValueInformation> ActorValueInformation { get; }
+        new Group<CameraShot> CameraShots { get; }
+        new Group<CameraPath> CameraPaths { get; }
+        new Group<VoiceType> VoiceTypes { get; }
+        new Group<MaterialType> MaterialTypes { get; }
+        new Group<Impact> Impacts { get; }
+        new Group<ImpactDataSet> ImpactDataSets { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -4962,6 +5484,15 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
         IGroupGetter<IFormListGetter> FormLists { get; }
         IGroupGetter<IPerkGetter> Perks { get; }
+        IGroupGetter<IBodyPartDataGetter> BodyParts { get; }
+        IGroupGetter<IAddonNodeGetter> AddonNodes { get; }
+        IGroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
+        IGroupGetter<ICameraShotGetter> CameraShots { get; }
+        IGroupGetter<ICameraPathGetter> CameraPaths { get; }
+        IGroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
+        IGroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
+        IGroupGetter<IImpactGetter> Impacts { get; }
+        IGroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
 
     }
 
@@ -5489,6 +6020,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ImageSpaceAdapters = 69,
         FormLists = 70,
         Perks = 71,
+        BodyParts = 72,
+        AddonNodes = 73,
+        ActorValueInformation = 74,
+        CameraShots = 75,
+        CameraPaths = 76,
+        VoiceTypes = 77,
+        MaterialTypes = 78,
+        Impacts = 79,
+        ImpactDataSets = 80,
     }
     #endregion
 
@@ -5506,9 +6046,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 72;
+        public const ushort AdditionalFieldCount = 81;
 
-        public const ushort FieldCount = 72;
+        public const ushort FieldCount = 81;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -5682,6 +6222,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.FormLists;
                 case "PERKS":
                     return (ushort)SkyrimMod_FieldIndex.Perks;
+                case "BODYPARTS":
+                    return (ushort)SkyrimMod_FieldIndex.BodyParts;
+                case "ADDONNODES":
+                    return (ushort)SkyrimMod_FieldIndex.AddonNodes;
+                case "ACTORVALUEINFORMATION":
+                    return (ushort)SkyrimMod_FieldIndex.ActorValueInformation;
+                case "CAMERASHOTS":
+                    return (ushort)SkyrimMod_FieldIndex.CameraShots;
+                case "CAMERAPATHS":
+                    return (ushort)SkyrimMod_FieldIndex.CameraPaths;
+                case "VOICETYPES":
+                    return (ushort)SkyrimMod_FieldIndex.VoiceTypes;
+                case "MATERIALTYPES":
+                    return (ushort)SkyrimMod_FieldIndex.MaterialTypes;
+                case "IMPACTS":
+                    return (ushort)SkyrimMod_FieldIndex.Impacts;
+                case "IMPACTDATASETS":
+                    return (ushort)SkyrimMod_FieldIndex.ImpactDataSets;
                 default:
                     return null;
             }
@@ -5764,6 +6322,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
                 case SkyrimMod_FieldIndex.Perks:
+                case SkyrimMod_FieldIndex.BodyParts:
+                case SkyrimMod_FieldIndex.AddonNodes:
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                case SkyrimMod_FieldIndex.CameraShots:
+                case SkyrimMod_FieldIndex.CameraPaths:
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                case SkyrimMod_FieldIndex.Impacts:
+                case SkyrimMod_FieldIndex.ImpactDataSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5847,6 +6414,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
                 case SkyrimMod_FieldIndex.Perks:
+                case SkyrimMod_FieldIndex.BodyParts:
+                case SkyrimMod_FieldIndex.AddonNodes:
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                case SkyrimMod_FieldIndex.CameraShots:
+                case SkyrimMod_FieldIndex.CameraPaths:
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                case SkyrimMod_FieldIndex.Impacts:
+                case SkyrimMod_FieldIndex.ImpactDataSets:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5930,6 +6506,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
                 case SkyrimMod_FieldIndex.Perks:
+                case SkyrimMod_FieldIndex.BodyParts:
+                case SkyrimMod_FieldIndex.AddonNodes:
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                case SkyrimMod_FieldIndex.CameraShots:
+                case SkyrimMod_FieldIndex.CameraPaths:
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                case SkyrimMod_FieldIndex.Impacts:
+                case SkyrimMod_FieldIndex.ImpactDataSets:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6085,6 +6670,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "FormLists";
                 case SkyrimMod_FieldIndex.Perks:
                     return "Perks";
+                case SkyrimMod_FieldIndex.BodyParts:
+                    return "BodyParts";
+                case SkyrimMod_FieldIndex.AddonNodes:
+                    return "AddonNodes";
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                    return "ActorValueInformation";
+                case SkyrimMod_FieldIndex.CameraShots:
+                    return "CameraShots";
+                case SkyrimMod_FieldIndex.CameraPaths:
+                    return "CameraPaths";
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                    return "VoiceTypes";
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                    return "MaterialTypes";
+                case SkyrimMod_FieldIndex.Impacts:
+                    return "Impacts";
+                case SkyrimMod_FieldIndex.ImpactDataSets:
+                    return "ImpactDataSets";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6167,6 +6770,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
                 case SkyrimMod_FieldIndex.Perks:
+                case SkyrimMod_FieldIndex.BodyParts:
+                case SkyrimMod_FieldIndex.AddonNodes:
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                case SkyrimMod_FieldIndex.CameraShots:
+                case SkyrimMod_FieldIndex.CameraPaths:
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                case SkyrimMod_FieldIndex.Impacts:
+                case SkyrimMod_FieldIndex.ImpactDataSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6251,6 +6863,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ImageSpaceAdapters:
                 case SkyrimMod_FieldIndex.FormLists:
                 case SkyrimMod_FieldIndex.Perks:
+                case SkyrimMod_FieldIndex.BodyParts:
+                case SkyrimMod_FieldIndex.AddonNodes:
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                case SkyrimMod_FieldIndex.CameraShots:
+                case SkyrimMod_FieldIndex.CameraPaths:
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                case SkyrimMod_FieldIndex.Impacts:
+                case SkyrimMod_FieldIndex.ImpactDataSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6406,6 +7027,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<FormList>);
                 case SkyrimMod_FieldIndex.Perks:
                     return typeof(Group<Perk>);
+                case SkyrimMod_FieldIndex.BodyParts:
+                    return typeof(Group<BodyPartData>);
+                case SkyrimMod_FieldIndex.AddonNodes:
+                    return typeof(Group<AddonNode>);
+                case SkyrimMod_FieldIndex.ActorValueInformation:
+                    return typeof(Group<ActorValueInformation>);
+                case SkyrimMod_FieldIndex.CameraShots:
+                    return typeof(Group<CameraShot>);
+                case SkyrimMod_FieldIndex.CameraPaths:
+                    return typeof(Group<CameraPath>);
+                case SkyrimMod_FieldIndex.VoiceTypes:
+                    return typeof(Group<VoiceType>);
+                case SkyrimMod_FieldIndex.MaterialTypes:
+                    return typeof(Group<MaterialType>);
+                case SkyrimMod_FieldIndex.Impacts:
+                    return typeof(Group<Impact>);
+                case SkyrimMod_FieldIndex.ImpactDataSets:
+                    return typeof(Group<ImpactDataSet>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6525,6 +7164,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ImageSpaceAdapters.Clear();
             item.FormLists.Clear();
             item.Perks.Clear();
+            item.BodyParts.Clear();
+            item.AddonNodes.Clear();
+            item.ActorValueInformation.Clear();
+            item.CameraShots.Clear();
+            item.CameraPaths.Clear();
+            item.VoiceTypes.Clear();
+            item.MaterialTypes.Clear();
+            item.Impacts.Clear();
+            item.ImpactDataSets.Clear();
         }
         
         #region Xml Translation
@@ -6751,6 +7399,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ImageSpaceAdapters = MaskItemExt.Factory(item.ImageSpaceAdapters.GetEqualsMask(rhs.ImageSpaceAdapters, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
+            ret.BodyParts = MaskItemExt.Factory(item.BodyParts.GetEqualsMask(rhs.BodyParts, include), include);
+            ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
+            ret.ActorValueInformation = MaskItemExt.Factory(item.ActorValueInformation.GetEqualsMask(rhs.ActorValueInformation, include), include);
+            ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
+            ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
+            ret.VoiceTypes = MaskItemExt.Factory(item.VoiceTypes.GetEqualsMask(rhs.VoiceTypes, include), include);
+            ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
+            ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
+            ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
         }
         
         public string ToString(
@@ -7085,6 +7742,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Perks?.ToString(fg, "Perks");
             }
+            if (printMask?.BodyParts?.Overall ?? true)
+            {
+                item.BodyParts?.ToString(fg, "BodyParts");
+            }
+            if (printMask?.AddonNodes?.Overall ?? true)
+            {
+                item.AddonNodes?.ToString(fg, "AddonNodes");
+            }
+            if (printMask?.ActorValueInformation?.Overall ?? true)
+            {
+                item.ActorValueInformation?.ToString(fg, "ActorValueInformation");
+            }
+            if (printMask?.CameraShots?.Overall ?? true)
+            {
+                item.CameraShots?.ToString(fg, "CameraShots");
+            }
+            if (printMask?.CameraPaths?.Overall ?? true)
+            {
+                item.CameraPaths?.ToString(fg, "CameraPaths");
+            }
+            if (printMask?.VoiceTypes?.Overall ?? true)
+            {
+                item.VoiceTypes?.ToString(fg, "VoiceTypes");
+            }
+            if (printMask?.MaterialTypes?.Overall ?? true)
+            {
+                item.MaterialTypes?.ToString(fg, "MaterialTypes");
+            }
+            if (printMask?.Impacts?.Overall ?? true)
+            {
+                item.Impacts?.ToString(fg, "Impacts");
+            }
+            if (printMask?.ImpactDataSets?.Overall ?? true)
+            {
+                item.ImpactDataSets?.ToString(fg, "ImpactDataSets");
+            }
         }
         
         public bool HasBeenSet(
@@ -7170,6 +7863,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ImageSpaceAdapters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImageSpaceAdapters?.GetHasBeenSetMask());
             mask.FormLists = new MaskItem<bool, Group.Mask<bool>?>(true, item.FormLists?.GetHasBeenSetMask());
             mask.Perks = new MaskItem<bool, Group.Mask<bool>?>(true, item.Perks?.GetHasBeenSetMask());
+            mask.BodyParts = new MaskItem<bool, Group.Mask<bool>?>(true, item.BodyParts?.GetHasBeenSetMask());
+            mask.AddonNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.AddonNodes?.GetHasBeenSetMask());
+            mask.ActorValueInformation = new MaskItem<bool, Group.Mask<bool>?>(true, item.ActorValueInformation?.GetHasBeenSetMask());
+            mask.CameraShots = new MaskItem<bool, Group.Mask<bool>?>(true, item.CameraShots?.GetHasBeenSetMask());
+            mask.CameraPaths = new MaskItem<bool, Group.Mask<bool>?>(true, item.CameraPaths?.GetHasBeenSetMask());
+            mask.VoiceTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.VoiceTypes?.GetHasBeenSetMask());
+            mask.MaterialTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MaterialTypes?.GetHasBeenSetMask());
+            mask.Impacts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Impacts?.GetHasBeenSetMask());
+            mask.ImpactDataSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImpactDataSets?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -7251,6 +7953,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
             if (!object.Equals(lhs.FormLists, rhs.FormLists)) return false;
             if (!object.Equals(lhs.Perks, rhs.Perks)) return false;
+            if (!object.Equals(lhs.BodyParts, rhs.BodyParts)) return false;
+            if (!object.Equals(lhs.AddonNodes, rhs.AddonNodes)) return false;
+            if (!object.Equals(lhs.ActorValueInformation, rhs.ActorValueInformation)) return false;
+            if (!object.Equals(lhs.CameraShots, rhs.CameraShots)) return false;
+            if (!object.Equals(lhs.CameraPaths, rhs.CameraPaths)) return false;
+            if (!object.Equals(lhs.VoiceTypes, rhs.VoiceTypes)) return false;
+            if (!object.Equals(lhs.MaterialTypes, rhs.MaterialTypes)) return false;
+            if (!object.Equals(lhs.Impacts, rhs.Impacts)) return false;
+            if (!object.Equals(lhs.ImpactDataSets, rhs.ImpactDataSets)) return false;
             return true;
         }
         
@@ -7329,6 +8040,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ImageSpaceAdapters);
             hash.Add(item.FormLists);
             hash.Add(item.Perks);
+            hash.Add(item.BodyParts);
+            hash.Add(item.AddonNodes);
+            hash.Add(item.ActorValueInformation);
+            hash.Add(item.CameraShots);
+            hash.Add(item.CameraPaths);
+            hash.Add(item.VoiceTypes);
+            hash.Add(item.MaterialTypes);
+            hash.Add(item.Impacts);
+            hash.Add(item.ImpactDataSets);
             return hash.ToHashCode();
         }
         
@@ -7700,6 +8420,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerk":
                 case "IPerkInternal":
                     return obj.Perks.RecordCache;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    return obj.BodyParts.RecordCache;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    return obj.AddonNodes.RecordCache;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    return obj.ActorValueInformation.RecordCache;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    return obj.CameraShots.RecordCache;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    return obj.CameraPaths.RecordCache;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    return obj.VoiceTypes.RecordCache;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    return obj.MaterialTypes.RecordCache;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    return obj.Impacts.RecordCache;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    return obj.ImpactDataSets.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -7719,7 +8484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[71];
+            Stream[] outputStreams = new Stream[80];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -7792,6 +8557,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -8339,6 +9113,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.BodyParts is ILinkedFormKeyContainer BodyPartslinkCont)
+            {
+                foreach (var item in BodyPartslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AddonNodes is ILinkedFormKeyContainer AddonNodeslinkCont)
+            {
+                foreach (var item in AddonNodeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorValueInformation is ILinkedFormKeyContainer ActorValueInformationlinkCont)
+            {
+                foreach (var item in ActorValueInformationlinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CameraShots is ILinkedFormKeyContainer CameraShotslinkCont)
+            {
+                foreach (var item in CameraShotslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CameraPaths is ILinkedFormKeyContainer CameraPathslinkCont)
+            {
+                foreach (var item in CameraPathslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.VoiceTypes is ILinkedFormKeyContainer VoiceTypeslinkCont)
+            {
+                foreach (var item in VoiceTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MaterialTypes is ILinkedFormKeyContainer MaterialTypeslinkCont)
+            {
+                foreach (var item in MaterialTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Impacts is ILinkedFormKeyContainer ImpactslinkCont)
+            {
+                foreach (var item in ImpactslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ImpactDataSets is ILinkedFormKeyContainer ImpactDataSetslinkCont)
+            {
+                foreach (var item in ImpactDataSetslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -8626,6 +9463,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Perks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraShots.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VoiceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -9281,6 +10154,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerk":
                 case "IPerkInternal":
                     foreach (var item in obj.Perks.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    foreach (var item in obj.BodyParts.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    foreach (var item in obj.CameraShots.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialType":
+                case "IMaterialTypeGetter":
+                case "IMaterialType":
+                case "IMaterialTypeInternal":
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in obj.Impacts.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -10744,6 +11698,186 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.BodyParts) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.BodyParts);
+                try
+                {
+                    item.BodyParts.DeepCopyIn(
+                        rhs: rhs.BodyParts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.BodyParts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AddonNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AddonNodes);
+                try
+                {
+                    item.AddonNodes.DeepCopyIn(
+                        rhs: rhs.AddonNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AddonNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ActorValueInformation) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                try
+                {
+                    item.ActorValueInformation.DeepCopyIn(
+                        rhs: rhs.ActorValueInformation,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ActorValueInformation));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraShots) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraShots);
+                try
+                {
+                    item.CameraShots.DeepCopyIn(
+                        rhs: rhs.CameraShots,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraShots));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraPaths) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraPaths);
+                try
+                {
+                    item.CameraPaths.DeepCopyIn(
+                        rhs: rhs.CameraPaths,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraPaths));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VoiceTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VoiceTypes);
+                try
+                {
+                    item.VoiceTypes.DeepCopyIn(
+                        rhs: rhs.VoiceTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VoiceTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MaterialTypes);
+                try
+                {
+                    item.MaterialTypes.DeepCopyIn(
+                        rhs: rhs.MaterialTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MaterialTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Impacts) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Impacts);
+                try
+                {
+                    item.Impacts.DeepCopyIn(
+                        rhs: rhs.Impacts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Impacts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                try
+                {
+                    item.ImpactDataSets.DeepCopyIn(
+                        rhs: rhs.ImpactDataSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImpactDataSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -11624,6 +12758,105 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Perks,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Perks));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.BodyParts) ?? true))
+            {
+                var BodyPartsItem = item.BodyParts;
+                ((GroupXmlWriteTranslation)((IXmlItem)BodyPartsItem).XmlWriteTranslator).Write<IBodyPartDataGetter>(
+                    item: BodyPartsItem,
+                    node: node,
+                    name: nameof(item.BodyParts),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.BodyParts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.BodyParts));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AddonNodes) ?? true))
+            {
+                var AddonNodesItem = item.AddonNodes;
+                ((GroupXmlWriteTranslation)((IXmlItem)AddonNodesItem).XmlWriteTranslator).Write<IAddonNodeGetter>(
+                    item: AddonNodesItem,
+                    node: node,
+                    name: nameof(item.AddonNodes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.AddonNodes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AddonNodes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ActorValueInformation) ?? true))
+            {
+                var ActorValueInformationItem = item.ActorValueInformation;
+                ((GroupXmlWriteTranslation)((IXmlItem)ActorValueInformationItem).XmlWriteTranslator).Write<IActorValueInformationGetter>(
+                    item: ActorValueInformationItem,
+                    node: node,
+                    name: nameof(item.ActorValueInformation),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ActorValueInformation,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ActorValueInformation));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraShots) ?? true))
+            {
+                var CameraShotsItem = item.CameraShots;
+                ((GroupXmlWriteTranslation)((IXmlItem)CameraShotsItem).XmlWriteTranslator).Write<ICameraShotGetter>(
+                    item: CameraShotsItem,
+                    node: node,
+                    name: nameof(item.CameraShots),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.CameraShots,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraShots));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraPaths) ?? true))
+            {
+                var CameraPathsItem = item.CameraPaths;
+                ((GroupXmlWriteTranslation)((IXmlItem)CameraPathsItem).XmlWriteTranslator).Write<ICameraPathGetter>(
+                    item: CameraPathsItem,
+                    node: node,
+                    name: nameof(item.CameraPaths),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.CameraPaths,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraPaths));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VoiceTypes) ?? true))
+            {
+                var VoiceTypesItem = item.VoiceTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)VoiceTypesItem).XmlWriteTranslator).Write<IVoiceTypeGetter>(
+                    item: VoiceTypesItem,
+                    node: node,
+                    name: nameof(item.VoiceTypes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.VoiceTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VoiceTypes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialTypes) ?? true))
+            {
+                var MaterialTypesItem = item.MaterialTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)MaterialTypesItem).XmlWriteTranslator).Write<IMaterialTypeGetter>(
+                    item: MaterialTypesItem,
+                    node: node,
+                    name: nameof(item.MaterialTypes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.MaterialTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MaterialTypes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Impacts) ?? true))
+            {
+                var ImpactsItem = item.Impacts;
+                ((GroupXmlWriteTranslation)((IXmlItem)ImpactsItem).XmlWriteTranslator).Write<IImpactGetter>(
+                    item: ImpactsItem,
+                    node: node,
+                    name: nameof(item.Impacts),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Impacts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Impacts));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                var ImpactDataSetsItem = item.ImpactDataSets;
+                ((GroupXmlWriteTranslation)((IXmlItem)ImpactDataSetsItem).XmlWriteTranslator).Write<IImpactDataSetGetter>(
+                    item: ImpactDataSetsItem,
+                    node: node,
+                    name: nameof(item.ImpactDataSets),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ImpactDataSets,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImpactDataSets));
             }
         }
 
@@ -13061,6 +14294,177 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "BodyParts":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.BodyParts);
+                    try
+                    {
+                        item.BodyParts.CopyInFromXml<BodyPartData>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AddonNodes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AddonNodes);
+                    try
+                    {
+                        item.AddonNodes.CopyInFromXml<AddonNode>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorValueInformation":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                    try
+                    {
+                        item.ActorValueInformation.CopyInFromXml<ActorValueInformation>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CameraShots":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraShots);
+                    try
+                    {
+                        item.CameraShots.CopyInFromXml<CameraShot>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CameraPaths":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraPaths);
+                    try
+                    {
+                        item.CameraPaths.CopyInFromXml<CameraPath>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VoiceTypes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VoiceTypes);
+                    try
+                    {
+                        item.VoiceTypes.CopyInFromXml<VoiceType>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaterialTypes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MaterialTypes);
+                    try
+                    {
+                        item.MaterialTypes.CopyInFromXml<MaterialType>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Impacts":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Impacts);
+                    try
+                    {
+                        item.Impacts.CopyInFromXml<Impact>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImpactDataSets":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                    try
+                    {
+                        item.ImpactDataSets.CopyInFromXml<ImpactDataSet>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -13301,6 +14705,15 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ImageSpaceAdapters;
         public bool FormLists;
         public bool Perks;
+        public bool BodyParts;
+        public bool AddonNodes;
+        public bool ActorValueInformation;
+        public bool CameraShots;
+        public bool CameraPaths;
+        public bool VoiceTypes;
+        public bool MaterialTypes;
+        public bool Impacts;
+        public bool ImpactDataSets;
         public GroupMask()
         {
         }
@@ -13377,6 +14790,15 @@ namespace Mutagen.Bethesda.Skyrim
             ImageSpaceAdapters = defaultValue;
             FormLists = defaultValue;
             Perks = defaultValue;
+            BodyParts = defaultValue;
+            AddonNodes = defaultValue;
+            ActorValueInformation = defaultValue;
+            CameraShots = defaultValue;
+            CameraPaths = defaultValue;
+            VoiceTypes = defaultValue;
+            MaterialTypes = defaultValue;
+            Impacts = defaultValue;
+            ImpactDataSets = defaultValue;
         }
     }
 
@@ -14182,6 +15604,105 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
                         item: PerksItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.BodyParts ?? true)
+            {
+                var BodyPartsItem = item.BodyParts;
+                if (BodyPartsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
+                        item: BodyPartsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.AddonNodes ?? true)
+            {
+                var AddonNodesItem = item.AddonNodes;
+                if (AddonNodesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
+                        item: AddonNodesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ActorValueInformation ?? true)
+            {
+                var ActorValueInformationItem = item.ActorValueInformation;
+                if (ActorValueInformationItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ActorValueInformationItem).BinaryWriteTranslator).Write<IActorValueInformationGetter>(
+                        item: ActorValueInformationItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.CameraShots ?? true)
+            {
+                var CameraShotsItem = item.CameraShots;
+                if (CameraShotsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
+                        item: CameraShotsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.CameraPaths ?? true)
+            {
+                var CameraPathsItem = item.CameraPaths;
+                if (CameraPathsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
+                        item: CameraPathsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.VoiceTypes ?? true)
+            {
+                var VoiceTypesItem = item.VoiceTypes;
+                if (VoiceTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
+                        item: VoiceTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MaterialTypes ?? true)
+            {
+                var MaterialTypesItem = item.MaterialTypes;
+                if (MaterialTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MaterialTypesItem).BinaryWriteTranslator).Write<IMaterialTypeGetter>(
+                        item: MaterialTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Impacts ?? true)
+            {
+                var ImpactsItem = item.Impacts;
+                if (ImpactsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImpactsItem).BinaryWriteTranslator).Write<IImpactGetter>(
+                        item: ImpactsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ImpactDataSets ?? true)
+            {
+                var ImpactDataSetsItem = item.ImpactDataSets;
+                if (ImpactDataSetsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
+                        item: ImpactDataSetsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -15249,6 +16770,132 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
                 }
+                case RecordTypeInts.BPTD:
+                {
+                    if (importMask?.BodyParts ?? true)
+                    {
+                        item.BodyParts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    if (importMask?.AddonNodes ?? true)
+                    {
+                        item.AddonNodes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                }
+                case RecordTypeInts.AVIF:
+                {
+                    if (importMask?.ActorValueInformation ?? true)
+                    {
+                        item.ActorValueInformation.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                }
+                case RecordTypeInts.CAMS:
+                {
+                    if (importMask?.CameraShots ?? true)
+                    {
+                        item.CameraShots.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    if (importMask?.CameraPaths ?? true)
+                    {
+                        item.CameraPaths.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                }
+                case RecordTypeInts.VTYP:
+                {
+                    if (importMask?.VoiceTypes ?? true)
+                    {
+                        item.VoiceTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                }
+                case RecordTypeInts.MATT:
+                {
+                    if (importMask?.MaterialTypes ?? true)
+                    {
+                        item.MaterialTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                }
+                case RecordTypeInts.IPCT:
+                {
+                    if (importMask?.Impacts ?? true)
+                    {
+                        item.Impacts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    if (importMask?.ImpactDataSets ?? true)
+                    {
+                        item.ImpactDataSets.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -15775,6 +17422,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IPerkGetter>? _Perks => _PerksLocation.HasValue ? GroupBinaryOverlay<IPerkGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _PerksLocation!.Value.Min, _PerksLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IPerkGetter> Perks => _Perks ?? new Group<Perk>(this);
         #endregion
+        #region BodyParts
+        private RangeInt64? _BodyPartsLocation;
+        private IGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocation.HasValue ? GroupBinaryOverlay<IBodyPartDataGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _BodyPartsLocation!.Value.Min, _BodyPartsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Group<BodyPartData>(this);
+        #endregion
+        #region AddonNodes
+        private RangeInt64? _AddonNodesLocation;
+        private IGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocation.HasValue ? GroupBinaryOverlay<IAddonNodeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AddonNodesLocation!.Value.Min, _AddonNodesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Group<AddonNode>(this);
+        #endregion
+        #region ActorValueInformation
+        private RangeInt64? _ActorValueInformationLocation;
+        private IGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocation.HasValue ? GroupBinaryOverlay<IActorValueInformationGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActorValueInformationLocation!.Value.Min, _ActorValueInformationLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new Group<ActorValueInformation>(this);
+        #endregion
+        #region CameraShots
+        private RangeInt64? _CameraShotsLocation;
+        private IGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocation.HasValue ? GroupBinaryOverlay<ICameraShotGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _CameraShotsLocation!.Value.Min, _CameraShotsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Group<CameraShot>(this);
+        #endregion
+        #region CameraPaths
+        private RangeInt64? _CameraPathsLocation;
+        private IGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocation.HasValue ? GroupBinaryOverlay<ICameraPathGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _CameraPathsLocation!.Value.Min, _CameraPathsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Group<CameraPath>(this);
+        #endregion
+        #region VoiceTypes
+        private RangeInt64? _VoiceTypesLocation;
+        private IGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocation.HasValue ? GroupBinaryOverlay<IVoiceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _VoiceTypesLocation!.Value.Min, _VoiceTypesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Group<VoiceType>(this);
+        #endregion
+        #region MaterialTypes
+        private RangeInt64? _MaterialTypesLocation;
+        private IGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocation.HasValue ? GroupBinaryOverlay<IMaterialTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MaterialTypesLocation!.Value.Min, _MaterialTypesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new Group<MaterialType>(this);
+        #endregion
+        #region Impacts
+        private RangeInt64? _ImpactsLocation;
+        private IGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocation.HasValue ? GroupBinaryOverlay<IImpactGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ImpactsLocation!.Value.Min, _ImpactsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IImpactGetter> Impacts => _Impacts ?? new Group<Impact>(this);
+        #endregion
+        #region ImpactDataSets
+        private RangeInt64? _ImpactDataSetsLocation;
+        private IGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocation.HasValue ? GroupBinaryOverlay<IImpactDataSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ImpactDataSetsLocation!.Value.Min, _ImpactDataSetsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Group<ImpactDataSet>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -16224,6 +17916,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _PerksLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                }
+                case RecordTypeInts.BPTD:
+                {
+                    _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                }
+                case RecordTypeInts.AVIF:
+                {
+                    _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                }
+                case RecordTypeInts.CAMS:
+                {
+                    _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                }
+                case RecordTypeInts.VTYP:
+                {
+                    _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                }
+                case RecordTypeInts.MATT:
+                {
+                    _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                }
+                case RecordTypeInts.IPCT:
+                {
+                    _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

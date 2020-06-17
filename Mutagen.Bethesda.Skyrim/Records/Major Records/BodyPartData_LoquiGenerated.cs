@@ -49,6 +49,31 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IBodyPartDataGetter.Model => this.Model;
+        #endregion
+        #region Parts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> Parts
+        {
+            get => this._Parts;
+            protected set => this._Parts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IBodyPartGetter> IBodyPartDataGetter.Parts => _Parts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -219,6 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -227,7 +254,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Model,
+                TItem Parts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +265,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -244,6 +275,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>? Parts;
             #endregion
 
             #region Equals
@@ -257,11 +293,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Parts, rhs.Parts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Parts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +312,23 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Parts != null)
+                {
+                    if (!eval(this.Parts.Overall)) return false;
+                    if (this.Parts.Specific != null)
+                    {
+                        foreach (var item in this.Parts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -280,6 +337,23 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Parts != null)
+                {
+                    if (eval(this.Parts.Overall)) return true;
+                    if (this.Parts.Specific != null)
+                    {
+                        foreach (var item in this.Parts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -295,6 +369,22 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Parts != null)
+                {
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, BodyPart.Mask<R>?>>());
+                    if (Parts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, BodyPart.Mask<R>?>>();
+                        obj.Parts.Specific = l;
+                        foreach (var item in Parts.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, BodyPart.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, BodyPart.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -317,6 +407,33 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if ((printMask?.Parts?.Overall ?? true)
+                        && Parts.TryGet(out var PartsItem))
+                    {
+                        fg.AppendLine("Parts =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(PartsItem.Overall);
+                            if (PartsItem.Specific != null)
+                            {
+                                foreach (var subItem in PartsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +445,21 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>? Parts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        return Model;
+                    case BodyPartData_FieldIndex.Parts:
+                        return Parts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +470,12 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case BodyPartData_FieldIndex.Parts:
+                        this.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +487,12 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
                 switch (enu)
                 {
+                    case BodyPartData_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case BodyPartData_FieldIndex.Parts:
+                        this.Parts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +502,8 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Parts != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +539,29 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                Model?.ToString(fg);
+                if (Parts.TryGet(out var PartsItem))
+                {
+                    fg.AppendLine("Parts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(PartsItem.Overall);
+                        if (PartsItem.Specific != null)
+                        {
+                            foreach (var subItem in PartsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -407,6 +570,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BodyPart.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +593,38 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, BodyPart.TranslationMask?> Parts;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Parts = new MaskItem<bool, BodyPart.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Parts?.Overall ?? true, Parts?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = BodyPartData_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => BodyPartDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BodyPartDataCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
         public BodyPartData(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -518,8 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBodyPartData :
         IBodyPartDataGetter,
         ISkyrimMajorRecord,
+        IModeled,
         ILoquiObjectSetter<IBodyPartDataInternal>
     {
+        new Model? Model { get; set; }
+        new ExtendedList<BodyPart> Parts { get; }
     }
 
     public partial interface IBodyPartDataInternal :
@@ -531,11 +718,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyPartDataGetter :
         ISkyrimMajorRecordGetter,
+        IModeledGetter,
         ILoquiObject<IBodyPartDataGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => BodyPartData_Registration.Instance;
+        IModelGetter? Model { get; }
+        IReadOnlyList<IBodyPartGetter> Parts { get; }
 
     }
 
@@ -836,6 +1027,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Model = 6,
+        Parts = 7,
     }
     #endregion
 
@@ -853,9 +1046,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5429249e-d4da-4637-999b-0f2b8a75e074";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(BodyPartData.Mask<>);
 
@@ -885,6 +1078,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "MODEL":
+                    return (ushort)BodyPartData_FieldIndex.Model;
+                case "PARTS":
+                    return (ushort)BodyPartData_FieldIndex.Parts;
                 default:
                     return null;
             }
@@ -895,6 +1092,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Parts:
+                    return true;
+                case BodyPartData_FieldIndex.Model:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                case BodyPartData_FieldIndex.Parts:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                case BodyPartData_FieldIndex.Parts:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1132,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                    return "Model";
+                case BodyPartData_FieldIndex.Parts:
+                    return "Parts";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1146,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                case BodyPartData_FieldIndex.Parts:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1159,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                case BodyPartData_FieldIndex.Parts:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1172,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
             switch (enu)
             {
+                case BodyPartData_FieldIndex.Model:
+                    return typeof(Model);
+                case BodyPartData_FieldIndex.Parts:
+                    return typeof(ExtendedList<BodyPart>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1004,6 +1225,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBodyPartDataInternal item)
         {
             ClearPartial();
+            item.Model = null;
+            item.Parts.Clear();
             base.Clear(item);
         }
         
@@ -1161,6 +1384,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Parts = item.Parts.CollectionEqualsHelper(
+                rhs.Parts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,12 +1444,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if (printMask?.Parts?.Overall ?? true)
+            {
+                fg.AppendLine("Parts =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Parts)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IBodyPartDataGetter item,
             BodyPartData.Mask<bool?> checkMask)
         {
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1227,6 +1484,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyPartDataGetter item,
             BodyPartData.Mask<bool> mask)
         {
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var PartsItem = item.Parts;
+            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +1539,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!lhs.Parts.SequenceEqual(rhs.Parts)) return false;
             return true;
         }
         
@@ -1302,6 +1565,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBodyPartDataGetter item)
         {
             var hash = new HashCode();
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Parts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1328,6 +1596,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IBodyPartDataGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Parts.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1378,6 +1657,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)BodyPartData_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            {
+                errorMask?.PushIndex((int)BodyPartData_FieldIndex.Parts);
+                try
+                {
+                    item.Parts.SetTo(
+                        rhs.Parts
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +1849,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)BodyPartData_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            {
+                ListXmlTranslation<IBodyPartGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Parts),
+                    item: item.Parts,
+                    fieldIndex: (int)BodyPartData_FieldIndex.Parts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Parts),
+                    transl: (XElement subNode, IBodyPartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((BodyPartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1627,6 +1990,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Model":
+                    errorMask?.PushIndex((int)BodyPartData_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)BodyPartData_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Parts":
+                    errorMask?.PushIndex((int)BodyPartData_FieldIndex.Parts);
+                    try
+                    {
+                        if (ListXmlTranslation<BodyPart>.Instance.Parse(
+                            node: node,
+                            enumer: out var PartsItem,
+                            transl: LoquiXmlTranslation<BodyPart>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Parts.SetTo(PartsItem);
+                        }
+                        else
+                        {
+                            item.Parts.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +2123,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static BodyPartDataBinaryWriteTranslation Instance = new BodyPartDataBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IBodyPartDataGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IBodyPartGetter>.Instance.Write(
+                writer: writer,
+                items: item.Parts,
+                transl: (MutagenWriter subWriter, IBodyPartGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((BodyPartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IBodyPartDataGetter item,
@@ -1726,7 +2165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1782,6 +2221,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IBodyPartDataInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Model);
+                }
+                case RecordTypeInts.BPTN:
+                {
+                    item.Parts.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.BPTN,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Parts);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
     }
 
 }
@@ -1817,6 +2299,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => BodyPartDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BodyPartDataCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => BodyPartDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1843,6 +2331,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +2385,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Model);
+                }
+                case RecordTypeInts.BPTN:
+                {
+                    this.Parts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: RecordTypes.BPTN,
+                        factory:  BodyPartBinaryOverlay.BodyPartFactory);
+                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Parts);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

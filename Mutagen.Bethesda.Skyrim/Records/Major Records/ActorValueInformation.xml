@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActorValueInformation" objType="Record" recordType="AVIF" baseClass="SkyrimMajorRecord" GUID="18758352-21f6-4d31-8846-afe6d29f48f8" ID="434">
+    <Interface>ITranslatedNamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <String name="Abbreviation" recordType="ANAM" />
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <RefDirect name="Skill" refName="ActorValueSkill" />
+      <RefList name="PerkTree" refName="ActorValuePerkNode" />
+    </Fields>
+  </Object>
+  <Object name="ActorValueSkill" objType="Subrecord" recordType="AVSK" GUID="c43d68e1-258c-48de-a653-48aeb259f70e" ID="435">
+    <Fields>
+      <Float name="UseMult" />
+      <Float name="OffsetMult" />
+      <Float name="ImproveMult" />
+      <Float name="ImproveOffset" />
+    </Fields>
+  </Object>
+  <Object name="ActorValuePerkNode" objType="Subrecord" GUID="a537929f-fd15-415b-8cc7-8a3047e4c986" ID="436">
+    <Fields>
+      <FormLink name="Perk" recordType="PNAM" refName="Perk" hasBeenSet="False" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <UInt32 name="PerkGridX" recordType="XNAM" />
+      <UInt32 name="PerkGridY" recordType="YNAM" />
+      <Float name="HorizontalPosition" recordType="HNAM" />
+      <Float name="VerticalPosition" recordType="VNAM" />
+      <FormLink name="AssociatedSkill" recordType="SNAM" refName="ActorValueInformation" />
+      <List name="ConnectionLineToIndices">
+        <UInt32 recordType="CNAM" />
+      </List>
+      <UInt32 name="Index" recordType="INAM" />
+    </Fields>
+  </Object>
+</Loqui>

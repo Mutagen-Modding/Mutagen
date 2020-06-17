@@ -145,6 +145,9 @@
     <Compile Include="Records\Common Subrecords\ContainerItem_LoquiGenerated.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Decal.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\DestructableData_LoquiGenerated.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -343,6 +346,12 @@
     <Compile Include="Records\Major Records\Activator_LoquiGenerated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ActorValueInformation.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AddonNode.cs">
+      <DependentUpon>AddonNode.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AIData_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
@@ -451,6 +460,12 @@
     <Compile Include="Records\Major Records\BodyData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\BodyPart.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPartData.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BodyPartData_LoquiGenerated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
@@ -471,6 +486,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Book_LoquiGenerated.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CameraPath.cs">
+      <DependentUpon>CameraPath.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CameraShot.cs">
+      <DependentUpon>CameraShot.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
@@ -591,12 +612,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Debris_LoquiGenerated.cs">
       <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Decal.cs">
-      <DependentUpon>TextureSet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Decal_LoquiGenerated.cs">
-      <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogBranch_LoquiGenerated.cs">
       <DependentUpon>DialogBranch.xml</DependentUpon>
@@ -835,6 +850,9 @@
     <Compile Include="Records\Major Records\ImageSpace_LoquiGenerated.cs">
       <DependentUpon>ImageSpace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Impact.cs">
+      <DependentUpon>Impact.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ImpactDataSet_LoquiGenerated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
@@ -1041,6 +1059,9 @@
     </Compile>
     <Compile Include="Records\Major Records\MaterialObject_LoquiGenerated.cs">
       <DependentUpon>MaterialObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialType.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MaterialType_LoquiGenerated.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
@@ -1603,6 +1624,9 @@
     <Compile Include="Records\Major Records\VisualEffect_LoquiGenerated.cs">
       <DependentUpon>VisualEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\VoiceType.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\VoiceType_LoquiGenerated.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
@@ -1825,6 +1849,36 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\IndexedScriptFragment_LoquiGenerated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPart_LoquiGenerated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AddonNode_LoquiGenerated.cs">
+      <DependentUpon>AddonNode.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueInformation_LoquiGenerated.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueSkill_LoquiGenerated.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValuePerkNode_LoquiGenerated.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CameraShot_LoquiGenerated.cs">
+      <DependentUpon>CameraShot.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CameraPath_LoquiGenerated.cs">
+      <DependentUpon>CameraPath.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Decal_LoquiGenerated.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Impact_LoquiGenerated.cs">
+      <DependentUpon>Impact.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactData_LoquiGenerated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

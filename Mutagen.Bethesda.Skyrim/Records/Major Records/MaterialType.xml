@@ -2,6 +2,12 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MaterialType" objType="Record" recordType="MATT" baseClass="SkyrimMajorRecord" GUID="426bbc1c-1857-4b5a-9bd4-0e0900e742d3" ID="80">
     <Fields>
+      <FormLink name="Parent" refName="MaterialType" recordType="PNAM" />
+      <String name="Name" recordType="MNAM" />
+      <Color name="HavokDisplayColor" recordType="CNAM" binaryType="NoAlphaFloat" />
+      <Float name="Buoyancy" recordType="BNAM" />
+      <Enum name="Flags" enumName="MaterialType.Flag" recordType="FNAM" />
+      <FormLink name="HavokImpactDataSet" recordType="HNAM" refName="ImpactDataSet" />
     </Fields>
   </Object>
 </Loqui>

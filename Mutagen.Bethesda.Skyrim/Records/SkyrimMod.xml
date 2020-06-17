@@ -78,6 +78,15 @@
       <Group name="ImageSpaceAdapters" refName="ImageSpaceAdapter" />
       <Group name="FormLists" refName="FormList" />
       <Group name="Perks" refName="Perk" />
+      <Group name="BodyParts" refName="BodyPartData" />
+      <Group name="AddonNodes" refName="AddonNode" />
+      <Group name="ActorValueInformation" refName="ActorValueInformation" />
+      <Group name="CameraShots" refName="CameraShot" />
+      <Group name="CameraPaths" refName="CameraPath" />
+      <Group name="VoiceTypes" refName="VoiceType" />
+      <Group name="MaterialTypes" refName="MaterialType" />
+      <Group name="Impacts" refName="Impact" />
+      <Group name="ImpactDataSets" refName="ImpactDataSet" />
     </Fields>
   </Object>
 </Loqui>

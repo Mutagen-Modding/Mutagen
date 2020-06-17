@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -49,6 +50,36 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Parent
+        public FormLinkNullable<MaterialType> Parent { get; set; } = new FormLinkNullable<MaterialType>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
+        #endregion
+        #region Name
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialTypeGetter.Name => this.Name;
+        #endregion
+        #region HavokDisplayColor
+        public Color? HavokDisplayColor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? IMaterialTypeGetter.HavokDisplayColor => this.HavokDisplayColor;
+        #endregion
+        #region Buoyancy
+        public Single? Buoyancy { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMaterialTypeGetter.Buoyancy => this.Buoyancy;
+        #endregion
+        #region Flags
+        public MaterialType.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        MaterialType.Flag? IMaterialTypeGetter.Flags => this.Flags;
+        #endregion
+        #region HavokImpactDataSet
+        public FormLinkNullable<ImpactDataSet> HavokImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
+        #endregion
 
         #region To String
 
@@ -219,6 +250,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Parent = initialValue;
+                this.Name = initialValue;
+                this.HavokDisplayColor = initialValue;
+                this.Buoyancy = initialValue;
+                this.Flags = initialValue;
+                this.HavokImpactDataSet = initialValue;
             }
 
             public Mask(
@@ -227,7 +264,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Parent,
+                TItem Name,
+                TItem HavokDisplayColor,
+                TItem Buoyancy,
+                TItem Flags,
+                TItem HavokImpactDataSet)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +279,12 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Parent = Parent;
+                this.Name = Name;
+                this.HavokDisplayColor = HavokDisplayColor;
+                this.Buoyancy = Buoyancy;
+                this.Flags = Flags;
+                this.HavokImpactDataSet = HavokImpactDataSet;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +293,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Parent;
+            public TItem Name;
+            public TItem HavokDisplayColor;
+            public TItem Buoyancy;
+            public TItem Flags;
+            public TItem HavokImpactDataSet;
             #endregion
 
             #region Equals
@@ -257,11 +315,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.HavokDisplayColor, rhs.HavokDisplayColor)) return false;
+                if (!object.Equals(this.Buoyancy, rhs.Buoyancy)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.HavokImpactDataSet, rhs.HavokImpactDataSet)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Parent);
+                hash.Add(this.Name);
+                hash.Add(this.HavokDisplayColor);
+                hash.Add(this.Buoyancy);
+                hash.Add(this.Flags);
+                hash.Add(this.HavokImpactDataSet);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +342,12 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.HavokDisplayColor)) return false;
+                if (!eval(this.Buoyancy)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.HavokImpactDataSet)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +356,12 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Parent)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.HavokDisplayColor)) return true;
+                if (eval(this.Buoyancy)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.HavokImpactDataSet)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +377,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Parent = eval(this.Parent);
+                obj.Name = eval(this.Name);
+                obj.HavokDisplayColor = eval(this.HavokDisplayColor);
+                obj.Buoyancy = eval(this.Buoyancy);
+                obj.Flags = eval(this.Flags);
+                obj.HavokImpactDataSet = eval(this.HavokImpactDataSet);
             }
             #endregion
 
@@ -317,6 +405,30 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Parent ?? true)
+                    {
+                        fg.AppendItem(Parent, "Parent");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.HavokDisplayColor ?? true)
+                    {
+                        fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                    }
+                    if (printMask?.Buoyancy ?? true)
+                    {
+                        fg.AppendItem(Buoyancy, "Buoyancy");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.HavokImpactDataSet ?? true)
+                    {
+                        fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +440,33 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Parent;
+            public Exception? Name;
+            public Exception? HavokDisplayColor;
+            public Exception? Buoyancy;
+            public Exception? Flags;
+            public Exception? HavokImpactDataSet;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        return Parent;
+                    case MaterialType_FieldIndex.Name:
+                        return Name;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        return HavokDisplayColor;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        return Buoyancy;
+                    case MaterialType_FieldIndex.Flags:
+                        return Flags;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        return HavokImpactDataSet;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +477,24 @@ namespace Mutagen.Bethesda.Skyrim
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case MaterialType_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        this.HavokDisplayColor = ex;
+                        break;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        this.Buoyancy = ex;
+                        break;
+                    case MaterialType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        this.HavokImpactDataSet = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +506,24 @@ namespace Mutagen.Bethesda.Skyrim
                 MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialType_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.HavokDisplayColor:
+                        this.HavokDisplayColor = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Buoyancy:
+                        this.Buoyancy = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case MaterialType_FieldIndex.HavokImpactDataSet:
+                        this.HavokImpactDataSet = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +533,12 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Parent != null) return true;
+                if (Name != null) return true;
+                if (HavokDisplayColor != null) return true;
+                if (Buoyancy != null) return true;
+                if (Flags != null) return true;
+                if (HavokImpactDataSet != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +574,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Parent, "Parent");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                fg.AppendItem(Buoyancy, "Buoyancy");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
             }
             #endregion
 
@@ -407,6 +588,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.HavokDisplayColor = this.HavokDisplayColor.Combine(rhs.HavokDisplayColor);
+                ret.Buoyancy = this.Buoyancy.Combine(rhs.Buoyancy);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.HavokImpactDataSet = this.HavokImpactDataSet.Combine(rhs.HavokImpactDataSet);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +615,50 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Parent;
+            public bool Name;
+            public bool HavokDisplayColor;
+            public bool Buoyancy;
+            public bool Flags;
+            public bool HavokImpactDataSet;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Parent = defaultOn;
+                this.Name = defaultOn;
+                this.HavokDisplayColor = defaultOn;
+                this.Buoyancy = defaultOn;
+                this.Flags = defaultOn;
+                this.HavokImpactDataSet = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Parent, null));
+                ret.Add((Name, null));
+                ret.Add((HavokDisplayColor, null));
+                ret.Add((Buoyancy, null));
+                ret.Add((Flags, null));
+                ret.Add((HavokImpactDataSet, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -520,6 +738,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMaterialTypeInternal>
     {
+        new FormLinkNullable<MaterialType> Parent { get; set; }
+        new String? Name { get; set; }
+        new Color? HavokDisplayColor { get; set; }
+        new Single? Buoyancy { get; set; }
+        new MaterialType.Flag? Flags { get; set; }
+        new FormLinkNullable<ImpactDataSet> HavokImpactDataSet { get; set; }
     }
 
     public partial interface IMaterialTypeInternal :
@@ -533,9 +757,16 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMaterialTypeGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => MaterialType_Registration.Instance;
+        IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        String? Name { get; }
+        Color? HavokDisplayColor { get; }
+        Single? Buoyancy { get; }
+        MaterialType.Flag? Flags { get; }
+        IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
 
     }
 
@@ -836,6 +1067,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Parent = 6,
+        Name = 7,
+        HavokDisplayColor = 8,
+        Buoyancy = 9,
+        Flags = 10,
+        HavokImpactDataSet = 11,
     }
     #endregion
 
@@ -853,9 +1090,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "426bbc1c-1857-4b5a-9bd4-0e0900e742d3";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
@@ -885,6 +1122,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "PARENT":
+                    return (ushort)MaterialType_FieldIndex.Parent;
+                case "NAME":
+                    return (ushort)MaterialType_FieldIndex.Name;
+                case "HAVOKDISPLAYCOLOR":
+                    return (ushort)MaterialType_FieldIndex.HavokDisplayColor;
+                case "BUOYANCY":
+                    return (ushort)MaterialType_FieldIndex.Buoyancy;
+                case "FLAGS":
+                    return (ushort)MaterialType_FieldIndex.Flags;
+                case "HAVOKIMPACTDATASET":
+                    return (ushort)MaterialType_FieldIndex.HavokImpactDataSet;
                 default:
                     return null;
             }
@@ -895,6 +1144,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                case MaterialType_FieldIndex.Name:
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                case MaterialType_FieldIndex.Buoyancy:
+                case MaterialType_FieldIndex.Flags:
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1161,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                case MaterialType_FieldIndex.Name:
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                case MaterialType_FieldIndex.Buoyancy:
+                case MaterialType_FieldIndex.Flags:
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1178,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                case MaterialType_FieldIndex.Name:
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                case MaterialType_FieldIndex.Buoyancy:
+                case MaterialType_FieldIndex.Flags:
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1195,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                    return "Parent";
+                case MaterialType_FieldIndex.Name:
+                    return "Name";
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                    return "HavokDisplayColor";
+                case MaterialType_FieldIndex.Buoyancy:
+                    return "Buoyancy";
+                case MaterialType_FieldIndex.Flags:
+                    return "Flags";
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return "HavokImpactDataSet";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1217,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                case MaterialType_FieldIndex.Name:
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                case MaterialType_FieldIndex.Buoyancy:
+                case MaterialType_FieldIndex.Flags:
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1234,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                case MaterialType_FieldIndex.Name:
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                case MaterialType_FieldIndex.Buoyancy:
+                case MaterialType_FieldIndex.Flags:
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1251,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
             switch (enu)
             {
+                case MaterialType_FieldIndex.Parent:
+                    return typeof(FormLinkNullable<MaterialType>);
+                case MaterialType_FieldIndex.Name:
+                    return typeof(String);
+                case MaterialType_FieldIndex.HavokDisplayColor:
+                    return typeof(Color);
+                case MaterialType_FieldIndex.Buoyancy:
+                    return typeof(Single);
+                case MaterialType_FieldIndex.Flags:
+                    return typeof(MaterialType.Flag);
+                case MaterialType_FieldIndex.HavokImpactDataSet:
+                    return typeof(FormLinkNullable<ImpactDataSet>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1004,6 +1312,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IMaterialTypeInternal item)
         {
             ClearPartial();
+            item.Parent = FormLinkNullable<MaterialType>.Null;
+            item.Name = default;
+            item.HavokDisplayColor = default;
+            item.Buoyancy = default;
+            item.Flags = default;
+            item.HavokImpactDataSet = FormLinkNullable<ImpactDataSet>.Null;
             base.Clear(item);
         }
         
@@ -1161,6 +1475,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.HavokDisplayColor = item.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor);
+            ret.Buoyancy = item.Buoyancy.EqualsWithin(rhs.Buoyancy);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.HavokImpactDataSet = object.Equals(item.HavokImpactDataSet, rhs.HavokImpactDataSet);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,12 +1532,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Parent ?? true)
+                && item.Parent.TryGet(out var ParentItem))
+            {
+                fg.AppendItem(ParentItem, "Parent");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.HavokDisplayColor ?? true)
+                && item.HavokDisplayColor.TryGet(out var HavokDisplayColorItem))
+            {
+                fg.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
+            }
+            if ((printMask?.Buoyancy ?? true)
+                && item.Buoyancy.TryGet(out var BuoyancyItem))
+            {
+                fg.AppendItem(BuoyancyItem, "Buoyancy");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
+            {
+                fg.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.HavokImpactDataSet ?? true)
+                && item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetItem))
+            {
+                fg.AppendItem(HavokImpactDataSetItem, "HavokImpactDataSet");
+            }
         }
         
         public bool HasBeenSet(
             IMaterialTypeGetter item,
             MaterialType.Mask<bool?> checkMask)
         {
+            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.HavokDisplayColor.HasValue && checkMask.HavokDisplayColor.Value != (item.HavokDisplayColor != null)) return false;
+            if (checkMask.Buoyancy.HasValue && checkMask.Buoyancy.Value != (item.Buoyancy != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.HavokImpactDataSet.HasValue && checkMask.HavokImpactDataSet.Value != (item.HavokImpactDataSet.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1227,6 +1583,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMaterialTypeGetter item,
             MaterialType.Mask<bool> mask)
         {
+            mask.Parent = (item.Parent.FormKey != null);
+            mask.Name = (item.Name != null);
+            mask.HavokDisplayColor = (item.HavokDisplayColor != null);
+            mask.Buoyancy = (item.Buoyancy != null);
+            mask.Flags = (item.Flags != null);
+            mask.HavokImpactDataSet = (item.HavokImpactDataSet.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +1640,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;
+            if (!lhs.Buoyancy.EqualsWithin(rhs.Buoyancy)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet)) return false;
             return true;
         }
         
@@ -1302,6 +1670,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMaterialTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.Parent.TryGet(out var Parentitem))
+            {
+                hash.Add(Parentitem);
+            }
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.HavokDisplayColor.TryGet(out var HavokDisplayColoritem))
+            {
+                hash.Add(HavokDisplayColoritem);
+            }
+            if (item.Buoyancy.TryGet(out var Buoyancyitem))
+            {
+                hash.Add(Buoyancyitem);
+            }
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetitem))
+            {
+                hash.Add(HavokImpactDataSetitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1330,6 +1722,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Parent.FormKey.TryGet(out var ParentKey))
+            {
+                yield return ParentKey;
+            }
+            if (obj.HavokImpactDataSet.FormKey.TryGet(out var HavokImpactDataSetKey))
+            {
+                yield return HavokImpactDataSetKey;
             }
             yield break;
         }
@@ -1378,6 +1778,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            {
+                item.Parent = rhs.Parent.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            {
+                item.HavokDisplayColor = rhs.HavokDisplayColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            {
+                item.Buoyancy = rhs.Buoyancy;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            {
+                item.HavokImpactDataSet = rhs.HavokImpactDataSet.FormKey;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +1944,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.Parent.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Parent),
+                    item: item.Parent.FormKey.Value,
+                    fieldIndex: (int)MaterialType_FieldIndex.Parent,
+                    errorMask: errorMask);
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)MaterialType_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.HavokDisplayColor != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokDisplayColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HavokDisplayColor),
+                    item: item.HavokDisplayColor.Value,
+                    fieldIndex: (int)MaterialType_FieldIndex.HavokDisplayColor,
+                    errorMask: errorMask);
+            }
+            if ((item.Buoyancy != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Buoyancy) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Buoyancy),
+                    item: item.Buoyancy.Value,
+                    fieldIndex: (int)MaterialType_FieldIndex.Buoyancy,
+                    errorMask: errorMask);
+            }
+            if ((item.Flags != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<MaterialType.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)MaterialType_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.HavokImpactDataSet.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HavokImpactDataSet),
+                    item: item.HavokImpactDataSet.FormKey.Value,
+                    fieldIndex: (int)MaterialType_FieldIndex.HavokImpactDataSet,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1627,6 +2111,114 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Parent":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.Parent);
+                    try
+                    {
+                        item.Parent = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HavokDisplayColor":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.HavokDisplayColor);
+                    try
+                    {
+                        item.HavokDisplayColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Buoyancy":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.Buoyancy);
+                    try
+                    {
+                        item.Buoyancy = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<MaterialType.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HavokImpactDataSet":
+                    errorMask?.PushIndex((int)MaterialType_FieldIndex.HavokImpactDataSet);
+                    try
+                    {
+                        item.HavokImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +2305,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MaterialTypeBinaryWriteTranslation Instance = new MaterialTypeBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IMaterialTypeGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Parent,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HavokDisplayColor,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                binaryType: ColorBinaryType.NoAlphaFloat);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Buoyancy,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MaterialType.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HavokImpactDataSet,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IMaterialTypeGetter item,
@@ -1726,7 +2356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1782,6 +2412,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMaterialTypeInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Parent);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Name);
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HavokDisplayColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokDisplayColor);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Buoyancy = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Buoyancy);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<MaterialType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Flags);
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HavokImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokImpactDataSet);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+
     }
 
 }
@@ -1817,6 +2509,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMaterialTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MaterialTypeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1843,6 +2541,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Parent
+        private int? _ParentLocation;
+        public bool Parent_IsSet => _ParentLocation.HasValue;
+        public IFormLinkNullable<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region HavokDisplayColor
+        private int? _HavokDisplayColorLocation;
+        public Color? HavokDisplayColor => _HavokDisplayColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HavokDisplayColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
+        #endregion
+        #region Buoyancy
+        private int? _BuoyancyLocation;
+        public Single? Buoyancy => _BuoyancyLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _BuoyancyLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public MaterialType.Flag? Flags => _FlagsLocation.HasValue ? (MaterialType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MaterialType.Flag?);
+        #endregion
+        #region HavokImpactDataSet
+        private int? _HavokImpactDataSetLocation;
+        public bool HavokImpactDataSet_IsSet => _HavokImpactDataSetLocation.HasValue;
+        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +2619,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Parent);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Name);
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _HavokDisplayColorLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokDisplayColor);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BuoyancyLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Buoyancy);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Flags);
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _HavokImpactDataSetLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokImpactDataSet);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

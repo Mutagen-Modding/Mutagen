@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ACBS = new RecordType(0x53424341);
         public static readonly RecordType ACHR = new RecordType(0x52484341);
         public static readonly RecordType ACTI = new RecordType(0x49544341);
+        public static readonly RecordType ADDN = new RecordType(0x4E444441);
         public static readonly RecordType AHCM = new RecordType(0x4D434841);
         public static readonly RecordType AIAD = new RecordType(0x44414941);
         public static readonly RecordType AIDT = new RecordType(0x54444941);
@@ -51,6 +52,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ATKE = new RecordType(0x454B5441);
         public static readonly RecordType ATKR = new RecordType(0x524B5441);
         public static readonly RecordType ATXT = new RecordType(0x54585441);
+        public static readonly RecordType AVIF = new RecordType(0x46495641);
+        public static readonly RecordType AVSK = new RecordType(0x4B535641);
         public static readonly RecordType BAMT = new RecordType(0x544D4142);
         public static readonly RecordType BIAD = new RecordType(0x44414942);
         public static readonly RecordType BIDS = new RecordType(0x53444942);
@@ -58,8 +61,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BNAM = new RecordType(0x4D414E42);
         public static readonly RecordType BODT = new RecordType(0x54444F42);
         public static readonly RecordType BOOK = new RecordType(0x4B4F4F42);
+        public static readonly RecordType BPND = new RecordType(0x444E5042);
+        public static readonly RecordType BPNI = new RecordType(0x494E5042);
+        public static readonly RecordType BPNN = new RecordType(0x4E4E5042);
+        public static readonly RecordType BPNT = new RecordType(0x544E5042);
         public static readonly RecordType BPTD = new RecordType(0x44545042);
+        public static readonly RecordType BPTN = new RecordType(0x4E545042);
         public static readonly RecordType BTXT = new RecordType(0x54585442);
+        public static readonly RecordType CAMS = new RecordType(0x534D4143);
         public static readonly RecordType CELL = new RecordType(0x4C4C4543);
         public static readonly RecordType CIAD = new RecordType(0x44414943);
         public static readonly RecordType CITC = new RecordType(0x43544943);
@@ -73,6 +82,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType COED = new RecordType(0x44454F43);
         public static readonly RecordType COLL = new RecordType(0x4C4C4F43);
         public static readonly RecordType CONT = new RecordType(0x544E4F43);
+        public static readonly RecordType CPTH = new RecordType(0x48545043);
         public static readonly RecordType CRDT = new RecordType(0x54445243);
         public static readonly RecordType CRGR = new RecordType(0x52475243);
         public static readonly RecordType CRIF = new RecordType(0x46495243);
@@ -190,6 +200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INFO = new RecordType(0x4F464E49);
         public static readonly RecordType INGR = new RecordType(0x52474E49);
         public static readonly RecordType INTV = new RecordType(0x56544E49);
+        public static readonly RecordType IPCT = new RecordType(0x54435049);
         public static readonly RecordType IPDS = new RecordType(0x53445049);
         public static readonly RecordType JAIL = new RecordType(0x4C49414A);
         public static readonly RecordType JIAD = new RecordType(0x4441494A);

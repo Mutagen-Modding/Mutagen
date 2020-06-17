@@ -1014,7 +1014,9 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "QUST", "FULL", "NNAM" },
                     new RecordType[] { "WATR", "FULL" },
                     new RecordType[] { "EXPL", "FULL" },
-                    new StringsAlignmentCustom("PERK", PerkStringHandler)
+                    new StringsAlignmentCustom("PERK", PerkStringHandler),
+                    new RecordType[] { "BPTD", "BPTN" },
+                    new RecordType[] { "AVIF", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,
@@ -1033,7 +1035,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "BOOK", "DESC" },
                     new RecordType[] { "QUST", "CNAM" },
                     new RecordType[] { "LSCR", "DESC" },
-                    new RecordType[] { "PERK", "DESC" }
+                    new RecordType[] { "PERK", "DESC" },
+                    new RecordType[] { "AVIF", "DESC" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int ACBS = 0x53424341;
         public const int ACHR = 0x52484341;
         public const int ACTI = 0x49544341;
+        public const int ADDN = 0x4E444441;
         public const int AHCM = 0x4D434841;
         public const int AIAD = 0x44414941;
         public const int AIDT = 0x54444941;
@@ -51,6 +52,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int ATKE = 0x454B5441;
         public const int ATKR = 0x524B5441;
         public const int ATXT = 0x54585441;
+        public const int AVIF = 0x46495641;
+        public const int AVSK = 0x4B535641;
         public const int BAMT = 0x544D4142;
         public const int BIAD = 0x44414942;
         public const int BIDS = 0x53444942;
@@ -58,8 +61,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int BNAM = 0x4D414E42;
         public const int BODT = 0x54444F42;
         public const int BOOK = 0x4B4F4F42;
+        public const int BPND = 0x444E5042;
+        public const int BPNI = 0x494E5042;
+        public const int BPNN = 0x4E4E5042;
+        public const int BPNT = 0x544E5042;
         public const int BPTD = 0x44545042;
+        public const int BPTN = 0x4E545042;
         public const int BTXT = 0x54585442;
+        public const int CAMS = 0x534D4143;
         public const int CELL = 0x4C4C4543;
         public const int CIAD = 0x44414943;
         public const int CITC = 0x43544943;
@@ -73,6 +82,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int COED = 0x44454F43;
         public const int COLL = 0x4C4C4F43;
         public const int CONT = 0x544E4F43;
+        public const int CPTH = 0x48545043;
         public const int CRDT = 0x54445243;
         public const int CRGR = 0x52475243;
         public const int CRIF = 0x46495243;
@@ -190,6 +200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int INFO = 0x4F464E49;
         public const int INGR = 0x52474E49;
         public const int INTV = 0x56544E49;
+        public const int IPCT = 0x54435049;
         public const int IPDS = 0x53445049;
         public const int JAIL = 0x4C49414A;
         public const int JIAD = 0x4441494A;

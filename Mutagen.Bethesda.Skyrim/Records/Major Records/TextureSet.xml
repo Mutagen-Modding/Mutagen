@@ -17,19 +17,4 @@
       <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" />
     </Fields>
   </Object>
-  <Object name="Decal" objType="Subrecord" recordType="DODT" GUID="8e13d6f4-ab4a-46fb-aad6-a31589952a1b" ID="24">
-    <Fields>
-      <Float name="MinWidth" />
-      <Float name="MaxWidth" />
-      <Float name="MinHeight" />
-      <Float name="MaxHeight" />
-      <Float name="Depth" />
-      <Float name="Shininess" />
-      <Float name="ParallaxScale" />
-      <UInt8 name="ParallaxPasses" />
-      <Enum name="Flags" enumName="Decal.Flag" byteLength="1" />
-      <UInt16 name="Unknown" />
-      <Color name="Color" binaryType="Alpha" />
-    </Fields>
-  </Object>
 </Loqui>
