@@ -212,8 +212,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GetDefault(bool getter)
         {
-            if (this.HasBeenSet) return "default";
-            return $"new FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>(FormKey.Null)";
+            if (this.HasBeenSet) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
+            return $"FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
         }
     }
 }

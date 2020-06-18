@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<VoiceType>> Voices { get; set; } = new GenderedItem<IFormLink<VoiceType>>(new FormLink<VoiceType>(FormKey.Null), new FormLink<VoiceType>(FormKey.Null));
+        public GenderedItem<IFormLink<VoiceType>> Voices { get; set; } = new GenderedItem<IFormLink<VoiceType>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
         IGenderedItemGetter<IFormLink<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region DecapitateArmors
@@ -11527,7 +11527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             get
             {
-                if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLink<IVoiceTypeGetter>>(new FormLink<IVoiceTypeGetter>(FormKey.Null), new FormLink<IVoiceTypeGetter>(FormKey.Null));
+                if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLink<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
                 var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLink<IVoiceTypeGetter>>(
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
