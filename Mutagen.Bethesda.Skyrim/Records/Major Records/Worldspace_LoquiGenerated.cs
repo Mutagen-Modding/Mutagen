@@ -4388,7 +4388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InteriorLighting),
-                    item: item.InteriorLighting.FormKey.Value,
+                    item: item.InteriorLighting.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.InteriorLighting,
                     errorMask: errorMask);
             }
@@ -4398,7 +4398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey.Value,
+                    item: item.EncounterZone.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
@@ -4408,7 +4408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Location),
-                    item: item.Location.FormKey.Value,
+                    item: item.Location.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Location,
                     errorMask: errorMask);
             }
@@ -4432,7 +4432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Climate),
-                    item: item.Climate.FormKey.Value,
+                    item: item.Climate.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Climate,
                     errorMask: errorMask);
             }
@@ -4442,7 +4442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Water),
-                    item: item.Water.FormKey.Value,
+                    item: item.Water.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -4452,7 +4452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LodWater),
-                    item: item.LodWater.FormKey.Value,
+                    item: item.LodWater.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.LodWater,
                     errorMask: errorMask);
             }
@@ -4568,7 +4568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Music),
-                    item: item.Music.FormKey.Value,
+                    item: item.Music.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Music,
                     errorMask: errorMask);
             }

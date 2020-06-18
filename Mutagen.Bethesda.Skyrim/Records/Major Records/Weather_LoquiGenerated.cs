@@ -6452,7 +6452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Precipitation),
-                    item: item.Precipitation.FormKey.Value,
+                    item: item.Precipitation.FormKey,
                     fieldIndex: (int)Weather_FieldIndex.Precipitation,
                     errorMask: errorMask);
             }

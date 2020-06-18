@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Idle),
-                    item: item.Idle.FormKey.Value,
+                    item: item.Idle.FormKey,
                     fieldIndex: (int)PackageEvent_FieldIndex.Idle,
                     errorMask: errorMask);
             }

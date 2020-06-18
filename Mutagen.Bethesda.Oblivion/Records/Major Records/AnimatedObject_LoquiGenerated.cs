@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.IdleAnimation),
-                    item: item.IdleAnimation.FormKey.Value,
+                    item: item.IdleAnimation.FormKey,
                     fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                     errorMask: errorMask);
             }

@@ -3962,7 +3962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SpecificLocation),
-                    item: item.SpecificLocation.FormKey.Value,
+                    item: item.SpecificLocation.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.SpecificLocation,
                     errorMask: errorMask);
             }
@@ -3972,7 +3972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ForcedReference),
-                    item: item.ForcedReference.FormKey.Value,
+                    item: item.ForcedReference.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.ForcedReference,
                     errorMask: errorMask);
             }
@@ -3982,7 +3982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.UniqueActor),
-                    item: item.UniqueActor.FormKey.Value,
+                    item: item.UniqueActor.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.UniqueActor,
                     errorMask: errorMask);
             }
@@ -4122,7 +4122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SpectatorOverridePackageList),
-                    item: item.SpectatorOverridePackageList.FormKey.Value,
+                    item: item.SpectatorOverridePackageList.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.SpectatorOverridePackageList,
                     errorMask: errorMask);
             }
@@ -4132,7 +4132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObserveDeadBodyOverridePackageList),
-                    item: item.ObserveDeadBodyOverridePackageList.FormKey.Value,
+                    item: item.ObserveDeadBodyOverridePackageList.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList,
                     errorMask: errorMask);
             }
@@ -4142,7 +4142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GuardWarnOverridePackageList),
-                    item: item.GuardWarnOverridePackageList.FormKey.Value,
+                    item: item.GuardWarnOverridePackageList.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList,
                     errorMask: errorMask);
             }
@@ -4152,7 +4152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatOverridePackageList),
-                    item: item.CombatOverridePackageList.FormKey.Value,
+                    item: item.CombatOverridePackageList.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.CombatOverridePackageList,
                     errorMask: errorMask);
             }
@@ -4162,7 +4162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DisplayName),
-                    item: item.DisplayName.FormKey.Value,
+                    item: item.DisplayName.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.DisplayName,
                     errorMask: errorMask);
             }
@@ -4226,7 +4226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VoiceTypes),
-                    item: item.VoiceTypes.FormKey.Value,
+                    item: item.VoiceTypes.FormKey,
                     fieldIndex: (int)QuestAlias_FieldIndex.VoiceTypes,
                     errorMask: errorMask);
             }

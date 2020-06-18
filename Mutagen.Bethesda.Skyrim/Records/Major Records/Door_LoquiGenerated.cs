@@ -2396,7 +2396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound.FormKey.Value,
+                    item: item.OpenSound.FormKey,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
@@ -2406,7 +2406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound.FormKey.Value,
+                    item: item.CloseSound.FormKey,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LoopSound),
-                    item: item.LoopSound.FormKey.Value,
+                    item: item.LoopSound.FormKey,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask);
             }

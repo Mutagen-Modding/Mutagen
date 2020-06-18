@@ -2188,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CreatedObject),
-                    item: item.CreatedObject.FormKey.Value,
+                    item: item.CreatedObject.FormKey,
                     fieldIndex: (int)ConstructibleObject_FieldIndex.CreatedObject,
                     errorMask: errorMask);
             }
@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.WorkbenchKeyword),
-                    item: item.WorkbenchKeyword.FormKey.Value,
+                    item: item.WorkbenchKeyword.FormKey,
                     fieldIndex: (int)ConstructibleObject_FieldIndex.WorkbenchKeyword,
                     errorMask: errorMask);
             }

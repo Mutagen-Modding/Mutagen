@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Spell),
-                    item: item.Spell.FormKey.Value,
+                    item: item.Spell.FormKey,
                     fieldIndex: (int)PerkAddActivateChoice_FieldIndex.Spell,
                     errorMask: errorMask);
             }

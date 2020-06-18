@@ -2272,7 +2272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey.Value,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)SigilStone_FieldIndex.Script,
                     errorMask: errorMask);
             }

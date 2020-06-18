@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Global),
-                    item: item.Global.FormKey.Value,
+                    item: item.Global.FormKey,
                     fieldIndex: (int)LeveledNpc_FieldIndex.Global,
                     errorMask: errorMask);
             }

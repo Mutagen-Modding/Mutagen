@@ -3015,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InteractionKeyword),
-                    item: item.InteractionKeyword.FormKey.Value,
+                    item: item.InteractionKeyword.FormKey,
                     fieldIndex: (int)Furniture_FieldIndex.InteractionKeyword,
                     errorMask: errorMask);
             }
@@ -3039,7 +3039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AssociatedSpell),
-                    item: item.AssociatedSpell.FormKey.Value,
+                    item: item.AssociatedSpell.FormKey,
                     fieldIndex: (int)Furniture_FieldIndex.AssociatedSpell,
                     errorMask: errorMask);
             }

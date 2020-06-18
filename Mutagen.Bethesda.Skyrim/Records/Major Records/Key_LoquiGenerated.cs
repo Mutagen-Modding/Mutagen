@@ -2752,7 +2752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey.Value,
+                    item: item.PickUpSound.FormKey,
                     fieldIndex: (int)Key_FieldIndex.PickUpSound,
                     errorMask: errorMask);
             }
@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey.Value,
+                    item: item.PutDownSound.FormKey,
                     fieldIndex: (int)Key_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }

@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey.Value,
+                    item: item.TextureSet.FormKey,
                     fieldIndex: (int)LandscapeTexture_FieldIndex.TextureSet,
                     errorMask: errorMask);
             }

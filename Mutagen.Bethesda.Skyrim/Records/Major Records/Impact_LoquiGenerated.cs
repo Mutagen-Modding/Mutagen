@@ -2746,7 +2746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey.Value,
+                    item: item.TextureSet.FormKey,
                     fieldIndex: (int)Impact_FieldIndex.TextureSet,
                     errorMask: errorMask);
             }
@@ -2756,7 +2756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SecondaryTextureSet),
-                    item: item.SecondaryTextureSet.FormKey.Value,
+                    item: item.SecondaryTextureSet.FormKey,
                     fieldIndex: (int)Impact_FieldIndex.SecondaryTextureSet,
                     errorMask: errorMask);
             }
@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Sound1),
-                    item: item.Sound1.FormKey.Value,
+                    item: item.Sound1.FormKey,
                     fieldIndex: (int)Impact_FieldIndex.Sound1,
                     errorMask: errorMask);
             }
@@ -2776,7 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Sound2),
-                    item: item.Sound2.FormKey.Value,
+                    item: item.Sound2.FormKey,
                     fieldIndex: (int)Impact_FieldIndex.Sound2,
                     errorMask: errorMask);
             }
@@ -2786,7 +2786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Hazard),
-                    item: item.Hazard.FormKey.Value,
+                    item: item.Hazard.FormKey,
                     fieldIndex: (int)Impact_FieldIndex.Hazard,
                     errorMask: errorMask);
             }

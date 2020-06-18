@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey.Value,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Enchantment),
-                    item: item.Enchantment.FormKey.Value,
+                    item: item.Enchantment.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }

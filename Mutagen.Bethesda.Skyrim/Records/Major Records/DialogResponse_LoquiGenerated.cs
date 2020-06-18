@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SpeakerIdleAnimation),
-                    item: item.SpeakerIdleAnimation.FormKey.Value,
+                    item: item.SpeakerIdleAnimation.FormKey,
                     fieldIndex: (int)DialogResponse_FieldIndex.SpeakerIdleAnimation,
                     errorMask: errorMask);
             }
@@ -2263,7 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ListenerIdleAnimation),
-                    item: item.ListenerIdleAnimation.FormKey.Value,
+                    item: item.ListenerIdleAnimation.FormKey,
                     fieldIndex: (int)DialogResponse_FieldIndex.ListenerIdleAnimation,
                     errorMask: errorMask);
             }

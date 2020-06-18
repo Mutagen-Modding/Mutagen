@@ -4102,7 +4102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base.FormKey.Value,
+                    item: item.Base.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey.Value,
+                    item: item.EncounterZone.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
@@ -4166,7 +4166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer.FormKey.Value,
+                    item: item.MerchantContainer.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }
@@ -4254,7 +4254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PersistentLocation),
-                    item: item.PersistentLocation.FormKey.Value,
+                    item: item.PersistentLocation.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.PersistentLocation,
                     errorMask: errorMask);
             }
@@ -4264,7 +4264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference.FormKey.Value,
+                    item: item.LocationReference.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }
@@ -4312,7 +4312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Horse),
-                    item: item.Horse.FormKey.Value,
+                    item: item.Horse.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.Horse,
                     errorMask: errorMask);
             }
@@ -4360,7 +4360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Emittance),
-                    item: item.Emittance.FormKey.Value,
+                    item: item.Emittance.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.Emittance,
                     errorMask: errorMask);
             }
@@ -4370,7 +4370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MultiboundReference),
-                    item: item.MultiboundReference.FormKey.Value,
+                    item: item.MultiboundReference.FormKey,
                     fieldIndex: (int)PlacedNpc_FieldIndex.MultiboundReference,
                     errorMask: errorMask);
             }

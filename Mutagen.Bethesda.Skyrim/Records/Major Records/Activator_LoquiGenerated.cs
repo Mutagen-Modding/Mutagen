@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LoopingSound),
-                    item: item.LoopingSound.FormKey.Value,
+                    item: item.LoopingSound.FormKey,
                     fieldIndex: (int)Activator_FieldIndex.LoopingSound,
                     errorMask: errorMask);
             }
@@ -2832,7 +2832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ActivationSound),
-                    item: item.ActivationSound.FormKey.Value,
+                    item: item.ActivationSound.FormKey,
                     fieldIndex: (int)Activator_FieldIndex.ActivationSound,
                     errorMask: errorMask);
             }
@@ -2842,7 +2842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.WaterType),
-                    item: item.WaterType.FormKey.Value,
+                    item: item.WaterType.FormKey,
                     fieldIndex: (int)Activator_FieldIndex.WaterType,
                     errorMask: errorMask);
             }
@@ -2872,7 +2872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InteractionKeyword),
-                    item: item.InteractionKeyword.FormKey.Value,
+                    item: item.InteractionKeyword.FormKey,
                     fieldIndex: (int)Activator_FieldIndex.InteractionKeyword,
                     errorMask: errorMask);
             }

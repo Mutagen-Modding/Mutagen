@@ -4222,7 +4222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle.FormKey.Value,
+                    item: item.CombatStyle.FormKey,
                     fieldIndex: (int)Package_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
@@ -4232,7 +4232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OwnerQuest),
-                    item: item.OwnerQuest.FormKey.Value,
+                    item: item.OwnerQuest.FormKey,
                     fieldIndex: (int)Package_FieldIndex.OwnerQuest,
                     errorMask: errorMask);
             }

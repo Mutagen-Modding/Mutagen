@@ -3468,7 +3468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MenuDisplayObject),
-                    item: item.MenuDisplayObject.FormKey.Value,
+                    item: item.MenuDisplayObject.FormKey,
                     fieldIndex: (int)Scroll_FieldIndex.MenuDisplayObject,
                     errorMask: errorMask);
             }
@@ -3478,7 +3478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey.Value,
+                    item: item.EquipmentType.FormKey,
                     fieldIndex: (int)Scroll_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }
@@ -3526,7 +3526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey.Value,
+                    item: item.PickUpSound.FormKey,
                     fieldIndex: (int)Scroll_FieldIndex.PickUpSound,
                     errorMask: errorMask);
             }
@@ -3536,7 +3536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey.Value,
+                    item: item.PutDownSound.FormKey,
                     fieldIndex: (int)Scroll_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }

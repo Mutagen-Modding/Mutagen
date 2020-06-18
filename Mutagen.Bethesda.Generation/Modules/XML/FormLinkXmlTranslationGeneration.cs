@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Generation
             switch (type.FormIDType)
             {
                 case FormLinkType.FormIDTypeEnum.Normal:
-                    return $"{itemAccessor.PropertyOrDirectAccess}.FormKey{(typeGen.HasBeenSet ? ".Value" : null)}";
+                    return $"{itemAccessor.PropertyOrDirectAccess}.FormKey";
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
                     return $"{itemAccessor.PropertyOrDirectAccess}.EDID";
                 default:

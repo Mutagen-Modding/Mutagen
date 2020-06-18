@@ -3003,7 +3003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MenuDisplayObject),
-                    item: item.MenuDisplayObject.FormKey.Value,
+                    item: item.MenuDisplayObject.FormKey,
                     fieldIndex: (int)Spell_FieldIndex.MenuDisplayObject,
                     errorMask: errorMask);
             }
@@ -3013,7 +3013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey.Value,
+                    item: item.EquipmentType.FormKey,
                     fieldIndex: (int)Spell_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }

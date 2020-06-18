@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.NextQuest),
-                    item: item.NextQuest.FormKey.Value,
+                    item: item.NextQuest.FormKey,
                     fieldIndex: (int)QuestLogEntry_FieldIndex.NextQuest,
                     errorMask: errorMask);
             }

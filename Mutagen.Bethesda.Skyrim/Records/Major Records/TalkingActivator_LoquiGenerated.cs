@@ -2616,7 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LoopingSound),
-                    item: item.LoopingSound.FormKey.Value,
+                    item: item.LoopingSound.FormKey,
                     fieldIndex: (int)TalkingActivator_FieldIndex.LoopingSound,
                     errorMask: errorMask);
             }
@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VoiceType),
-                    item: item.VoiceType.FormKey.Value,
+                    item: item.VoiceType.FormKey,
                     fieldIndex: (int)TalkingActivator_FieldIndex.VoiceType,
                     errorMask: errorMask);
             }

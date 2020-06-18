@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Parent),
-                    item: item.Parent.FormKey.Value,
+                    item: item.Parent.FormKey,
                     fieldIndex: (int)MaterialType_FieldIndex.Parent,
                     errorMask: errorMask);
             }
@@ -2000,7 +2000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.HavokImpactDataSet),
-                    item: item.HavokImpactDataSet.FormKey.Value,
+                    item: item.HavokImpactDataSet.FormKey,
                     fieldIndex: (int)MaterialType_FieldIndex.HavokImpactDataSet,
                     errorMask: errorMask);
             }

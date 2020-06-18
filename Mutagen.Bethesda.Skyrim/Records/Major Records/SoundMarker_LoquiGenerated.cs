@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SoundDescriptor),
-                    item: item.SoundDescriptor.FormKey.Value,
+                    item: item.SoundDescriptor.FormKey,
                     fieldIndex: (int)SoundMarker_FieldIndex.SoundDescriptor,
                     errorMask: errorMask);
             }

@@ -2995,7 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObjectEffect),
-                    item: item.ObjectEffect.FormKey.Value,
+                    item: item.ObjectEffect.FormKey,
                     fieldIndex: (int)Explosion_FieldIndex.ObjectEffect,
                     errorMask: errorMask);
             }
@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImageSpaceModifier),
-                    item: item.ImageSpaceModifier.FormKey.Value,
+                    item: item.ImageSpaceModifier.FormKey,
                     fieldIndex: (int)Explosion_FieldIndex.ImageSpaceModifier,
                     errorMask: errorMask);
             }

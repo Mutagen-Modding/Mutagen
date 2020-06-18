@@ -3524,7 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey.Value,
+                    item: item.EncounterZone.FormKey,
                     fieldIndex: (int)APlacedTrap_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
@@ -3636,7 +3636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Emittance),
-                    item: item.Emittance.FormKey.Value,
+                    item: item.Emittance.FormKey,
                     fieldIndex: (int)APlacedTrap_FieldIndex.Emittance,
                     errorMask: errorMask);
             }
@@ -3646,7 +3646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MultiBoundReference),
-                    item: item.MultiBoundReference.FormKey.Value,
+                    item: item.MultiBoundReference.FormKey,
                     fieldIndex: (int)APlacedTrap_FieldIndex.MultiBoundReference,
                     errorMask: errorMask);
             }
@@ -3685,7 +3685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference.FormKey.Value,
+                    item: item.LocationReference.FormKey,
                     fieldIndex: (int)APlacedTrap_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }

@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Music),
-                    item: item.Music.FormKey.Value,
+                    item: item.Music.FormKey,
                     fieldIndex: (int)RegionSounds_FieldIndex.Music,
                     errorMask: errorMask);
             }

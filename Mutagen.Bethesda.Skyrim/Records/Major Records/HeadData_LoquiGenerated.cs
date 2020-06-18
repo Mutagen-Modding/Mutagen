@@ -2751,7 +2751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DefaultFaceTexture),
-                    item: item.DefaultFaceTexture.FormKey.Value,
+                    item: item.DefaultFaceTexture.FormKey,
                     fieldIndex: (int)HeadData_FieldIndex.DefaultFaceTexture,
                     errorMask: errorMask);
             }
@@ -2795,7 +2795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MorphRace),
-                    item: item.MorphRace.FormKey.Value,
+                    item: item.MorphRace.FormKey,
                     fieldIndex: (int)HeadData_FieldIndex.MorphRace,
                     errorMask: errorMask);
             }
@@ -2805,7 +2805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ArmorRace),
-                    item: item.ArmorRace.FormKey.Value,
+                    item: item.ArmorRace.FormKey,
                     fieldIndex: (int)HeadData_FieldIndex.ArmorRace,
                     errorMask: errorMask);
             }

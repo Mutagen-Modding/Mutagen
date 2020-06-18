@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.QNAM),
-                    item: item.QNAM.FormKey.Value,
+                    item: item.QNAM.FormKey,
                     fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.QNAM,
                     errorMask: errorMask);
             }

@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BaseEffect),
-                    item: item.BaseEffect.FormKey.Value,
+                    item: item.BaseEffect.FormKey,
                     fieldIndex: (int)Effect_FieldIndex.BaseEffect,
                     errorMask: errorMask);
             }

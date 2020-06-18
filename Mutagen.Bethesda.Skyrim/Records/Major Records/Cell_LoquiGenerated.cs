@@ -4830,7 +4830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Location),
-                    item: item.Location.FormKey.Value,
+                    item: item.Location.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Location,
                     errorMask: errorMask);
             }
@@ -4874,7 +4874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Water),
-                    item: item.Water.FormKey.Value,
+                    item: item.Water.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -4898,7 +4898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LockList),
-                    item: item.LockList.FormKey.Value,
+                    item: item.LockList.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.LockList,
                     errorMask: errorMask);
             }
@@ -4918,7 +4918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SkyAndWeatherFromRegion),
-                    item: item.SkyAndWeatherFromRegion.FormKey.Value,
+                    item: item.SkyAndWeatherFromRegion.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.SkyAndWeatherFromRegion,
                     errorMask: errorMask);
             }
@@ -4928,7 +4928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AcousticSpace),
-                    item: item.AcousticSpace.FormKey.Value,
+                    item: item.AcousticSpace.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.AcousticSpace,
                     errorMask: errorMask);
             }
@@ -4938,7 +4938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey.Value,
+                    item: item.EncounterZone.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
@@ -4948,7 +4948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MusicType),
-                    item: item.MusicType.FormKey.Value,
+                    item: item.MusicType.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.MusicType,
                     errorMask: errorMask);
             }
@@ -4958,7 +4958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImageSpace),
-                    item: item.ImageSpace.FormKey.Value,
+                    item: item.ImageSpace.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.ImageSpace,
                     errorMask: errorMask);
             }

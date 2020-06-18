@@ -3176,7 +3176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ExteriorJailMarker),
-                    item: item.ExteriorJailMarker.FormKey.Value,
+                    item: item.ExteriorJailMarker.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.ExteriorJailMarker,
                     errorMask: errorMask);
             }
@@ -3186,7 +3186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FollowerWaitMarker),
-                    item: item.FollowerWaitMarker.FormKey.Value,
+                    item: item.FollowerWaitMarker.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.FollowerWaitMarker,
                     errorMask: errorMask);
             }
@@ -3196,7 +3196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.StolenGoodsContainer),
-                    item: item.StolenGoodsContainer.FormKey.Value,
+                    item: item.StolenGoodsContainer.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.StolenGoodsContainer,
                     errorMask: errorMask);
             }
@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PlayerInventoryContainer),
-                    item: item.PlayerInventoryContainer.FormKey.Value,
+                    item: item.PlayerInventoryContainer.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.PlayerInventoryContainer,
                     errorMask: errorMask);
             }
@@ -3216,7 +3216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SharedCrimeFactionList),
-                    item: item.SharedCrimeFactionList.FormKey.Value,
+                    item: item.SharedCrimeFactionList.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.SharedCrimeFactionList,
                     errorMask: errorMask);
             }
@@ -3226,7 +3226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.JailOutfit),
-                    item: item.JailOutfit.FormKey.Value,
+                    item: item.JailOutfit.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.JailOutfit,
                     errorMask: errorMask);
             }
@@ -3270,7 +3270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VendorBuySellList),
-                    item: item.VendorBuySellList.FormKey.Value,
+                    item: item.VendorBuySellList.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.VendorBuySellList,
                     errorMask: errorMask);
             }
@@ -3280,7 +3280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer.FormKey.Value,
+                    item: item.MerchantContainer.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }

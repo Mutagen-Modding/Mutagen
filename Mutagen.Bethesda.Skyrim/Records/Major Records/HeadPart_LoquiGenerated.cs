@@ -2521,7 +2521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey.Value,
+                    item: item.TextureSet.FormKey,
                     fieldIndex: (int)HeadPart_FieldIndex.TextureSet,
                     errorMask: errorMask);
             }
@@ -2531,7 +2531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Color),
-                    item: item.Color.FormKey.Value,
+                    item: item.Color.FormKey,
                     fieldIndex: (int)HeadPart_FieldIndex.Color,
                     errorMask: errorMask);
             }
@@ -2541,7 +2541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ValidRaces),
-                    item: item.ValidRaces.FormKey.Value,
+                    item: item.ValidRaces.FormKey,
                     fieldIndex: (int)HeadPart_FieldIndex.ValidRaces,
                     errorMask: errorMask);
             }

@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey.Value,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)Flora_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2000,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Ingredient),
-                    item: item.Ingredient.FormKey.Value,
+                    item: item.Ingredient.FormKey,
                     fieldIndex: (int)Flora_FieldIndex.Ingredient,
                     errorMask: errorMask);
             }

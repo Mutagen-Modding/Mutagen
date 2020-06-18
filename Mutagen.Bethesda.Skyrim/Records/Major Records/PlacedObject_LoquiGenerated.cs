@@ -7011,7 +7011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base.FormKey.Value,
+                    item: item.Base.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -7113,7 +7113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LightingTemplate),
-                    item: item.LightingTemplate.FormKey.Value,
+                    item: item.LightingTemplate.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.LightingTemplate,
                     errorMask: errorMask);
             }
@@ -7123,7 +7123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImageSpace),
-                    item: item.ImageSpace.FormKey.Value,
+                    item: item.ImageSpace.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.ImageSpace,
                     errorMask: errorMask);
             }
@@ -7228,7 +7228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Emittance),
-                    item: item.Emittance.FormKey.Value,
+                    item: item.Emittance.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Emittance,
                     errorMask: errorMask);
             }
@@ -7280,7 +7280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TeleportMessageBox),
-                    item: item.TeleportMessageBox.FormKey.Value,
+                    item: item.TeleportMessageBox.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.TeleportMessageBox,
                     errorMask: errorMask);
             }
@@ -7290,7 +7290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MultiboundReference),
-                    item: item.MultiboundReference.FormKey.Value,
+                    item: item.MultiboundReference.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.MultiboundReference,
                     errorMask: errorMask);
             }
@@ -7344,7 +7344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.XCZR),
-                    item: item.XCZR.FormKey.Value,
+                    item: item.XCZR.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.XCZR,
                     errorMask: errorMask);
             }
@@ -7364,7 +7364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.XCZC),
-                    item: item.XCZC.FormKey.Value,
+                    item: item.XCZC.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.XCZC,
                     errorMask: errorMask);
             }
@@ -7384,7 +7384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SpawnContainer),
-                    item: item.SpawnContainer.FormKey.Value,
+                    item: item.SpawnContainer.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.SpawnContainer,
                     errorMask: errorMask);
             }
@@ -7408,7 +7408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LeveledItemBaseObject),
-                    item: item.LeveledItemBaseObject.FormKey.Value,
+                    item: item.LeveledItemBaseObject.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.LeveledItemBaseObject,
                     errorMask: errorMask);
             }
@@ -7428,7 +7428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PersistentLocation),
-                    item: item.PersistentLocation.FormKey.Value,
+                    item: item.PersistentLocation.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.PersistentLocation,
                     errorMask: errorMask);
             }
@@ -7462,7 +7462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey.Value,
+                    item: item.EncounterZone.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
@@ -7548,7 +7548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference.FormKey.Value,
+                    item: item.LocationReference.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }
@@ -7659,7 +7659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttachRef),
-                    item: item.AttachRef.FormKey.Value,
+                    item: item.AttachRef.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.AttachRef,
                     errorMask: errorMask);
             }

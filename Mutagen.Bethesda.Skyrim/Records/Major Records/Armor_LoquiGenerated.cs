@@ -3567,7 +3567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObjectEffect),
-                    item: item.ObjectEffect.FormKey.Value,
+                    item: item.ObjectEffect.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.ObjectEffect,
                     errorMask: errorMask);
             }
@@ -3641,7 +3641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey.Value,
+                    item: item.PickUpSound.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.PickUpSound,
                     errorMask: errorMask);
             }
@@ -3651,7 +3651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey.Value,
+                    item: item.PutDownSound.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }
@@ -3671,7 +3671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey.Value,
+                    item: item.EquipmentType.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }
@@ -3681,7 +3681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BashImpactDataSet),
-                    item: item.BashImpactDataSet.FormKey.Value,
+                    item: item.BashImpactDataSet.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.BashImpactDataSet,
                     errorMask: errorMask);
             }
@@ -3691,7 +3691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AlternateBlockMaterial),
-                    item: item.AlternateBlockMaterial.FormKey.Value,
+                    item: item.AlternateBlockMaterial.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.AlternateBlockMaterial,
                     errorMask: errorMask);
             }
@@ -3701,7 +3701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Race),
-                    item: item.Race.FormKey.Value,
+                    item: item.Race.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.Race,
                     errorMask: errorMask);
             }
@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TemplateArmor),
-                    item: item.TemplateArmor.FormKey.Value,
+                    item: item.TemplateArmor.FormKey,
                     fieldIndex: (int)Armor_FieldIndex.TemplateArmor,
                     errorMask: errorMask);
             }

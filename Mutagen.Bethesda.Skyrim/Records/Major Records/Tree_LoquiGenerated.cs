@@ -2598,7 +2598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Ingredient),
-                    item: item.Ingredient.FormKey.Value,
+                    item: item.Ingredient.FormKey,
                     fieldIndex: (int)Tree_FieldIndex.Ingredient,
                     errorMask: errorMask);
             }
@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.HarvestSound),
-                    item: item.HarvestSound.FormKey.Value,
+                    item: item.HarvestSound.FormKey,
                     fieldIndex: (int)Tree_FieldIndex.HarvestSound,
                     errorMask: errorMask);
             }

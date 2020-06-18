@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImageSpaceModifier),
-                    item: item.ImageSpaceModifier.FormKey.Value,
+                    item: item.ImageSpaceModifier.FormKey,
                     fieldIndex: (int)CameraShot_FieldIndex.ImageSpaceModifier,
                     errorMask: errorMask);
             }

@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Color),
-                    item: item.Color.FormKey.Value,
+                    item: item.Color.FormKey,
                     fieldIndex: (int)TintPreset_FieldIndex.Color,
                     errorMask: errorMask);
             }

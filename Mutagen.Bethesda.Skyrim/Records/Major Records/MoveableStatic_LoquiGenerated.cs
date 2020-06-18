@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LoopingSound),
-                    item: item.LoopingSound.FormKey.Value,
+                    item: item.LoopingSound.FormKey,
                     fieldIndex: (int)MoveableStatic_FieldIndex.LoopingSound,
                     errorMask: errorMask);
             }

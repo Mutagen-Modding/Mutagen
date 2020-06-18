@@ -4935,7 +4935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MenuDisplayObject),
-                    item: item.MenuDisplayObject.FormKey.Value,
+                    item: item.MenuDisplayObject.FormKey,
                     fieldIndex: (int)MagicEffect_FieldIndex.MenuDisplayObject,
                     errorMask: errorMask);
             }

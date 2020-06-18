@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AssociatedSkill),
-                    item: item.AssociatedSkill.FormKey.Value,
+                    item: item.AssociatedSkill.FormKey,
                     fieldIndex: (int)ActorValuePerkNode_FieldIndex.AssociatedSkill,
                     errorMask: errorMask);
             }

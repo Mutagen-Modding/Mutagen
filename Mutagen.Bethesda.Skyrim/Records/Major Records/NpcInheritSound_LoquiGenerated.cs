@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InheritsSoundsFrom),
-                    item: item.InheritsSoundsFrom.FormKey.Value,
+                    item: item.InheritsSoundsFrom.FormKey,
                     fieldIndex: (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom,
                     errorMask: errorMask);
             }

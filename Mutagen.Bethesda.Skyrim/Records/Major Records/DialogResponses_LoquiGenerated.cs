@@ -3189,7 +3189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Topic),
-                    item: item.Topic.FormKey.Value,
+                    item: item.Topic.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.Topic,
                     errorMask: errorMask);
             }
@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PreviousDialog),
-                    item: item.PreviousDialog.FormKey.Value,
+                    item: item.PreviousDialog.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.PreviousDialog,
                     errorMask: errorMask);
             }
@@ -3237,7 +3237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ResponseData),
-                    item: item.ResponseData.FormKey.Value,
+                    item: item.ResponseData.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.ResponseData,
                     errorMask: errorMask);
             }
@@ -3317,7 +3317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Speaker),
-                    item: item.Speaker.FormKey.Value,
+                    item: item.Speaker.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.Speaker,
                     errorMask: errorMask);
             }
@@ -3327,7 +3327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.WalkAwayTopic),
-                    item: item.WalkAwayTopic.FormKey.Value,
+                    item: item.WalkAwayTopic.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.WalkAwayTopic,
                     errorMask: errorMask);
             }
@@ -3337,7 +3337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AudioOutputOverride),
-                    item: item.AudioOutputOverride.FormKey.Value,
+                    item: item.AudioOutputOverride.FormKey,
                     fieldIndex: (int)DialogResponses_FieldIndex.AudioOutputOverride,
                     errorMask: errorMask);
             }

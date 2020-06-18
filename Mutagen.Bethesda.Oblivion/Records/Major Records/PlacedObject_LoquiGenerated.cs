@@ -3438,7 +3438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base.FormKey.Value,
+                    item: item.Base.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Owner),
-                    item: item.Owner.FormKey.Value,
+                    item: item.Owner.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -3516,7 +3516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable.FormKey.Value,
+                    item: item.GlobalVariable.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -3540,7 +3540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Target),
-                    item: item.Target.FormKey.Value,
+                    item: item.Target.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Target,
                     errorMask: errorMask);
             }
@@ -3604,7 +3604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.XRTM),
-                    item: item.XRTM.FormKey.Value,
+                    item: item.XRTM.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.XRTM,
                     errorMask: errorMask);
             }
@@ -3677,7 +3677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul.FormKey.Value,
+                    item: item.ContainedSoul.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                     errorMask: errorMask);
             }

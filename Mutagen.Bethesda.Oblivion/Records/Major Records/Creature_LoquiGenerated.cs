@@ -4371,7 +4371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DeathItem),
-                    item: item.DeathItem.FormKey.Value,
+                    item: item.DeathItem.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.DeathItem,
                     errorMask: errorMask);
             }
@@ -4381,7 +4381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey.Value,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -4466,7 +4466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle.FormKey.Value,
+                    item: item.CombatStyle.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
@@ -4526,7 +4526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InheritsSoundFrom),
-                    item: item.InheritsSoundFrom.FormKey.Value,
+                    item: item.InheritsSoundFrom.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                     errorMask: errorMask);
             }

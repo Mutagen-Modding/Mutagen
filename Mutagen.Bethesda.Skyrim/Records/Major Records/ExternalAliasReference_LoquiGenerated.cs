@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Quest),
-                    item: item.Quest.FormKey.Value,
+                    item: item.Quest.FormKey,
                     fieldIndex: (int)ExternalAliasReference_FieldIndex.Quest,
                     errorMask: errorMask);
             }

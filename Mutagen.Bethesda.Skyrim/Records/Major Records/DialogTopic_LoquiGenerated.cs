@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Branch),
-                    item: item.Branch.FormKey.Value,
+                    item: item.Branch.FormKey,
                     fieldIndex: (int)DialogTopic_FieldIndex.Branch,
                     errorMask: errorMask);
             }
@@ -2552,7 +2552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Quest),
-                    item: item.Quest.FormKey.Value,
+                    item: item.Quest.FormKey,
                     fieldIndex: (int)DialogTopic_FieldIndex.Quest,
                     errorMask: errorMask);
             }

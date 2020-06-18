@@ -4261,7 +4261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObjectEffect),
-                    item: item.ObjectEffect.FormKey.Value,
+                    item: item.ObjectEffect.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.ObjectEffect,
                     errorMask: errorMask);
             }
@@ -4295,7 +4295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey.Value,
+                    item: item.EquipmentType.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }
@@ -4305,7 +4305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BlockBashImpact),
-                    item: item.BlockBashImpact.FormKey.Value,
+                    item: item.BlockBashImpact.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.BlockBashImpact,
                     errorMask: errorMask);
             }
@@ -4315,7 +4315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AlternateBlockMaterial),
-                    item: item.AlternateBlockMaterial.FormKey.Value,
+                    item: item.AlternateBlockMaterial.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.AlternateBlockMaterial,
                     errorMask: errorMask);
             }
@@ -4325,7 +4325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey.Value,
+                    item: item.PickUpSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.PickUpSound,
                     errorMask: errorMask);
             }
@@ -4335,7 +4335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey.Value,
+                    item: item.PutDownSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }
@@ -4398,7 +4398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ImpactDataSet),
-                    item: item.ImpactDataSet.FormKey.Value,
+                    item: item.ImpactDataSet.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.ImpactDataSet,
                     errorMask: errorMask);
             }
@@ -4408,7 +4408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FirstPersonModel),
-                    item: item.FirstPersonModel.FormKey.Value,
+                    item: item.FirstPersonModel.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.FirstPersonModel,
                     errorMask: errorMask);
             }
@@ -4418,7 +4418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackSound),
-                    item: item.AttackSound.FormKey.Value,
+                    item: item.AttackSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.AttackSound,
                     errorMask: errorMask);
             }
@@ -4428,7 +4428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackSound2D),
-                    item: item.AttackSound2D.FormKey.Value,
+                    item: item.AttackSound2D.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.AttackSound2D,
                     errorMask: errorMask);
             }
@@ -4438,7 +4438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackLoopSound),
-                    item: item.AttackLoopSound.FormKey.Value,
+                    item: item.AttackLoopSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.AttackLoopSound,
                     errorMask: errorMask);
             }
@@ -4448,7 +4448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackFailSound),
-                    item: item.AttackFailSound.FormKey.Value,
+                    item: item.AttackFailSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.AttackFailSound,
                     errorMask: errorMask);
             }
@@ -4458,7 +4458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.IdleSound),
-                    item: item.IdleSound.FormKey.Value,
+                    item: item.IdleSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.IdleSound,
                     errorMask: errorMask);
             }
@@ -4468,7 +4468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipSound),
-                    item: item.EquipSound.FormKey.Value,
+                    item: item.EquipSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.EquipSound,
                     errorMask: errorMask);
             }
@@ -4478,7 +4478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.UnequipSound),
-                    item: item.UnequipSound.FormKey.Value,
+                    item: item.UnequipSound.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.UnequipSound,
                     errorMask: errorMask);
             }
@@ -4540,7 +4540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Template),
-                    item: item.Template.FormKey.Value,
+                    item: item.Template.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.Template,
                     errorMask: errorMask);
             }

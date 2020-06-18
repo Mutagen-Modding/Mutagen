@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MarkerKeyword),
-                    item: item.MarkerKeyword.FormKey.Value,
+                    item: item.MarkerKeyword.FormKey,
                     fieldIndex: (int)FurnitureMarker_FieldIndex.MarkerKeyword,
                     errorMask: errorMask);
             }

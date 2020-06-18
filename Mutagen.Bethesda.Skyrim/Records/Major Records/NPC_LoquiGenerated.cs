@@ -6048,7 +6048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DeathItem),
-                    item: item.DeathItem.FormKey.Value,
+                    item: item.DeathItem.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.DeathItem,
                     errorMask: errorMask);
             }
@@ -6058,7 +6058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Voice),
-                    item: item.Voice.FormKey.Value,
+                    item: item.Voice.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Voice,
                     errorMask: errorMask);
             }
@@ -6068,7 +6068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Template),
-                    item: item.Template.FormKey.Value,
+                    item: item.Template.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Template,
                     errorMask: errorMask);
             }
@@ -6120,7 +6120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.WornArmor),
-                    item: item.WornArmor.FormKey.Value,
+                    item: item.WornArmor.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.WornArmor,
                     errorMask: errorMask);
             }
@@ -6130,7 +6130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FarAwayModel),
-                    item: item.FarAwayModel.FormKey.Value,
+                    item: item.FarAwayModel.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.FarAwayModel,
                     errorMask: errorMask);
             }
@@ -6140,7 +6140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AttackRace),
-                    item: item.AttackRace.FormKey.Value,
+                    item: item.AttackRace.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.AttackRace,
                     errorMask: errorMask);
             }
@@ -6170,7 +6170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SpectatorOverridePackageList),
-                    item: item.SpectatorOverridePackageList.FormKey.Value,
+                    item: item.SpectatorOverridePackageList.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.SpectatorOverridePackageList,
                     errorMask: errorMask);
             }
@@ -6180,7 +6180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ObserveDeadBodyOverridePackageList),
-                    item: item.ObserveDeadBodyOverridePackageList.FormKey.Value,
+                    item: item.ObserveDeadBodyOverridePackageList.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList,
                     errorMask: errorMask);
             }
@@ -6190,7 +6190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GuardWarnOverridePackageList),
-                    item: item.GuardWarnOverridePackageList.FormKey.Value,
+                    item: item.GuardWarnOverridePackageList.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.GuardWarnOverridePackageList,
                     errorMask: errorMask);
             }
@@ -6200,7 +6200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatOverridePackageList),
-                    item: item.CombatOverridePackageList.FormKey.Value,
+                    item: item.CombatOverridePackageList.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.CombatOverridePackageList,
                     errorMask: errorMask);
             }
@@ -6361,7 +6361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.HairColor),
-                    item: item.HairColor.FormKey.Value,
+                    item: item.HairColor.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.HairColor,
                     errorMask: errorMask);
             }
@@ -6371,7 +6371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle.FormKey.Value,
+                    item: item.CombatStyle.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
@@ -6381,7 +6381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GiftFilter),
-                    item: item.GiftFilter.FormKey.Value,
+                    item: item.GiftFilter.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.GiftFilter,
                     errorMask: errorMask);
             }
@@ -6441,7 +6441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DefaultOutfit),
-                    item: item.DefaultOutfit.FormKey.Value,
+                    item: item.DefaultOutfit.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.DefaultOutfit,
                     errorMask: errorMask);
             }
@@ -6451,7 +6451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SleepingOutfit),
-                    item: item.SleepingOutfit.FormKey.Value,
+                    item: item.SleepingOutfit.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.SleepingOutfit,
                     errorMask: errorMask);
             }
@@ -6461,7 +6461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DefaultPackageList),
-                    item: item.DefaultPackageList.FormKey.Value,
+                    item: item.DefaultPackageList.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.DefaultPackageList,
                     errorMask: errorMask);
             }
@@ -6471,7 +6471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CrimeFaction),
-                    item: item.CrimeFaction.FormKey.Value,
+                    item: item.CrimeFaction.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.CrimeFaction,
                     errorMask: errorMask);
             }
@@ -6481,7 +6481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.HeadTexture),
-                    item: item.HeadTexture.FormKey.Value,
+                    item: item.HeadTexture.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.HeadTexture,
                     errorMask: errorMask);
             }

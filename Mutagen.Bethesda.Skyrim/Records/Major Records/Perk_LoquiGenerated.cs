@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.NextPerk),
-                    item: item.NextPerk.FormKey.Value,
+                    item: item.NextPerk.FormKey,
                     fieldIndex: (int)Perk_FieldIndex.NextPerk,
                     errorMask: errorMask);
             }

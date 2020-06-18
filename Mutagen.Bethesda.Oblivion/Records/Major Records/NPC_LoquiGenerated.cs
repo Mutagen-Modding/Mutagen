@@ -4240,7 +4240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DeathItem),
-                    item: item.DeathItem.FormKey.Value,
+                    item: item.DeathItem.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.DeathItem,
                     errorMask: errorMask);
             }
@@ -4250,7 +4250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Race),
-                    item: item.Race.FormKey.Value,
+                    item: item.Race.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Race,
                     errorMask: errorMask);
             }
@@ -4278,7 +4278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script.FormKey.Value,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -4359,7 +4359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Class),
-                    item: item.Class.FormKey.Value,
+                    item: item.Class.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Class,
                     errorMask: errorMask);
             }
@@ -4383,7 +4383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Hair),
-                    item: item.Hair.FormKey.Value,
+                    item: item.Hair.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Hair,
                     errorMask: errorMask);
             }
@@ -4432,7 +4432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle.FormKey.Value,
+                    item: item.CombatStyle.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
