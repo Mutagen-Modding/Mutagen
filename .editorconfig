@@ -87,3 +87,5 @@ dotnet_diagnostic.IDE0060.severity = silent
 # CS1066: // Optional parameter has no effect
 dotnet_diagnostic.CS1066.severity = silent
 
+# CS8621: // Nullability of reference types in return type doesn't match the target delegate.
+dotnet_diagnostic.CS8621.severity = error
