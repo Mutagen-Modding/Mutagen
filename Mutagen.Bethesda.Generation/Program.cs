@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "nvertToCustom(RecordTypes.EIAD)";
+            string testString = "public override TryGet<int?> FillRecordType(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

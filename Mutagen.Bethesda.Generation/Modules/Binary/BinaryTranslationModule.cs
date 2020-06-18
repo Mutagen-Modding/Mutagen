@@ -660,11 +660,7 @@ namespace Mutagen.Bethesda.Generation
                                     args.AddPassArg("contentLength");
                                     if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
-                                        args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
-                                    }
-                                    else
-                                    {
-                                        args.AddPassArg("recordTypeConverter");
+                                        args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
                                     }
                                 }
                             }
@@ -2549,7 +2545,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");
-                        args.Add("RecordTypeConverter? recordTypeConverter");
+                        args.Add("RecordTypeConverter? recordTypeConverter = null");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -2652,11 +2648,7 @@ namespace Mutagen.Bethesda.Generation
                                         args.AddPassArg("lastParsed");
                                         if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                         {
-                                            args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
-                                        }
-                                        else
-                                        {
-                                            args.AddPassArg("recordTypeConverter");
+                                            args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
                                         }
                                     }
                                 }
@@ -2672,11 +2664,7 @@ namespace Mutagen.Bethesda.Generation
                                         args.AddPassArg("lastParsed");
                                         if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                         {
-                                            args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
-                                        }
-                                        else
-                                        {
-                                            args.AddPassArg("recordTypeConverter");
+                                            args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
                                         }
                                     }
                                 }

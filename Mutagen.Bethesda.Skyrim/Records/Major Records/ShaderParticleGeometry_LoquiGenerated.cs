@@ -3140,8 +3140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        recordTypeConverter: recordTypeConverter);
+                        contentLength: contentLength);
             }
         }
 
@@ -3330,7 +3329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
@@ -3356,8 +3355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed,
-                        recordTypeConverter: recordTypeConverter);
+                        lastParsed: lastParsed);
             }
         }
         #region To String

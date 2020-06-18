@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int offset,
                 RecordType type,
                 int? lastParsed,
-                RecordTypeConverter? recordTypeConverter)
+                RecordTypeConverter? recordTypeConverter = null)
             {
                 if (type.TypeInt == 0x44494445) // EDID
                 {

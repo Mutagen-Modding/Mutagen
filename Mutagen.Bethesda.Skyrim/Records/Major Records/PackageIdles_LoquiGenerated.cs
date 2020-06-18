@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
