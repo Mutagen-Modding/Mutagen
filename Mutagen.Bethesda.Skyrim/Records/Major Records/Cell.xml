@@ -40,7 +40,7 @@
       <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <RefDirect name="Ownership" refName="Ownership" />
-      <FormLink name="LockList" objType="Record" recordType="XILL">
+      <FormLink name="LockList" recordType="XILL">
         <Interface>ILockList</Interface>
       </FormLink>
       <String name="WaterEnvironmentMap" recordType="XWEM" />

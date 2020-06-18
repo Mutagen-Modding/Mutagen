@@ -10,7 +10,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <FormLink name="ObjectEffect" recordType="EITM" objType="Record" >
+      <FormLink name="ObjectEffect" recordType="EITM" >
         <Interface>IEffectRecord</Interface>
       </FormLink>
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />

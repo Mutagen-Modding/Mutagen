@@ -19,10 +19,10 @@
       <RefDirect name="Decal" refName="Decal" />
       <FormLink name="TextureSet" refName="TextureSet" recordType="DNAM" />
       <FormLink name="SecondaryTextureSet" refName="TextureSet" recordType="ENAM" />
-      <FormLink name="Sound1" recordType="SNAM" objType="Record">
+      <FormLink name="Sound1" recordType="SNAM" >
         <Interface>ISound</Interface>
       </FormLink>
-      <FormLink name="Sound2" recordType="NAM1" objType="Record">
+      <FormLink name="Sound2" recordType="NAM1" >
         <Interface>ISound</Interface>
       </FormLink>
       <FormLink name="Hazard" recordType="NAM2" refName="Hazard" />

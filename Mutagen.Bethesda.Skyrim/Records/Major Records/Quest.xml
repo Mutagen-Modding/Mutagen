@@ -111,7 +111,7 @@
       <Enum name="Flags" enumName="QuestAlias.Flag" byteLength="4" recordType="FNAM" />
       <Int32 name="AliasIndexToForceIntoWhenFilled" recordType="ALFI" />
       <FormLink name="SpecificLocation" refName="Location" recordType="ALFL" />
-      <FormLink name="ForcedReference" objType="Record" recordType="ALFR">
+      <FormLink name="ForcedReference" recordType="ALFR">
         <Interface>IPlaced</Interface>
       </FormLink>
       <FormLink name="UniqueActor" refName="Npc" recordType="ALUA" />
@@ -139,7 +139,7 @@
       <List name="PackageData">
         <FormLink recordType="ALPC" refName="Package" />
       </List>
-      <FormLink name="VoiceTypes" recordType="VTCK" objType="Record">
+      <FormLink name="VoiceTypes" recordType="VTCK" >
         <Interface>IAliasVoiceType</Interface>
       </FormLink>
       <CustomLogic name="End" recordType="ALED" />
@@ -186,7 +186,7 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <FormLink name="Target" objType="Record">
+          <FormLink name="Target" >
             <Interface>IPlaced</Interface>
           </FormLink>
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />

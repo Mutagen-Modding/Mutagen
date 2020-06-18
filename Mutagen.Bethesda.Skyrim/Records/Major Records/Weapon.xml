@@ -13,7 +13,7 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
-      <FormLink name="ObjectEffect" recordType="EITM" objType="Record">
+      <FormLink name="ObjectEffect" recordType="EITM" >
         <Interface>IEffectRecord</Interface>
       </FormLink>
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />

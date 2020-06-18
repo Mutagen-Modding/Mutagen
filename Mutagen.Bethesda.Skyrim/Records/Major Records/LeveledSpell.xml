@@ -19,7 +19,7 @@
     <Fields>
       <Int16 name="Level" />
       <Int16 name="Unknown" />
-      <FormLink name="Reference" objType="Record">
+      <FormLink name="Reference" >
         <Interface>ISpellSpawn</Interface>
       </FormLink>
       <Int16 name="Count" />

@@ -558,13 +558,6 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="objType" type="MutagenObjectType">
-          <xs:annotation>
-            <xs:documentation>
-              Type of mutagen object this is creating.  Only applicable if FormLink is referencing non-Loqui interfaces
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

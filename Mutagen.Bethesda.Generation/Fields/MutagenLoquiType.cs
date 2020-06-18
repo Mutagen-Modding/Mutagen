@@ -15,13 +15,15 @@ namespace Mutagen.Bethesda.Generation
     public class MutagenLoquiType : LoquiType
     {
         private ObjectType _interfObjectType;
+        public bool RequireInterfaceObject = true;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
             if (this.RefType == LoquiRefType.Interface)
             {
-                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.ObjectType, out _interfObjectType))
+                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.ObjectType, out _interfObjectType)
+                    && RequireInterfaceObject)
                 {
                     throw new ArgumentException("Interface Ref Type was specified without supplying object type");
                 }

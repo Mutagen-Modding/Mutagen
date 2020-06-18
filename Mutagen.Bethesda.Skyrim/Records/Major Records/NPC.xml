@@ -14,7 +14,7 @@
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
       <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
-      <FormLink name="Template" recordType="TPLT" objType="Record" >
+      <FormLink name="Template" recordType="TPLT" >
         <Interface>INpcSpawn</Interface>
       </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" hasBeenSet="False" />

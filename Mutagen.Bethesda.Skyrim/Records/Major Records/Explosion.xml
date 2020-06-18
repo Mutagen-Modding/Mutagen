@@ -8,7 +8,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="ObjectEffect" recordType="EITM" objType="Record" >
+      <FormLink name="ObjectEffect" recordType="EITM" >
         <Interface>IEffectRecord</Interface>
       </FormLink>
       <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />

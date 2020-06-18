@@ -16,7 +16,7 @@
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <RefDirect name="ActivateParents" refName="ActivateParents" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormLink name="Emittance" objType="Record" recordType="XEMI">
+      <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
       <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
@@ -24,7 +24,7 @@
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>
-      <FormLink name="LocationReference" objType="Record" recordType="XLRL">
+      <FormLink name="LocationReference" recordType="XLRL">
         <Interface>ILocationRecord</Interface>
       </FormLink>
       <List name="DistantLodData" recordType="XLOD">

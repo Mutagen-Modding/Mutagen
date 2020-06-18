@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EnableParent" recordType="XESP" objType="Subrecord" GUID="e078cd3d-8b51-4e47-ac43-427229d9cf88" ID="124">
     <Fields>
-      <FormLink name="Reference" objType="Record" >
+      <FormLink name="Reference">
         <Interface>IPlaced</Interface>
       </FormLink>
       <Enum name="Flags" enumName="EnableParent.Flag" byteLength="4" />

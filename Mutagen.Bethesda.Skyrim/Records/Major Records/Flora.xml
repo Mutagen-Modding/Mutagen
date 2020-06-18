@@ -17,7 +17,7 @@
       <ByteArray name="PNAM" recordType="PNAM" />
       <String name="ActivateTextOverride" recordType="RNAM" />
       <ByteArray name="FNAM" recordType="FNAM" />
-      <FormLink name="Ingredient" objType="Record" recordType="PFIG">
+      <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>
       <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />

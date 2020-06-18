@@ -10,7 +10,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="Ingredient" objType="Record" recordType="PFIG">
+      <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>
       <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />

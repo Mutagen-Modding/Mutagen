@@ -8,7 +8,7 @@
   </Object>
   <Object name="ContainerItem" recordType="CNTO" objType="Subrecord" GUID="9136f361-686d-4ce5-a654-fda162ea6bf8" ID="172">
     <Fields>
-      <FormLink name="Item" objType="Record">
+      <FormLink name="Item" >
         <Interface>IItem</Interface>
       </FormLink>
       <Int32 name="Count" />

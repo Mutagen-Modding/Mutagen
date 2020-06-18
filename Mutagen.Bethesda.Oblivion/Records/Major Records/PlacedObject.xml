@@ -8,13 +8,13 @@
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <FormLink name="Owner" recordType="XOWN" objType="Record">
+      <FormLink name="Owner" recordType="XOWN" >
         <Interface>IOwner</Interface>
       </FormLink>
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormLink name="Target" recordType="XTRG" objType="Record" >
+      <FormLink name="Target" recordType="XTRG" >
         <Interface>IPlaced</Interface>
       </FormLink>
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
@@ -35,7 +35,7 @@
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
-      <FormLink name="Destination" objType="Record" >
+      <FormLink name="Destination" >
         <Interface>IPlaced</Interface>
       </FormLink>
       <P3Float name="Position" />

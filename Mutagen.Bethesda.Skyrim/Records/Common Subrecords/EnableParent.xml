@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EnableParent" objType="Subrecord" recordType="XESP" GUID="38c30ba6-9e8b-4527-bc32-c50192765290" ID="299" >
     <Fields>
-      <FormLink name="Reference" objType="Record">
+      <FormLink name="Reference" >
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <Break />

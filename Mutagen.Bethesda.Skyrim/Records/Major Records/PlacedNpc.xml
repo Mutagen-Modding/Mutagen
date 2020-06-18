@@ -22,7 +22,7 @@
       <RefDirect name="ActivateParents" refName="ActivateParents" />
       <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
       <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
-      <FormLink name="LocationReference" objType="Record" recordType="XLRL">
+      <FormLink name="LocationReference" recordType="XLRL">
         <Interface>ILocationRecord</Interface>
       </FormLink>
       <Bool name="IgnoredBySandbox" boolAsMarker="XIS2" />
@@ -34,7 +34,7 @@
       <Float name="FavorCost" recordType="XFVC" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <RefDirect name="Ownership" refName="Ownership" />
-      <FormLink name="Emittance" objType="Record" recordType="XEMI">
+      <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
       <FormLink name="MultiboundReference" refName="PlacedObject" recordType="XMBR" />

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weather" baseClass="SkyrimMajorRecord" objType="Record" customRecordFallback="true" recordType="WTHR" GUID="2a067384-8f2a-4245-9c26-092e2a0351f0" ID="248">
     <Fields>
@@ -116,7 +116,7 @@
   </Object>
   <Object name="WeatherSound" objType="Subrecord" recordType="SNAM" GUID="64e679e9-2100-4369-99ad-82954aa050ff" ID="252">
     <Fields>
-      <FormLink name="Sound" objType="Record">
+      <FormLink name="Sound" >
         <Interface>ISound</Interface>
       </FormLink>
       <Enum name="Type" enumName="WeatherSound.TypeEnum" byteLength="4" />

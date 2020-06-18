@@ -10,7 +10,7 @@
       <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
       <Enum name="FavorLevel" enumName="FavorLevel" byteLength="1" recordType="CNAM" />
       <List name="LinkTo">
-        <FormLink recordType="TCLT" objType="Record">
+        <FormLink recordType="TCLT" >
           <Interface>IDialog</Interface>
         </FormLink>
       </List>

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
         public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
         private FormIDType _rawFormID;
-        public LoquiType LoquiType { get; private set; }
+        public MutagenLoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
         public override bool HasProperty => false;
         public override bool IsEnumerable => false;
@@ -67,9 +67,10 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
+            LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<MutagenLoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
             LoquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
+            LoquiType.RequireInterfaceObject = false;
             await LoquiType.Load(node, requireName: false);
             LoquiType.Name = this.Name;
             LoquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;

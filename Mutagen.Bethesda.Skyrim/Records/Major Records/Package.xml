@@ -107,14 +107,14 @@
   </Object>
   <Object name="PackageTargetSpecificReference" baseClass="APackageTarget" objType="Subrecord" GUID="c412e131-d50c-428d-9698-a8548aef0a99" ID="376">
     <Fields>
-      <FormLink name="Reference" objType="Record">
+      <FormLink name="Reference" >
         <Interface>ILinkedReference</Interface>
       </FormLink>
     </Fields>
   </Object>
   <Object name="PackageTargetObjectID" baseClass="APackageTarget" objType="Subrecord" GUID="9e7ef46d-9664-4c21-b10d-97bae6621a10" ID="377">
     <Fields>
-      <FormLink name="Reference" objType="Record">
+      <FormLink name="Reference" >
         <Interface>IObjectId</Interface>
       </FormLink>
     </Fields>

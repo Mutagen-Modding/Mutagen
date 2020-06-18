@@ -8,7 +8,7 @@
   </Object>
   <Object name="ActivateParent" objType="Subrecord" recordType="XAPR" GUID="5a5f33f9-1fba-4a3f-84bf-57b7d9da4c18" ID="298">
     <Fields>
-      <FormLink name="Reference" objType="Record">
+      <FormLink name="Reference">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <Float name="Delay" />

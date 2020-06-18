@@ -63,7 +63,7 @@
   </Object>
   <Object name="RegionObject" objType="Subrecord" GUID="97e90183-2a56-46b0-bbdd-014ba9cc25da" ID="266">
     <Fields>
-      <FormLink name="Object" objType="Record">
+      <FormLink name="Object" >
         <Interface>IRegionTarget</Interface>
       </FormLink>
       <UInt16 name="ParentIndex" />

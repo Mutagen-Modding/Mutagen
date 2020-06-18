@@ -7,7 +7,7 @@
       <String name="Filename" recordType="DNAM" />
       <String name="AnimationEvent" recordType="ENAM" />
       <List name="RelatedIdles" recordType="ANAM" hasBeenSet="False" >
-        <FormLink objType="Record">
+        <FormLink >
           <Interface>IIdleRelation</Interface>
         </FormLink>
       </List>
