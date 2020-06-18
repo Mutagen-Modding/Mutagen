@@ -217,9 +217,6 @@
     <Compile Include="Records\Common Subrecords\LocationObjectType_LoquiGenerated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\LocationReference_LoquiGenerated.cs">
-      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
@@ -1884,6 +1881,9 @@
       <DependentUpon>FootstepSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius_LoquiGenerated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTarget_LoquiGenerated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
   </ItemGroup>

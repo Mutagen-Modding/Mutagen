@@ -7,7 +7,7 @@
     </Fields>
   </Object>
   <Object name="ALocationTarget" abstract="true" objType="Subrecord" GUID="9dbd900f-2e31-46bb-a927-ac5831e0c2ec" ID="222" />
-  <Object name="LocationReference" baseClass="ALocationTarget" objType="Subrecord" GUID="a321885a-3f8e-4f28-b1ea-33d84e24937e" ID="223">
+  <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord" GUID="a321885a-3f8e-4f28-b1ea-33d84e24937e" ID="223">
     <Fields>
       <FormLink name="Link" >
         <Interface>ILocationTargetable</Interface>

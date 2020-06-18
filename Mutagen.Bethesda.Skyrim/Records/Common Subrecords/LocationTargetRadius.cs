@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (type)
                 {
                     case LocationTargetRadius.LocationType.NearReference:
-                        return new LocationReference()
+                        return new LocationTarget()
                         {
                             Link = FormKeyBinaryTranslation.Instance.Parse(frame)
                         };
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var target = item.Target;
                 switch (target)
                 {
-                    case LocationReference reference:
+                    case LocationTarget reference:
                         writer.Write((int)LocationTargetRadius.LocationType.NearReference);
                         FormKeyBinaryTranslation.Instance.Write(writer, reference.Link.FormKey);
                         break;
