@@ -163,13 +163,13 @@
             Implemented by: [Location, LocationReferenceType]
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.Skyrim.ILocationReferencable">
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationTargetable">
             <summary>
             Used for specifying which records can be specified in a Location Reference.
             Implemented by: [Door, PlacedNpc, PlacedObject]
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.Skyrim.ILocationReferencableGetter">
+        <member name="T:Mutagen.Bethesda.Skyrim.ILocationTargetableGetter">
             <summary>
             Used for specifying which records can be specified in a Location Reference.
             Implemented by: [Door, PlacedNpc, PlacedObject]

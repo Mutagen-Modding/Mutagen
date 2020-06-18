@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
-    <Interface>ILocationReferencable</Interface>
+    <Interface>ILocationTargetable</Interface>
     <Interface>IOwner</Interface>
     <Interface>IPlaced</Interface>
     <Interface>ILinkedReference</Interface>

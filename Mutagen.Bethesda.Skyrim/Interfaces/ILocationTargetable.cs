@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Used for specifying which records can be specified in a Location Reference.
     /// Implemented by: [Door, PlacedNpc, PlacedObject]
     /// </summary>
-    public interface ILocationReferencable : IMajorRecordCommon, ILocationReferencableGetter
+    public interface ILocationTargetable : IMajorRecordCommon, ILocationTargetableGetter
     {
     }
 
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Used for specifying which records can be specified in a Location Reference.
     /// Implemented by: [Door, PlacedNpc, PlacedObject]
     /// </summary>
-    public interface ILocationReferencableGetter : IMajorRecordCommonGetter
+    public interface ILocationTargetableGetter : IMajorRecordCommonGetter
     {
     }
 

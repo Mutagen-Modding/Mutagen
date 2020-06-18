@@ -4,7 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>ILocationReferencable</Interface>
+    <Interface>ILocationTargetable</Interface>
     <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />

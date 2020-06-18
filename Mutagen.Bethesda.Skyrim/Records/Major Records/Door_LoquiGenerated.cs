@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILocationReferencable,
+        ILocationTargetable,
         IObjectId,
         ILoquiObjectSetter<IDoorInternal>
     {
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        ILocationReferencableGetter,
+        ILocationTargetableGetter,
         IObjectIdGetter,
         ILoquiObject<IDoorGetter>,
         IXmlItem,

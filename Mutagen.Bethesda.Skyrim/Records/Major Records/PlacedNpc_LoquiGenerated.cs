@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedNpc :
         IPlacedNpcGetter,
         ISkyrimMajorRecord,
-        ILocationReferencable,
+        ILocationTargetable,
         IOwner,
         IPlaced,
         ILinkedReference,
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedNpcGetter :
         ISkyrimMajorRecordGetter,
-        ILocationReferencableGetter,
+        ILocationTargetableGetter,
         IOwnerGetter,
         IPlacedGetter,
         ILinkedReferenceGetter,

@@ -60,7 +60,7 @@
     <Compile Include="Interfaces\IKeywordLinkedReference.cs" />
     <Compile Include="Interfaces\ILinkedReference.cs" />
     <Compile Include="Interfaces\ILocationRecord.cs" />
-    <Compile Include="Interfaces\ILocationReferencable.cs" />
+    <Compile Include="Interfaces\ILocationTargetable.cs" />
     <Compile Include="Interfaces\ILockList.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="Interfaces\INpcSpawn.cs" />

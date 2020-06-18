@@ -49,9 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        public FormLink<ILocationReferencable> Link { get; set; } = new FormLink<ILocationReferencable>();
+        public FormLink<ILocationTargetable> Link { get; set; } = new FormLink<ILocationTargetable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILocationReferencableGetter> ILocationReferenceGetter.Link => this.Link;
+        IFormLink<ILocationTargetableGetter> ILocationReferenceGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         IALocationTarget,
         ILoquiObjectSetter<ILocationReference>
     {
-        new FormLink<ILocationReferencable> Link { get; set; }
+        new FormLink<ILocationTargetable> Link { get; set; }
     }
 
     public partial interface ILocationReferenceGetter :
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => LocationReference_Registration.Instance;
-        IFormLink<ILocationReferencableGetter> Link { get; }
+        IFormLink<ILocationTargetableGetter> Link { get; }
 
     }
 
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case LocationReference_FieldIndex.Link:
-                    return typeof(FormLink<ILocationReferencable>);
+                    return typeof(FormLink<ILocationTargetable>);
                 default:
                     return ALocationTarget_Registration.GetNthType(index);
             }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationReference item)
         {
             ClearPartial();
-            item.Link = FormLink<ILocationReferencable>.Null;
+            item.Link = FormLink<ILocationTargetable>.Null;
             base.Clear(item);
         }
         
@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILocationReferencableGetter> Link => new FormLink<ILocationReferencableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
