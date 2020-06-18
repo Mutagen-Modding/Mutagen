@@ -20,7 +20,7 @@
       <FormLink name="VendorBuySellList" recordType="VEND" refName="FormList" />
       <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
       <RefDirect name="VendorValues" refName="VendorValues" />
-      <RefDirect name="VendorLocation" refName="LocationTarget" recordType="PLVD" />
+      <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
     </Fields>
   </Object>

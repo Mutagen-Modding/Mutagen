@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageDataLocationBinaryOverlay
         {
-            public ILocationTargetGetter Location => throw new NotImplementedException();
+            public ILocationTargetRadiusGetter Location => throw new NotImplementedException();
         }
     }
 }

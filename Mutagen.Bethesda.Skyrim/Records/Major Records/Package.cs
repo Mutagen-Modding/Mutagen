@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
                             if (lastPackage is PackageDataLocation loc)
                             {
                                 stream.Position += subRecord.Header.HeaderLength;
-                                loc.Location = Mutagen.Bethesda.Skyrim.LocationTarget.CreateFromBinary(new MutagenFrame(stream));
+                                loc.Location = Mutagen.Bethesda.Skyrim.LocationTargetRadius.CreateFromBinary(new MutagenFrame(stream));
                             }
                             else
                             {

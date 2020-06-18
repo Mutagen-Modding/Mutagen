@@ -149,14 +149,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region VendorLocation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LocationTarget? _VendorLocation;
-        public LocationTarget? VendorLocation
+        private LocationTargetRadius? _VendorLocation;
+        public LocationTargetRadius? VendorLocation
         {
             get => _VendorLocation;
             set => _VendorLocation = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocationTargetGetter? IFactionGetter.VendorLocation => this.VendorLocation;
+        ILocationTargetRadiusGetter? IFactionGetter.VendorLocation => this.VendorLocation;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VendorBuySellList = initialValue;
                 this.MerchantContainer = initialValue;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
-                this.VendorLocation = new MaskItem<TItem, LocationTarget.Mask<TItem>?>(initialValue, new LocationTarget.Mask<TItem>(initialValue));
+                this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VendorBuySellList = VendorBuySellList;
                 this.MerchantContainer = MerchantContainer;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
-                this.VendorLocation = new MaskItem<TItem, LocationTarget.Mask<TItem>?>(VendorLocation, new LocationTarget.Mask<TItem>(VendorLocation));
+                this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem VendorBuySellList;
             public TItem MerchantContainer;
             public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
-            public MaskItem<TItem, LocationTarget.Mask<TItem>?>? VendorLocation { get; set; }
+            public MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>? VendorLocation { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.VendorBuySellList = eval(this.VendorBuySellList);
                 obj.MerchantContainer = eval(this.MerchantContainer);
                 obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues.Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
-                obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTarget.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
+                obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? VendorBuySellList;
             public Exception? MerchantContainer;
             public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
-            public MaskItem<Exception?, LocationTarget.ErrorMask?>? VendorLocation;
+            public MaskItem<Exception?, LocationTargetRadius.ErrorMask?>? VendorLocation;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.VendorLocation:
-                        this.VendorLocation = new MaskItem<Exception?, LocationTarget.ErrorMask?>(ex, null);
+                        this.VendorLocation = new MaskItem<Exception?, LocationTargetRadius.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.VendorLocation:
-                        this.VendorLocation = (MaskItem<Exception?, LocationTarget.ErrorMask?>?)obj;
+                        this.VendorLocation = (MaskItem<Exception?, LocationTargetRadius.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool VendorBuySellList;
             public bool MerchantContainer;
             public MaskItem<bool, VendorValues.TranslationMask?> VendorValues;
-            public MaskItem<bool, LocationTarget.TranslationMask?> VendorLocation;
+            public MaskItem<bool, LocationTargetRadius.TranslationMask?> VendorLocation;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             #endregion
 
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VendorBuySellList = defaultOn;
                 this.MerchantContainer = defaultOn;
                 this.VendorValues = new MaskItem<bool, VendorValues.TranslationMask?>(defaultOn, null);
-                this.VendorLocation = new MaskItem<bool, LocationTarget.TranslationMask?>(defaultOn, null);
+                this.VendorLocation = new MaskItem<bool, LocationTargetRadius.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<FormList> VendorBuySellList { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
-        new LocationTarget? VendorLocation { get; set; }
+        new LocationTargetRadius? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
     }
 
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IFormListGetter> VendorBuySellList { get; }
         IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
         IVendorValuesGetter? VendorValues { get; }
-        ILocationTargetGetter? VendorLocation { get; }
+        ILocationTargetRadiusGetter? VendorLocation { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
 
     }
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.VendorValues:
                     return typeof(VendorValues);
                 case Faction_FieldIndex.VendorLocation:
-                    return typeof(LocationTarget);
+                    return typeof(LocationTargetRadius);
                 case Faction_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
                 default:
@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemVendorValues = item.VendorValues;
             mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
             var itemVendorLocation = item.VendorLocation;
-            mask.VendorLocation = new MaskItem<bool, LocationTarget.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
+            mask.VendorLocation = new MaskItem<bool, LocationTargetRadius.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
             if (item.Conditions.TryGet(out var ConditionsItem))
             {
                 mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -3303,7 +3303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.VendorLocation.TryGet(out var VendorLocationItem))
                 {
-                    ((LocationTargetXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
+                    ((LocationTargetRadiusXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
                         item: VendorLocationItem,
                         node: node,
                         name: nameof(item.VendorLocation),
@@ -3718,7 +3718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                     try
                     {
-                        item.VendorLocation = LoquiXmlTranslation<LocationTarget>.Instance.Parse(
+                        item.VendorLocation = LoquiXmlTranslation<LocationTargetRadius>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
@@ -3952,7 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PLVD))
                 {
-                    ((LocationTargetBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
+                    ((LocationTargetRadiusBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
                         item: VendorLocationItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
@@ -4169,7 +4169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PLVD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTarget.CreateFromBinary(frame: frame);
+                    item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTargetRadius.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
                 case RecordTypeInts.CTDA:
@@ -4320,7 +4320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
-        public ILocationTargetGetter? VendorLocation { get; private set; }
+        public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
         #region Conditions
         partial void ConditionsCustomParse(
             BinaryMemoryReadStream stream,
@@ -4482,7 +4482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PLVD:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.VendorLocation = LocationTargetBinaryOverlay.LocationTargetFactory(
+                    this.VendorLocation = LocationTargetRadiusBinaryOverlay.LocationTargetRadiusFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Type
-        public LocationTarget.LocationType Type { get; set; } = default;
+        public LocationTargetRadius.LocationType Type { get; set; } = default;
         #endregion
         #region Data
         public Int32 Data { get; set; } = default;
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
         IALocationTarget,
         ILoquiObjectSetter<ILocationFallback>
     {
-        new LocationTarget.LocationType Type { get; set; }
+        new LocationTargetRadius.LocationType Type { get; set; }
         new Int32 Data { get; set; }
     }
 
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => LocationFallback_Registration.Instance;
-        LocationTarget.LocationType Type { get; }
+        LocationTargetRadius.LocationType Type { get; }
         Int32 Data { get; }
 
     }
@@ -1013,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case LocationFallback_FieldIndex.Type:
-                    return typeof(LocationTarget.LocationType);
+                    return typeof(LocationTargetRadius.LocationType);
                 case LocationFallback_FieldIndex.Data:
                     return typeof(Int32);
                 default:
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)LocationFallback_FieldIndex.Type) ?? true))
             {
-                EnumXmlTranslation<LocationTarget.LocationType>.Instance.Write(
+                EnumXmlTranslation<LocationTargetRadius.LocationType>.Instance.Write(
                     node: node,
                     name: nameof(item.Type),
                     item: item.Type,
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)LocationFallback_FieldIndex.Type);
                     try
                     {
-                        item.Type = EnumXmlTranslation<LocationTarget.LocationType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<LocationTargetRadius.LocationType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1681,7 +1681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationFallbackGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LocationTarget.LocationType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationFallback item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<LocationTarget.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Data = frame.ReadInt32();
         }
 
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public LocationTarget.LocationType Type => (LocationTarget.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public LocationTargetRadius.LocationType Type => (LocationTargetRadius.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,

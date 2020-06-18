@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LocationTarget" objType="Subrecord" GUID="5bd28818-6711-45ca-bed6-de977e414602" ID="35">
+  <Object name="LocationTargetRadius" objType="Subrecord" GUID="5bd28818-6711-45ca-bed6-de977e414602" ID="35">
     <Fields>
       <RefDirect name="Target" refName="ALocationTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
       <UInt32 name="Radius" />
@@ -38,7 +38,7 @@
   </Object>
   <Object name="LocationFallback" baseClass="ALocationTarget" objType="Subrecord" GUID="f2be660e-2fc0-4dab-b5dc-0c41205416bd" ID="233">
     <Fields>
-      <Enum name="Type" enumName="LocationTarget.LocationType" byteLength="4" />
+      <Enum name="Type" enumName="LocationTargetRadius.LocationType" byteLength="4" />
       <Int32 name="Data" />
     </Fields>
   </Object>

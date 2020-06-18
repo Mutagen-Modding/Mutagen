@@ -84,7 +84,7 @@
   </Object>
   <Object name="PackageDataLocation" objType="Subrecord" baseClass="APackageData" GUID="947ddb8a-c1b6-41cc-a7bf-c50b627aa80a" ID="391">
     <Fields>
-      <RefDirect name="Location" refName="LocationTarget" recordType="PLVD" hasBeenSet="False" binary="NoGeneration" />
+      <RefDirect name="Location" refName="LocationTargetRadius" recordType="PLVD" hasBeenSet="False" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="PackageDataTarget" objType="Subrecord" baseClass="APackageData" GUID="3fca774e-9f38-4d5c-aa94-e19393aeeeb0" ID="392">

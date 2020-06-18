@@ -86,7 +86,7 @@
       <DependentUpon>ActivateParents.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ALocationTarget_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\AlternateTexture_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
@@ -203,28 +203,25 @@
       <DependentUpon>LinkedReferences.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationCell_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationFallback_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationKeyword_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationObjectId_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationObjectType_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationReference_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\LocationTarget.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\LocationTarget_LoquiGenerated.cs">
-      <DependentUpon>LocationTarget.xml</DependentUpon>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Model_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
@@ -1885,6 +1882,9 @@
     </Compile>
     <Compile Include="Records\Major Records\FootstepSet_LoquiGenerated.cs">
       <DependentUpon>FootstepSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius_LoquiGenerated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

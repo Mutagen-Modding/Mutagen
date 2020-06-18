@@ -49,9 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        public LocationTarget Location { get; set; } = new LocationTarget();
+        public LocationTargetRadius Location { get; set; } = new LocationTargetRadius();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocationTargetGetter IPackageDataLocationGetter.Location => Location;
+        ILocationTargetRadiusGetter IPackageDataLocationGetter.Location => Location;
         #endregion
 
         #region To String
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Location = new MaskItem<TItem, LocationTarget.Mask<TItem>?>(initialValue, new LocationTarget.Mask<TItem>(initialValue));
+                this.Location = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Name: Name,
                 Flags: Flags)
             {
-                this.Location = new MaskItem<TItem, LocationTarget.Mask<TItem>?>(Location, new LocationTarget.Mask<TItem>(Location));
+                this.Location = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(Location, new LocationTargetRadius.Mask<TItem>(Location));
             }
 
             #pragma warning disable CS8618
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, LocationTarget.Mask<TItem>?>? Location { get; set; }
+            public MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>? Location { get; set; }
             #endregion
 
             #region Equals
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Location = this.Location == null ? null : new MaskItem<R, LocationTarget.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
+                obj.Location = this.Location == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
             }
             #endregion
 
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, LocationTarget.ErrorMask?>? Location;
+            public MaskItem<Exception?, LocationTargetRadius.ErrorMask?>? Location;
             #endregion
 
             #region IErrorMask
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case PackageDataLocation_FieldIndex.Location:
-                        this.Location = new MaskItem<Exception?, LocationTarget.ErrorMask?>(ex, null);
+                        this.Location = new MaskItem<Exception?, LocationTargetRadius.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case PackageDataLocation_FieldIndex.Location:
-                        this.Location = (MaskItem<Exception?, LocationTarget.ErrorMask?>?)obj;
+                        this.Location = (MaskItem<Exception?, LocationTargetRadius.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -464,14 +464,14 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, LocationTarget.TranslationMask?> Location;
+            public MaskItem<bool, LocationTargetRadius.TranslationMask?> Location;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Location = new MaskItem<bool, LocationTarget.TranslationMask?>(defaultOn, null);
+                this.Location = new MaskItem<bool, LocationTargetRadius.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPackageData,
         ILoquiObjectSetter<IPackageDataLocation>
     {
-        new LocationTarget Location { get; set; }
+        new LocationTargetRadius Location { get; set; }
     }
 
     public partial interface IPackageDataLocationGetter :
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => PackageDataLocation_Registration.Instance;
-        ILocationTargetGetter Location { get; }
+        ILocationTargetRadiusGetter Location { get; }
 
     }
 
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PackageDataLocation_FieldIndex.Location:
-                    return typeof(LocationTarget);
+                    return typeof(LocationTargetRadius);
                 default:
                     return APackageData_Registration.GetNthType(index);
             }
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageDataLocationGetter item,
             PackageDataLocation.Mask<bool> mask)
         {
-            mask.Location = new MaskItem<bool, LocationTarget.Mask<bool>?>(true, item.Location?.GetHasBeenSetMask());
+            mask.Location = new MaskItem<bool, LocationTargetRadius.Mask<bool>?>(true, item.Location?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)PackageDataLocation_FieldIndex.Location) ?? true))
             {
                 var LocationItem = item.Location;
-                ((LocationTargetXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
+                ((LocationTargetRadiusXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
                     item: LocationItem,
                     node: node,
                     name: nameof(item.Location),
@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PackageDataLocation_FieldIndex.Location);
                     try
                     {
-                        item.Location = LoquiXmlTranslation<LocationTarget>.Instance.Parse(
+                        item.Location = LoquiXmlTranslation<LocationTargetRadius>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)PackageDataLocation_FieldIndex.Location));

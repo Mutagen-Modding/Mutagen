@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationTarget
+    public partial class LocationTargetRadius
     {
         public ALocationTarget Target { get; set; } = null!;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IALocationTargetGetter ILocationTargetGetter.Target => Target;
+        IALocationTargetGetter ILocationTargetRadiusGetter.Target => Target;
 
         public enum LocationType
         {
@@ -30,34 +30,34 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class LocationTargetBinaryCreateTranslation
+        public partial class LocationTargetRadiusBinaryCreateTranslation
         {
             public static ALocationTarget GetLocationTarget(MutagenFrame frame)
             {
-                var type = (LocationTarget.LocationType)frame.ReadInt32();
+                var type = (LocationTargetRadius.LocationType)frame.ReadInt32();
                 switch (type)
                 {
-                    case LocationTarget.LocationType.NearReference:
+                    case LocationTargetRadius.LocationType.NearReference:
                         return new LocationReference()
                         {
                             Link = FormKeyBinaryTranslation.Instance.Parse(frame)
                         };
-                    case LocationTarget.LocationType.InCell:
+                    case LocationTargetRadius.LocationType.InCell:
                         return new LocationCell()
                         {
                             Link = FormKeyBinaryTranslation.Instance.Parse(frame)
                         };
-                    case LocationTarget.LocationType.ObjectID:
+                    case LocationTargetRadius.LocationType.ObjectID:
                         return new LocationObjectId()
                         {
                             Link = FormKeyBinaryTranslation.Instance.Parse(frame)
                         };
-                    case LocationTarget.LocationType.ObjectType:
+                    case LocationTargetRadius.LocationType.ObjectType:
                         return new LocationObjectType()
                         {
                             Type = (TargetObjectType)frame.ReadInt32()
                         };
-                    case LocationTarget.LocationType.LinkedReference:
+                    case LocationTargetRadius.LocationType.LinkedReference:
                         return new LocationKeyword()
                         {
                             Link = FormKeyBinaryTranslation.Instance.Parse(frame)
@@ -71,37 +71,37 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryTargetCustom(MutagenFrame frame, ILocationTarget item)
+            static partial void FillBinaryTargetCustom(MutagenFrame frame, ILocationTargetRadius item)
             {
                 item.Target = GetLocationTarget(frame);
             }
         }
 
-        public partial class LocationTargetBinaryWriteTranslation
+        public partial class LocationTargetRadiusBinaryWriteTranslation
         {
-            static partial void WriteBinaryTargetCustom(MutagenWriter writer, ILocationTargetGetter item)
+            static partial void WriteBinaryTargetCustom(MutagenWriter writer, ILocationTargetRadiusGetter item)
             {
                 var target = item.Target;
                 switch (target)
                 {
                     case LocationReference reference:
-                        writer.Write((int)LocationTarget.LocationType.NearReference);
+                        writer.Write((int)LocationTargetRadius.LocationType.NearReference);
                         FormKeyBinaryTranslation.Instance.Write(writer, reference.Link.FormKey);
                         break;
                     case LocationCell cell:
-                        writer.Write((int)LocationTarget.LocationType.InCell);
+                        writer.Write((int)LocationTargetRadius.LocationType.InCell);
                         FormKeyBinaryTranslation.Instance.Write(writer, cell.Link.FormKey);
                         break;
                     case LocationObjectId id:
-                        writer.Write((int)LocationTarget.LocationType.ObjectID);
+                        writer.Write((int)LocationTargetRadius.LocationType.ObjectID);
                         FormKeyBinaryTranslation.Instance.Write(writer, id.Link.FormKey);
                         break;
                     case LocationObjectType type:
-                        writer.Write((int)LocationTarget.LocationType.ObjectType);
+                        writer.Write((int)LocationTargetRadius.LocationType.ObjectType);
                         writer.Write((int)type.Type);
                         break;
                     case LocationKeyword keyw:
-                        writer.Write((int)LocationTarget.LocationType.LinkedReference);
+                        writer.Write((int)LocationTargetRadius.LocationType.LinkedReference);
                         FormKeyBinaryTranslation.Instance.Write(writer, keyw.Link.FormKey);
                         break;
                     case LocationFallback fallback:
@@ -114,11 +114,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class LocationTargetBinaryOverlay
+        public partial class LocationTargetRadiusBinaryOverlay
         {
             IALocationTargetGetter GetTargetCustom(int location)
             {
-                return LocationTargetBinaryCreateTranslation.GetLocationTarget(
+                return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(
                     new MutagenFrame(
                         new MutagenMemoryReadStream(_data.Slice(location), _package.MetaData)));
             }
