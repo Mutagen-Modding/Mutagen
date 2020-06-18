@@ -535,6 +535,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out BaseLayer item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(frame, recordTypeConverter);
+            return startPos != frame.Position;
+        }
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);

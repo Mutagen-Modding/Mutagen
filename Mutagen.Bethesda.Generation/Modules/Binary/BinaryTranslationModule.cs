@@ -320,6 +320,22 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
+            if (!obj.Abstract && obj.GetObjectType() != ObjectType.Mod)
+            {
+                using (var args = new FunctionWrapper(fg,
+                    "public static bool TryCreateFromBinary"))
+                {
+                    args.Add($"{nameof(MutagenFrame)} frame");
+                    args.Add($"out {obj.ObjectName} item");
+                    args.Add($"RecordTypeConverter? recordTypeConverter = null");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"var startPos = frame.Position;");
+                    fg.AppendLine($"item = CreateFromBinary(frame, recordTypeConverter);");
+                    fg.AppendLine($"return startPos != frame.Position;");
+                }
+            }
             await GenerateBinaryOverlayCreates(obj, fg);
         }
 
