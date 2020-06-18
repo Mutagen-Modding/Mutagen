@@ -2722,8 +2722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Quests.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.QSTI,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
                 }

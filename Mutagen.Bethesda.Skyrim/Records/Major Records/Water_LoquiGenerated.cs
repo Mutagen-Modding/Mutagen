@@ -8007,7 +8007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnusedNoisemaps.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.NNAM,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                             transl: StringBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
                 }

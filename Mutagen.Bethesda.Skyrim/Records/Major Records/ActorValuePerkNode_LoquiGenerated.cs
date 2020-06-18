@@ -2693,7 +2693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ConnectionLineToIndices.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.CNAM,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                             transl: UInt32BinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices);
                 }

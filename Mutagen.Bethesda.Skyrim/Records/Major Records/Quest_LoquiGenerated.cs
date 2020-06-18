@@ -4454,8 +4454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextDisplayGlobals.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Global>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.QTGL,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.TextDisplayGlobals);
                 }

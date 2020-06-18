@@ -4089,8 +4089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LinkTo.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialog>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.TCLT,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.LinkTo);
                 }

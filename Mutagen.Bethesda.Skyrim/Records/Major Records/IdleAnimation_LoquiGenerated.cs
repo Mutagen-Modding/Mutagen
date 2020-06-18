@@ -3086,7 +3086,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RelatedIdles.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
                 }

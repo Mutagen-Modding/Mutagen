@@ -3525,8 +3525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Topics.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.NAME,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NAME),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
@@ -3558,8 +3557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Choices.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.TCLT,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
@@ -3568,8 +3566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LinkFrom.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.TCLF,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }

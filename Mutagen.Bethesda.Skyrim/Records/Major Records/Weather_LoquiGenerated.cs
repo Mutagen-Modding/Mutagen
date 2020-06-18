@@ -9071,8 +9071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SkyStatics.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Static>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.TNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
                 }

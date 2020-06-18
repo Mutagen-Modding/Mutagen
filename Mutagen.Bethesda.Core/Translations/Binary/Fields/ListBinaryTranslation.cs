@@ -408,6 +408,71 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecord();
+            if (subHeader.RecordType != triggeringRecord)
+            {
+                throw new ArgumentException($"Unexpected record encountered.");
+            }
+            if (!IsLoqui)
+            {
+                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+            }
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                if (transl(frame, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return Parse(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl);
+            }
+        }
+
         public IEnumerable<T> ParsePerItem(
             MutagenFrame frame,
             int amount,
@@ -474,6 +539,71 @@ namespace Mutagen.Bethesda.Binary
                     triggeringRecord,
                     transl,
                     recordTypeConverter);
+            }
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<T> transl)
+        {
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                var subHeader = frame.GetSubrecord();
+                if (subHeader.RecordType != triggeringRecord)
+                {
+                    throw new ArgumentException($"Unexpected record encountered.");
+                }
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                }
+                if (transl(frame, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl);
             }
         }
 

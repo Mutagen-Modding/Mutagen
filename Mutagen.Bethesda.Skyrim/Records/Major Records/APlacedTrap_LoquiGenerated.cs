@@ -4639,7 +4639,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LocationRefTypes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LocationReferenceType>>();
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.LocationRefTypes);

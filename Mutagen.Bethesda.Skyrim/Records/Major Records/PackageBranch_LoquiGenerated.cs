@@ -3122,7 +3122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DataInputIndices.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Byte>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.PKC2,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
                             transl: ByteBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
                 }
@@ -3138,7 +3138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.PFOR,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
                 }

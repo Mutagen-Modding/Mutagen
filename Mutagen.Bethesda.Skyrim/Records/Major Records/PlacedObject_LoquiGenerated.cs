@@ -9578,8 +9578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LitWater.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<PlacedObject>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.XLTW,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
                 }
@@ -9740,7 +9739,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LocationRefTypes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LocationReferenceType>>();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);

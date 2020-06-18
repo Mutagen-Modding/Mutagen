@@ -2664,8 +2664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Grasses.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.GNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
                 }

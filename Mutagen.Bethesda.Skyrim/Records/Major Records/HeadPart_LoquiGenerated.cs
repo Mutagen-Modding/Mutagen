@@ -3109,8 +3109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ExtraParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.HNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
                 }

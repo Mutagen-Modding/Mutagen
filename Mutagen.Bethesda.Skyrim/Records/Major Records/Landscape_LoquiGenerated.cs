@@ -2833,7 +2833,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Textures = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandscapeTexture>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LandscapeTexture>>();
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);

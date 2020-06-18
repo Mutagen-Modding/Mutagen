@@ -2875,8 +2875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.RandomTeleportDestinations.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.TNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 }

@@ -6786,9 +6786,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.KSIZ,
-                            triggeringRecord: RecordTypes.KWDA,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Keywords);
@@ -6876,8 +6875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CounterEffects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MagicEffect>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.ESCE,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }

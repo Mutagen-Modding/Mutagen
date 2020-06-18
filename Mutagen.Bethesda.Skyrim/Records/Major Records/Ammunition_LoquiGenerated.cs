@@ -3716,9 +3716,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.KSIZ,
-                            triggeringRecord: RecordTypes.KWDA,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Keywords);

@@ -4794,9 +4794,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.KSIZ,
-                            triggeringRecord: RecordTypes.KWDA,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Keywords);
@@ -4815,8 +4814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Armature.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ArmorAddon>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.MODL,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Armature);
                 }

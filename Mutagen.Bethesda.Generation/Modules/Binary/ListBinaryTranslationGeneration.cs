@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Generation
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
                 && (bool)t;
 
-            bool needsMasters = list.SubTypeGeneration.NeedMasters();
+            bool needsRecordConv = list.SubTypeGeneration.NeedsRecordConverter();
 
             bool recordPerItem = false;
             if (listBinaryType == ListBinaryType.CounterRecord
@@ -319,7 +319,14 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ListBinaryType.SubTrigger:
                                 args.AddPassArg($"frame");
-                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                if (needsRecordConv)
+                                {
+                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                }
+                                else
+                                {
+                                    args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                }
                                 break;
                             case ListBinaryType.Trigger:
                                 args.Add($"frame: frame.SpawnWithLength(contentLength)");
@@ -331,15 +338,36 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     var len = (byte)typeGen.CustomData[CounterByteLength];
                                     args.Add($"countLengthLength: {len}");
-                                    args.Add($"countRecord: {objGen.RecordTypeHeaderName(counterRecType)}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"countRecord: {objGen.RecordTypeHeaderName(counterRecType)}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"countRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
+                                    }
                                 }
                                 if (data.RecordType != null)
                                 {
-                                    args.Add($"triggeringRecord: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"triggeringRecord: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                                    }
                                 }
                                 else if (subData.HasTrigger)
                                 {
-                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                    }
                                 }
                                 break;
                             case ListBinaryType.PrependCount:
@@ -368,7 +396,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"thread: frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
                     }
-                    if (needsMasters && data.HasTrigger)
+                    if (needsRecordConv)
                     {
                         args.AddPassArg($"recordTypeConverter");
                     }
@@ -416,7 +444,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                                     using (new BraceWrapper(gen))
                                     {
                                         subGen.GenerateCopyInRet(
@@ -437,7 +465,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                                 using (new BraceWrapper(gen))
                                 {
                                     gen.AppendLine("switch (header.TypeInt)");

@@ -5387,9 +5387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.KSIZ,
-                            triggeringRecord: RecordTypes.KWDA,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Keywords);
@@ -5453,8 +5452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.ALSP,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALSP),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Spells);
                 }
@@ -5463,8 +5461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Faction>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.ALFC,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALFC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Factions);
                 }
@@ -5473,8 +5470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PackageData.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Package>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.ALPC,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALPC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.PackageData);
                 }

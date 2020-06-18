@@ -3358,7 +3358,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);

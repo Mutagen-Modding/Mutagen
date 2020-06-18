@@ -10825,9 +10825,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.SPCT,
-                            triggeringRecord: RecordTypes.SPLO,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<ASpell>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
@@ -10852,9 +10851,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
-                            countRecord: RecordTypes.KSIZ,
-                            triggeringRecord: RecordTypes.KWDA,
-                            recordTypeConverter: recordTypeConverter,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
@@ -10929,7 +10927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MovementTypeNames.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.MTNM,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MTNM),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
                                 return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -11016,7 +11014,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Hairs = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Hair>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
@@ -11027,7 +11024,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Eyes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eyes>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eyes>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
@@ -11119,8 +11115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentSlots.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.QNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
                 }

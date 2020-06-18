@@ -2599,7 +2599,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.RelatedIdleAnimations = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IdleAnimation>>();
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);

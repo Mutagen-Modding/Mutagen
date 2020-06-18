@@ -3481,8 +3481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.RPRM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.RacePresets);
                 }
@@ -3492,8 +3491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.AHCM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.AvailableHairColors);
                 }
@@ -3503,8 +3501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.FTSM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.FaceDetails);
                 }

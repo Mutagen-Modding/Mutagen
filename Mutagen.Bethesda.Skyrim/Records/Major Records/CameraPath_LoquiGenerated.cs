@@ -2767,7 +2767,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RelatedPaths.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraPath>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.RelatedPaths);
                 }
@@ -2783,8 +2782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Shots.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraShot>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.SNAM,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Shots);
                 }

@@ -6252,7 +6252,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Regions = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Region>>();
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);

@@ -3900,8 +3900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AdditionalRaces.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Race>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.MODL,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
                 }

@@ -5487,8 +5487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.SPLO,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Spells);
                 }
@@ -5520,8 +5519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.AIPackages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: RecordTypes.PKID,
-                            recordTypeConverter: recordTypeConverter,
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIPackages);
                 }
@@ -5574,7 +5572,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Eyes = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eye>>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Eyes);
